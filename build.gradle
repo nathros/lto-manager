@@ -1,0 +1,22 @@
+plugins {
+	id 'application'
+	id 'org.openjfx.javafxplugin' version '0.0.9'
+	id 'com.github.johnrengelman.shadow' version '5.2.0'
+}
+
+repositories {
+    mavenCentral()
+}
+
+javafx {
+    version = "11"
+    modules = [ 'javafx.controls' ]
+}
+
+mainClassName = 'lto.manager.Main'
+
+tasks.withType(JavaExec) {
+	if (System.getProperty('DEBUG', 'false') == 'true') {
+		jvmArgs '-Xdebug', '-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=9999'
+	}
+}
