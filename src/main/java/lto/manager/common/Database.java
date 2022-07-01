@@ -1,4 +1,4 @@
-package lto.manager;
+package lto.manager.common;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;

@@ -1,4 +1,4 @@
-package lto.manager;
+package lto.manager.gui;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -19,7 +19,7 @@ public class UserSettings {
 	private HashMap<String, String> settingsMap = new HashMap<String, String>();
 	private HashMap<String, String> settingsDefault = createDefault();
 	
-	UserSettings() {
+	public UserSettings() {
 		if (!readSettings()) {
 			System.out.println("Failed to read user settings");
 		}

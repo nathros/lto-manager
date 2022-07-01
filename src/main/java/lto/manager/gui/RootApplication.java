@@ -1,4 +1,4 @@
-package lto.manager;
+package lto.manager.gui;
 
 import java.io.IOException;
 
