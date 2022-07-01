@@ -13,6 +13,16 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
 public abstract class BaseHandler implements HttpHandler {
+	public static final String VIEWPORT_KEY = "viewport";
+	public static final String VIEWPORT_VALUE = "width=device-width, initial-scale=1";
+
+	public static final String CHARSET_KEY = "charset";
+	public static final String CHARSET_VALUE = "UTF-8";
+
+	public static final String LANG_VALUE = "en";
+
+	private static int count = 0;
+
 	protected void parseQuery(String query, Map<String, Object> parameters) throws UnsupportedEncodingException {
 		if (query != null) {
 			String pairs[] = query.split("[&]");
@@ -52,6 +62,7 @@ public abstract class BaseHandler implements HttpHandler {
 	@OverridingMethodsMustInvokeSuper
 	@Override
 	public void handle(HttpExchange he) throws IOException {
-		System.out.println("Request: " + he.getRequestHeaders().getFirst("Host") + he.getRequestURI());
+		System.out.println("Request (" + String.format("%04d", count) + "): " + he.getRequestHeaders().getFirst("Host") + he.getRequestURI());
+		count++;
 	}
 }

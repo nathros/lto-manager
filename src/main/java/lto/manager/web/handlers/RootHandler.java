@@ -9,6 +9,7 @@ import org.xmlet.htmlapifaster.EnumRelType;
 import com.sun.net.httpserver.HttpExchange;
 
 import htmlflow.StaticHtml;
+import lto.manager.web.Asset;
 
 public class RootHandler extends BaseHandler {
 
@@ -18,22 +19,23 @@ public class RootHandler extends BaseHandler {
 		String response =
 		StaticHtml
 			.view()
-		    	.html().addAttr("lang", "en")
-		    		.head()
-		    			.meta().addAttr("charset", "UTF-8").__()
-		    			.title().text("HtmlFlow").__()
-		    			.link().attrRel(EnumRelType.ICON).attrHref("assets/img/favico.svg").addAttr("type", "image/svg+xml").__()
-		    			.meta().attrName("viewport").attrContent("width=device-width, initial-scale=1").__()
-	    			.__() //head
-	    			.body()
-			        	.div().attrClass("container")
-			        		.h1().text("My first page with HtmlFlow").__()
-			        		.img().attrSrc("http://bit.ly/2MoHwrU").__()
-			        		.p().text("Typesafe is awesome! :-)").__()
-		        		.__() //div
-	        		.__() //body
-        		.__() //html
-    		.render();
+				.html().attrLang(BaseHandler.LANG_VALUE)
+					.head()
+						.meta().addAttr(BaseHandler.CHARSET_KEY, BaseHandler.CHARSET_VALUE).__()
+						.title().text("RootHandler").__()
+						.link().attrRel(EnumRelType.ICON).attrHref(Asset.IMG_FAVICO_SVG).addAttr("type", "image/svg+xml").__()
+						.meta().attrName(BaseHandler.VIEWPORT_KEY).attrContent(BaseHandler.VIEWPORT_VALUE).__()
+						.link().attrRel(EnumRelType.STYLESHEET).attrHref(Asset.CSS_MAIN).__()
+					.__() //head
+					.body()
+						.div().attrClass("container")
+							.h1().text("My first page with HtmlFlow").__()
+							.img().attrSrc("http://bit.ly/2MoHwrU").__()
+							.p().text("Typesafe is awesome !").__()
+						.__() //div
+					.__() //body
+				.__() //html
+			.render();
 
 		he.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length());
 		OutputStream os = he.getResponseBody();
@@ -41,3 +43,4 @@ public class RootHandler extends BaseHandler {
 		os.close();
 	}
 }
+
