@@ -1,0 +1,79 @@
+.header-root {
+	background-color: maroon;
+}
+
+.main-content {
+	display: block;
+}
+
+#nav-toggle {
+	width: 3rem;
+}
+
+#nav-toggle input {
+	width: 3rem;
+	height: 3rem;
+}
+
+#nav-menu {
+	width: 100%;
+	margin-left: 0;
+	transform: translate(-100%, 0);
+}
+
+#nav-toggle span {
+	display: block;
+	width: 33px;
+	height: 4px;
+	margin: auto;
+	margin-bottom: 5px;
+	position: relative;
+	background: #cdcdcd;
+	border-radius: 3px;
+	z-index: 1;
+	transform-origin: 0px 0px;
+	transition: transform 0.5s cubic-bezier(0.77,0.2,0.05,1.0),
+		background 0.5s cubic-bezier(0.77,0.2,0.05,1.0),
+		opacity 0.55s ease;
+}
+
+#nav-toggle input:hover ~ div span {
+	background: green;
+	*opacity: 1;
+}
+
+#nav-toggle input:checked:hover ~ div span {
+	background: black;
+	*opacity: 1;
+}
+
+#nav-toggle span:last-child {
+	margin-bottom: 0;
+}
+
+#nav-toggle input:checked ~ ul {
+	transform: none;
+}
+
+#nav-toggle div span:first-child {
+	transform-origin: 0% 0%;
+}
+
+#nav-toggle div span:nth-last-child(2) {
+	transform-origin: center;
+}
+
+#nav-toggle input:checked ~ div span {
+	opacity: 1;
+	transform: translate(7px, 0) rotate(45deg);
+	*background: #232323;
+}
+
+#nav-toggle input:checked ~ div span:nth-last-child(1) {
+	transform: translate(5px, 5px) rotate(-45deg);
+}
+
+#nav-toggle input:checked ~ div span:nth-last-child(2) {
+	opacity: 0;
+	transform: scale(0.2, 0.2);
+}

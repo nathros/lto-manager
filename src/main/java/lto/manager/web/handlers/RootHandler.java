@@ -5,6 +5,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 
 import org.xmlet.htmlapifaster.EnumRelType;
+import org.xmlet.htmlapifaster.EnumTypeInputType;
 
 import com.sun.net.httpserver.HttpExchange;
 
@@ -23,15 +24,34 @@ public class RootHandler extends BaseHandler {
 					.head()
 						.meta().addAttr(BaseHandler.CHARSET_KEY, BaseHandler.CHARSET_VALUE).__()
 						.title().text("RootHandler").__()
-						.link().attrRel(EnumRelType.ICON).attrHref(Asset.IMG_FAVICO_SVG).addAttr("type", "image/svg+xml").__()
+						.link().attrRel(EnumRelType.ICON).attrHref(Asset.IMG_FAVICO_SVG).addAttr(BaseHandler.TYPE_KEY, BaseHandler.TYPE_SVG).__()
 						.meta().attrName(BaseHandler.VIEWPORT_KEY).attrContent(BaseHandler.VIEWPORT_VALUE).__()
 						.link().attrRel(EnumRelType.STYLESHEET).attrHref(Asset.CSS_MAIN).__()
+						.link().attrRel(EnumRelType.STYLESHEET).attrHref(Asset.CSS_MOBILE).addAttr(BaseHandler.MEDIA_KEY, BaseHandler.CSS_MOBILE_MEDIA).__()
 					.__() //head
 					.body()
-						.div().attrClass("container")
-							.h1().text("My first page with HtmlFlow").__()
-							.img().attrSrc("http://bit.ly/2MoHwrU").__()
-							.p().text("Typesafe is awesome !").__()
+						.header().attrClass("header-root")
+							.div().attrClass("header-root-container")
+								.div().attrId("nav-toggle")
+									.input().attrType(EnumTypeInputType.CHECKBOX).__()
+									.div() // Menu Icon
+										.span().__()
+										.span().__()
+										.span().__()
+									.__() // div
+									.ul().attrId("nav-menu")
+										.li().a().attrClass("icon-alarm").text("ss").__().__()
+									.__()
+								.__() // div nav-toggle
+							.__() // div header-root-container
+						.__() // header
+						.div().attrClass("main-content")
+							.div().attrClass("nav-area").__()
+							.div().attrClass("main-content-wrapper")
+								.h1().text("My first page with HtmlFlow").__()
+								.img().attrSrc("http://bit.ly/2MoHwrU").__()
+								.p().text("Typesafe is awesome !").__()
+							.__() // div
 						.__() //div
 					.__() //body
 				.__() //html
@@ -43,4 +63,3 @@ public class RootHandler extends BaseHandler {
 		os.close();
 	}
 }
-
