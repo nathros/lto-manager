@@ -24,7 +24,7 @@ public class RootHandler extends BaseHandler {
 					.head()
 						.meta().addAttr(BaseHandler.CHARSET_KEY, BaseHandler.CHARSET_VALUE).__()
 						.title().text("RootHandler").__()
-						.link().attrRel(EnumRelType.ICON).attrHref(Asset.IMG_FAVICO_SVG).addAttr(BaseHandler.TYPE_KEY, BaseHandler.TYPE_SVG).__()
+						.link().addAttr(BaseHandler.ICON_KEY, BaseHandler.ICON_VALUE).attrHref(Asset.IMG_FAVICO_SVG).addAttr(BaseHandler.TYPE_KEY, BaseHandler.TYPE_SVG).addAttr(BaseHandler.ICON_SIZE_KEY, BaseHandler.ICON_SIZE_VALUE).__()
 						.meta().attrName(BaseHandler.VIEWPORT_KEY).attrContent(BaseHandler.VIEWPORT_VALUE).__()
 						.link().attrRel(EnumRelType.STYLESHEET).attrHref(Asset.CSS_MAIN).__()
 						.link().attrRel(EnumRelType.STYLESHEET).attrHref(Asset.CSS_MOBILE).addAttr(BaseHandler.MEDIA_KEY, BaseHandler.CSS_MOBILE_MEDIA).__()

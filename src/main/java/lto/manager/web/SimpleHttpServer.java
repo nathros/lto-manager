@@ -16,7 +16,7 @@ public class SimpleHttpServer {
 	public void Start(int port, boolean redirectOnly) {
 		try {
 			server = HttpServer.create(new InetSocketAddress(port), 0);
-			System.out.println("HTTP " + (redirectOnly ? "redirect" : "") + " server started at port: " + port);
+			System.out.println("HTTP " + (redirectOnly ? "redirect " : "") + "server started at port: " + port);
 
 			if (redirectOnly) {
 				server.createContext("/", new HTTPSRedirectHandler());
