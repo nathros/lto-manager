@@ -1,6 +1,5 @@
 package lto.manager.web.handlers.sandpit;
 
-import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 
@@ -13,22 +12,22 @@ import lto.manager.web.handlers.BaseHandler;
 public class DatabaseTestHandler extends BaseHandler {
 
 	@Override
-	public void handle(HttpExchange he) throws IOException {
-		super.handle(he);
+	public void requestHadle(HttpExchange he) throws Exception {
 		String response =
-		StaticHtml
-			.view()
-				.html().attrLang(BaseHandler.LANG_VALUE)
-					.head()
-						.meta().addAttr(BaseHandler.CHARSET_KEY, BaseHandler.CHARSET_VALUE).__()
-						.title().text("Database").__()
-					.__() //head
-					.body()
-						.p().text("ssssw").__()
-					.__() //body
-				.__() //html
-			.render();
-
+				StaticHtml
+					.view()
+						.html().attrLang(BaseHandler.LANG_VALUE)
+							.head()
+								.meta().addAttr(BaseHandler.CHARSET_KEY, BaseHandler.CHARSET_VALUE).__()
+								.title().text("Database").__()
+							.__() //head
+							.body()
+								.p().text("ssssw").__()
+							.__() //body
+						.__() //html
+					.render();
+		int a = 0;
+		a = a / 0;
 		Database d = new Database();
 		d.openDatabase("config/base.db");
 

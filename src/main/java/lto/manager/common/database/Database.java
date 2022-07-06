@@ -18,6 +18,8 @@ public class Database {
 				return false;
 			}
 
+			TableVersion.getVersion(connection);
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;

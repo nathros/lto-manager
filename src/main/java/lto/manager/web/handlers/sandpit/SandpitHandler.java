@@ -12,8 +12,7 @@ import lto.manager.web.handlers.BaseHandler;
 public class SandpitHandler extends BaseHandler {
 
 	@Override
-	public void handle(HttpExchange he) throws IOException {
-		super.handle(he);
+	public void requestHadle(HttpExchange he) throws IOException {
 		String response =
 		StaticHtml
 			.view()

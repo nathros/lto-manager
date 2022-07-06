@@ -1,7 +1,11 @@
 package lto.manager.web.handlers;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +13,8 @@ import java.util.Map;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+
+import htmlflow.StaticHtml;
 
 public abstract class BaseHandler implements HttpHandler {
 	public static final String LANG_VALUE = "en";
@@ -72,5 +78,45 @@ public abstract class BaseHandler implements HttpHandler {
 	public void handle(HttpExchange he) throws IOException {
 		System.out.println("Request (" + String.format("%04d", count) + "): " + he.getRequestHeaders().getFirst("Host") + he.getRequestURI());
 		count++;
+		try {
+			this.requestHadle(he);
+		} catch (Exception e) {
+			errorHandle(he, e);
+		}
+	}
+
+	public abstract void requestHadle(HttpExchange he) throws Exception;
+
+	protected void errorHandle(HttpExchange he, Exception exception) {
+		try {
+			StringWriter sw = new StringWriter();
+			PrintWriter pw = new PrintWriter(sw);
+			exception.printStackTrace(pw);
+			String sStackTrace = sw.toString();
+			String trace = sStackTrace;
+
+			String response =
+			StaticHtml
+				.view()
+					.html().attrLang(BaseHandler.LANG_VALUE)
+						.head()
+							.meta().addAttr(BaseHandler.CHARSET_KEY, BaseHandler.CHARSET_VALUE).__()
+							.title().text("ERROR").__()
+						.__() //head
+						.body()
+							.p().attrStyle("background-color:red").text("HTTP Status " + HttpURLConnection.HTTP_INTERNAL_ERROR + "- Internal Error").__()
+							.hr().__()
+							.div().text(trace).__()
+						.__() //body
+					.__() //html
+				.render();
+
+			he.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, response.length());
+			OutputStream os = he.getResponseBody();
+			os.write(response.getBytes());
+			os.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

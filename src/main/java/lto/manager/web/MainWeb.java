@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import lto.manager.common.Main;
+
 public class MainWeb {
 	public static int portHTTP = 9000;
 	public static int portHTTPS = 9001;
@@ -176,8 +178,8 @@ public class MainWeb {
 					continue;
 				}
 
-				case "web":
-				case "gui": {
+				case Main.WEB:
+				case Main.GUI: {
 					// ignore
 					i++;
 					break;

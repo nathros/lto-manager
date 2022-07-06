@@ -11,8 +11,7 @@ import lto.manager.web.MainWeb;
 public class HTTPSRedirectHandler extends BaseHandler {
 
 	@Override
-	public void handle(HttpExchange he) throws IOException {
-		super.handle(he);
+	public void requestHadle(HttpExchange he) throws IOException {
 		String originalHost = he.getRequestHeaders().getFirst("Host");
 		String newHost = null;
 		String response = "";
@@ -44,4 +43,5 @@ public class HTTPSRedirectHandler extends BaseHandler {
 		os.write(response.getBytes());
 		os.close();
 	}
+
 }

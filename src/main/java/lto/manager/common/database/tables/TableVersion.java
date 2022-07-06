@@ -1,11 +1,13 @@
 package lto.manager.common.database.tables;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.healthmarketscience.sqlbuilder.BinaryCondition;
 import com.healthmarketscience.sqlbuilder.CreateTableQuery;
 import com.healthmarketscience.sqlbuilder.InsertQuery;
+import com.healthmarketscience.sqlbuilder.SelectQuery;
 import com.healthmarketscience.sqlbuilder.UpdateQuery;
 import com.healthmarketscience.sqlbuilder.dbspec.basic.DbSchema;
 import com.healthmarketscience.sqlbuilder.dbspec.basic.DbSpec;
@@ -14,7 +16,7 @@ import com.healthmarketscience.sqlbuilder.dbspec.basic.DbTable;
 public class TableVersion {
 	public static DbTable table = getSelf();
 
-	public static final int TABLE_VERSION_CURRENT = 1;
+	public static final int TABLE_VERSION_CURRENT = 66;
 	public static final String TABLE_NAME = "version";
 	public static final String COLUMN_NAME_ID = "id";
 	public static final String COLUMN_NAME_VERSION = "database_version";
@@ -60,5 +62,19 @@ public class TableVersion {
 		}
 
 		return true;
+	}
+
+	public static int getVersion(Connection con) throws SQLException {
+		SelectQuery uq = new SelectQuery();
+
+		uq.addAllTableColumns(table);
+		uq.addCondition(BinaryCondition.equalTo(table.getColumns().get(COLUMN_INDEX_ID), COLUMN_INDEX_ID));
+		String q = uq.validate().toString();
+
+		var statment = con.createStatement();
+		ResultSet result = statment.executeQuery(q);
+		int version = result.getInt(COLUMN_NAME_VERSION);
+
+		return version;
 	}
 }
