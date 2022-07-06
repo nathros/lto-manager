@@ -6,7 +6,7 @@ import java.net.HttpURLConnection;
 
 import com.sun.net.httpserver.HttpExchange;
 
-import lto.manager.web.Main;
+import lto.manager.web.MainWeb;
 
 public class HTTPSRedirectHandler extends BaseHandler {
 
@@ -18,9 +18,9 @@ public class HTTPSRedirectHandler extends BaseHandler {
 		String response = "";
 
 		if (null != originalHost) {
-			String http = String.valueOf(Main.portHTTP);
+			String http = String.valueOf(MainWeb.portHTTP);
 			if (originalHost.contains(http)) {
-				newHost = "https://" + originalHost.replace(http, String.valueOf(Main.portHTTPS)) + he.getRequestURI();
+				newHost = "https://" + originalHost.replace(http, String.valueOf(MainWeb.portHTTPS)) + he.getRequestURI();
 			} else {
 				String port = "NULL";
 				int index = originalHost.indexOf(':');
@@ -36,7 +36,7 @@ public class HTTPSRedirectHandler extends BaseHandler {
 			he.getResponseHeaders().set("Location", newHost);
 			he.sendResponseHeaders(HttpURLConnection.HTTP_MOVED_PERM, response.length());
 		} else {
-			response += "Please use HTTPS on port " + Main.portHTTPS;
+			response += "Please use HTTPS on port " + MainWeb.portHTTPS;
 			he.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length());
 		}
 

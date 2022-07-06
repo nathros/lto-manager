@@ -11,8 +11,7 @@ repositories {
 dependencies {
 	implementation group: 'org.xerial', name: 'sqlite-jdbc', version: '3.36.0.3'
 	implementation group: 'com.github.xmlet', name: 'htmlflow', version: '3.9'
-	implementation group: 'com.github.spotbugs', name: 'spotbugs-annotations', version: '4.7.1'
-	implementation group: 'com.github.spotbugs', name: 'spotbugs', version: '4.7.1', ext: 'pom'
+	implementation group: 'com.healthmarketscience.sqlbuilder', name: 'sqlbuilder', version: '3.0.2'
 }
 
 
@@ -21,7 +20,7 @@ javafx {
     modules = [ 'javafx.controls', 'javafx.fxml' ]
 }
 
-mainClassName = 'lto.manager.gui.Main'
+mainClassName = 'lto.manager.common.Main'
 
 tasks.withType(JavaExec) { // Needed to debug JavaFX
 	//println "ttt"

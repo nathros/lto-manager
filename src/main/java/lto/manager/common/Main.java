@@ -1,17 +1,19 @@
 package lto.manager.common;
 
 public class Main {
-	
+	public static final String WEB = "web";
+	public static final String GUI = "gui";
+
 	 public static void main(String[] args) {
 		 if (args.length > 0) {
-			 if (args[0] == "web") {
-				 lto.manager.web.Main.main(args);
+			 if (args[0].equals(WEB)) {
+				 lto.manager.web.MainWeb.main(args);
 				 return;
-			 } else if (args[0] == "gui") {
-				 lto.manager.gui.Main.main(args);
+			 } else if (args[0].equals(GUI)) {
+				 lto.manager.gui.MainGUI.main(args);
 				 return;
-			 } 
+			 }
 		 }
-		 System.out.println("Missing param options are web and gui");
+		 System.out.println("Error: Missing mode param, options are " + WEB + " and " + GUI);
 	 }
 }

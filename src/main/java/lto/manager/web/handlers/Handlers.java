@@ -4,6 +4,9 @@ import java.util.HashMap;
 
 import com.sun.net.httpserver.HttpHandler;
 
+import lto.manager.web.handlers.sandpit.DatabaseTestHandler;
+import lto.manager.web.handlers.sandpit.SandpitHandler;
+
 public class Handlers {
 	public static HashMap<String, HttpHandler> handlers = getHandlers();
 
@@ -15,6 +18,9 @@ public class Handlers {
 		ret.put("/echoHeader", new EchoHeaderHandler());
 		ret.put("/echoGet", new EchoGetHandler());
 		ret.put("/echoPost", new EchoPostHandler());
+
+		ret.put("/sandpit", new SandpitHandler());
+		ret.put("/sandpit/database", new DatabaseTestHandler());
 		return ret;
 	}
 

@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.OverridingMethodsMustInvokeSuper;
-
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
@@ -70,7 +68,6 @@ public abstract class BaseHandler implements HttpHandler {
 		}
 	}
 
-	@OverridingMethodsMustInvokeSuper
 	@Override
 	public void handle(HttpExchange he) throws IOException {
 		System.out.println("Request (" + String.format("%04d", count) + "): " + he.getRequestHeaders().getFirst("Host") + he.getRequestURI());

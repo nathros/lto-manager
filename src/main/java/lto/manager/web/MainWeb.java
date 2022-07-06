@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class Main {
+public class MainWeb {
 	public static int portHTTP = 9000;
 	public static int portHTTPS = 9001;
 	public static boolean enableHTTPS = false;
@@ -133,6 +133,7 @@ public class Main {
 						keyStoreFile = path;
 					} else {
 						System.out.println(KEYSTORECONFIGPATH + " does not exist or have read access");
+						return false;
 					}
 
 					try {
@@ -173,6 +174,18 @@ public class Main {
 					}
 					i++;
 					continue;
+				}
+
+				case "web":
+				case "gui": {
+					// ignore
+					i++;
+					break;
+				}
+
+				default: {
+					System.out.println("Unknown parameter: " + args[i]);
+					return false;
 				}
 				}
 			}
