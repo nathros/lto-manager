@@ -12,7 +12,7 @@ import com.sun.net.httpserver.HttpExchange;
 public class EchoGetHandler extends BaseHandler {
 
 	@Override
-	public void requestHadle(HttpExchange he) throws IOException {
+	public void requestHandle(HttpExchange he) throws IOException {
 		// parse request
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		URI requestedUri = he.getRequestURI();

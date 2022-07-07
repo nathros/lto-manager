@@ -17,7 +17,7 @@ public class AssetHandler extends BaseHandler {
 	private static ClassLoader loader = new Asset().getClass().getClassLoader();
 
 	@Override
-	public void requestHadle(HttpExchange he) throws IOException {
+	public void requestHandle(HttpExchange he) throws IOException {
 		URI requestedFile = he.getRequestURI();
 		String resource = path + requestedFile;
 		InputStream is = null;

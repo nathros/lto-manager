@@ -13,7 +13,7 @@ import com.sun.net.httpserver.HttpExchange;
 public class EchoPostHandler extends BaseHandler {
 
 	@Override
-	public void requestHadle(HttpExchange he) throws IOException {
+	public void requestHandle(HttpExchange he) throws IOException {
 		// parse request
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		InputStreamReader isr = new InputStreamReader(he.getRequestBody(), "utf-8");

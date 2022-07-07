@@ -13,7 +13,7 @@ import com.sun.net.httpserver.HttpExchange;
 public class EchoHeaderHandler extends BaseHandler {
 
 	@Override
-	public void requestHadle(HttpExchange he) throws IOException {
+	public void requestHandle(HttpExchange he) throws IOException {
 		Headers headers = he.getRequestHeaders();
 		Set<Map.Entry<String, List<String>>> entries = headers.entrySet();
 		String response = "";

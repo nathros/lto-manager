@@ -15,7 +15,7 @@ import lto.manager.web.Asset;
 public class RootHandler extends BaseHandler {
 
 	@Override
-	public void requestHadle(HttpExchange he) throws IOException {
+	public void requestHandle(HttpExchange he) throws IOException {
 		String response =
 		StaticHtml
 			.view()
