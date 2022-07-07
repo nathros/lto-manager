@@ -13,6 +13,7 @@ import htmlflow.StaticHtml;
 import lto.manager.web.Asset;
 
 public class RootHandler extends BaseHandler {
+	public static final String PATH = "/";
 
 	@Override
 	public void requestHandle(HttpExchange he) throws IOException {

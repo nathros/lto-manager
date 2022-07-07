@@ -9,6 +9,11 @@ body {
 	margin: 0;
 }
 
+a {
+	color: inherit;
+	text-decoration: inherit;
+}
+
 .header-root {
 	position: fixed;
 	width: 100%;

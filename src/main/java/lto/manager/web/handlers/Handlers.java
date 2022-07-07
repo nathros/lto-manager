@@ -12,15 +12,15 @@ public class Handlers {
 
 	private static HashMap<String, HttpHandler> getHandlers() {
 		HashMap<String, HttpHandler> ret = new HashMap<String, HttpHandler>();
-		ret.put("/", new RootHandler());
-		ret.put("/assets", new AssetHandler());
+		ret.put(RootHandler.PATH, new RootHandler());
+		ret.put(AssetHandler.PATH, new AssetHandler());
 
 		ret.put("/echoHeader", new EchoHeaderHandler());
 		ret.put("/echoGet", new EchoGetHandler());
 		ret.put("/echoPost", new EchoPostHandler());
 
-		ret.put("/sandpit", new SandpitHandler());
-		ret.put("/sandpit/database", new DatabaseTestHandler());
+		ret.put(SandpitHandler.PATH, new SandpitHandler());
+		ret.put(DatabaseTestHandler.PATH, new DatabaseTestHandler());
 		return ret;
 	}
 

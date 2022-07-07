@@ -12,7 +12,7 @@ import com.sun.net.httpserver.HttpExchange;
 import lto.manager.web.Asset;
 
 public class AssetHandler extends BaseHandler {
-
+	public static final String PATH = "/assets";
 	private static String path = Asset.class.getPackageName().replace(".", File.separator);
 	private static ClassLoader loader = new Asset().getClass().getClassLoader();
 

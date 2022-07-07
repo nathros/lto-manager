@@ -14,12 +14,13 @@ import lto.manager.web.handlers.templates.TemplateHead.TemplateHeadModel;
 import lto.manager.web.handlers.templates.models.EmptyModel;
 
 public class SandpitHandler extends BaseHandler {
+	public static final String PATH = "/sandpit";
 	public static DynamicHtml<EmptyModel> view = DynamicHtml.view(SandpitHandler::body);
 
 	static void body(DynamicHtml<EmptyModel> view, EmptyModel model) {
 		view
 			.div().attrStyle("text-align:center")
-				.p().a().attrHref("/sandpit/database").text("Database test").__().__()
+				.p().a().attrHref(DatabaseTestHandler.PATH).text("Database test").__().__()
 			.__(); //  div
 	}
 

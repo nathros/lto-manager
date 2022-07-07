@@ -14,6 +14,7 @@ import lto.manager.web.handlers.templates.TemplateHead.TemplateHeadModel;
 import lto.manager.web.handlers.templates.models.EmptyModel;
 
 public class DatabaseTestHandler extends BaseHandler {
+	public static final String PATH = "/sandpit/database";
 	public static DynamicHtml<EmptyModel> view = DynamicHtml.view(DatabaseTestHandler::body);
 
 	static void body(DynamicHtml<EmptyModel> view, EmptyModel model) {
