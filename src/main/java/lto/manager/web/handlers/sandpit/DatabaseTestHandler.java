@@ -6,20 +6,14 @@ import java.net.HttpURLConnection;
 import com.sun.net.httpserver.HttpExchange;
 
 import htmlflow.DynamicHtml;
+import lto.manager.common.database.Database;
 import lto.manager.web.handlers.BaseHandler;
 import lto.manager.web.handlers.templates.TemplateEmptyPage;
 import lto.manager.web.handlers.templates.TemplateEmptyPage.TemplateEmptyPageModel;
 import lto.manager.web.handlers.templates.TemplateHead.TemplateHeadModel;
+import lto.manager.web.handlers.templates.models.EmptyModel;
 
 public class DatabaseTestHandler extends BaseHandler {
-	public static class EmptyModel {
-		private EmptyModel() {}
-
-		public static EmptyModel of() {
-			return new EmptyModel();
-		}
-	}
-
 	public static DynamicHtml<EmptyModel> view = DynamicHtml.view(DatabaseTestHandler::body);
 
 	static void body(DynamicHtml<EmptyModel> view, EmptyModel model) {
@@ -31,8 +25,8 @@ public class DatabaseTestHandler extends BaseHandler {
 
 	@Override
 	public void requestHandle(HttpExchange he) throws Exception {
-		//Database d = new Database();
-		//d.openDatabase("config/base.db");
+		Database d = new Database();
+		d.openDatabase("config/base.db");
 
 		TemplateHeadModel thm = TemplateHeadModel.of("Database");
 		TemplateEmptyPageModel tepm = TemplateEmptyPageModel.of(view, thm);

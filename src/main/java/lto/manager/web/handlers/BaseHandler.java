@@ -52,7 +52,7 @@ public abstract class BaseHandler implements HttpHandler {
 
 	protected void errorHandle(HttpExchange he, Exception exception) {
 		try {
-			String response = TemplateInternalError.view.render(TemplateInternalErrorModel.of(exception));
+			String response = TemplateInternalError.view.render(TemplateInternalErrorModel.of(exception, he));
 			he.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, response.length());
 			OutputStream os = he.getResponseBody();
 			os.write(response.getBytes());

@@ -6,28 +6,28 @@ import java.net.HttpURLConnection;
 
 import com.sun.net.httpserver.HttpExchange;
 
-import htmlflow.StaticHtml;
+import htmlflow.DynamicHtml;
 import lto.manager.web.handlers.BaseHandler;
+import lto.manager.web.handlers.templates.TemplateEmptyPage;
+import lto.manager.web.handlers.templates.TemplateEmptyPage.TemplateEmptyPageModel;
+import lto.manager.web.handlers.templates.TemplateHead.TemplateHeadModel;
+import lto.manager.web.handlers.templates.models.EmptyModel;
 
 public class SandpitHandler extends BaseHandler {
+	public static DynamicHtml<EmptyModel> view = DynamicHtml.view(SandpitHandler::body);
+
+	static void body(DynamicHtml<EmptyModel> view, EmptyModel model) {
+		view
+			.div().attrStyle("text-align:center")
+				.p().a().attrHref("/sandpit/database").text("Database test").__().__()
+			.__(); //  div
+	}
 
 	@Override
 	public void requestHandle(HttpExchange he) throws IOException {
-		String response =
-		StaticHtml
-			.view()
-				.html().attrLang(BaseHandler.LANG_VALUE)
-					.head()
-						.meta().addAttr(BaseHandler.CHARSET_KEY, BaseHandler.CHARSET_VALUE).__()
-						.title().text("Sandpit").__()
-					.__() //head
-					.body()
-						.div().attrStyle("text-align:center")
-							.p().a().attrHref("/sandpit/database").text("Database test").__().__()
-						.__() //  div
-					.__() //body
-				.__() //html
-			.render();
+		TemplateHeadModel thm = TemplateHeadModel.of("Sandpit");
+		TemplateEmptyPageModel tepm = TemplateEmptyPageModel.of(view, thm);
+		String response = TemplateEmptyPage.view.render(tepm);
 
 		he.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length());
 		OutputStream os = he.getResponseBody();
