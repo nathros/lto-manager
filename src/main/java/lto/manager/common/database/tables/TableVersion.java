@@ -16,9 +16,9 @@ import com.healthmarketscience.sqlbuilder.dbspec.basic.DbTable;
 public class TableVersion {
 	public static DbTable table = getSelf();
 
-	public static final int TABLE_VERSION_CURRENT = 66;
-	public static final String TABLE_NAME = "version";
-	public static final String COLUMN_NAME_ID = "id";
+	public static final int TABLE_VERSION_CURRENT = 1;
+	public static final String TABLE_NAME = "table_version";
+	public static final String COLUMN_NAME_ID = "id_version";
 	public static final String COLUMN_NAME_VERSION = "database_version";
 
 	public static final int COLUMN_INDEX_ID = 0;

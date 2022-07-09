@@ -44,7 +44,11 @@ public abstract class BaseHandler implements HttpHandler {
 		try {
 			this.requestHandle(he);
 		} catch (Exception e) {
+			e.printStackTrace();
 			errorHandle(he, e);
+		} catch (Throwable e) {
+			e.printStackTrace();
+			errorHandle(he, new Exception(e));
 		}
 	}
 

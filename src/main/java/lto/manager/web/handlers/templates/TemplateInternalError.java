@@ -44,7 +44,7 @@ public class TemplateInternalError {
 		for (Map.Entry<String, List<String>> entry : entries)
 			sb.append(entry.toString() + "<br>\n");
 
-		String headers = sb.toString();
+		String headers = "";//sb.toString();
 
 		sb = new StringBuilder(128);
 		try {

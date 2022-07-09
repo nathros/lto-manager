@@ -7,6 +7,10 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import lto.manager.common.database.tables.TableFile;
+import lto.manager.common.database.tables.TableManufacturer;
+import lto.manager.common.database.tables.TableTape;
+import lto.manager.common.database.tables.TableTapeType;
 import lto.manager.common.database.tables.TableVersion;
 
 public class Database {
@@ -19,6 +23,12 @@ public class Database {
 			}
 
 			TableVersion.getVersion(connection);
+
+			TableTapeType.createTable(connection);
+			TableManufacturer.createTable(connection);
+			TableManufacturer.getAll(connection);
+			TableTape.createTable(connection);
+			TableFile.createTable(connection);
 
 		} catch (SQLException e) {
 			e.printStackTrace();
