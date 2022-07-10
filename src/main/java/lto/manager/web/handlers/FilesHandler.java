@@ -7,29 +7,28 @@ import java.net.HttpURLConnection;
 import com.sun.net.httpserver.HttpExchange;
 
 import htmlflow.DynamicHtml;
-import lto.manager.web.handlers.sandpit.DatabaseTestHandler;
 import lto.manager.web.handlers.templates.TemplateHead.TemplateHeadModel;
 import lto.manager.web.handlers.templates.TemplatePage;
 import lto.manager.web.handlers.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.templates.TemplatePage.TemplatePageModel;
 import lto.manager.web.handlers.templates.models.EmptyModel;
 
-public class RootHandler extends BaseHandler {
-	public static final String PATH = "/";
+public class FilesHandler extends BaseHandler {
+	public static final String PATH = "/files";
 
-	public static DynamicHtml<EmptyModel> view = DynamicHtml.view(RootHandler::body);
+	public static DynamicHtml<EmptyModel> view = DynamicHtml.view(FilesHandler::body);
 
 	static void body(DynamicHtml<EmptyModel> view, EmptyModel model) {
 		view
 			.div()
-				.p().a().attrHref(DatabaseTestHandler.PATH).text("test").__().__()
+				.p().text("files lost").__()
 			.__(); // div
 	}
 
 	@Override
 	public void requestHandle(HttpExchange he) throws IOException {
-		TemplateHeadModel thm = TemplateHeadModel.of("Root");
-		TemplatePageModel tepm = TemplatePageModel.of(view, thm, SelectedPage.Admin);
+		TemplateHeadModel thm = TemplateHeadModel.of("Files");
+		TemplatePageModel tepm = TemplatePageModel.of(view, thm, SelectedPage.Files);
 		String response = TemplatePage.view.render(tepm);
 
 		he.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length());

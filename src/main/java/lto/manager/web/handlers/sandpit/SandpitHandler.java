@@ -8,9 +8,10 @@ import com.sun.net.httpserver.HttpExchange;
 
 import htmlflow.DynamicHtml;
 import lto.manager.web.handlers.BaseHandler;
-import lto.manager.web.handlers.templates.TemplateEmptyPage;
-import lto.manager.web.handlers.templates.TemplateEmptyPage.TemplateEmptyPageModel;
 import lto.manager.web.handlers.templates.TemplateHead.TemplateHeadModel;
+import lto.manager.web.handlers.templates.TemplatePage;
+import lto.manager.web.handlers.templates.TemplatePage.SelectedPage;
+import lto.manager.web.handlers.templates.TemplatePage.TemplatePageModel;
 import lto.manager.web.handlers.templates.models.EmptyModel;
 
 public class SandpitHandler extends BaseHandler {
@@ -27,8 +28,8 @@ public class SandpitHandler extends BaseHandler {
 	@Override
 	public void requestHandle(HttpExchange he) throws IOException {
 		TemplateHeadModel thm = TemplateHeadModel.of("Sandpit");
-		TemplateEmptyPageModel tepm = TemplateEmptyPageModel.of(view, thm);
-		String response = TemplateEmptyPage.view.render(tepm);
+		TemplatePageModel tepm = TemplatePageModel.of(view, thm, SelectedPage.Sandpit);
+		String response = TemplatePage.view.render(tepm);
 
 		he.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length());
 		OutputStream os = he.getResponseBody();

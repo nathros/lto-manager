@@ -24,8 +24,6 @@ public class MainWeb {
 	public static final String STOREPASS = "storepass";
 	public static final String KEYPASS = "keypass";
 
-	public static final boolean DEBUG_MODE = java.lang.management.ManagementFactory.getRuntimeMXBean().getInputArguments().toString().indexOf("-agentlib:jdwp") > 0;
-
 	public static void main(String[] args) {
 		if (processArgs(args)) {
 			SimpleHttpServer httpServer = new SimpleHttpServer();

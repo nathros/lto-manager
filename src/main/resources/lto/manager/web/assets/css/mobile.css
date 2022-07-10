@@ -1,5 +1,5 @@
 .header-root {
-	background-color: maroon;
+	*background-color: maroon;
 }
 
 .main-content {
@@ -38,12 +38,12 @@
 }
 
 #nav-toggle input:hover ~ div span {
-	background: green;
+	*background: green;
 	*opacity: 1;
 }
 
 #nav-toggle input:checked:hover ~ div span {
-	background: black;
+	background: white;
 	*opacity: 1;
 }
 

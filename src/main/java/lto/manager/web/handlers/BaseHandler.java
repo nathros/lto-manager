@@ -20,8 +20,6 @@ public abstract class BaseHandler implements HttpHandler {
 
 	public static final String ICON_KEY = "rel";
 	public static final String ICON_VALUE = "shortcut icon";
-	public static final String ICON_SIZE_KEY = "size";
-	public static final String ICON_SIZE_VALUE = "any";
 
 	public static final String CHARSET_KEY = "charset";
 	public static final String CHARSET_VALUE = "UTF-8";

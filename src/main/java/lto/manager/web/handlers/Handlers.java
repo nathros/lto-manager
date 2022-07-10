@@ -14,6 +14,9 @@ public class Handlers {
 		HashMap<String, HttpHandler> ret = new HashMap<String, HttpHandler>();
 		ret.put(RootHandler.PATH, new RootHandler());
 		ret.put(AssetHandler.PATH, new AssetHandler());
+		ret.put(AdminHandler.PATH, new AdminHandler());
+		ret.put(TapesHandler.PATH, new TapesHandler());
+		ret.put(FilesHandler.PATH, new FilesHandler());
 
 		ret.put("/echoHeader", new EchoHeaderHandler());
 		ret.put("/echoGet", new EchoGetHandler());
