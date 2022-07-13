@@ -8,8 +8,9 @@ import java.time.LocalDateTime;
 import com.healthmarketscience.sqlbuilder.CreateTableQuery;
 import com.healthmarketscience.sqlbuilder.dbspec.basic.DbColumn;
 import com.healthmarketscience.sqlbuilder.dbspec.basic.DbSchema;
-import com.healthmarketscience.sqlbuilder.dbspec.basic.DbSpec;
 import com.healthmarketscience.sqlbuilder.dbspec.basic.DbTable;
+
+import lto.manager.common.database.Database;
 
 public class TableFile {
 	public static DbTable table = getSelf();
@@ -64,8 +65,7 @@ public class TableFile {
 	}
 
 	static DbTable getSelf() {
-		DbSpec spec = new DbSpec();
-		DbSchema schema = spec.addDefaultSchema();
+		DbSchema schema = Database.schema;
 		DbTable table = schema.addTable(TABLE_NAME);
 
 		DbColumn id = table.addColumn(COLUMN_NAME_ID, Types.INTEGER, null);

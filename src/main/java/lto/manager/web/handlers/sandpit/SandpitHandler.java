@@ -12,13 +12,13 @@ import lto.manager.web.handlers.templates.TemplateHead.TemplateHeadModel;
 import lto.manager.web.handlers.templates.TemplatePage;
 import lto.manager.web.handlers.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.templates.TemplatePage.TemplatePageModel;
-import lto.manager.web.handlers.templates.models.EmptyModel;
+import lto.manager.web.handlers.templates.models.BodyModel;
 
 public class SandpitHandler extends BaseHandler {
 	public static final String PATH = "/sandpit";
-	public static DynamicHtml<EmptyModel> view = DynamicHtml.view(SandpitHandler::body);
+	public static DynamicHtml<BodyModel> view = DynamicHtml.view(SandpitHandler::body);
 
-	static void body(DynamicHtml<EmptyModel> view, EmptyModel model) {
+	static void body(DynamicHtml<BodyModel> view, BodyModel model) {
 		view
 			.div().attrStyle("text-align:center")
 				.p().a().attrHref(DatabaseTestHandler.PATH).text("Database test").__().__()
@@ -28,7 +28,7 @@ public class SandpitHandler extends BaseHandler {
 	@Override
 	public void requestHandle(HttpExchange he) throws IOException {
 		TemplateHeadModel thm = TemplateHeadModel.of("Sandpit");
-		TemplatePageModel tepm = TemplatePageModel.of(view, thm, SelectedPage.Sandpit);
+		TemplatePageModel tepm = TemplatePageModel.of(view, thm, SelectedPage.Sandpit, BodyModel.of(he, null));
 		String response = TemplatePage.view.render(tepm);
 
 		he.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length());

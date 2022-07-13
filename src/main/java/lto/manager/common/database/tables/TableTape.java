@@ -4,26 +4,36 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.healthmarketscience.sqlbuilder.BinaryCondition;
 import com.healthmarketscience.sqlbuilder.CreateTableQuery;
+import com.healthmarketscience.sqlbuilder.InsertQuery;
 import com.healthmarketscience.sqlbuilder.SelectQuery;
+import com.healthmarketscience.sqlbuilder.SelectQuery.JoinType;
 import com.healthmarketscience.sqlbuilder.dbspec.basic.DbColumn;
+import com.healthmarketscience.sqlbuilder.dbspec.basic.DbJoin;
 import com.healthmarketscience.sqlbuilder.dbspec.basic.DbSchema;
-import com.healthmarketscience.sqlbuilder.dbspec.basic.DbSpec;
 import com.healthmarketscience.sqlbuilder.dbspec.basic.DbTable;
 
+import lto.manager.common.database.Database;
+import lto.manager.common.database.tables.TableManufacturer.RecordManufacturer;
 import lto.manager.common.database.tables.TableTapeType.RecordTapeType;
 
 public class TableTape {
 	public static DbTable table = getSelf();
+	private static DbJoin manufacturerJoin;
+	private static DbJoin tapeTypeJoin;
+
 	public static final String TABLE_NAME = "table_tape";
+
 	public static final String COLUMN_NAME_ID = "id_tape";
-	public static final String COLUMN_NAME_TYPE = "tape_type";
+	public static final String COLUMN_NAME_TYPE = TableTapeType.COLUMN_NAME_ID;
 	public static final String COLUMN_NAME_BARCODE = "barcode";
 	public static final String COLUMN_NAME_SERIAL = "serial";
-	public static final String COLUMN_NAME_MANUFACTURER = "id_manufacturer";
+	public static final String COLUMN_NAME_MANUFACTURER = TableManufacturer.COLUMN_NAME_ID;
 	public static final String COLUMN_NAME_TOTAL_SPACE = "bytes_total";
 	public static final String COLUMN_NAME_SPACE_REMAINING = "bytes_remaining";
 	public static final String COLUMN_NAME_DATE_ADDED = "date_added";
@@ -37,9 +47,53 @@ public class TableTape {
 	public static final int COLUMN_INDEX_SPACE_REMAINING = 6;
 	public static final int COLUMN_INDEX_DATE_ADDED = 7;
 
+	public static class RecordTape {
+		private int id;
+		private RecordManufacturer manufacturer;
+		private RecordTapeType type;
+		private String barcode;
+		private String serial;
+		private int totalSpace;
+		private int remainingSpace;
+		private LocalDateTime dateAdded;
+
+		public RecordTape(int id, RecordManufacturer manufacturer, RecordTapeType type, String barcode,
+				String serial, int totalSpace, int remainingSpace, LocalDateTime dateAdded) {
+			this.id = id;
+			this.manufacturer = manufacturer;
+			this.type = type;
+			this.barcode = barcode;
+			this.serial = serial;
+			this.totalSpace = totalSpace;
+			this.remainingSpace = remainingSpace;
+			this.dateAdded = dateAdded;
+		}
+
+		public static RecordTape of(int id, RecordManufacturer manufacturer, RecordTapeType type, String barcode,
+				String serial, int totalSpace, int remainingSpace, LocalDateTime dateAdded) {
+			return new RecordTape(id, manufacturer, type, barcode, serial, totalSpace, remainingSpace, dateAdded);
+		}
+
+		public int getID() { return id; }
+		public void setID(int id) { this.id = id; }
+		public RecordManufacturer getManufacturer() { return manufacturer; }
+		public void setManufacturer(RecordManufacturer manufacturer) { this.manufacturer = manufacturer; }
+		public RecordTapeType getTapeType() { return type; }
+		public void setTapeType(RecordTapeType type) { this.type = type; }
+		public String getBarcode() { return barcode; }
+		public void setBarcode(String barcode) { this.barcode = barcode; }
+		public String getSerial() { return serial; }
+		public void setTapeType(String serial) { this.serial = serial; }
+		public int getTotalSpace() { return totalSpace; }
+		public void setTotalSpace(int totalSpace) { this.totalSpace = totalSpace; }
+		public int getRemainingSpace() { return remainingSpace; }
+		public void setRemainingSpace(int remainingSpace) { this.remainingSpace = remainingSpace; }
+		public LocalDateTime getDateAdded() { return dateAdded; }
+		public void setDateAdded(LocalDateTime dateAdded) { this.dateAdded = dateAdded; }
+	}
+
 	static DbTable getSelf() {
-		DbSpec spec = new DbSpec();
-		DbSchema schema = spec.addDefaultSchema();
+		DbSchema schema = Database.schema;
 		DbTable table = schema.addTable(TABLE_NAME);
 
 		DbColumn id = table.addColumn(COLUMN_NAME_ID, Types.INTEGER, null);
@@ -66,6 +120,10 @@ public class TableTape {
 		table.addColumn(COLUMN_NAME_TOTAL_SPACE, Types.INTEGER, null);
 		table.addColumn(COLUMN_NAME_SPACE_REMAINING, Types.INTEGER, null);
 		table.addColumn(COLUMN_NAME_DATE_ADDED, Types.TIME, null);
+
+		manufacturerJoin = Database.spec.addJoin(null, TABLE_NAME, null, TableManufacturer.TABLE_NAME, TableManufacturer.COLUMN_NAME_ID);
+		tapeTypeJoin = Database.spec.addJoin(null, TABLE_NAME, null, TableTapeType.TABLE_NAME, TableTapeType.COLUMN_NAME_ID);
+
 		return table;
 	}
 
@@ -100,6 +158,61 @@ public class TableTape {
 		}
 
 		return list;
+	}
+
+	public static boolean addTape(Connection con, RecordTape newTape) throws SQLException {
+		var statment = con.createStatement();
+
+		InsertQuery iq = new InsertQuery(table);
+		iq.addColumn(table.getColumns().get(COLUMN_INDEX_TYPE), newTape.getTapeType().getID());
+		iq.addColumn(table.getColumns().get(COLUMN_INDEX_BARCODE), newTape.getBarcode());
+		iq.addColumn(table.getColumns().get(COLUMN_INDEX_SERIAL), newTape.getSerial());
+		iq.addColumn(table.getColumns().get(COLUMN_INDEX_MANUFACTURER), newTape.getManufacturer().getID());
+		iq.addColumn(table.getColumns().get(COLUMN_INDEX_TOTAL_SPACE), newTape.getTotalSpace());
+		iq.addColumn(table.getColumns().get(COLUMN_INDEX_SPACE_REMAINING), newTape.getRemainingSpace());
+		iq.addColumn(table.getColumns().get(COLUMN_INDEX_DATE_ADDED), newTape.getDateAdded());
+
+		String sql = iq.validate().toString();
+		if (!statment.execute(sql)) {
+			return true;
+		}
+
+		return true;
+	}
+
+	public static RecordTape getTapeAtID(Connection con, int id) throws SQLException {
+		var statment = con.createStatement();
+		SelectQuery uq = new SelectQuery();
+		uq.addAllTableColumns(table);
+		uq.addAllTableColumns(TableManufacturer.table);
+		uq.addAllTableColumns(TableTapeType.table);
+		uq.addJoins(JoinType.INNER, manufacturerJoin);
+		uq.addJoins(JoinType.INNER, tapeTypeJoin);
+
+		uq.addCondition(BinaryCondition.equalTo(table.getColumns().get(COLUMN_INDEX_ID), id));
+		String sql = uq.validate().toString();
+		ResultSet result = statment.executeQuery(sql);
+
+		RecordTape tape = null;
+
+		if (result.next()) {
+			int i = result.getInt(TableManufacturer.COLUMN_NAME_ID);
+			String name = result.getString(TableManufacturer.COLUMN_NAME_NAME);
+			RecordManufacturer rm = RecordManufacturer.of(i, name);
+
+			i = result.getInt(TableTapeType.COLUMN_NAME_ID);
+			name = result.getString(TableTapeType.COLUMN_NAME_TYPE);
+			RecordTapeType tt = RecordTapeType.of(i, name);
+
+			String barcode = result.getString(COLUMN_NAME_BARCODE);
+			String serial = result.getString(COLUMN_NAME_SERIAL);
+			int space = result.getInt(COLUMN_NAME_TOTAL_SPACE);
+			int left = result.getInt(COLUMN_NAME_SPACE_REMAINING);
+			//Time time = result.getTime(COLUMN_NAME_DATE_ADDED);
+			tape = RecordTape.of(i, rm, tt, barcode, serial, space, left, null);
+		}
+
+		return tape;
 	}
 
 }

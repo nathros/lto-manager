@@ -1,4 +1,4 @@
-package lto.manager.web.handlers;
+package lto.manager.web.handlers.tapes;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -7,18 +7,20 @@ import java.net.HttpURLConnection;
 import com.sun.net.httpserver.HttpExchange;
 
 import htmlflow.DynamicHtml;
+import lto.manager.web.handlers.BaseHandler;
 import lto.manager.web.handlers.templates.TemplateHead.TemplateHeadModel;
 import lto.manager.web.handlers.templates.TemplatePage;
 import lto.manager.web.handlers.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.templates.TemplatePage.TemplatePageModel;
-import lto.manager.web.handlers.templates.models.EmptyModel;
+import lto.manager.web.handlers.templates.models.BodyModel;
 
 public class TapesHandler extends BaseHandler {
 	public static final String PATH = "/tapes";
 
-	public static DynamicHtml<EmptyModel> view = DynamicHtml.view(TapesHandler::body);
+	public static DynamicHtml<BodyModel> view = DynamicHtml.view(TapesHandler::body);
 
-	static void body(DynamicHtml<EmptyModel> view, EmptyModel model) {
+	static void body(DynamicHtml<BodyModel> view, BodyModel model) {
+
 		view
 			.div()
 				.p().text("tapes page").__()
@@ -28,7 +30,7 @@ public class TapesHandler extends BaseHandler {
 	@Override
 	public void requestHandle(HttpExchange he) throws IOException {
 		TemplateHeadModel thm = TemplateHeadModel.of("Tapes");
-		TemplatePageModel tepm = TemplatePageModel.of(view, thm, SelectedPage.Tapes);
+		TemplatePageModel tepm = TemplatePageModel.of(view, thm, SelectedPage.Tapes, BodyModel.of(he, null));
 		String response = TemplatePage.view.render(tepm);
 
 		he.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length());

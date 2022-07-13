@@ -11,14 +11,14 @@ import lto.manager.web.handlers.templates.TemplateHead.TemplateHeadModel;
 import lto.manager.web.handlers.templates.TemplatePage;
 import lto.manager.web.handlers.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.templates.TemplatePage.TemplatePageModel;
-import lto.manager.web.handlers.templates.models.EmptyModel;
+import lto.manager.web.handlers.templates.models.BodyModel;
 
 public class FilesHandler extends BaseHandler {
 	public static final String PATH = "/files";
 
-	public static DynamicHtml<EmptyModel> view = DynamicHtml.view(FilesHandler::body);
+	public static DynamicHtml<BodyModel> view = DynamicHtml.view(FilesHandler::body);
 
-	static void body(DynamicHtml<EmptyModel> view, EmptyModel model) {
+	static void body(DynamicHtml<BodyModel> view, BodyModel model) {
 		view
 			.div()
 				.p().text("files lost").__()
@@ -28,7 +28,7 @@ public class FilesHandler extends BaseHandler {
 	@Override
 	public void requestHandle(HttpExchange he) throws IOException {
 		TemplateHeadModel thm = TemplateHeadModel.of("Files");
-		TemplatePageModel tepm = TemplatePageModel.of(view, thm, SelectedPage.Files);
+		TemplatePageModel tepm = TemplatePageModel.of(view, thm, SelectedPage.Files, BodyModel.of(he, null));
 		String response = TemplatePage.view.render(tepm);
 
 		he.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length());

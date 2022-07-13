@@ -28,7 +28,7 @@ public class AssetHandler extends BaseHandler {
 		String extension = requestedFile.toString();
 		int index = extension.lastIndexOf('.');
 		if (index > 0) {
-			extension = extension.substring(index + 1, extension.length());
+			extension = extension.substring(index + 1);
 			final String contentType = "Content-Type";
 			switch (extension) {
 			case "css": { he.getResponseHeaders().set(contentType, "text/css"); break; }

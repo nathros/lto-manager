@@ -13,8 +13,9 @@ import com.healthmarketscience.sqlbuilder.InsertQuery;
 import com.healthmarketscience.sqlbuilder.SelectQuery;
 import com.healthmarketscience.sqlbuilder.dbspec.basic.DbColumn;
 import com.healthmarketscience.sqlbuilder.dbspec.basic.DbSchema;
-import com.healthmarketscience.sqlbuilder.dbspec.basic.DbSpec;
 import com.healthmarketscience.sqlbuilder.dbspec.basic.DbTable;
+
+import lto.manager.common.database.Database;
 
 public class TableTapeType {
 	public static final DbTable table = getSelf();
@@ -45,8 +46,7 @@ public class TableTapeType {
 	}
 
 	private static DbTable getSelf() {
-		DbSpec spec = new DbSpec();
-		DbSchema schema = spec.addDefaultSchema();
+		DbSchema schema = Database.schema;
 		DbTable table = schema.addTable(TABLE_NAME);
 
 		DbColumn id = table.addColumn(COLUMN_NAME_ID, Types.INTEGER, null);

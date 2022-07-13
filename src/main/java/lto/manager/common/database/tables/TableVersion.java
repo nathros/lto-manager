@@ -10,8 +10,9 @@ import com.healthmarketscience.sqlbuilder.InsertQuery;
 import com.healthmarketscience.sqlbuilder.SelectQuery;
 import com.healthmarketscience.sqlbuilder.UpdateQuery;
 import com.healthmarketscience.sqlbuilder.dbspec.basic.DbSchema;
-import com.healthmarketscience.sqlbuilder.dbspec.basic.DbSpec;
 import com.healthmarketscience.sqlbuilder.dbspec.basic.DbTable;
+
+import lto.manager.common.database.Database;
 
 public class TableVersion {
 	public static DbTable table = getSelf();
@@ -25,8 +26,7 @@ public class TableVersion {
 	public static final int COLUMN_INDEX_VERSION = 1;
 
 	static DbTable getSelf() {
-		DbSpec spec = new DbSpec();
-		DbSchema schema = spec.addDefaultSchema();
+		DbSchema schema = Database.schema;
 		DbTable table = schema.addTable(TABLE_NAME);
 		table.addColumn(COLUMN_NAME_ID, "number", null);
 		table.addColumn(COLUMN_NAME_VERSION, "number", null);

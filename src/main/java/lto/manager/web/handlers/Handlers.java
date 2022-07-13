@@ -6,6 +6,7 @@ import com.sun.net.httpserver.HttpHandler;
 
 import lto.manager.web.handlers.sandpit.DatabaseTestHandler;
 import lto.manager.web.handlers.sandpit.SandpitHandler;
+import lto.manager.web.handlers.tapes.TapesHandler;
 
 public class Handlers {
 	public static HashMap<String, HttpHandler> handlers = getHandlers();
