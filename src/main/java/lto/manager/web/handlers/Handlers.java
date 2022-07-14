@@ -6,6 +6,7 @@ import com.sun.net.httpserver.HttpHandler;
 
 import lto.manager.web.handlers.sandpit.DatabaseTestHandler;
 import lto.manager.web.handlers.sandpit.SandpitHandler;
+import lto.manager.web.handlers.tapes.TapesCreateHandler;
 import lto.manager.web.handlers.tapes.TapesHandler;
 
 public class Handlers {
@@ -16,7 +17,11 @@ public class Handlers {
 		ret.put(RootHandler.PATH, new RootHandler());
 		ret.put(AssetHandler.PATH, new AssetHandler());
 		ret.put(AdminHandler.PATH, new AdminHandler());
+
+
 		ret.put(TapesHandler.PATH, new TapesHandler());
+		ret.put(TapesCreateHandler.PATH, new TapesCreateHandler());
+
 		ret.put(FilesHandler.PATH, new FilesHandler());
 
 		ret.put("/echoHeader", new EchoHeaderHandler());

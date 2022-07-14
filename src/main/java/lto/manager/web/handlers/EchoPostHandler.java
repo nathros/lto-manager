@@ -18,8 +18,8 @@ public class EchoPostHandler extends BaseHandler {
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		InputStreamReader isr = new InputStreamReader(he.getRequestBody(), "utf-8");
 		BufferedReader br = new BufferedReader(isr);
-		String query = br.readLine();
-		parseQuery(query, parameters);
+		//String query = br.readLine();
+		//parseQuery(query, parameters);
 
 		// send response
 		String response = "";

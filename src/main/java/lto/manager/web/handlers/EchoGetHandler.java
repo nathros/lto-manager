@@ -16,8 +16,8 @@ public class EchoGetHandler extends BaseHandler {
 		// parse request
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		URI requestedUri = he.getRequestURI();
-		String query = requestedUri.getRawQuery();
-		parseQuery(query, parameters);
+		//String query = requestedUri.getRawQuery();
+		//parseQuery(query, parameters);
 		// send response
 		String response = "";
 		for (String key : parameters.keySet())

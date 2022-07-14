@@ -94,13 +94,14 @@ public class TableTapeType {
 
 		SelectQuery uq = new SelectQuery();
 		uq.addAllTableColumns(table);
+		uq.addOrderings(table.getColumns().get(COLUMN_INDEX_TYPE));
 		String sql = uq.validate().toString();
 		ResultSet result = statment.executeQuery(sql);
 
 		List<RecordTapeType> list = new ArrayList<RecordTapeType>();
 		while (result.next()) {
 			int id = result.getInt(COLUMN_NAME_ID);
-			String type = result.getString(COLUMN_NAME_ID);
+			String type = result.getString(COLUMN_NAME_TYPE);
 			RecordTapeType tmp = RecordTapeType.of(id, type);
 			list.add(tmp);
 		}
@@ -118,7 +119,7 @@ public class TableTapeType {
 		ResultSet result = statment.executeQuery(sql);
 
 		id = result.getInt(COLUMN_NAME_ID);
-		String manu = result.getString(COLUMN_NAME_ID);
+		String manu = result.getString(COLUMN_NAME_TYPE);
 		RecordTapeType tmp = RecordTapeType.of(id, manu);
 
 		return tmp;

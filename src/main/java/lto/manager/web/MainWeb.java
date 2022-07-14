@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import lto.manager.common.Main;
+import lto.manager.common.database.Database;
 
 public class MainWeb {
 	public static int portHTTP = 9000;
@@ -33,6 +34,7 @@ public class MainWeb {
 				SimpleHttpsServer httpsServer = new SimpleHttpsServer();
 				httpsServer.Start(portHTTPS, keyStoreFile, storePass.toCharArray(), keyPass.toCharArray());
 			}
+			Database.openDatabase("config/base.db");
 		}
 	}
 
@@ -177,8 +179,7 @@ public class MainWeb {
 				}
 
 				case Main.WEB:
-				case Main.GUI: {
-					// ignore
+				case Main.GUI: { // Ignore
 					i++;
 					break;
 				}

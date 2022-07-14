@@ -5,8 +5,6 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import com.sun.net.httpserver.HttpExchange;
@@ -64,7 +62,7 @@ public abstract class BaseHandler implements HttpHandler {
 		}
 	}
 
-	protected void parseQuery(String query, Map<String, Object> parameters) throws UnsupportedEncodingException {
+	public static void parseQuery(String query, Map<String, String> parameters) {
 		if (query != null) {
 			String pairs[] = query.split("[&]");
 
@@ -73,27 +71,17 @@ public abstract class BaseHandler implements HttpHandler {
 
 				String key = null;
 				String value = null;
-				if (param.length > 0) {
-					key = URLDecoder.decode(param[0], System.getProperty("file.encoding"));
-				}
-
 				if (param.length > 1) {
-					value = URLDecoder.decode(param[1], System.getProperty("file.encoding"));
+					try {
+						key = URLDecoder.decode(param[0], System.getProperty("file.encoding"));
+						value = URLDecoder.decode(param[1], System.getProperty("file.encoding"));
+					} catch (UnsupportedEncodingException e) {
+						e.printStackTrace();
+						continue;
+					}
 				}
 
-				if (parameters.containsKey(key)) {
-					Object obj = parameters.get(key);
-					if (obj instanceof List<?>) {
-						@SuppressWarnings("unchecked")
-						List<String> values = (List<String>) obj;
-						values.add(value);
-					} else if (obj instanceof String) {
-						List<String> values = new ArrayList<String>();
-						values.add((String) obj);
-						values.add(value);
-						parameters.put(key, values);
-					}
-				} else {
+				if (!parameters.containsKey(key)) {
 					parameters.put(key, value);
 				}
 			}

@@ -5,8 +5,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 import com.healthmarketscience.sqlbuilder.BinaryCondition;
 import com.healthmarketscience.sqlbuilder.CreateTableQuery;
@@ -138,26 +136,6 @@ public class TableTape {
 		}
 
 		return false;
-	}
-
-
-	public static List<RecordTapeType> getAll(Connection con) throws SQLException {
-		var statment = con.createStatement();
-
-		SelectQuery uq = new SelectQuery();
-		uq.addAllTableColumns(table);
-		String sql = uq.validate().toString();
-		ResultSet result = statment.executeQuery(sql);
-
-		List<RecordTapeType> list = new ArrayList<RecordTapeType>();
-		while (result.next()) {
-			int id = result.getInt(COLUMN_NAME_ID);
-			String type = result.getString(COLUMN_NAME_ID);
-			RecordTapeType tmp = RecordTapeType.of(id, type);
-			list.add(tmp);
-		}
-
-		return list;
 	}
 
 	public static boolean addTape(Connection con, RecordTape newTape) throws SQLException {

@@ -75,7 +75,7 @@ public class TableManufacturer {
 		manufacturer.add("Spectra");
 		if (!statment.execute(q)) {
 			for (int i = 0; i < manufacturer.size(); i++) {
-				if (addNewType(con, manufacturer.get(i)) == false) return false;
+				if (addNewManufacturer(con, manufacturer.get(i)) == false) return false;
 			}
 			return true;
 		}
@@ -83,7 +83,7 @@ public class TableManufacturer {
 		return false;
 	}
 
-	public static boolean addNewType(Connection con, String name) throws SQLException {
+	public static boolean addNewManufacturer(Connection con, String name) throws SQLException {
 		var statment = con.createStatement();
 
 		InsertQuery iq = new InsertQuery(table);
@@ -100,6 +100,7 @@ public class TableManufacturer {
 
 		SelectQuery uq = new SelectQuery();
 		uq.addAllTableColumns(table);
+		uq.addOrderings(table.getColumns().get(COLUMN_INDEX_TYPE));
 		String sql = uq.validate().toString();
 		ResultSet result = statment.executeQuery(sql);
 

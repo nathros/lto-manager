@@ -20,10 +20,11 @@ public class TapesHandler extends BaseHandler {
 	public static DynamicHtml<BodyModel> view = DynamicHtml.view(TapesHandler::body);
 
 	static void body(DynamicHtml<BodyModel> view, BodyModel model) {
-
 		view
 			.div()
-				.p().text("tapes page").__()
+				.form().attrAction(TapesCreateHandler.PATH)
+					.button().text("Add New Tape").__()
+				.__()
 			.__(); // div
 	}
 
