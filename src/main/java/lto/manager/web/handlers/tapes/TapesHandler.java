@@ -3,10 +3,16 @@ package lto.manager.web.handlers.tapes;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.sql.SQLException;
+import java.util.List;
+
+import org.xmlet.htmlapifaster.EnumBorderType;
 
 import com.sun.net.httpserver.HttpExchange;
 
 import htmlflow.DynamicHtml;
+import lto.manager.common.database.Database;
+import lto.manager.common.database.tables.TableTape.RecordTape;
 import lto.manager.web.handlers.BaseHandler;
 import lto.manager.web.handlers.templates.TemplateHead.TemplateHeadModel;
 import lto.manager.web.handlers.templates.TemplatePage;
@@ -20,12 +26,44 @@ public class TapesHandler extends BaseHandler {
 	public static DynamicHtml<BodyModel> view = DynamicHtml.view(TapesHandler::body);
 
 	static void body(DynamicHtml<BodyModel> view, BodyModel model) {
-		view
-			.div()
-				.form().attrAction(TapesCreateHandler.PATH)
-					.button().text("Add New Tape").__()
-				.__()
-			.__(); // div
+		List<RecordTape> tmp = null;
+		try {
+			tmp = Database.getTapeAtIDRange(0, 100);
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+
+		final List<RecordTape> tapes = tmp;
+
+		try {
+			view
+				.div()
+					.a().attrHref(TapesCreateHandler.PATH).text("Add New Tape").__()
+					.table().dynamic(table -> {
+						table.attrBorder(EnumBorderType._1).tr()
+							.th().text("Tape ID").__()
+							.th().text("Barcode").__()
+							.th().text("Type").__()
+							.th().text("Serial").__()
+							.th().text("Manufacturer").__()
+						.__();
+						for (RecordTape item : tapes) {
+							table.tr()
+								.td().text(item.getID()).__()
+								.td().text(item.getBarcode()).__()
+								.td().text(item.getTapeType().getType()).__()
+								.td().text(item.getSerial()).__()
+								.td().text(item.getManufacturer().getManufacturer()).__()
+							.__();
+						}
+
+
+					}).__()
+				.__(); // div
+		} catch (Exception e) {
+			TapesHandler.view = DynamicHtml.view(TapesHandler::body);
+			throw e;
+		}
 	}
 
 	@Override

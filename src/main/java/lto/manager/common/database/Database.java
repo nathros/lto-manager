@@ -63,6 +63,7 @@ public class Database {
 			if (newDatabase) {
 				createTables();
 			}
+			con.createStatement().executeUpdate("PRAGMA foreign_keys = ON;");
             return con;
 		} catch (Exception e1) {
 			e1.printStackTrace();
@@ -77,6 +78,10 @@ public class Database {
 
 	public static RecordTape getTapeAtID(int id) throws SQLException {
 		return TableTape.getTapeAtID(connection, id);
+	}
+
+	public static List<RecordTape> getTapeAtIDRange(int StartID, int endID) throws SQLException {
+		return TableTape.getTapeAtIDRange(connection, StartID, endID);
 	}
 
 	public static boolean addTapeManufacturer(String name) throws SQLException {

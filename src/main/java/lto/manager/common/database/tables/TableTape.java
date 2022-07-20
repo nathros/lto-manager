@@ -5,6 +5,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.healthmarketscience.sqlbuilder.BinaryCondition;
 import com.healthmarketscience.sqlbuilder.CreateTableQuery;
@@ -70,6 +72,13 @@ public class TableTape {
 		public static RecordTape of(int id, RecordManufacturer manufacturer, RecordTapeType type, String barcode,
 				String serial, int totalSpace, int remainingSpace, LocalDateTime dateAdded) {
 			return new RecordTape(id, manufacturer, type, barcode, serial, totalSpace, remainingSpace, dateAdded);
+		}
+
+		public static RecordTape of(int id, int manufacturerID, int typeID, String barcode,
+				String serial, int totalSpace, int remainingSpace, LocalDateTime dateAdded) {
+			RecordManufacturer rm = RecordManufacturer.of(manufacturerID, "");
+			RecordTapeType t = RecordTapeType.of(typeID, "");
+			return new RecordTape(id, rm, t, barcode, serial, totalSpace, remainingSpace, dateAdded);
 		}
 
 		public int getID() { return id; }
@@ -151,6 +160,7 @@ public class TableTape {
 		iq.addColumn(table.getColumns().get(COLUMN_INDEX_DATE_ADDED), newTape.getDateAdded());
 
 		String sql = iq.validate().toString();
+
 		if (!statment.execute(sql)) {
 			return true;
 		}
@@ -182,12 +192,50 @@ public class TableTape {
 			name = result.getString(TableTapeType.COLUMN_NAME_TYPE);
 			RecordTapeType tt = RecordTapeType.of(i, name);
 
+			i = result.getInt(COLUMN_NAME_ID);
 			String barcode = result.getString(COLUMN_NAME_BARCODE);
 			String serial = result.getString(COLUMN_NAME_SERIAL);
 			int space = result.getInt(COLUMN_NAME_TOTAL_SPACE);
 			int left = result.getInt(COLUMN_NAME_SPACE_REMAINING);
 			//Time time = result.getTime(COLUMN_NAME_DATE_ADDED);
 			tape = RecordTape.of(i, rm, tt, barcode, serial, space, left, null);
+		}
+
+		return tape;
+	}
+
+	public static List<RecordTape> getTapeAtIDRange(Connection con, int start, int end) throws SQLException {
+		var statment = con.createStatement();
+		SelectQuery uq = new SelectQuery();
+		uq.addAllTableColumns(table);
+		uq.addAllTableColumns(TableManufacturer.table);
+		uq.addAllTableColumns(TableTapeType.table);
+		uq.addJoins(JoinType.INNER, manufacturerJoin);
+		uq.addJoins(JoinType.INNER, tapeTypeJoin);
+
+		uq.addCondition(BinaryCondition.greaterThan(table.getColumns().get(COLUMN_INDEX_ID), start));
+		uq.addCondition(BinaryCondition.lessThan(table.getColumns().get(COLUMN_INDEX_ID), end));
+		String sql = uq.validate().toString();
+		ResultSet result = statment.executeQuery(sql);
+
+		List<RecordTape> tape = new ArrayList<RecordTape>();
+
+		while (result.next()) {
+			int i = result.getInt(TableManufacturer.COLUMN_NAME_ID);
+			String name = result.getString(TableManufacturer.COLUMN_NAME_NAME);
+			RecordManufacturer rm = RecordManufacturer.of(i, name);
+
+			i = result.getInt(TableTapeType.COLUMN_NAME_ID);
+			name = result.getString(TableTapeType.COLUMN_NAME_TYPE);
+			RecordTapeType tt = RecordTapeType.of(i, name);
+
+			i = result.getInt(COLUMN_NAME_ID);
+			String barcode = result.getString(COLUMN_NAME_BARCODE);
+			String serial = result.getString(COLUMN_NAME_SERIAL);
+			int space = result.getInt(COLUMN_NAME_TOTAL_SPACE);
+			int left = result.getInt(COLUMN_NAME_SPACE_REMAINING);
+			//Time time = result.getTime(COLUMN_NAME_DATE_ADDED);
+			tape.add(RecordTape.of(i, rm, tt, barcode, serial, space, left, null));
 		}
 
 		return tape;

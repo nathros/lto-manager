@@ -27,9 +27,15 @@ public class BodyModel {
 	public HttpExchange getHttpExchange() { return he; }
 	public Object getModel() { return model; }
 	public String getQuery(String key) { return queries.get(key); }
+
 	public String getQueryNoNull(String key) {
 		String q = queries.get(key);
 		if (q == null) return "";
 		else return q;
+	}
+
+	public boolean hasQuery() {
+		String q = he.getRequestURI().getRawQuery();
+		return q != null;
 	}
 }

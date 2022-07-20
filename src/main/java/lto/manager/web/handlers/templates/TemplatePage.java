@@ -45,52 +45,65 @@ public class TemplatePage {
 
 	static void template(DynamicHtml<TemplatePageModel> view, TemplatePageModel model) {
 		final String selected = " selected";
-		view
-			.html().attrLang(BaseHandler.LANG_VALUE)
-				.dynamic(head -> view.addPartial(TemplateHead.view, TemplateHead.TemplateHeadModel.of(model.head.title)))
-				.body()
-					.header().attrClass("header-root")
-					.div().attrClass("header-root-container")
-						.div().attrId("nav-toggle")
-							.input().attrType(EnumTypeInputType.CHECKBOX).__()
-							.div() // Menu Icon
-								.span().__()
-								.span().__()
-								.span().__()
-							.__() // div
-							.ul().attrId("nav-menu")
-								.li()
-									.a().dynamic(a -> a.attrHref(AdminHandler.PATH)
-										.attrClass("icon-admin" + (model.page == SelectedPage.Admin ? selected : ""))
-										.text("Admin")).__()
+		final DynamicHtml<TemplatePageModel> viewTmp = view;
+
+		try {
+			view
+				.html().attrLang(BaseHandler.LANG_VALUE)
+					.dynamic(head -> viewTmp.addPartial(TemplateHead.view, TemplateHead.TemplateHeadModel.of(model.head.title)))
+					.body()
+						.header().attrClass("header-root")
+						.div().attrClass("header-root-container")
+							.div().attrId("nav-toggle")
+								.input().attrType(EnumTypeInputType.CHECKBOX).__()
+								.div() // Menu Icon
+									.span().__()
+									.span().__()
+									.span().__()
+								.__() // div
+								.ul().attrId("nav-menu")
+									.li()
+										.a().dynamic(a -> a.attrHref(AdminHandler.PATH)
+											.attrClass("icon-admin" + (model.page == SelectedPage.Admin ? selected : ""))
+											.text("Admin"))
+										.__()
+									.__()
+									.li()
+										.a().dynamic(a -> a.attrHref(TapesHandler.PATH)
+											.attrClass("icon-tape" + (model.page == SelectedPage.Tapes ? selected : ""))
+											.text("Tapes"))
+										.__()
+									.__()
+									.li()
+										.a().dynamic(a -> a.attrHref(FilesHandler.PATH)
+											.attrClass("icon-folder" + (model.page == SelectedPage.Files ? selected : ""))
+											.text("Files"))
+										.__()
+									.__()
+									.li().dynamic(li -> {
+										if (Main.DEBUG_MODE) {
+											li.a()
+											.attrHref(SandpitHandler.PATH).attrClass("icon-sandpit" + (model.page == SelectedPage.Sandpit ? selected : ""))
+											.text("Sandpit")
+											.__();
+										}
+									})
 								.__()
-								.li()
-									.a().dynamic(a -> a.attrHref(TapesHandler.PATH)
-										.attrClass("icon-tape" + (model.page == SelectedPage.Tapes ? selected : ""))
-										.text("Tapes")).__()
-								.__()
-								.li()
-									.a().dynamic(a -> a.attrHref(FilesHandler.PATH)
-										.attrClass("icon-folder" + (model.page == SelectedPage.Files ? selected : ""))
-										.text("Files")).__()
-								.__()
-								.li().dynamic(li -> {
-									if (Main.DEBUG_MODE)
-										li.a()
-										.attrHref(SandpitHandler.PATH).attrClass("icon-sandpit" + (model.page == SelectedPage.Sandpit ? selected : ""))
-										.text("Sandpit").__();
-								})
-							.__()
-						.__() // div nav-toggle
-					.__() // div header-root-container
-				.__() // header
-				.div().attrClass("main-content")
-					.div().attrClass("nav-area").__()
-					.div().attrClass("main-content-wrapper")
-						.dynamic(div -> view.addPartial(model.dynamicHtml, model.getBodyModel()))
-					.__() // div
-				.__() //div
-			.__() // body
-		.__(); // html
+							.__() // div nav-toggle
+						.__() // div header-root-container
+					.__() // header
+					.div().attrClass("main-content")
+						.div().attrClass("nav-area").__()
+						.div().attrClass("main-content-wrapper")
+							.dynamic(div -> viewTmp.addPartial(model.dynamicHtml, model.getBodyModel()))
+						.__() // div
+					.__() //div
+				.__() // body
+			.__(); // html
+
+		} catch (Exception e) {
+			TemplatePage.view = DynamicHtml.view(TemplatePage::template);
+			throw e;
+		}
 	}
 }
