@@ -10,6 +10,7 @@ import java.util.List;
 
 import com.healthmarketscience.sqlbuilder.BinaryCondition;
 import com.healthmarketscience.sqlbuilder.CreateTableQuery;
+import com.healthmarketscience.sqlbuilder.DeleteQuery;
 import com.healthmarketscience.sqlbuilder.InsertQuery;
 import com.healthmarketscience.sqlbuilder.SelectQuery;
 import com.healthmarketscience.sqlbuilder.SelectQuery.JoinType;
@@ -160,6 +161,21 @@ public class TableTape {
 		iq.addColumn(table.getColumns().get(COLUMN_INDEX_DATE_ADDED), newTape.getDateAdded());
 
 		String sql = iq.validate().toString();
+
+		if (!statment.execute(sql)) {
+			return true;
+		}
+
+		return true;
+	}
+
+	public static boolean delTape(Connection con, int id) throws SQLException {
+		var statment = con.createStatement();
+
+		DeleteQuery dq = new DeleteQuery(table);
+		dq.addCondition(BinaryCondition.equalTo(table.getColumns().get(COLUMN_INDEX_ID), id));
+
+		String sql = dq.validate().toString();
 
 		if (!statment.execute(sql)) {
 			return true;

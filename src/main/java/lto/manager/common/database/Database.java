@@ -76,6 +76,10 @@ public class Database {
 		return TableTape.addTape(connection, newTape);
 	}
 
+	public static boolean DelTape(int id) throws SQLException {
+		return TableTape.delTape(connection, id);
+	}
+
 	public static RecordTape getTapeAtID(int id) throws SQLException {
 		return TableTape.getTapeAtID(connection, id);
 	}

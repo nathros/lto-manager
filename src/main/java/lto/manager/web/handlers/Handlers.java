@@ -4,9 +4,12 @@ import java.util.HashMap;
 
 import com.sun.net.httpserver.HttpHandler;
 
+import lto.manager.web.handlers.files.FilesAddHandler;
+import lto.manager.web.handlers.files.FilesHandler;
 import lto.manager.web.handlers.sandpit.DatabaseTestHandler;
 import lto.manager.web.handlers.sandpit.SandpitHandler;
 import lto.manager.web.handlers.tapes.TapesCreateHandler;
+import lto.manager.web.handlers.tapes.TapesDeleteHandler;
 import lto.manager.web.handlers.tapes.TapesHandler;
 
 public class Handlers {
@@ -21,8 +24,10 @@ public class Handlers {
 
 		ret.put(TapesHandler.PATH, new TapesHandler());
 		ret.put(TapesCreateHandler.PATH, new TapesCreateHandler());
+		ret.put(TapesDeleteHandler.PATH, new TapesDeleteHandler());
 
 		ret.put(FilesHandler.PATH, new FilesHandler());
+		ret.put(FilesAddHandler.PATH, new FilesAddHandler());
 
 		ret.put("/echoHeader", new EchoHeaderHandler());
 		ret.put("/echoGet", new EchoGetHandler());

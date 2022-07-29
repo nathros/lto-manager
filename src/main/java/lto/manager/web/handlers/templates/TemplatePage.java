@@ -6,7 +6,7 @@ import htmlflow.DynamicHtml;
 import lto.manager.common.Main;
 import lto.manager.web.handlers.AdminHandler;
 import lto.manager.web.handlers.BaseHandler;
-import lto.manager.web.handlers.FilesHandler;
+import lto.manager.web.handlers.files.FilesHandler;
 import lto.manager.web.handlers.sandpit.SandpitHandler;
 import lto.manager.web.handlers.tapes.TapesHandler;
 import lto.manager.web.handlers.templates.TemplateHead.TemplateHeadModel;

@@ -10,17 +10,17 @@ import lto.manager.common.database.Database;
 
 public class MainWeb {
 	public static int portHTTP = 9000;
-	public static int portHTTPS = 9001;
-	public static boolean enableHTTPS = false;
+	public static int portHTTPS = -1;
 	public static String keyStoreFile = null;
 	public static String storePass = null;
 	public static String keyPass = null;
+	public static String dbPath = "config/base.db";
 
 	public static final String HTTPPORT = "httpport";
 	public static final String HTTPSPORT = "httpsport";
-	public static final String HTTPSENABLE = "httpsenable";
 	public static final String KEYSTOREPATH = "keystorepath";
 	public static final String KEYSTORECONFIGPATH = "keystoreconfigpath";
+	public static final String DBPATH = "dbpath";
 
 	public static final String STOREPASS = "storepass";
 	public static final String KEYPASS = "keypass";
@@ -28,13 +28,13 @@ public class MainWeb {
 	public static void main(String[] args) {
 		if (processArgs(args)) {
 			SimpleHttpServer httpServer = new SimpleHttpServer();
-			httpServer.Start(portHTTP, enableHTTPS);
+			httpServer.Start(portHTTP, portHTTPS > 0);
 
-			if (enableHTTPS) {
+			if (portHTTPS > 0) {
 				SimpleHttpsServer httpsServer = new SimpleHttpsServer();
 				httpsServer.Start(portHTTPS, keyStoreFile, storePass.toCharArray(), keyPass.toCharArray());
 			}
-			Database.openDatabase("config/base.db");
+			Database.openDatabase(dbPath);
 		}
 	}
 
@@ -75,27 +75,6 @@ public class MainWeb {
 						portHTTPS = Integer.valueOf(portStr);
 					} catch (Exception e) {
 						System.out.println(HTTPSPORT + " value of " + portStr + " is not valid");
-						return false;
-					}
-					i++;
-					continue;
-				}
-
-				case HTTPSENABLE: {
-					i++;
-					String enable = null;
-					try {
-						enable = args[i];
-					} catch (Exception e) {
-						System.out.println(HTTPSENABLE + " value is missing");
-						return false;
-					}
-					if (enable.equals("1")) {
-						enableHTTPS = true;
-					} else if (enable.equals("0")) {
-						enableHTTPS = false;
-					} else {
-						System.out.println(HTTPSENABLE + " value of " + enable + " is not valid accept 0 or 1");
 						return false;
 					}
 					i++;
@@ -176,6 +155,13 @@ public class MainWeb {
 					}
 					i++;
 					continue;
+				}
+
+				case DBPATH: {
+					i++;
+					dbPath = args[i];
+					i++;
+					break;
 				}
 
 				case Main.WEB:

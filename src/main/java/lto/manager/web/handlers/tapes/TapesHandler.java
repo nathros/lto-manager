@@ -54,6 +54,7 @@ public class TapesHandler extends BaseHandler {
 								.td().text(item.getTapeType().getType()).__()
 								.td().text(item.getSerial()).__()
 								.td().text(item.getManufacturer().getManufacturer()).__()
+								.td().a().attrHref(TapesDeleteHandler.PATH + "?id=" +item.getID()).text("Delete").__()
 							.__();
 						}
 

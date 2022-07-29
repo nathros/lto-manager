@@ -1,4 +1,4 @@
-package lto.manager.web.handlers;
+package lto.manager.web.handlers.files;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -7,6 +7,7 @@ import java.net.HttpURLConnection;
 import com.sun.net.httpserver.HttpExchange;
 
 import htmlflow.DynamicHtml;
+import lto.manager.web.handlers.BaseHandler;
 import lto.manager.web.handlers.templates.TemplateHead.TemplateHeadModel;
 import lto.manager.web.handlers.templates.TemplatePage;
 import lto.manager.web.handlers.templates.TemplatePage.SelectedPage;
@@ -21,7 +22,8 @@ public class FilesHandler extends BaseHandler {
 	static void body(DynamicHtml<BodyModel> view, BodyModel model) {
 		view
 			.div()
-				.p().text("files lost").__()
+				.a().attrHref(FilesAddHandler.PATH).text("Add files").__()
+				.p().text("files list").__()
 			.__(); // div
 	}
 
