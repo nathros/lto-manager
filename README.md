@@ -76,25 +76,103 @@ To get a local copy up and running follow these simple example steps.
 ### Prerequisites
 * Java 17 LTS recommended
 * Gradle 7.2 or higher
+* LTFS
+
+### Linux Dependencies
+<details>
+<summary><u><b>Expand</b></u></summary>
 
 ### Install Java
-   ```sh
-   sudo apt-get update
-   sudo apt-get install openjdk-17-jdk openjdk-17-jre
-   ```
-   These command apply to Debian and derivatives such as Ubuntu
+```sh
+sudo apt-get update
+sudo apt-get install openjdk-17-jdk openjdk-17-jre
+```
+These commands apply to Debian and derivatives such as Ubuntu
+
+### Install LTFS
+Make sure your tape drive is visible, if this returns nothing then check cables / system configuration
+```sh
+ls /dev/ | grep nst
+```
+Compile and install: https://github.com/LinearTapeFileSystem/ltfs
+
+Ubuntu 18.04 and 20.04
+```sh
+sudo apt-get update
+sudo apt-get install libicu-dev libfuse-dev libxml2-dev uuid-dev libperl-dev libsnmp-perl
+sudo apt install snapd
+sudo snap install net-snmp
+
+export USR=$(whoami)
+sudo mkdir /opt/ltfs
+sudo chown $USR /opt/ltfs
+cd /opt/ltfs
+git clone https://github.com/LinearTapeFileSystem/ltfs
+mv ltfs/{.[!.],}* /opt/ltfs/
+
+./autogen.sh
+./configure
+make
+sudo make install
+
+#if you run ltfs now it will complain that libraries are missing - the fix
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(pwd)/src/libltfs/.libs/
+echo export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(pwd)/src/libltfs/.libs/ >> ~/.bashrc
+
+ltfs # test command
+```
+
 ### Install Gradle
-   ```sh
-   export USR=$(whoami)
-   sudo mkdir /opt/gradle
-   sudo chown $USR /opt/gradle
-   cd /opt/gradle
-   wget https://services.gradle.org/distributions/gradle-7.2-bin.zip
-   unzip gradle-7.2-bin.zip
-   rm gradle-7.2-bin.zip
-   echo export PATH=$PATH:/opt/gradle/bin >> ~/.bashrc
-   export PATH=$PATH:/opt/gradle/bin
-   ```
+```sh
+export USR=$(whoami)
+sudo mkdir /opt/gradle
+sudo chown $USR /opt/gradle
+cd /opt/gradle
+wget https://services.gradle.org/distributions/gradle-7.2-bin.zip
+unzip gradle-7.2-bin.zip
+rm gradle-7.2-bin.zip
+echo export PATH=$PATH:/opt/gradle/bin >> ~/.bashrc
+export PATH=$PATH:/opt/gradle/bin
+```
+</details>
+<hr>
+
+### Windows Dependencies
+<details>
+<summary><u><b>Expand</b></u></summary>
+
+### Install Java
+Download and install: https://download.oracle.com/java/17/archive/jdk-17.0.4_windows-x64_bin.exe
+
+Run CMD as Admin
+```sh
+setx /M PATH "%PATH%;C:\Program Files\Java\jdk-17.0_4\bin"
+ ```
+
+or
+
+In <b>File Explorer</b> right-click on the `This PC` (or `Computer`) icon, then click `Properties` -> `Advanced System Settings` -> `Environmental Variables`.
+
+Under `System Variables` select Path, then click Edit. Add an entry for `C:\Program Files\Java\jdk-17.0_4\bin`. Click OK to save.
+
+### Install LTFS
+Download and install: https://www.quantum.com/en/service-support/downloads-and-firmware/ltfs/
+
+### Install Gradle (Build Only)
+Download: https://services.gradle.org/distributions/gradle-7.2-bin.zip
+
+Extract to: `C:\Gradle`
+
+Run CMD as Admin
+```sh
+setx /M PATH "%PATH%;C:\Gradle\bin"
+ ```
+or
+
+Add `C:\Gradle\bin` to `Environmental Variables`
+</details>
+<hr>
+
 
 ### Build Project
 1. Clone the repo
@@ -116,20 +194,22 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 
 Run
 ```sh
-	java -jar lto-manager-all.jar web httpport 9000
+java -jar lto-manager-all.jar web httpport 9000
 ```
 Open in browser: http://localhost:9000/
 
 Optional Enable HTTPS
 1. Generate Keys
 ```sh
-	./config/generate-key.sh
+./config/generate-key.sh
 ```
-This will ask for a password, 2 files will be created `config/key.keystore` and `config/keypass.config`
+On Windows double click `config/generate-key.bat`
+
+  This will ask for a password, 2 files will be created `config/key.keystore` and `config/keypass.config`
 
 2. Run
 ```sh
-	java -jar lto-manager-all.jar web httpport 9000 httpsport 9001 keystorepath config/key.keystore keystoreconfigpath config/keypass.config
+java -jar lto-manager-all.jar web httpport 9000 httpsport 9001 keystorepath config/key.keystore keystoreconfigpath config/keypass.config
 ```
 Open in browser: https://localhost:9001/, accept self signed certificate
 
@@ -143,9 +223,9 @@ These are all available launch parameters
 * <b>HTTP port</b>
     * Port number for HTTP
 
-        ```sh
-        httpport [port]
-        ```
+      ```sh
+      httpport [port]
+      ```
     If HTTPS is enabled requests to this port this will redirected to HTTPS
 
     Example: `httpport 9000`
@@ -153,9 +233,9 @@ These are all available launch parameters
 * <b>HTTPS port</b>
    * Port number for HTTPS
 
-       ```sh
-       httpport [port]
-       ```
+     ```sh
+     httpport [port]
+     ```
    HTTP requests will be redirected to HTTPS
 
    If this is specified then options `keystorepath` and `keystoreconfigpath` must also be configured
@@ -165,9 +245,9 @@ These are all available launch parameters
 * <b>Key store path</b>
    * Path for Key store
 
-       ```sh
-       keystorepath [path]
-       ```
+     ```sh
+     keystorepath [path]
+     ```
   Make sure to run `config/generate-key.sh` once to generate a key
 
    Example: `keystorepath config/key.keystore`
@@ -175,23 +255,23 @@ These are all available launch parameters
 * <b>Key store config path</b>
   * Path for Key store config
 
-      ```sh
-      keystoreconfigpath [path]
-      ```
+    ```sh
+    keystoreconfigpath [path]
+    ```
   Make sure to run `config/generate-key.sh` once to generate a key
 
     Example: `keystoreconfigpath config/keypass.config`
 
 
 * <b>Database path</b>
-  * Path for database
+  * Path to SQLite database file
 
-      ```sh
-      dbpath [path]
-      ```
+    ```sh
+    dbpath [path]
+    ```
   If file it does not exist it will be created
 
-    Also if this option is not specified then default of `config/base.db` will be used
+    Note: if this option is not specified then default of `config/base.db` will be used
 
     Example: `dbpath config/base.db`
   </details>
