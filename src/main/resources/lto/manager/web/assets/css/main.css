@@ -33,7 +33,7 @@ a {
 
 .nav-area {
 	background-color: #101820;
-	width: 12rem;
+	min-width: 12rem;
 }
 
 .nav-area ul {

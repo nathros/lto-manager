@@ -116,8 +116,8 @@ make
 sudo make install
 
 #if you run ltfs now it will complain that libraries are missing - the fix
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(pwd)/src/libltfs/.libs/
-echo export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(pwd)/src/libltfs/.libs/ >> ~/.bashrc
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/ltfs/src/libltfs/.libs/
+echo export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/ltfs/src/libltfs/.libs/ >> ~/.bashrc
 
 ltfs # test command
 ```
@@ -184,6 +184,16 @@ Add `C:\Gradle\bin` to `Environmental Variables`
    cd lto-manager
    gradle shadowJar
    ```
+<details>
+<summary>Optional build parameters</summary>
+  Minify CSS and JavaScript (experimental)
+
+  ```sh
+  gradle shadowJar -PcssMinify -PjsMinify
+  ```
+</details>
+
+
 3. Compiled Jar will be named `lto-manager-all.jar` in `build/libs`
 
 ## Usage

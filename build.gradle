@@ -2,6 +2,7 @@ plugins {
 	id 'application'
 	id 'org.openjfx.javafxplugin' version '0.0.9'
 	id 'com.github.johnrengelman.shadow' version '5.2.0'
+	id "org.gradlewebtools.minify" version "1.3.1"
 }
 
 repositories {
@@ -14,7 +15,6 @@ dependencies {
 	implementation group: 'com.healthmarketscience.sqlbuilder', name: 'sqlbuilder', version: '3.0.2'
 }
 
-
 javafx {
     version = "17"
     modules = [ 'javafx.controls', 'javafx.fxml' ]
@@ -26,7 +26,45 @@ tasks.withType(JavaExec) { // Needed to debug JavaFX
 	//println "ttt"
 	//println myArg
 	//mainClassName = 'lto.manager.common.Main'
+	// https://www.javafixing.com/2022/06/fixed-how-to-generate-javafx-jar-from.html
 	if (System.getProperty('DEBUG', 'false') == 'true') {
 		jvmArgs '-Xdebug', '-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=9999'
 	}
+}
+
+shadowJar {
+	if (project.hasProperty('cssMinify')) {
+		dependsOn 'cssMinify'
+		tasks.findByName('shadowJar').mustRunAfter 'cssMinify'
+	}
+	if (project.hasProperty('jsMinify')) {
+		dependsOn 'jsMinify'
+		tasks.findByName('shadowJar').mustRunAfter 'jsMinify'
+	}
+}
+
+sourceSets {
+	main {
+		resources {
+			if (project.hasProperty('cssMinify')) {
+				exclude '**/*.css' // exclude css from build
+			}
+			if (project.hasProperty('jsMinify')) {
+				exclude '**/*.js' // exclude js from build
+			}
+		}
+	}
+}
+
+minification {
+    css {
+        srcDir = project.file("src/main/resources/lto/manager/web/assets/css")
+        dstDir = project.file("build/resources/main/lto/manager/web/assets/css")
+        options.originalFileNames = true
+    }
+    js {
+        srcDir = project.file("src/main/resources/lto/manager/web/assets/js")
+        dstDir = project.file("build/resources/main/lto/manager/web/assets/js")
+        options.originalFileNames = true
+    }
 }

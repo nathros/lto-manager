@@ -60,7 +60,7 @@ public class TapesCreateHandler extends BaseHandler {
 
 		if (model.hasQuery()) {
 			try {
-				Database.addTape(RecordTape.of(-1, manuIndex - 1, typeIndex - 1, barcode, serial, 0, 0, null));
+				Database.addTape(RecordTape.of(-1, manuIndex, typeIndex, barcode, serial, 0, 0, null));
 				s = true;
 			} catch (Exception e) {
 				e.printStackTrace();
