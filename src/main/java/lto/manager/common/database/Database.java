@@ -1,6 +1,7 @@
 package lto.	manager.common.database;
 
 import java.io.File;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -102,5 +103,13 @@ public class Database {
 
 	public static List<RecordTapeType> getAllTapeTypes() throws SQLException {
 		return TableTapeType.getAll(connection);
+	}
+
+	public static boolean addFilesToTape(int tapeID, List<File> files) throws SQLException, IOException {
+		return TableFile.addFiles(connection, tapeID, files);
+	}
+
+	public static List<File> getFilesOnTape(int tapeID) throws SQLException, IOException {
+		return TableFile.getFilesOnTape(connection, tapeID);
 	}
 }

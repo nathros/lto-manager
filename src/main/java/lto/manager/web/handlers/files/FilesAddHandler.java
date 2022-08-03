@@ -4,17 +4,20 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+import org.xmlet.htmlapifaster.EnumBorderType;
 import org.xmlet.htmlapifaster.EnumTypeButtonType;
 import org.xmlet.htmlapifaster.EnumTypeInputType;
 
 import com.sun.net.httpserver.HttpExchange;
 
 import htmlflow.DynamicHtml;
+import lto.manager.common.database.Database;
 import lto.manager.web.handlers.BaseHandler;
 import lto.manager.web.handlers.templates.TemplateHead.TemplateHeadModel;
 import lto.manager.web.handlers.templates.TemplatePage;
@@ -27,11 +30,13 @@ public class FilesAddHandler extends BaseHandler {
 
 	public static DynamicHtml<BodyModel> view = DynamicHtml.view(FilesAddHandler::body);
 	private static final String DIR = "dir";
+	private static final String TAPE_ID = "tapeid";
 
 	static void body(DynamicHtml<BodyModel> view, BodyModel model) {
 		final String dir = model.getQueryNoNull(DIR);
+		final String tapeId = model.getQueryNoNull(TAPE_ID);
 
-		final List<File> allFiles = new ArrayList<File>();;
+		final List<File> allFiles = new ArrayList<File>();
 		if (!dir.equals("")) {
 			Queue<File> dirs = new LinkedList<File>();
 			dirs.add(new File(dir));
@@ -45,24 +50,53 @@ public class FilesAddHandler extends BaseHandler {
 			    }
 			  }
 			}
+
+			if (!tapeId.equals("")) {
+				try {
+					Database.addFilesToTape(Integer.valueOf(tapeId), allFiles);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
 		}
 
 
-		view
-			.div()
-				.form()
-					.b().text("Directory: ").__()
-					.input().attrStyle("width:26rem").attrType(EnumTypeInputType.TEXT).attrName(DIR).dynamic(input -> input.attrValue(dir)).__()
-					.button().attrType(EnumTypeButtonType.SUBMIT).text("Submit").__()
-				.__()
 
-				.dynamic(div -> {
-					for (File f: allFiles) {
-						div.p().text(f.getAbsolutePath().substring(dir.length() + 1)).__();
-					}
-				})
+		try {
+			view
+				.div()
+					.form()
+						.b().text("Directory: ").__()
+						.input().attrStyle("width:26rem").attrType(EnumTypeInputType.TEXT).attrName(DIR).dynamic(input -> input.attrValue(dir)).__()
+						.br().__()
+						.b().text("Tape ID: ").__()
+						.input().attrType(EnumTypeInputType.TEXT).attrName(TAPE_ID).dynamic(input -> input.attrValue(tapeId)).__()
+						.button().attrType(EnumTypeButtonType.SUBMIT).text("Submit").__()
+					.__()
 
-			.__(); // div
+					.table().dynamic(table -> {
+						table.attrBorder(EnumBorderType._1).tr()
+							.th().text("Path").__()
+							.th().text("Size").__()
+						.__();
+						for (File f: allFiles) {
+							try {
+								table.tr()
+									.td().text(f.getAbsolutePath().substring(dir.length() + 1)).__()
+									.td().text(Files.size(f.toPath())).__()
+								.__();
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+						}
+
+					}).__()
+
+				.__(); // div
+		} catch (Exception e) {
+			view = DynamicHtml.view(FilesAddHandler::body);
+			throw e;
+		}
 	}
 
 	@Override

@@ -1,11 +1,20 @@
 package lto.manager.common.database.tables;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
+import com.healthmarketscience.sqlbuilder.BinaryCondition;
 import com.healthmarketscience.sqlbuilder.CreateTableQuery;
+import com.healthmarketscience.sqlbuilder.InsertQuery;
+import com.healthmarketscience.sqlbuilder.SelectQuery;
 import com.healthmarketscience.sqlbuilder.dbspec.basic.DbColumn;
 import com.healthmarketscience.sqlbuilder.dbspec.basic.DbSchema;
 import com.healthmarketscience.sqlbuilder.dbspec.basic.DbTable;
@@ -84,7 +93,7 @@ public class TableFile {
 		DbColumn columns[] = new DbColumn[] { tapeTypeForegnColumn};
 		DbTable tableTape =  TableTape.table;
 		DbColumn columnsRef[] = new DbColumn[] { tableTape.getColumns().get(TableTape.COLUMN_INDEX_ID)};
-		table.foreignKey(TableManufacturer.COLUMN_NAME_ID, columns, tableTape, columnsRef);
+		table.foreignKey(TableTape.COLUMN_NAME_ID, columns, tableTape, columnsRef);
 		return table;
 	}
 
@@ -99,6 +108,48 @@ public class TableFile {
 		}
 
 		return false;
+	}
+
+	public static boolean addFiles(Connection con, int tapeID, List<File> files) throws SQLException, IOException {
+		var statment = con.createStatement();
+
+		for (File f: files) {
+			InsertQuery iq = new InsertQuery(table);
+
+			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_NAME), f.getName());
+			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_PATH), f.getPath());
+			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_SIZE), Files.size(f.toPath()));
+			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_DATE), "");
+			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_TAPE_LOC), tapeID);
+
+			String sql = iq.validate().toString();
+			if (statment.execute(sql)) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	public static List<File> getFilesOnTape(Connection con, int tapeID) throws SQLException, IOException {
+		var statment = con.createStatement();
+
+		List<File> files = new ArrayList<File>();
+
+		SelectQuery uq = new SelectQuery();
+		uq.addAllTableColumns(table);
+		uq.addCondition(BinaryCondition.equalTo(table.getColumns().get(COLUMN_INDEX_FILE_TAPE_LOC), tapeID));
+		uq.addOrderings(table.getColumns().get(COLUMN_INDEX_ID));
+		String sql = uq.validate().toString();
+
+		ResultSet result = statment.executeQuery(sql);
+
+		while (result.next()) {
+			String path = result.getString(COLUMN_INDEX_FILE_PATH);
+			files.add(new File(path));
+		}
+
+		return files;
 	}
 
 }

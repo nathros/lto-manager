@@ -1,3 +1,5 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
 plugins {
 	id 'application'
 	id 'org.openjfx.javafxplugin' version '0.0.9'
@@ -23,35 +25,30 @@ javafx {
 mainClassName = 'lto.manager.common.Main'
 
 tasks.withType(JavaExec) { // Needed to debug JavaFX
-	//println "ttt"
-	//println myArg
-	//mainClassName = 'lto.manager.common.Main'
 	// https://www.javafixing.com/2022/06/fixed-how-to-generate-javafx-jar-from.html
 	if (System.getProperty('DEBUG', 'false') == 'true') {
 		jvmArgs '-Xdebug', '-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=9999'
 	}
 }
 
-shadowJar {
-	if (project.hasProperty('cssMinify')) {
-		dependsOn 'cssMinify'
-		tasks.findByName('shadowJar').mustRunAfter 'cssMinify'
-	}
-	if (project.hasProperty('jsMinify')) {
-		dependsOn 'jsMinify'
-		tasks.findByName('shadowJar').mustRunAfter 'jsMinify'
-	}
+shadowJar {}
+
+task shadowJarMinify(type: ShadowJar) {
+	dependsOn 'cssMinify'
+	dependsOn 'jsMinify'
+	tasks.findByName('shadowJar').mustRunAfter 'cssMinify'
+	tasks.findByName('shadowJar').mustRunAfter 'jsMinify'
+
+	archiveClassifier.set("all")
+	from sourceSets.main.output
+	configurations = [project.configurations.compileClasspath]
 }
 
 sourceSets {
-	main {
+	shadowJarMinify {
 		resources {
-			if (project.hasProperty('cssMinify')) {
-				exclude '**/*.css' // exclude css from build
-			}
-			if (project.hasProperty('jsMinify')) {
-				exclude '**/*.js' // exclude js from build
-			}
+			exclude '**/*.css' // exclude css from build
+			exclude '**/*.js' // exclude js from build
 		}
 	}
 }

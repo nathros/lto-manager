@@ -125,14 +125,16 @@ ltfs # test command
 ### Install Gradle
 ```sh
 export USR=$(whoami)
+export VER=7.2
 sudo mkdir /opt/gradle
 sudo chown $USR /opt/gradle
-cd /opt/gradle
-wget https://services.gradle.org/distributions/gradle-7.2-bin.zip
-unzip gradle-7.2-bin.zip
-rm gradle-7.2-bin.zip
-echo export PATH=$PATH:/opt/gradle/bin >> ~/.bashrc
-export PATH=$PATH:/opt/gradle/bin
+mkdir /opt/gradle/gradle-$VER/
+cd /opt/gradle/gradle-$VER/
+wget https://services.gradle.org/distributions/gradle-$VER-bin.zip
+unzip gradle-$VER-bin.zip
+rm gradle-$VER-bin.zip
+export PATH=$PATH:/opt/gradle/gradle-$VER/bin
+echo export PATH=$PATH:/opt/gradle/gradle-$VER/bin >> ~/.bashrc
 ```
 </details>
 <hr>
@@ -186,10 +188,10 @@ Add `C:\Gradle\bin` to `Environmental Variables`
    ```
 <details>
 <summary>Optional build parameters</summary>
-  Minify CSS and JavaScript (experimental)
+  Minify CSS and JavaScript
 
   ```sh
-  gradle shadowJar -PcssMinify -PjsMinify
+  gradle shadowJarMinify
   ```
 </details>
 
