@@ -34,55 +34,55 @@ public class FilesAddHandler extends BaseHandler {
 
 		final List<File> workingDir = Util.getFilesListInDir(dir);
 
-		try {
-			view
-				.div()
-					.form()
-						.fieldset().dynamic(fieldset -> {
-							File currentDir = new File(dir);
-							if (dir.equals("")) currentDir = Util.getWorkingDir();
+		view
+			.div()
+				.form()
+					.fieldset().dynamic(fieldset -> {
+						File currentDir = new File(dir);
+						if (dir.equals("")) currentDir = Util.getWorkingDir();
 
-							fieldset.label().text("DIR: " + currentDir.getAbsolutePath()).__().br().__();
-							fieldset.label().a().attrHref("?" + DIR + "=" + Util.encodeUrl(currentDir.getParent())).text("&cularr; UP").__().br().__();
-							fieldset.hr().__();
+						fieldset.label().text("DIR: " + currentDir.getAbsolutePath()).__().br().__();
+						fieldset.label().a().attrHref("?" + DIR + "=" + Util.encodeUrl(currentDir.getParent())).text("&cularr; UP").__().br().__();
+						fieldset.hr().__();
 
-							for (File f: workingDir) {
-								if (f.isDirectory()) {
-									String url = Util.encodeUrl(f.getAbsolutePath());
-									fieldset.b().a().attrHref("?" + DIR + "=" + url).text(f.getName()).__().__();
-								} else {
-									fieldset.span().text(f.getName()).__();
-								}
-								fieldset.br().__();
+						for (File f: workingDir) {
+							if (f.isDirectory()) {
+								String url = Util.encodeUrl(f.getAbsolutePath());
+								fieldset.b().a().attrHref("?" + DIR + "=" + url).text(f.getName()).__().__();
+							} else {
+								fieldset.span().text(f.getName()).__();
 							}
-							}).__()
-					.__()
+							fieldset.br().__();
+						}
+						}).__()
+				.__()
 
-					.form()
-						.b().text("Directory: ").__()
-						.input().attrStyle("width:26rem").attrType(EnumTypeInputType.TEXT).attrName(DIR).dynamic(input -> input.attrValue(dir)).__()
-						.br().__()
-						.b().text("Tape ID: ").__()
-						.input().attrType(EnumTypeInputType.TEXT).attrName(TAPE_ID).dynamic(input -> input.attrValue(tapeId)).__()
-						.button().attrType(EnumTypeButtonType.SUBMIT).text("Submit").__()
-					.__()
+				.form()
+					.b().text("Directory: ").__()
+					.input().attrStyle("width:26rem").attrType(EnumTypeInputType.TEXT).attrName(DIR).dynamic(input -> input.attrValue(dir)).__()
+					.br().__()
+					.b().text("Tape ID: ").__()
+					.input().attrType(EnumTypeInputType.TEXT).attrName(TAPE_ID).dynamic(input -> input.attrValue(tapeId)).__()
+					.button().attrType(EnumTypeButtonType.SUBMIT).text("Submit").__()
+				.__()
 
-				.__(); // div
-		} catch (Exception e) {
-			view = DynamicHtml.view(FilesAddHandler::body);
-			throw e;
-		}
+			.__(); // div
 	}
 
 	@Override
 	public void requestHandle(HttpExchange he) throws IOException {
-		TemplateHeadModel thm = TemplateHeadModel.of("Files Add");
-		TemplatePageModel tepm = TemplatePageModel.of(view, thm, SelectedPage.Files, BodyModel.of(he, null));
-		String response = TemplatePage.view.render(tepm);
+		try {
+			TemplateHeadModel thm = TemplateHeadModel.of("Files Add");
+			TemplatePageModel tepm = TemplatePageModel.of(view, thm, SelectedPage.Files, BodyModel.of(he, null));
+			String response = TemplatePage.view.render(tepm);
 
-		he.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length());
-		OutputStream os = he.getResponseBody();
-		os.write(response.getBytes());
-		os.close();
+			he.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length());
+			OutputStream os = he.getResponseBody();
+			os.write(response.getBytes());
+			os.close();
+		} catch (Exception e) {
+			view = DynamicHtml.view(FilesAddHandler::body);
+			throw e;
+		}
 	}
 }

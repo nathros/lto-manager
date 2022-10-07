@@ -36,48 +36,47 @@ public class TapesHandler extends BaseHandler {
 
 		final List<RecordTape> tapes = tmp;
 
-		try {
-			view
-				.div()
-					.a().attrHref(TapesCreateHandler.PATH).text("Add New Tape").__()
-					.table().dynamic(table -> {
-						table.attrBorder(EnumBorderType._1).tr()
-							.th().text("Tape ID").__()
-							.th().text("Barcode").__()
-							.th().text("Type").__()
-							.th().text("Serial").__()
-							.th().text("Manufacturer").__()
+		view
+			.div()
+				.a().attrHref(TapesCreateHandler.PATH).text("Add New Tape").__()
+				.table().dynamic(table -> {
+					table.attrBorder(EnumBorderType._1).tr()
+						.th().text("Tape ID").__()
+						.th().text("Barcode").__()
+						.th().text("Type").__()
+						.th().text("Serial").__()
+						.th().text("Manufacturer").__()
+					.__();
+					for (RecordTape item : tapes) {
+						table.tr()
+							.td().text(item.getID()).__()
+							.td().text(item.getBarcode()).__()
+							.td().text(item.getTapeType().getType()).__()
+							.td().text(item.getSerial()).__()
+							.td().text(item.getManufacturer().getManufacturer()).__()
+							.td().a().attrHref(TapesDeleteHandler.PATH + "?" + TapesDeleteHandler.ID + "=" + item.getID()).text("Delete").__().__()
+							.td().a().attrHref(FilesHandler.PATH + "?" + FilesHandler.TAPE_ID + "=" + item.getID()).text("Show Files").__()
 						.__();
-						for (RecordTape item : tapes) {
-							table.tr()
-								.td().text(item.getID()).__()
-								.td().text(item.getBarcode()).__()
-								.td().text(item.getTapeType().getType()).__()
-								.td().text(item.getSerial()).__()
-								.td().text(item.getManufacturer().getManufacturer()).__()
-								.td().a().attrHref(TapesDeleteHandler.PATH + "?" + TapesDeleteHandler.ID + "=" + item.getID()).text("Delete").__().__()
-								.td().a().attrHref(FilesHandler.PATH + "?" + FilesHandler.TAPE_ID + "=" + item.getID()).text("Show Files").__()
-							.__();
-						}
+					}
+				}).__()
+			.__(); // div
 
-
-					}).__()
-				.__(); // div
-		} catch (Exception e) {
-			TapesHandler.view = DynamicHtml.view(TapesHandler::body);
-			throw e;
-		}
 	}
 
 	@Override
 	public void requestHandle(HttpExchange he) throws IOException {
-		TemplateHeadModel thm = TemplateHeadModel.of("Tapes");
-		TemplatePageModel tepm = TemplatePageModel.of(view, thm, SelectedPage.Tapes, BodyModel.of(he, null));
-		String response = TemplatePage.view.render(tepm);
+		try {
+			TemplateHeadModel thm = TemplateHeadModel.of("Tapes");
+			TemplatePageModel tepm = TemplatePageModel.of(view, thm, SelectedPage.Tapes, BodyModel.of(he, null));
+			String response = TemplatePage.view.render(tepm);
 
-		he.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length());
-		OutputStream os = he.getResponseBody();
-		os.write(response.getBytes());
-		os.close();
+			he.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length());
+			OutputStream os = he.getResponseBody();
+			os.write(response.getBytes());
+			os.close();
+		} catch (Exception e) {
+			TapesHandler.view = DynamicHtml.view(TapesHandler::body);
+			throw e;
+		}
 	}
 }

@@ -73,14 +73,14 @@ public class TapesDeleteHandler extends BaseHandler {
 	@Override
 	public void requestHandle(HttpExchange he) throws IOException, SQLException {
 		try {
-		TemplateHeadModel thm = TemplateHeadModel.of("Tape Delete");
-		TemplatePageModel tepm = TemplatePageModel.of(view, thm, SelectedPage.Tapes, BodyModel.of(he, null));
-		String response = TemplatePage.view.render(tepm);
+			TemplateHeadModel thm = TemplateHeadModel.of("Tape Delete");
+			TemplatePageModel tepm = TemplatePageModel.of(view, thm, SelectedPage.Tapes, BodyModel.of(he, null));
+			String response = TemplatePage.view.render(tepm);
 
-		he.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length());
-		OutputStream os = he.getResponseBody();
-		os.write(response.getBytes());
-		os.close();
+			he.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length());
+			OutputStream os = he.getResponseBody();
+			os.write(response.getBytes());
+			os.close();
 		} catch (Exception e) {
 			view = DynamicHtml.view(TapesDeleteHandler::body);
 			throw e;

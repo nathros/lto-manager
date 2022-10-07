@@ -39,49 +39,50 @@ public class JobsHandler extends BaseHandler {
 		}
 
 		final var info = job.getLatestInfo();
-		try {
-			view
-				.div().dynamic(div -> {
-					if (job.operationInProgress()) div.p().text("Job Running").__().br().__();
-					else div.p().text("Job NOT Running").__().br().__();
-					div.p().text("Total copied: " + info.getTotalCopied()).__();
-					div.p().text("Percent: " + info.getPercentCompleted()).__();
-					div.p().text("Speed: " + info.getTransferSpeed()).__();
-					div.p().text("ETA: " + info.getEstimatedTimeRemaining()).__();
 
-					String exitCodeStr = "";
-					Integer exitCode = job.getExitCode();
-					if (exitCode != null) exitCodeStr = String.valueOf(exitCode);
-					div.p().text("Exit Code: " + exitCodeStr).__();
+		view
+			.div().dynamic(div -> {
+				if (job.operationInProgress()) div.p().text("Job Running").__().br().__();
+				else div.p().text("Job NOT Running").__().br().__();
+				div.p().text("Total copied: " + info.getTotalCopied()).__();
+				div.p().text("Percent: " + info.getPercentCompleted()).__();
+				div.p().text("Speed: " + info.getTransferSpeed()).__();
+				div.p().text("ETA: " + info.getEstimatedTimeRemaining()).__();
 
-					div.hr().__();
-					div.p().text("err: " + job.getLatestError()).__();
-					div
-						.form()
-							.input().attrType(EnumTypeInputType.CHECKBOX).attrName(STOP).__()
-							.button().attrType(EnumTypeButtonType.SUBMIT).text("Stop").__()
-							.input().attrType(EnumTypeInputType.CHECKBOX).attrName(START).__()
-							.button().attrType(EnumTypeButtonType.SUBMIT).text("Start").__()
-						.__();
-					div.form().button().attrType(EnumTypeButtonType.SUBMIT).text("Refresh").__().__();
-				}).__(); //  div
+				String exitCodeStr = "";
+				Integer exitCode = job.getExitCode();
+				if (exitCode != null) exitCodeStr = String.valueOf(exitCode);
+				div.p().text("Exit Code: " + exitCodeStr).__();
 
-		} catch (Exception e) {
-			view = DynamicHtml.view(JobsHandler::body);
-			throw e;
-		}
+				div.hr().__();
+				div.p().text("err: " + job.getLatestError()).__();
+				div
+					.form()
+						.input().attrType(EnumTypeInputType.CHECKBOX).attrName(STOP).__()
+						.button().attrType(EnumTypeButtonType.SUBMIT).text("Stop").__()
+						.input().attrType(EnumTypeInputType.CHECKBOX).attrName(START).__()
+						.button().attrType(EnumTypeButtonType.SUBMIT).text("Start").__()
+					.__();
+				div.form().button().attrType(EnumTypeButtonType.SUBMIT).text("Refresh").__().__();
+			}).__(); //  div
+
 	}
 
 	@Override
 	public void requestHandle(HttpExchange he) throws IOException {
-		TemplateHeadModel thm = TemplateHeadModel.of("Jobs");
-		TemplatePageModel tepm = TemplatePageModel.of(view, thm, SelectedPage.Jobs, BodyModel.of(he, null));
-		String response = TemplatePage.view.render(tepm);
+		try {
+			TemplateHeadModel thm = TemplateHeadModel.of("Jobs");
+			TemplatePageModel tepm = TemplatePageModel.of(view, thm, SelectedPage.Jobs, BodyModel.of(he, null));
+			String response = TemplatePage.view.render(tepm);
 
-		he.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length());
-		OutputStream os = he.getResponseBody();
-		os.write(response.getBytes());
-		os.close();
+			he.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length());
+			OutputStream os = he.getResponseBody();
+			os.write(response.getBytes());
+			os.close();
+		} catch (Exception e) {
+			view = DynamicHtml.view(JobsHandler::body);
+			throw e;
+		}
 	}
 
 }

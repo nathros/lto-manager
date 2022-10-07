@@ -13,6 +13,7 @@ public class BodyModel {
 	private final Map<String, String> queries;
 
 	public static final String QUERY_ON = "on";
+	public static final String QUERY_OFF = "off";
 
 	private BodyModel(HttpExchange he, Object model) {
 		this.he = he;

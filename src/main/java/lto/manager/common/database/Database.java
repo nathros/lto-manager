@@ -13,6 +13,7 @@ import com.healthmarketscience.sqlbuilder.dbspec.basic.DbSpec;
 import lto.manager.common.database.tables.TableFile;
 import lto.manager.common.database.tables.TableManufacturer;
 import lto.manager.common.database.tables.TableManufacturer.RecordManufacturer;
+import lto.manager.common.database.tables.TableOptions;
 import lto.manager.common.database.tables.TableTape;
 import lto.manager.common.database.tables.TableTape.RecordTape;
 import lto.manager.common.database.tables.TableTapeType;
@@ -34,6 +35,7 @@ public class Database {
 			TableManufacturer.createTable(connection);
 			TableTape.createTable(connection);
 			TableFile.createTable(connection);
+			TableOptions.createTable(connection);
 
 			//var manu = TableManufacturer.getAll(connection);
 			//var type = TableTapeType.getAll(connection);
@@ -65,6 +67,7 @@ public class Database {
 				createTables();
 			}
 			con.createStatement().executeUpdate("PRAGMA foreign_keys = ON;");
+			TableOptions.readAndSetAllOptions(con);
             return con;
 		} catch (Exception e1) {
 			e1.printStackTrace();
@@ -111,5 +114,13 @@ public class Database {
 
 	public static List<File> getFilesOnTape(int tapeID) throws SQLException, IOException {
 		return TableFile.getFilesOnTape(connection, tapeID);
+	}
+
+	public static boolean updateOption(int id, String value) throws SQLException {
+		return TableOptions.updateOption(connection, id, value);
+	}
+
+	public static String getOption(int id) throws SQLException {
+		return TableOptions.getOption(connection, id);
 	}
 }
