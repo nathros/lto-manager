@@ -2,7 +2,7 @@ package lto.manager.common;
 
 import java.io.IOException;
 
-public class Job extends ExternalProcess {
+public class RsyncJob extends ExternalProcess {
 
 	private static final String[] cmd = {"bash", "copy.sh" };
 

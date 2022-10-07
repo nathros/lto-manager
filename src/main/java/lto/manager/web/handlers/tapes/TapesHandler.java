@@ -14,6 +14,7 @@ import htmlflow.DynamicHtml;
 import lto.manager.common.database.Database;
 import lto.manager.common.database.tables.TableTape.RecordTape;
 import lto.manager.web.handlers.BaseHandler;
+import lto.manager.web.handlers.files.FilesHandler;
 import lto.manager.web.handlers.templates.TemplateHead.TemplateHeadModel;
 import lto.manager.web.handlers.templates.TemplatePage;
 import lto.manager.web.handlers.templates.TemplatePage.SelectedPage;
@@ -54,7 +55,8 @@ public class TapesHandler extends BaseHandler {
 								.td().text(item.getTapeType().getType()).__()
 								.td().text(item.getSerial()).__()
 								.td().text(item.getManufacturer().getManufacturer()).__()
-								.td().a().attrHref(TapesDeleteHandler.PATH + "?id=" +item.getID()).text("Delete").__()
+								.td().a().attrHref(TapesDeleteHandler.PATH + "?" + TapesDeleteHandler.ID + "=" + item.getID()).text("Delete").__().__()
+								.td().a().attrHref(FilesHandler.PATH + "?" + FilesHandler.TAPE_ID + "=" + item.getID()).text("Show Files").__()
 							.__();
 						}
 

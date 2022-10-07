@@ -27,7 +27,7 @@ public class FilesHandler extends BaseHandler {
 
 	public static DynamicHtml<BodyModel> view = DynamicHtml.view(FilesHandler::body);
 
-	private static final String TAPE_ID = "tape_id";
+	public static final String TAPE_ID = "tape_id";
 
 	static void body(DynamicHtml<BodyModel> view, BodyModel model) {
 		final String tapeId = model.getQueryNoNull(TAPE_ID);
@@ -62,7 +62,7 @@ public class FilesHandler extends BaseHandler {
 								.td().text(f.getAbsolutePath()).__()
 							.__();
 						}
-
+						if (files.size() == 0) table.tr().td().text("Empty").__().__();
 					}).__()
 				.__(); // div
 		} catch (Exception e) {

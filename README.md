@@ -99,13 +99,12 @@ Compile and install: https://github.com/LinearTapeFileSystem/ltfs
 Ubuntu 18.04 and 20.04
 ```sh
 sudo apt-get update
-sudo apt-get install libicu-dev libfuse-dev libxml2-dev uuid-dev libperl-dev libsnmp-perl
-sudo apt install snapd
-sudo snap install net-snmp
+sudo apt-get install -y libicu-dev libfuse-dev libxml2-dev uuid-dev libperl-dev libsnmp-perl
+sudo apt-get install -y snapd
+sudo snap install -y net-snmp
 
-export USR=$(whoami)
 sudo mkdir /opt/ltfs
-sudo chown $USR /opt/ltfs
+sudo chown $(whoami) /opt/ltfs
 cd /opt/ltfs
 git clone https://github.com/LinearTapeFileSystem/ltfs
 mv ltfs/{.[!.],}* /opt/ltfs/
@@ -124,10 +123,9 @@ ltfs # test command
 
 ### Install Gradle
 ```sh
-export USR=$(whoami)
 export VER=7.2
 sudo mkdir /opt/gradle
-sudo chown $USR /opt/gradle
+sudo chown $(whoami) /opt/gradle
 mkdir /opt/gradle/gradle-$VER/
 cd /opt/gradle/gradle-$VER/
 wget https://services.gradle.org/distributions/gradle-$VER-bin.zip

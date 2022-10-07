@@ -23,7 +23,7 @@ public class TapesDeleteHandler extends BaseHandler {
 	public static final String PATH = "/tapes/delete";
 	public static DynamicHtml<BodyModel> view = DynamicHtml.view(TapesDeleteHandler::body);
 
-	private static final String ID = "id";
+	public static final String ID = "id";
 
 	static void body(DynamicHtml<BodyModel> view, BodyModel model) {
 		final String idQuery = model.getQueryNoNull(ID);

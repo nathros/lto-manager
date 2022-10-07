@@ -10,7 +10,7 @@ import org.xmlet.htmlapifaster.EnumTypeInputType;
 import com.sun.net.httpserver.HttpExchange;
 
 import htmlflow.DynamicHtml;
-import lto.manager.common.Job;
+import lto.manager.common.RsyncJob;
 import lto.manager.web.handlers.BaseHandler;
 import lto.manager.web.handlers.templates.TemplateHead.TemplateHeadModel;
 import lto.manager.web.handlers.templates.TemplatePage;
@@ -25,7 +25,7 @@ public class JobsHandler extends BaseHandler {
 	private final static String STOP = "stop";
 	private final static String START = "start";
 
-	private static Job job = new Job();
+	private static RsyncJob job = new RsyncJob();
 
 	static void body(DynamicHtml<BodyModel> view, BodyModel model) {
 		final String stop = model.getQueryNoNull(STOP);
