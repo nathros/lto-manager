@@ -6,6 +6,7 @@ import com.sun.net.httpserver.HttpHandler;
 
 import lto.manager.web.handlers.files.FilesAddHandler;
 import lto.manager.web.handlers.files.FilesHandler;
+import lto.manager.web.handlers.jobs.JobsHandler;
 import lto.manager.web.handlers.sandpit.DatabaseTestHandler;
 import lto.manager.web.handlers.sandpit.SandpitHandler;
 import lto.manager.web.handlers.tapes.TapesCreateHandler;
@@ -28,6 +29,8 @@ public class Handlers {
 
 		ret.put(FilesHandler.PATH, new FilesHandler());
 		ret.put(FilesAddHandler.PATH, new FilesAddHandler());
+
+		ret.put(JobsHandler.PATH, new JobsHandler());
 
 		ret.put("/echoHeader", new EchoHeaderHandler());
 		ret.put("/echoGet", new EchoGetHandler());

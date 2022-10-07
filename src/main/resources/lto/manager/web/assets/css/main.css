@@ -93,6 +93,10 @@ a {
 	background-image: url('/assets/img/favico.svg');
 }
 
+.icon-jobs:before {
+	background-image: url('/assets/img/list-fill.svg');
+}
+
 .icon-admin:before {
 	background-image: url('/assets/img/person-fill.svg');
 }

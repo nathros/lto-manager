@@ -16,6 +16,6 @@ public class Main {
 				return;
 			}
 		}
-		System.out.println("Error: Missing mode param, options are " + WEB + " and " + GUI);
+		System.out.println("Error: Missing mode parameter, options are " + WEB + " and " + GUI);
 	}
 }

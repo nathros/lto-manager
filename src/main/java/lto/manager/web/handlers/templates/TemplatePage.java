@@ -7,6 +7,7 @@ import lto.manager.common.Main;
 import lto.manager.web.handlers.AdminHandler;
 import lto.manager.web.handlers.BaseHandler;
 import lto.manager.web.handlers.files.FilesHandler;
+import lto.manager.web.handlers.jobs.JobsHandler;
 import lto.manager.web.handlers.sandpit.SandpitHandler;
 import lto.manager.web.handlers.tapes.TapesHandler;
 import lto.manager.web.handlers.templates.TemplateHead.TemplateHeadModel;
@@ -18,6 +19,7 @@ public class TemplatePage {
 		Tapes,
 		Files,
 		Sandpit,
+		Jobs,
 		Missing
 	}
 
@@ -78,6 +80,12 @@ public class TemplatePage {
 										.a().dynamic(a -> a.attrHref(FilesHandler.PATH)
 											.attrClass("icon-folder" + (model.page == SelectedPage.Files ? selected : ""))
 											.text("Files"))
+										.__()
+									.__()
+									.li()
+										.a().dynamic(a -> a.attrHref(JobsHandler.PATH)
+											.attrClass("icon-jobs" + (model.page == SelectedPage.Jobs ? selected : ""))
+											.text("Jobs"))
 										.__()
 									.__()
 									.li().dynamic(li -> {

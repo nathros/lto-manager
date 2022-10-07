@@ -4,20 +4,15 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 
-import org.xmlet.htmlapifaster.EnumBorderType;
 import org.xmlet.htmlapifaster.EnumTypeButtonType;
 import org.xmlet.htmlapifaster.EnumTypeInputType;
 
 import com.sun.net.httpserver.HttpExchange;
 
 import htmlflow.DynamicHtml;
-import lto.manager.common.database.Database;
+import lto.manager.common.Util;
 import lto.manager.web.handlers.BaseHandler;
 import lto.manager.web.handlers.templates.TemplateHead.TemplateHeadModel;
 import lto.manager.web.handlers.templates.TemplatePage;
@@ -36,35 +31,33 @@ public class FilesAddHandler extends BaseHandler {
 		final String dir = model.getQueryNoNull(DIR);
 		final String tapeId = model.getQueryNoNull(TAPE_ID);
 
-		final List<File> allFiles = new ArrayList<File>();
-		if (!dir.equals("")) {
-			Queue<File> dirs = new LinkedList<File>();
-			dirs.add(new File(dir));
 
-			while (!dirs.isEmpty()) {
-			  for (File f : dirs.poll().listFiles()) {
-			    if (f.isDirectory()) {
-			      dirs.add(f);
-			    } else if (f.isFile()) {
-			      allFiles.add(f);
-			    }
-			  }
-			}
-
-			if (!tapeId.equals("")) {
-				try {
-					Database.addFilesToTape(Integer.valueOf(tapeId), allFiles);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		}
-
-
+		final List<File> workingDir = Util.getFilesListInDir(dir);
 
 		try {
 			view
 				.div()
+					.form()
+						.fieldset().dynamic(fieldset -> {
+							File currentDir = new File(dir);
+							if (dir.equals("")) currentDir = Util.getWorkingDir();
+
+							fieldset.label().text("DIR: " + currentDir.getAbsolutePath()).__().br().__();
+							fieldset.label().a().attrHref("?" + DIR + "=" + Util.encodeUrl(currentDir.getParent())).text("&cularr; UP").__().br().__();
+							fieldset.hr().__();
+
+							for (File f: workingDir) {
+								if (f.isDirectory()) {
+									String url = Util.encodeUrl(f.getAbsolutePath());
+									fieldset.b().a().attrHref("?" + DIR + "=" + url).text(f.getName()).__().__();
+								} else {
+									fieldset.span().text(f.getName()).__();
+								}
+								fieldset.br().__();
+							}
+							}).__()
+					.__()
+
 					.form()
 						.b().text("Directory: ").__()
 						.input().attrStyle("width:26rem").attrType(EnumTypeInputType.TEXT).attrName(DIR).dynamic(input -> input.attrValue(dir)).__()
@@ -73,24 +66,6 @@ public class FilesAddHandler extends BaseHandler {
 						.input().attrType(EnumTypeInputType.TEXT).attrName(TAPE_ID).dynamic(input -> input.attrValue(tapeId)).__()
 						.button().attrType(EnumTypeButtonType.SUBMIT).text("Submit").__()
 					.__()
-
-					.table().dynamic(table -> {
-						table.attrBorder(EnumBorderType._1).tr()
-							.th().text("Path").__()
-							.th().text("Size").__()
-						.__();
-						for (File f: allFiles) {
-							try {
-								table.tr()
-									.td().text(f.getAbsolutePath().substring(dir.length() + 1)).__()
-									.td().text(Files.size(f.toPath())).__()
-								.__();
-							} catch (IOException e) {
-								e.printStackTrace();
-							}
-						}
-
-					}).__()
 
 				.__(); // div
 		} catch (Exception e) {

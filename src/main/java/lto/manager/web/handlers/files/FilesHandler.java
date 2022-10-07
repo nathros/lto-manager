@@ -45,7 +45,7 @@ public class FilesHandler extends BaseHandler {
 			view
 				.div()
 					.a().attrHref(FilesAddHandler.PATH).text("Add files").__()
-					.p().text("files list").__()
+					.p().text("files list from tape ID").__()
 					.form().of(form -> {
 						form.input().attrType(EnumTypeInputType.TEXT).attrName(TAPE_ID).dynamic(input -> input.attrValue(tapeId)).__();
 						})
