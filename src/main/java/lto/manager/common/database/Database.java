@@ -67,7 +67,7 @@ public class Database {
 				createTables();
 			}
 			con.createStatement().executeUpdate("PRAGMA foreign_keys = ON;");
-			TableOptions.readAndSetAllOptions(con);
+			//TableOptions.createTable(con);
             return con;
 		} catch (Exception e1) {
 			e1.printStackTrace();

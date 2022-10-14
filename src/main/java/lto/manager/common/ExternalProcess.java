@@ -22,6 +22,8 @@ public abstract class ExternalProcess {
 		if (inProgress.get()) return false;
 		inProgress.set(true);
 
+		stdout.clear();
+		stderr.clear();
 		exitCode = null;
 		ProcessBuilder builder = new ProcessBuilder(commands);
 		process = builder.start();

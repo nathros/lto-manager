@@ -10,6 +10,7 @@ import java.util.Map;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
+import lto.manager.common.database.tables.TableOptions;
 import lto.manager.web.Options;
 import lto.manager.web.handlers.templates.TemplateInternalError;
 import lto.manager.web.handlers.templates.TemplateInternalError.TemplateInternalErrorModel;
@@ -36,8 +37,11 @@ public abstract class BaseHandler implements HttpHandler {
 
 	@Override
 	public void handle(HttpExchange he) throws IOException {
-		if (Options.logRequests) System.out.println("Request (" + String.format("%04d", count) + "): " + he.getRequestHeaders().getFirst("Host") + he.getRequestURI());
-		count++;
+		if (Options.getBool(TableOptions.INDEX_ENABLE_LOG_REQUESTS)) {
+			System.out.println("Request (" + String.format("%04d", count) + "): " + he.getRequestHeaders().getFirst("Host") + he.getRequestURI());
+			count++;
+		}
+
 		try {
 			this.requestHandle(he);
 		} catch (Exception e) {

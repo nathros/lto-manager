@@ -10,6 +10,7 @@ import org.xmlet.htmlapifaster.EnumTypeInputType;
 import com.sun.net.httpserver.HttpExchange;
 
 import htmlflow.DynamicHtml;
+import lto.manager.common.database.tables.TableOptions;
 import lto.manager.common.ltfs.ListTapeDevices;
 import lto.manager.common.ltfs.ListTapeDevices.TapeDevicesInfo;
 import lto.manager.web.Options;
@@ -26,7 +27,8 @@ public class AdminHandler extends BaseHandler {
 	private final static String LIST_DRIVES = "list-drives";
 
 	private final static String CHANGE_OPTIONS = "change-options";
-	private final static String ENABLE_REQUESTS = "enable-requests";
+	private final static String ENABLE_LOG_REQUESTS = "enable-requests";
+	private final static String ENABLE_LOG_EXTERNAL_PROCESS = "enable-ext-log";
 
 	private static ListTapeDevices devices = new ListTapeDevices();
 
@@ -39,12 +41,21 @@ public class AdminHandler extends BaseHandler {
 			} catch (Exception e) {}
 		}
 
-		if (model.getQueryNoNull(CHANGE_OPTIONS).equals(BodyModel.QUERY_ON)) {
-			String enableRequests = model.getQueryNoNull(ENABLE_REQUESTS);
-			if (enableRequests.equals(BodyModel.QUERY_ON)) Options.logRequests = true;
-			else Options.logRequests = false;
+		final String writeOptions = model.getQueryNoNull(CHANGE_OPTIONS);
+		if (writeOptions.equals(BodyModel.QUERY_ON)) {
+			String enableRequests = model.getQueryNoNull(ENABLE_LOG_REQUESTS);
+			String enableExtLog = model.getQueryNoNull(ENABLE_LOG_EXTERNAL_PROCESS);
+
+			if (enableRequests.equals(BodyModel.QUERY_ON)) Options.setBool(TableOptions.INDEX_ENABLE_LOG_REQUESTS, true);
+			else Options.setBool(TableOptions.INDEX_ENABLE_LOG_REQUESTS, false);
+
+			if (enableExtLog.equals(BodyModel.QUERY_ON)) Options.setBool(TableOptions.INDEX_ENABLE_LOG_EXTERNAL_PROCESS, true);
+			else Options.setBool(TableOptions.INDEX_ENABLE_LOG_EXTERNAL_PROCESS, false);
+
 			try {
-				if (!enableRequests.equals("")) Options.writeAll();
+				if (!writeOptions.equals("")) {
+					Options.writeAll();
+				}
 			} catch (Exception e) {}
 		}
 
@@ -80,11 +91,19 @@ public class AdminHandler extends BaseHandler {
 				.form()
 					.fieldset()
 						.legend().text("Options").__()
-						.label().attrFor(ENABLE_REQUESTS).text("Enable request logging").__()
-						.input().attrType(EnumTypeInputType.HIDDEN).attrName(CHANGE_OPTIONS).attrValue(BodyModel.QUERY_ON) .__()
+						.input().attrType(EnumTypeInputType.HIDDEN).attrName(CHANGE_OPTIONS).attrValue(BodyModel.QUERY_ON).__()
+
+						.label().attrFor(ENABLE_LOG_REQUESTS).text("Enable request logging").__()
 						.input().of(input -> {
-							input.attrType(EnumTypeInputType.CHECKBOX).attrName(ENABLE_REQUESTS).attrId(ENABLE_REQUESTS);
-							if (Options.logRequests) input.attrChecked(true);
+							input.attrType(EnumTypeInputType.CHECKBOX).attrName(ENABLE_LOG_REQUESTS).attrId(ENABLE_LOG_REQUESTS);
+							if (Options.getBool(TableOptions.INDEX_ENABLE_LOG_REQUESTS)) input.attrChecked(true);
+						}).__()
+						.br().__()
+
+						.label().attrFor(ENABLE_LOG_EXTERNAL_PROCESS).text("Enable external process logging").__()
+						.input().of(input -> {
+							input.attrType(EnumTypeInputType.CHECKBOX).attrName(ENABLE_LOG_EXTERNAL_PROCESS).attrId(ENABLE_LOG_EXTERNAL_PROCESS);
+							if (Options.getBool(TableOptions.INDEX_ENABLE_LOG_EXTERNAL_PROCESS)) input.attrChecked(true);
 						}).__()
 						.br().__()
 						.button().attrType(EnumTypeButtonType.SUBMIT).text("Submit").__()
