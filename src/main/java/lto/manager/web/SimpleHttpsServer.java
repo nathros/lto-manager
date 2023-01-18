@@ -73,7 +73,7 @@ public class SimpleHttpsServer {
 				}
 			});
 
-			System.out.println("HTTPS main server started at port: " + port);
+			System.out.println("HTTPS main server started at port: https://localhost:" + port);
 			for(Map.Entry<String, HttpHandler> entry : Handlers.handlers.entrySet()) {
 				String key = entry.getKey();
 			    HttpHandler value = entry.getValue();

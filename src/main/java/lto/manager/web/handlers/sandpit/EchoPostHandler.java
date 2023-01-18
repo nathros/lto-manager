@@ -1,4 +1,4 @@
-package lto.manager.web.handlers;
+package lto.manager.web.handlers.sandpit;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,7 +10,11 @@ import java.util.Map;
 
 import com.sun.net.httpserver.HttpExchange;
 
+import lto.manager.web.handlers.BaseHandler;
+
 public class EchoPostHandler extends BaseHandler {
+
+	public static final String PATH = "/echoPost";
 
 	@Override
 	public void requestHandle(HttpExchange he) throws IOException {
@@ -18,7 +22,7 @@ public class EchoPostHandler extends BaseHandler {
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		InputStreamReader isr = new InputStreamReader(he.getRequestBody(), "utf-8");
 		BufferedReader br = new BufferedReader(isr);
-		//String query = br.readLine();
+		String query = br.readLine();
 		//parseQuery(query, parameters);
 
 		// send response

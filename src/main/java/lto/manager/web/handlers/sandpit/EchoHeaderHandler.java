@@ -1,4 +1,4 @@
-package lto.manager.web.handlers;
+package lto.manager.web.handlers.sandpit;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -10,7 +10,11 @@ import java.util.Set;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 
+import lto.manager.web.handlers.BaseHandler;
+
 public class EchoHeaderHandler extends BaseHandler {
+
+	public static final String PATH = "/echoHeader";
 
 	@Override
 	public void requestHandle(HttpExchange he) throws IOException {

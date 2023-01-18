@@ -3,8 +3,8 @@ package lto.manager.web.handlers.templates;
 import org.xmlet.htmlapifaster.EnumRelType;
 
 import htmlflow.DynamicHtml;
-import lto.manager.web.Asset;
 import lto.manager.web.handlers.BaseHandler;
+import lto.manager.web.resource.Asset;
 
 public class TemplateHead {
 	public static class TemplateHeadModel {

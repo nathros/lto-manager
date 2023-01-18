@@ -23,34 +23,29 @@ a {
 	background-color: #080c10;
 	z-index: 10;
 }
-
 .header-root-container {
 	width: 100%;
 	height: 100%;
 	display: flex;
 	flex-direction: row-reverse;
 }
-
 .nav-area {
 	background-color: #101820;
 	min-width: 12rem;
 }
-
 .nav-area ul {
 	list-style: none;
 }
-
 .main-content {
 	position: relative;
-	overflow-x: hidden;
 	display: flex;
-	height: 200rem;
 }
-
 .main-content-wrapper {
-	*padding-top: 3rem;
+	padding: 0.5rem;
+	flex: 1;
+	height: calc(100vh - 4rem);
+	overflow-y: scroll;
 }
-
 #nav-toggle {
 	display: flex;
 	z-index: 20;
@@ -59,11 +54,10 @@ a {
 	align-items: center;
 	justify-content: center;
 }
-
 #nav-toggle a {
 	text-decoration: none;
 	color: rgba(255, 255, 255, 0.5);
-	transition: color 0.3s ease;
+	transition: 0.3s ease;
 	*display: inline-block;
 	display: flex;
 	align-items: center;
@@ -71,11 +65,11 @@ a {
     height: 100%;
     padding: 0.5rem;
 }
-
 #nav-toggle a:before {
 	content: '';
 	height: 2rem;
 	width: 2rem;
+	transition: 0.3s ease;
 	background-repeat: no-repeat;
 	background-position: center center;
 	display: inline-block;
@@ -84,36 +78,38 @@ a {
 	opacity: 0.5;
 	background-size: contain;
 }
-
 .icon-folder:before {
 	background-image: url('/assets/img/folder-fill.svg');
 }
-
 .icon-tape:before {
 	background-image: url('/assets/img/favico.svg');
 }
-
 .icon-jobs:before {
 	background-image: url('/assets/img/list-fill.svg');
 }
-
 .icon-admin:before {
 	background-image: url('/assets/img/person-fill.svg');
 }
-
 .icon-sandpit:before {
 	background-image: url('/assets/img/bucket-spade-fill.svg');
 }
-
-#nav-toggle a:hover:before {
+#nav-toggle a:hover:before,
+#nav-toggle a.selected:before  {
 	opacity: 1;
 }
-
-#nav-toggle a:hover {
-	color: rgba(255, 255, 255, 1);
-	background-color: rgba(255, 255, 255, 0.5);
+#nav-menu li a.selected {
+	background-color: rgb(0, 119, 161);
 }
-
+#nav-toggle a:hover,
+#nav-toggle a.selected {
+	color: rgba(255, 255, 255, 1);
+}
+#nav-toggle a:hover {
+	background-color: rgba(255, 255, 255, 0.1);
+}
+#nav-toggle a.selected:hover {
+	opacity: 0.75;
+}
 #nav-toggle input {
 	display: block;
 	width: 0;
@@ -124,7 +120,6 @@ a {
 	opacity: 0;
 	z-index: 2;
 }
-
 #nav-menu {
 	position: absolute;
 	width: 12rem;
@@ -139,7 +134,64 @@ a {
 	box-sizing: border-box;
 	overflow-x: clip;
 }
-
-#nav-menu li a.selected {
-	background-color: rgba(255, 0, 0, 0.5);
+.btn {
+	align-items: center;
+	background-clip: padding-box;
+	background-color: black;
+	border: 1px solid transparent;
+	border-radius: .25rem;
+	box-shadow: rgba(0, 0, 0, 0.02) 0 1px 3px 0;
+	box-sizing: border-box;
+	color: #fff;
+	cursor: pointer;
+	display: inline-flex;
+	justify-content: center;
+	line-height: 1.25;
+	margin: 0;
+	min-height: 3rem;
+	padding: calc(.875rem - 1px) calc(1.5rem - 1px);
+	position: relative;
+	text-decoration: none;
+	transition: all 250ms;
+	user-select: none;
+	-webkit-user-select: none;
+	touch-action: manipulation;
+	vertical-align: baseline;
+	width: auto;
+}
+.btn:hover,
+.btn:focus {
+	box-shadow: inset 100px 100px 0px 0px rgba(255, 255, 255, 0.3), rgba(0, 0, 0, 0.1) 0 4px 12px;
+}
+.btn:hover {
+	transform: translateY(-1px);
+}
+.btn:active {
+	background-color: rgb(32, 74, 135);
+	box-shadow: rgba(0, 0, 0, .06) 0 2px 4px;
+	transform: translateY(0);
+}
+.background-caution {
+	background-color: darkorange;
+}
+.background-active {
+	background-color: teal;
+}
+table {
+	border-collapse: collapse;
+	width: 100%;
+}
+table td,
+table th {
+	border: 1px solid #ddd;
+	padding: 8px;
+}
+table tr:nth-child(even) { background-color: #f2f2f2; }
+table tr:hover { background-color: #ddd; }
+table th {
+	padding-top: 12px;
+	padding-bottom: 12px;
+	text-align: left;
+	background-color: #04AA6D;
+	color: white;
 }

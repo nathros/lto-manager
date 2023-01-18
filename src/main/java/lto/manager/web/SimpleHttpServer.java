@@ -3,10 +3,12 @@ package lto.manager.web;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.Map;
+import java.util.logging.Level;
 
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 
+import lto.manager.common.log.Log;
 import lto.manager.web.handlers.HTTPSRedirectHandler;
 import lto.manager.web.handlers.Handlers;
 
@@ -16,7 +18,7 @@ public class SimpleHttpServer {
 	public void Start(int port, boolean redirectOnly) {
 		try {
 			server = HttpServer.create(new InetSocketAddress(port), 0);
-			System.out.println("HTTP " + (redirectOnly ? "redirect " : "") + "server started at port: " + port);
+			Log.l.info("HTTP " + (redirectOnly ? "redirect " : "") + "server started at port: http://localhost:" + port);
 
 			if (redirectOnly) {
 				server.createContext("/", new HTTPSRedirectHandler());
@@ -30,12 +32,12 @@ public class SimpleHttpServer {
 			server.setExecutor(null);
 			server.start();
 		} catch (IOException e) {
-			e.printStackTrace();
+			Log.l.log(Level.SEVERE, e.getMessage(), e);
 		}
 	}
 
 	public void Stop() {
 		server.stop(0);
-		System.out.println("HTTP server stopped");
+		Log.l.info("HTTP server stopped");
 	}
 }

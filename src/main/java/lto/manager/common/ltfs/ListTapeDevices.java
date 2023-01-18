@@ -8,7 +8,7 @@ import lto.manager.common.ExternalProcess;
 
 public class ListTapeDevices extends ExternalProcess {
 	private static final String[] cmd = {"bash", "list.sh" };
-	private List<TapeDevicesInfo> devices = null;
+	private List<TapeDevicesInfo> devices = new ArrayList<TapeDevicesInfo>();
 
 	public boolean start() throws IOException {
 		return start(cmd);
@@ -70,7 +70,7 @@ public class ListTapeDevices extends ExternalProcess {
 		public String getProductName() { return productName; }
 	}
 
-	public List<TapeDevicesInfo> getDevices() { return devices; }
+	public List<TapeDevicesInfo> getDevices() {	return devices;	}
 
 	@Override
 	public void onProcessExit() {

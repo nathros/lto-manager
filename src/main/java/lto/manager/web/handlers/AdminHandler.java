@@ -10,10 +10,10 @@ import org.xmlet.htmlapifaster.EnumTypeInputType;
 import com.sun.net.httpserver.HttpExchange;
 
 import htmlflow.DynamicHtml;
+import lto.manager.common.database.Options;
 import lto.manager.common.database.tables.TableOptions;
 import lto.manager.common.ltfs.ListTapeDevices;
 import lto.manager.common.ltfs.ListTapeDevices.TapeDevicesInfo;
-import lto.manager.web.Options;
 import lto.manager.web.handlers.templates.TemplateHead.TemplateHeadModel;
 import lto.manager.web.handlers.templates.TemplatePage;
 import lto.manager.web.handlers.templates.TemplatePage.SelectedPage;
@@ -51,12 +51,6 @@ public class AdminHandler extends BaseHandler {
 
 			if (enableExtLog.equals(BodyModel.QUERY_ON)) Options.setBool(TableOptions.INDEX_ENABLE_LOG_EXTERNAL_PROCESS, true);
 			else Options.setBool(TableOptions.INDEX_ENABLE_LOG_EXTERNAL_PROCESS, false);
-
-			try {
-				if (!writeOptions.equals("")) {
-					Options.writeAll();
-				}
-			} catch (Exception e) {}
 		}
 
 		view

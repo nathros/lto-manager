@@ -1,4 +1,4 @@
-package lto.manager.web;
+package lto.manager.web.resource;
 
 import lto.manager.web.handlers.AssetHandler;
 

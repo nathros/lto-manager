@@ -10,8 +10,8 @@ import java.util.Map;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
+import lto.manager.common.database.Options;
 import lto.manager.common.database.tables.TableOptions;
-import lto.manager.web.Options;
 import lto.manager.web.handlers.templates.TemplateInternalError;
 import lto.manager.web.handlers.templates.TemplateInternalError.TemplateInternalErrorModel;
 

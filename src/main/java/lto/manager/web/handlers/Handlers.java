@@ -8,6 +8,9 @@ import lto.manager.web.handlers.files.FilesAddHandler;
 import lto.manager.web.handlers.files.FilesHandler;
 import lto.manager.web.handlers.jobs.JobsHandler;
 import lto.manager.web.handlers.sandpit.DatabaseTestHandler;
+import lto.manager.web.handlers.sandpit.EchoGetHandler;
+import lto.manager.web.handlers.sandpit.EchoHeaderHandler;
+import lto.manager.web.handlers.sandpit.EchoPostHandler;
 import lto.manager.web.handlers.sandpit.SandpitHandler;
 import lto.manager.web.handlers.tapes.TapesCreateHandler;
 import lto.manager.web.handlers.tapes.TapesDeleteHandler;
@@ -32,9 +35,9 @@ public class Handlers {
 
 		ret.put(JobsHandler.PATH, new JobsHandler());
 
-		ret.put("/echoHeader", new EchoHeaderHandler());
-		ret.put("/echoGet", new EchoGetHandler());
-		ret.put("/echoPost", new EchoPostHandler());
+		ret.put(EchoHeaderHandler.PATH, new EchoHeaderHandler());
+		ret.put(EchoGetHandler.PATH, new EchoGetHandler());
+		ret.put(EchoGetHandler.PATH, new EchoPostHandler());
 
 		ret.put(SandpitHandler.PATH, new SandpitHandler());
 		ret.put(DatabaseTestHandler.PATH, new DatabaseTestHandler());

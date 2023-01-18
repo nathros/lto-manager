@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.util.Map.Entry;
 
 import com.healthmarketscience.sqlbuilder.BinaryCondition;
 import com.healthmarketscience.sqlbuilder.CreateTableQuery;
@@ -16,7 +15,7 @@ import com.healthmarketscience.sqlbuilder.dbspec.basic.DbSchema;
 import com.healthmarketscience.sqlbuilder.dbspec.basic.DbTable;
 
 import lto.manager.common.database.Database;
-import lto.manager.web.Options;
+import lto.manager.common.database.Options;
 
 public class TableOptions {
 	public static DbTable table = getSelf();
@@ -30,7 +29,7 @@ public class TableOptions {
 
 	public static final int INDEX_ENABLE_LOG_REQUESTS = 0;
 	public static final int INDEX_ENABLE_LOG_EXTERNAL_PROCESS = 1;
-	public static final int INDEX_TEST = 99;
+	public static final int INDEX_MAX = 2;
 
 	static DbTable getSelf() {
 		DbSchema schema = Database.schema;
@@ -51,10 +50,8 @@ public class TableOptions {
 		var statment = con.createStatement();
 
 		if (!statment.execute(q)) {
-			for (Entry<Integer, String> entry : Options.defaultValues.entrySet()) {
-			    Integer key = entry.getKey();
-			    String value = entry.getValue();
-			    if (!insertOption(con, key, value)) return false;
+			for (int i = 0; i < Options.defaultValues.length; i++) {
+				if (!insertOption(con, i, Options.defaultValues[i])) return false;
 			}
 		}
 

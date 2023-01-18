@@ -7,7 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import lto.manager.common.database.Options;
+import lto.manager.common.database.tables.TableOptions;
 
 public abstract class ExternalProcess {
 	protected List<String> stdout = new ArrayList<String>();
@@ -28,11 +32,17 @@ public abstract class ExternalProcess {
 		ProcessBuilder builder = new ProcessBuilder(commands);
 		process = builder.start();
 		service = Executors.newFixedThreadPool(2);
+		BufferedReader stdOutBuffer = new BufferedReader(new InputStreamReader(process.getInputStream()));
+		BufferedReader stdErrBuffer = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+		Semaphore semaphore = new Semaphore(2, true);
+		semaphore.drainPermits();
 
 		new Thread(() -> {
 			try {
 				process.waitFor();
 				exitCode = process.exitValue();
+				inProgress.set(false);
+				semaphore.acquire(2);
 				stop();
 				onProcessExit();
 			} catch (InterruptedException e) {
@@ -41,39 +51,55 @@ public abstract class ExternalProcess {
 		}).start();
 
 		service.submit(() -> { // stdout
-			BufferedReader lineReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-	        while (inProgress.get() && process.isAlive()) {
-	        	String tmp = null;
+			StringBuilder str = new StringBuilder();
+			while (true) {
 				try {
-					tmp = lineReader.readLine();
+					if (stdOutBuffer.ready()) {
+						char tmp = (char) stdOutBuffer.read();
+						if (tmp != '\n') str.append(tmp);
+						else {
+							String line = str.toString();
+							if (Options.getBool(TableOptions.INDEX_ENABLE_LOG_EXTERNAL_PROCESS))
+								System.out.println("stdout:" + line);
+							stdout.add(line);
+							str = new StringBuilder();
+						}
+					} else if (!inProgress.get()) {
+						break;
+					}
 				} catch (IOException e) {
 					e.printStackTrace();
 					break;
 				}
-				if (tmp != null) {
-					System.out.println("stdout:" + tmp);
-					stdout.add(tmp);
-					if (stdout.size() > 16) stdout.remove(0);
-				}
-	        }
+			}
+			semaphore.release();
+			if (Options.getBool(TableOptions.INDEX_ENABLE_LOG_EXTERNAL_PROCESS)) System.out.println("stdout: EXIT");
 	    });
 
 		service.submit(() -> { // stderr
-			BufferedReader lineReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-	        while (inProgress.get() && process.isAlive()) {
-	        	String tmp = null;
+			StringBuilder str = new StringBuilder();
+			while (true) {
 				try {
-					tmp = lineReader.readLine();
+					if (stdErrBuffer.ready()) {
+						char tmp = (char) stdErrBuffer.read();
+						if (tmp != '\n') str.append(tmp);
+						else {
+							String line = str.toString();
+							if (Options.getBool(TableOptions.INDEX_ENABLE_LOG_EXTERNAL_PROCESS))
+								System.out.println("stderr:" + line);
+							stdout.add(line);
+							str = new StringBuilder();
+						}
+					} else if (!inProgress.get()) {
+						break;
+					}
 				} catch (IOException e) {
 					e.printStackTrace();
 					break;
 				}
-				if (tmp != null) {
-					System.out.println("stderr:" + tmp);
-					stderr.add(tmp);
-					if (stdout.size() > 32) stdout.remove(0);
-				}
-	        }
+			}
+			semaphore.release();
+			if (Options.getBool(TableOptions.INDEX_ENABLE_LOG_EXTERNAL_PROCESS)) System.out.println("stderr: EXIT");
 	    });
 
 		return true;
