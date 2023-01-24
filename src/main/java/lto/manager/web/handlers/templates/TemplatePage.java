@@ -10,8 +10,8 @@ import lto.manager.web.handlers.files.FilesHandler;
 import lto.manager.web.handlers.jobs.JobsHandler;
 import lto.manager.web.handlers.sandpit.SandpitHandler;
 import lto.manager.web.handlers.tapes.TapesHandler;
-import lto.manager.web.handlers.templates.TemplateHead.TemplateHeadModel;
 import lto.manager.web.handlers.templates.models.BodyModel;
+import lto.manager.web.handlers.templates.models.TemplateHeadModel;
 
 public class TemplatePage {
 	public static enum SelectedPage {
@@ -41,6 +41,7 @@ public class TemplatePage {
 		}
 
 		public BodyModel getBodyModel() { return body; }
+		public TemplateHeadModel getHeadModel() { return head; }
 	}
 
 	public static DynamicHtml<TemplatePageModel> view = DynamicHtml.view(TemplatePage::template);
@@ -52,7 +53,7 @@ public class TemplatePage {
 		try {
 			view
 				.html().attrLang(BaseHandler.LANG_VALUE)
-					.dynamic(head -> viewTmp.addPartial(TemplateHead.view, TemplateHead.TemplateHeadModel.of(model.head.title)))
+				.dynamic(head -> viewTmp.addPartial(TemplateHead.view, model.getHeadModel()))
 					.body()
 						.header().attrClass("header-root")
 						.div().attrClass("header-root-container")

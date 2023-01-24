@@ -13,11 +13,11 @@ import com.sun.net.httpserver.HttpExchange;
 import htmlflow.DynamicHtml;
 import lto.manager.common.database.Database;
 import lto.manager.web.handlers.BaseHandler;
-import lto.manager.web.handlers.templates.TemplateHead.TemplateHeadModel;
 import lto.manager.web.handlers.templates.TemplatePage;
 import lto.manager.web.handlers.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.templates.TemplatePage.TemplatePageModel;
 import lto.manager.web.handlers.templates.models.BodyModel;
+import lto.manager.web.handlers.templates.models.TemplateHeadModel;
 
 public class TapesDeleteHandler extends BaseHandler {
 	public static final String PATH = "/tapes/delete";

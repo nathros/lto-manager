@@ -68,4 +68,16 @@ public class Util {
 		}
 	}
 
+	public static long getUsedMemory() {
+		var runtime = Runtime.getRuntime();
+		return runtime.totalMemory() - runtime.freeMemory();
+	}
+
+	public static long getJVMMaxMemory() {
+		return Runtime.getRuntime().maxMemory();
+	}
+
+	public static long getJVMAllocatedMemory() {
+		return Runtime.getRuntime().totalMemory();
+	}
 }

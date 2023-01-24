@@ -5,13 +5,14 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
-import lto.manager.common.database.Options;
-import lto.manager.common.database.tables.TableOptions;
+import lto.manager.common.log.Log;
 import lto.manager.web.handlers.templates.TemplateInternalError;
 import lto.manager.web.handlers.templates.TemplateInternalError.TemplateInternalErrorModel;
 
@@ -37,10 +38,8 @@ public abstract class BaseHandler implements HttpHandler {
 
 	@Override
 	public void handle(HttpExchange he) throws IOException {
-		if (Options.getBool(TableOptions.INDEX_ENABLE_LOG_REQUESTS)) {
-			System.out.println("Request (" + String.format("%04d", count) + "): " + he.getRequestHeaders().getFirst("Host") + he.getRequestURI());
-			count++;
-		}
+		Log.l.finest("Request (" + String.format("%04d", count) + "): " + he.getRequestHeaders().getFirst("Host")
+				+ he.getRequestURI());
 
 		try {
 			this.requestHandle(he);
@@ -67,7 +66,7 @@ public abstract class BaseHandler implements HttpHandler {
 		}
 	}
 
-	public static void parseQuery(String query, Map<String, String> parameters) {
+	public static void parseQuery(String query, Map<String, Object> parameters) {
 		if (query != null) {
 			String pairs[] = query.split("[&]");
 
@@ -88,6 +87,19 @@ public abstract class BaseHandler implements HttpHandler {
 
 				if (!parameters.containsKey(key)) {
 					parameters.put(key, value);
+				} else if (key != null) {
+					Object o = parameters.get(key);
+					if (o instanceof String) {
+						List<String> list = new ArrayList<String>();
+						list.add((String) o);
+						list.add(value);
+						parameters.put(key, list);
+					} else {
+						@SuppressWarnings("unchecked")
+						List<String> list = (List<String>) o;
+						list.add(value);
+
+					}
 				}
 			}
 		}

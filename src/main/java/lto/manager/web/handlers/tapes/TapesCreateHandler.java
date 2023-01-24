@@ -17,11 +17,11 @@ import lto.manager.common.database.tables.TableManufacturer.RecordManufacturer;
 import lto.manager.common.database.tables.TableTape.RecordTape;
 import lto.manager.common.database.tables.TableTapeType.RecordTapeType;
 import lto.manager.web.handlers.BaseHandler;
-import lto.manager.web.handlers.templates.TemplateHead.TemplateHeadModel;
 import lto.manager.web.handlers.templates.TemplatePage;
 import lto.manager.web.handlers.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.templates.TemplatePage.TemplatePageModel;
 import lto.manager.web.handlers.templates.models.BodyModel;
+import lto.manager.web.handlers.templates.models.TemplateHeadModel;
 
 public class TapesCreateHandler extends BaseHandler {
 	public static final String PATH = "/tapes/new";

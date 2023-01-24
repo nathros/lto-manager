@@ -10,15 +10,17 @@ import org.xmlet.htmlapifaster.EnumTypeInputType;
 import com.sun.net.httpserver.HttpExchange;
 
 import htmlflow.DynamicHtml;
+import lto.manager.common.Util;
 import lto.manager.common.database.Options;
 import lto.manager.common.database.tables.TableOptions;
 import lto.manager.common.ltfs.ListTapeDevices;
 import lto.manager.common.ltfs.ListTapeDevices.TapeDevicesInfo;
-import lto.manager.web.handlers.templates.TemplateHead.TemplateHeadModel;
 import lto.manager.web.handlers.templates.TemplatePage;
 import lto.manager.web.handlers.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.templates.TemplatePage.TemplatePageModel;
 import lto.manager.web.handlers.templates.models.BodyModel;
+import lto.manager.web.handlers.templates.models.TemplateHeadModel;
+import lto.manager.web.resource.Asset;
 
 public class AdminHandler extends BaseHandler {
 	public static final String PATH = "/admin";
@@ -55,6 +57,20 @@ public class AdminHandler extends BaseHandler {
 
 		view
 		.div().dynamic(div -> {
+			final int maxMemoryMB = (int) (Util.getJVMMaxMemory() / 1024 / 1024);
+			final int allocatedMB = (int) (Util.getJVMAllocatedMemory() / 1024 / 1024);
+			final int usedMemMB = (int) ((Util.getJVMAllocatedMemory() - Util.getUsedMemory()) / 1024 / 1024);
+
+			int p = (int) (((double)usedMemMB / (double)maxMemoryMB) * 100);
+			div
+				.p().text("AnalyticsHandler").__()
+				.p().text("JVM max memory: " + maxMemoryMB + "MB").__()
+				.p().text("JVM allocated memory: " + allocatedMB + "MB").__()
+				.p().text("JVM used memory: " + usedMemMB + "MB").__()
+				.p().text("percent used: " + p + "%").__()
+				.div().attrClass("pie animate no-round").attrStyle("--p:" + p + ";--c:orange;").text(p + "%").__()
+				.div().attrClass("pie animate").attrStyle("--p:66;--c:red;").text("66%-test").__()
+			.__(); // div
 			div
 				.form()
 					.input().attrType(EnumTypeInputType.HIDDEN).attrName(LIST_DRIVES).attrValue(BodyModel.QUERY_ON).__()
@@ -79,7 +95,6 @@ public class AdminHandler extends BaseHandler {
 					div.b().text("No devices found").__().br().__();
 				}
 			}
-
 			div.hr().__();
 			div
 				.form()
@@ -111,6 +126,7 @@ public class AdminHandler extends BaseHandler {
 	public void requestHandle(HttpExchange he) throws IOException {
 		try {
 			TemplateHeadModel thm = TemplateHeadModel.of("Admin");
+			thm.AddCSS(Asset.CSS_PIE);
 			TemplatePageModel tepm = TemplatePageModel.of(view, thm, SelectedPage.Admin, BodyModel.of(he, null));
 			String response = TemplatePage.view.render(tepm);
 

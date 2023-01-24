@@ -8,11 +8,11 @@ import com.sun.net.httpserver.HttpExchange;
 
 import htmlflow.DynamicHtml;
 import lto.manager.web.handlers.sandpit.DatabaseTestHandler;
-import lto.manager.web.handlers.templates.TemplateHead.TemplateHeadModel;
 import lto.manager.web.handlers.templates.TemplatePage;
 import lto.manager.web.handlers.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.templates.TemplatePage.TemplatePageModel;
 import lto.manager.web.handlers.templates.models.BodyModel;
+import lto.manager.web.handlers.templates.models.TemplateHeadModel;
 
 public class RootHandler extends BaseHandler {
 	public static final String PATH = "/";

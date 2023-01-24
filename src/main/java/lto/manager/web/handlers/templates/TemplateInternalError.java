@@ -12,6 +12,7 @@ import com.sun.net.httpserver.HttpExchange;
 
 import htmlflow.DynamicHtml;
 import lto.manager.web.handlers.BaseHandler;
+import lto.manager.web.handlers.templates.models.TemplateHeadModel;
 
 public class TemplateInternalError {
 	public static class TemplateInternalErrorModel {
@@ -62,7 +63,7 @@ public class TemplateInternalError {
 		final String style = "background-color:darkblue; color:white;";
 		view
 			.html().attrLang(BaseHandler.LANG_VALUE)
-				.dynamic(head -> view.addPartial(TemplateHead.view, TemplateHead.TemplateHeadModel.of("HTTP Status 500")))
+				.dynamic(head -> view.addPartial(TemplateHead.view, TemplateHeadModel.of("HTTP Status 500")))
 				.body()
 					.div().attrStyle("font-family:monospace")
 						.p().attrStyle("padding:1rem; font-weight:bold; font-size:1rem;" + style).text("HTTP Status 500 - Internal Error").__()
