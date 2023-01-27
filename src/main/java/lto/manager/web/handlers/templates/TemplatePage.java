@@ -11,7 +11,7 @@ import lto.manager.web.handlers.jobs.JobsHandler;
 import lto.manager.web.handlers.sandpit.SandpitHandler;
 import lto.manager.web.handlers.tapes.TapesHandler;
 import lto.manager.web.handlers.templates.models.BodyModel;
-import lto.manager.web.handlers.templates.models.TemplateHeadModel;
+import lto.manager.web.handlers.templates.models.HeadModel;
 
 public class TemplatePage {
 	public static enum SelectedPage {
@@ -25,23 +25,23 @@ public class TemplatePage {
 
 	public static class TemplatePageModel {
 		final DynamicHtml<BodyModel> dynamicHtml;
-		final TemplateHeadModel head;
+		final HeadModel head;
 		final SelectedPage page;
 		final BodyModel body;
 
-		private TemplatePageModel(DynamicHtml<BodyModel> dynamicHtml, TemplateHeadModel head, SelectedPage page, BodyModel body) {
+		private TemplatePageModel(DynamicHtml<BodyModel> dynamicHtml, HeadModel head, SelectedPage page, BodyModel body) {
 			this.dynamicHtml = dynamicHtml;
 			this.head = head;
 			this.page = page;
 			this.body = body;
 		}
 
-		public static TemplatePageModel of(DynamicHtml<BodyModel> dynamicHtml, TemplateHeadModel head, SelectedPage page, BodyModel body) {
+		public static TemplatePageModel of(DynamicHtml<BodyModel> dynamicHtml, HeadModel head, SelectedPage page, BodyModel body) {
 			return new TemplatePageModel(dynamicHtml, head, page, body);
 		}
 
 		public BodyModel getBodyModel() { return body; }
-		public TemplateHeadModel getHeadModel() { return head; }
+		public HeadModel getHeadModel() { return head; }
 	}
 
 	public static DynamicHtml<TemplatePageModel> view = DynamicHtml.view(TemplatePage::template);

@@ -21,7 +21,8 @@ import lto.manager.web.handlers.templates.TemplatePage;
 import lto.manager.web.handlers.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.templates.TemplatePage.TemplatePageModel;
 import lto.manager.web.handlers.templates.models.BodyModel;
-import lto.manager.web.handlers.templates.models.TemplateHeadModel;
+import lto.manager.web.handlers.templates.models.HeadModel;
+import lto.manager.web.resource.CSS;
 
 public class TapesCreateHandler extends BaseHandler {
 	public static final String PATH = "/tapes/new";
@@ -38,7 +39,6 @@ public class TapesCreateHandler extends BaseHandler {
 		String er = null;
 		boolean s = false;
 
-
 		final String barcode = model.getQueryNoNull(BARCODE);
 		final String serial = model.getQueryNoNull(SERIAL);
 		final String manu = model.getQueryNoNull(MANU);
@@ -46,7 +46,6 @@ public class TapesCreateHandler extends BaseHandler {
 
 		final int manuIndex = manu.equals("") ? -1 : Integer.valueOf(manu);
 		final int typeIndex = type.equals("") ? -1 : Integer.valueOf(type);
-
 
 		try {
 			m = Database.getAllTapeManufacturers();
@@ -76,7 +75,7 @@ public class TapesCreateHandler extends BaseHandler {
 			view
 				.div()
 					.form()
-						.b().text("LTO Tape Type: ").__()
+						.b().attrStyle("width:150px;display:inline-block").text("LTO Tape Type: ").__()
 						.select().attrName(TAPETYPE).dynamic(select -> {
 							select.option().attrValue("").attrDisabled(true).attrHidden(true).attrSelected(true).text("Select").__();
 							for (RecordTapeType item: typesList) {
@@ -88,7 +87,7 @@ public class TapesCreateHandler extends BaseHandler {
 							}
 						}).__().br().__()
 
-						.b().text("LTO Manufacturer: ").__()
+						.b().attrStyle("width:150px;display:inline-block").text("LTO Manufacturer: ").__()
 						.select().attrName(MANU).dynamic(select -> {
 							select.option().attrValue("").attrDisabled(true).attrHidden(true).attrSelected(true).text("Select").__();
 							for (RecordManufacturer item: manuList) {
@@ -100,13 +99,13 @@ public class TapesCreateHandler extends BaseHandler {
 							}
 						}).__().br().__()
 
-						.b().text("Serial Number: ").__()
+						.b().attrStyle("width:150px;display:inline-block").text("Serial Number: ").__()
 						.input().attrType(EnumTypeInputType.TEXT).attrName(SERIAL).dynamic(input -> input.attrValue(serial)).__().br().__()
 
-						.b().text("Barcode: ").__()
+						.b().attrStyle("width:150px;display:inline-block").text("Barcode: ").__()
 						.input().attrType(EnumTypeInputType.TEXT).attrName(BARCODE).dynamic(input -> input.attrValue(barcode)).__().br().__()
 
-						.button().attrType(EnumTypeButtonType.SUBMIT).text("Submit").__()
+						.button().attrClass(CSS.BUTTON).attrType(EnumTypeButtonType.SUBMIT).text("Submit").__()
 
 						.p().dynamic(p -> {
 							if (model.hasQuery()) {
@@ -128,7 +127,7 @@ public class TapesCreateHandler extends BaseHandler {
 	@Override
 	public void requestHandle(HttpExchange he) throws IOException, SQLException {
 		try {
-			TemplateHeadModel thm = TemplateHeadModel.of("Tapes");
+			HeadModel thm = HeadModel.of("Tapes");
 			TemplatePageModel tepm = TemplatePageModel.of(view, thm, SelectedPage.Tapes, BodyModel.of(he, null));
 			String response = TemplatePage.view.render(tepm);
 

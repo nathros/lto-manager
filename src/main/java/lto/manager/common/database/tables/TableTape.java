@@ -36,7 +36,7 @@ public class TableTape {
 	public static final String COLUMN_NAME_SERIAL = "serial";
 	public static final String COLUMN_NAME_MANUFACTURER = TableManufacturer.COLUMN_NAME_ID;
 	public static final String COLUMN_NAME_TOTAL_SPACE = "bytes_total";
-	public static final String COLUMN_NAME_SPACE_REMAINING = "bytes_remaining";
+	public static final String COLUMN_NAME_SPACE_USED = "bytes_used";
 	public static final String COLUMN_NAME_DATE_ADDED = "date_added";
 
 	public static final int COLUMN_INDEX_ID = 0;
@@ -55,31 +55,31 @@ public class TableTape {
 		private String barcode;
 		private String serial;
 		private int totalSpace;
-		private int remainingSpace;
+		private int usedSpace;
 		private LocalDateTime dateAdded;
 
 		public RecordTape(int id, RecordManufacturer manufacturer, RecordTapeType type, String barcode,
-				String serial, int totalSpace, int remainingSpace, LocalDateTime dateAdded) {
+				String serial, int totalSpace, int usedSpace, LocalDateTime dateAdded) {
 			this.id = id;
 			this.manufacturer = manufacturer;
 			this.type = type;
 			this.barcode = barcode;
 			this.serial = serial;
 			this.totalSpace = totalSpace;
-			this.remainingSpace = remainingSpace;
+			this.usedSpace = usedSpace;
 			this.dateAdded = dateAdded;
 		}
 
 		public static RecordTape of(int id, RecordManufacturer manufacturer, RecordTapeType type, String barcode,
-				String serial, int totalSpace, int remainingSpace, LocalDateTime dateAdded) {
-			return new RecordTape(id, manufacturer, type, barcode, serial, totalSpace, remainingSpace, dateAdded);
+				String serial, int totalSpace, int usedSpace, LocalDateTime dateAdded) {
+			return new RecordTape(id, manufacturer, type, barcode, serial, totalSpace, usedSpace, dateAdded);
 		}
 
 		public static RecordTape of(int id, int manufacturerID, int typeID, String barcode,
-				String serial, int totalSpace, int remainingSpace, LocalDateTime dateAdded) {
+				String serial, int totalSpace, int usedSpace, LocalDateTime dateAdded) {
 			RecordManufacturer rm = RecordManufacturer.of(manufacturerID, "");
 			RecordTapeType t = RecordTapeType.of(typeID, "");
-			return new RecordTape(id, rm, t, barcode, serial, totalSpace, remainingSpace, dateAdded);
+			return new RecordTape(id, rm, t, barcode, serial, totalSpace, usedSpace, dateAdded);
 		}
 
 		public int getID() { return id; }
@@ -93,9 +93,11 @@ public class TableTape {
 		public String getSerial() { return serial; }
 		public void setTapeType(String serial) { this.serial = serial; }
 		public int getTotalSpace() { return totalSpace; }
+		public float getTotalSpaceTB() { return (float) totalSpace / (1024 * 1024 * 1024); }
 		public void setTotalSpace(int totalSpace) { this.totalSpace = totalSpace; }
-		public int getRemainingSpace() { return remainingSpace; }
-		public void setRemainingSpace(int remainingSpace) { this.remainingSpace = remainingSpace; }
+		public int getUsedSpace() { return usedSpace; }
+		public float getUsedSpaceTB() { return (float) usedSpace / (1024 * 1024 * 1024); }
+		public void setUsedSpace(int remainingSpace) { this.usedSpace = remainingSpace; }
 		public LocalDateTime getDateAdded() { return dateAdded; }
 		public void setDateAdded(LocalDateTime dateAdded) { this.dateAdded = dateAdded; }
 	}
@@ -126,7 +128,7 @@ public class TableTape {
 		table.foreignKey(TableManufacturer.COLUMN_NAME_ID, columns, tableTapeType, columnsRef);
 
 		table.addColumn(COLUMN_NAME_TOTAL_SPACE, Types.INTEGER, null);
-		table.addColumn(COLUMN_NAME_SPACE_REMAINING, Types.INTEGER, null);
+		table.addColumn(COLUMN_NAME_SPACE_USED, Types.INTEGER, null);
 		table.addColumn(COLUMN_NAME_DATE_ADDED, Types.TIME, null);
 
 		manufacturerJoin = Database.spec.addJoin(null, TABLE_NAME, null, TableManufacturer.TABLE_NAME, TableManufacturer.COLUMN_NAME_ID);
@@ -157,7 +159,7 @@ public class TableTape {
 		iq.addColumn(table.getColumns().get(COLUMN_INDEX_SERIAL), newTape.getSerial());
 		iq.addColumn(table.getColumns().get(COLUMN_INDEX_MANUFACTURER), newTape.getManufacturer().getID());
 		iq.addColumn(table.getColumns().get(COLUMN_INDEX_TOTAL_SPACE), newTape.getTotalSpace());
-		iq.addColumn(table.getColumns().get(COLUMN_INDEX_SPACE_REMAINING), newTape.getRemainingSpace());
+		iq.addColumn(table.getColumns().get(COLUMN_INDEX_SPACE_REMAINING), newTape.getUsedSpace());
 		iq.addColumn(table.getColumns().get(COLUMN_INDEX_DATE_ADDED), newTape.getDateAdded());
 
 		String sql = iq.validate().toString();
@@ -212,7 +214,7 @@ public class TableTape {
 			String barcode = result.getString(COLUMN_NAME_BARCODE);
 			String serial = result.getString(COLUMN_NAME_SERIAL);
 			int space = result.getInt(COLUMN_NAME_TOTAL_SPACE);
-			int left = result.getInt(COLUMN_NAME_SPACE_REMAINING);
+			int left = result.getInt(COLUMN_NAME_SPACE_USED);
 			//Time time = result.getTime(COLUMN_NAME_DATE_ADDED);
 			tape = RecordTape.of(i, rm, tt, barcode, serial, space, left, null);
 		}
@@ -249,7 +251,7 @@ public class TableTape {
 			String barcode = result.getString(COLUMN_NAME_BARCODE);
 			String serial = result.getString(COLUMN_NAME_SERIAL);
 			int space = result.getInt(COLUMN_NAME_TOTAL_SPACE);
-			int left = result.getInt(COLUMN_NAME_SPACE_REMAINING);
+			int left = result.getInt(COLUMN_NAME_SPACE_USED);
 			//Time time = result.getTime(COLUMN_NAME_DATE_ADDED);
 			tape.add(RecordTape.of(i, rm, tt, barcode, serial, space, left, null));
 		}

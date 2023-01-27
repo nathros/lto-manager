@@ -13,7 +13,7 @@ import lto.manager.web.handlers.templates.TemplatePage;
 import lto.manager.web.handlers.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.templates.TemplatePage.TemplatePageModel;
 import lto.manager.web.handlers.templates.models.BodyModel;
-import lto.manager.web.handlers.templates.models.TemplateHeadModel;
+import lto.manager.web.handlers.templates.models.HeadModel;
 
 public class DatabaseTestHandler extends BaseHandler {
 	public static final String PATH = "/sandpit/database";
@@ -34,7 +34,7 @@ public class DatabaseTestHandler extends BaseHandler {
 
 	@Override
 	public void requestHandle(HttpExchange he) throws Exception {
-		TemplateHeadModel thm = TemplateHeadModel.of("Database Test");
+		HeadModel thm = HeadModel.of("Database Test");
 		TemplatePageModel tepm = TemplatePageModel.of(view, thm, SelectedPage.Sandpit, BodyModel.of(he, null));
 		String response = TemplatePage.view.render(tepm);
 

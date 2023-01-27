@@ -22,24 +22,6 @@ public class Util {
 			ret.add(f);
 		}
 		return ret;
-
-	}
-
-	public static List<File> getFilesListInDirRecursive(String path) {
-		List<File> ret  = new ArrayList<File>();
-		if ((null == path) || (path.equals(""))) {
-			path = getWorkingDir().getAbsolutePath();
-		}
-
-		File dir = new File(path);
-		for (File f: dir.listFiles()) {
-			ret.add(f);
-			if (f.isDirectory()) {
-				List<File> list = getFilesListInDirRecursive(f.getAbsolutePath());
-				ret.addAll(list);
-			}
-		}
-		return ret;
 	}
 
 	public static File getWorkingDir() {

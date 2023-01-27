@@ -4,13 +4,13 @@ import org.xmlet.htmlapifaster.EnumRelType;
 
 import htmlflow.DynamicHtml;
 import lto.manager.web.handlers.BaseHandler;
-import lto.manager.web.handlers.templates.models.TemplateHeadModel;
+import lto.manager.web.handlers.templates.models.HeadModel;
 import lto.manager.web.resource.Asset;
 
 public class TemplateHead {
-	public static DynamicHtml<TemplateHeadModel> view = DynamicHtml.view(TemplateHead::template);
+	public static DynamicHtml<HeadModel> view = DynamicHtml.view(TemplateHead::template);
 
-	static void template(DynamicHtml<TemplateHeadModel> view, TemplateHeadModel model) {
+	static void template(DynamicHtml<HeadModel> view, HeadModel model) {
 		try {
 			view
 				.defineRoot()

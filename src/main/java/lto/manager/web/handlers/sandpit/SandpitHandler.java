@@ -12,7 +12,7 @@ import lto.manager.web.handlers.templates.TemplatePage;
 import lto.manager.web.handlers.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.templates.TemplatePage.TemplatePageModel;
 import lto.manager.web.handlers.templates.models.BodyModel;
-import lto.manager.web.handlers.templates.models.TemplateHeadModel;
+import lto.manager.web.handlers.templates.models.HeadModel;
 import lto.manager.web.resource.CSS;
 
 public class SandpitHandler extends BaseHandler {
@@ -31,7 +31,7 @@ public class SandpitHandler extends BaseHandler {
 
 	@Override
 	public void requestHandle(HttpExchange he) throws IOException {
-		TemplateHeadModel thm = TemplateHeadModel.of("Sandpit");
+		HeadModel thm = HeadModel.of("Sandpit");
 		TemplatePageModel tepm = TemplatePageModel.of(view, thm, SelectedPage.Sandpit, BodyModel.of(he, null));
 		String response = TemplatePage.view.render(tepm);
 

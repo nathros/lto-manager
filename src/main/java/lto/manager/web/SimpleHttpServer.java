@@ -33,6 +33,7 @@ public class SimpleHttpServer {
 			server.start();
 		} catch (IOException e) {
 			Log.l.log(Level.SEVERE, e.getMessage(), e);
+			System.exit(-1);
 		}
 	}
 

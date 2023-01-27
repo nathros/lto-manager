@@ -17,7 +17,7 @@ import lto.manager.web.handlers.templates.TemplatePage;
 import lto.manager.web.handlers.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.templates.TemplatePage.TemplatePageModel;
 import lto.manager.web.handlers.templates.models.BodyModel;
-import lto.manager.web.handlers.templates.models.TemplateHeadModel;
+import lto.manager.web.handlers.templates.models.HeadModel;
 
 public class TapesDeleteHandler extends BaseHandler {
 	public static final String PATH = "/tapes/delete";
@@ -73,7 +73,7 @@ public class TapesDeleteHandler extends BaseHandler {
 	@Override
 	public void requestHandle(HttpExchange he) throws IOException, SQLException {
 		try {
-			TemplateHeadModel thm = TemplateHeadModel.of("Tape Delete");
+			HeadModel thm = HeadModel.of("Tape Delete");
 			TemplatePageModel tepm = TemplatePageModel.of(view, thm, SelectedPage.Tapes, BodyModel.of(he, null));
 			String response = TemplatePage.view.render(tepm);
 

@@ -4,17 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class TemplateHeadModel {
+public class HeadModel {
 	final String title;
 	final List<String> extraStylesList = new ArrayList<String>();
 	final List<String> extraScriptsList = new ArrayList<String>();
 
-	private TemplateHeadModel(final String title) {
+	private HeadModel(final String title) {
 		this.title = title;
 	}
 
-	public static TemplateHeadModel of(final String title) {
-		return new TemplateHeadModel(title);
+	public static HeadModel of(final String title) {
+		return new HeadModel(title);
 	}
 
 	public String getTitle() {

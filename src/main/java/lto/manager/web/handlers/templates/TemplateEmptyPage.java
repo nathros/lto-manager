@@ -2,19 +2,19 @@ package lto.manager.web.handlers.templates;
 
 import htmlflow.DynamicHtml;
 import lto.manager.web.handlers.BaseHandler;
-import lto.manager.web.handlers.templates.models.TemplateHeadModel;
+import lto.manager.web.handlers.templates.models.HeadModel;
 
 public class TemplateEmptyPage {
 	public static class TemplateEmptyPageModel {
 		final DynamicHtml<?> dynamicHtml;
-		final TemplateHeadModel head;
+		final HeadModel head;
 
-		private TemplateEmptyPageModel(DynamicHtml<?> dynamicHtml, TemplateHeadModel head) {
+		private TemplateEmptyPageModel(DynamicHtml<?> dynamicHtml, HeadModel head) {
 			this.dynamicHtml = dynamicHtml;
 			this.head = head;
 		}
 
-		public static TemplateEmptyPageModel of(DynamicHtml<?> dynamicHtml, TemplateHeadModel head) {
+		public static TemplateEmptyPageModel of(DynamicHtml<?> dynamicHtml, HeadModel head) {
 			return new TemplateEmptyPageModel(dynamicHtml, head);
 		}
 	}
@@ -25,7 +25,7 @@ public class TemplateEmptyPage {
 		try {
 			view
 				.html().attrLang(BaseHandler.LANG_VALUE)
-					.dynamic(head -> view.addPartial(TemplateHead.view, TemplateHeadModel.of(model.head.getTitle())))
+					.dynamic(head -> view.addPartial(TemplateHead.view, HeadModel.of(model.head.getTitle())))
 					.body()
 						.dynamic(div -> view.addPartial(model.dynamicHtml, null))
 					.__() // body

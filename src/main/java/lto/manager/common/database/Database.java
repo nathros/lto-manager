@@ -19,6 +19,7 @@ import lto.manager.common.database.tables.TableTape.RecordTape;
 import lto.manager.common.database.tables.TableTapeType;
 import lto.manager.common.database.tables.TableTapeType.RecordTapeType;
 import lto.manager.common.database.tables.TableVersion;
+import lto.manager.common.log.Log;
 
 public class Database {
 	public static Connection connection;
@@ -64,17 +65,19 @@ public class Database {
 			Connection con = DriverManager.getConnection(url);
 			connection = con;
 			if (newDatabase) {
+				Log.l.info("Database does not exist, creating new");
 				createTables();
 			}
 			con.createStatement().executeUpdate("PRAGMA foreign_keys = ON;");
 			//TableOptions.createTable(con);
+			Log.l.info("Successfully opened database: " + fileName);
             return con;
 		} catch (Exception e1) {
+			Log.l.severe("Failed to open database: " + fileName);
 			e1.printStackTrace();
 		}
 		return null;
 	}
-
 
 	public static boolean addTape(RecordTape newTape) throws SQLException {
 		return TableTape.addTape(connection, newTape);

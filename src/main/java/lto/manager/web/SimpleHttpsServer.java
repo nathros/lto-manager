@@ -83,16 +83,22 @@ public class SimpleHttpsServer {
 			server.start();
 		} catch (IOException e) {
 			e.printStackTrace();
+			System.exit(-1);
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
+			System.exit(-1);
 		} catch (KeyStoreException e) {
 			e.printStackTrace();
+			System.exit(-1);
 		} catch (CertificateException e) {
 			e.printStackTrace();
+			System.exit(-1);
 		} catch (KeyManagementException e) {
 			e.printStackTrace();
+			System.exit(-1);
 		} catch (UnrecoverableKeyException e) {
 			e.printStackTrace();
+			System.exit(-1);
 		}
 	}
 

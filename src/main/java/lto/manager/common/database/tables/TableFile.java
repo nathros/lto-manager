@@ -28,15 +28,19 @@ public class TableFile {
 	public static final String COLUMN_NAME_FILE_NAME = "file_name";
 	public static final String COLUMN_NAME_FILE_PATH = "file_path";
 	public static final String COLUMN_NAME_FILE_SIZE = "file_size";
-	public static final String COLUMN_NAME_FILE_DATE = "file_created";
-	public static final String COLUMN_NAME_FILE_TAPE_LOC = "file_tape_location";
+	public static final String COLUMN_NAME_FILE_DATE_CREATE = "file_created";
+	public static final String COLUMN_NAME_FILE_DATE_MODIFY = "file_modified";
+	public static final String COLUMN_NAME_FILE_TAPE_LOC = "file_tape_id";
+	public static final String COLUMN_NAME_FILE_CRC32 = "file_crc32";
 
 	public static final int COLUMN_INDEX_ID = 0;
 	public static final int COLUMN_INDEX_FILE_NAME = 1;
 	public static final int COLUMN_INDEX_FILE_PATH = 2;
 	public static final int COLUMN_INDEX_FILE_SIZE = 3;
-	public static final int COLUMN_INDEX_FILE_DATE = 4;
-	public static final int COLUMN_INDEX_FILE_TAPE_LOC = 5;
+	public static final int COLUMN_INDEX_FILE_DATE_CREATE = 4;
+	public static final int COLUMN_INDEX_FILE_DATE_MODFIY = 5;
+	public static final int COLUMN_INDEX_FILE_TAPE_LOC = 6;
+	public static final int COLUMN_INDEX_FILE_CRC32 = 7;
 
 	public static class RecordFile {
 		private int id;
@@ -44,19 +48,23 @@ public class TableFile {
 		private String filePath;
 		private int size;
 		private LocalDateTime created;
+		private LocalDateTime modified;
 		private int tapeID;
+		private int crc32;
 
-		public RecordFile(int id, String fileName, String filePath, int size, LocalDateTime created, int tapeID) {
+		public RecordFile(int id, String fileName, String filePath, int size, LocalDateTime created, LocalDateTime modified, int tapeID, int crc32) {
 			this.id = id;
 			this.fileName = fileName;
 			this.filePath = filePath;
 			this.size = size;
 			this.created = created;
+			this.modified = modified;
 			this.tapeID = tapeID;
+			this.crc32 = crc32;
 		}
 
-		public static RecordFile of(int id, String fileName, String filePath, int size, LocalDateTime created, int tapeID) {
-			return new RecordFile(id, fileName, filePath, size, created, tapeID);
+		public static RecordFile of(int id, String fileName, String filePath, int size, LocalDateTime created, LocalDateTime modified, int tapeID, int crc32) {
+			return new RecordFile(id, fileName, filePath, size, created, modified, tapeID, crc32);
 		}
 
 		public int getID() { return id;	}
@@ -69,8 +77,13 @@ public class TableFile {
 		public void setFileSize(int size) { this.size = size; }
 		public LocalDateTime getCreatedDateTime() { return created;	}
 		public void setCreatedDateTime(LocalDateTime created) { this.created = created; }
+		public LocalDateTime getModifiedDateTime() { return modified;	}
+		public void setModifiedDateTime(LocalDateTime modified) { this.modified = modified; }
 		public int getTapeID() { return tapeID;	}
 		public void setTapeID(int tapeID) { this.tapeID = tapeID; }
+		public int getCRC32() { return crc32; }
+		public void setCRC32(int crc32) { this.crc32 = crc32; }
+		public String getCRC32StrHex() { return Integer.toHexString(crc32); }
 	}
 
 	static DbTable getSelf() {
@@ -84,16 +97,19 @@ public class TableFile {
 
 		String key[] = new String[] { COLUMN_NAME_ID};
 		table.primaryKey(COLUMN_NAME_ID, key);
-		table.addColumn(COLUMN_NAME_FILE_NAME, Types.VARCHAR, 128);
+		table.addColumn(COLUMN_NAME_FILE_NAME, Types.VARCHAR, 256);
 		table.addColumn(COLUMN_NAME_FILE_PATH, Types.VARCHAR, 256);
 		table.addColumn(COLUMN_NAME_FILE_SIZE, Types.INTEGER, null);
-		table.addColumn(COLUMN_NAME_FILE_DATE, Types.TIMESTAMP, null);
+		table.addColumn(COLUMN_NAME_FILE_DATE_CREATE, Types.TIMESTAMP, null);
+		table.addColumn(COLUMN_NAME_FILE_DATE_MODIFY, Types.TIMESTAMP, null);
 
 		DbColumn tapeTypeForegnColumn = table.addColumn(COLUMN_NAME_FILE_TAPE_LOC, Types.INTEGER, null);
 		DbColumn columns[] = new DbColumn[] { tapeTypeForegnColumn};
 		DbTable tableTape =  TableTape.table;
 		DbColumn columnsRef[] = new DbColumn[] { tableTape.getColumns().get(TableTape.COLUMN_INDEX_ID)};
 		table.foreignKey(TableTape.COLUMN_NAME_ID, columns, tableTape, columnsRef);
+
+		table.addColumn(COLUMN_NAME_FILE_CRC32, Types.INTEGER, null);
 		return table;
 	}
 
@@ -115,13 +131,13 @@ public class TableFile {
 
 		for (File f: files) {
 			InsertQuery iq = new InsertQuery(table);
-
 			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_NAME), f.getName());
 			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_PATH), f.getPath());
 			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_SIZE), Files.size(f.toPath()));
-			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_DATE), "");
+			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_DATE_CREATE), "");
+			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_DATE_MODFIY), "");
 			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_TAPE_LOC), tapeID);
-
+			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_CRC32), 0);
 			String sql = iq.validate().toString();
 			if (statment.execute(sql)) {
 				return false;

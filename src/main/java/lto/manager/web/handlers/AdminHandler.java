@@ -19,7 +19,7 @@ import lto.manager.web.handlers.templates.TemplatePage;
 import lto.manager.web.handlers.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.templates.TemplatePage.TemplatePageModel;
 import lto.manager.web.handlers.templates.models.BodyModel;
-import lto.manager.web.handlers.templates.models.TemplateHeadModel;
+import lto.manager.web.handlers.templates.models.HeadModel;
 import lto.manager.web.resource.Asset;
 
 public class AdminHandler extends BaseHandler {
@@ -125,7 +125,7 @@ public class AdminHandler extends BaseHandler {
 	@Override
 	public void requestHandle(HttpExchange he) throws IOException {
 		try {
-			TemplateHeadModel thm = TemplateHeadModel.of("Admin");
+			HeadModel thm = HeadModel.of("Admin");
 			thm.AddCSS(Asset.CSS_PIE);
 			TemplatePageModel tepm = TemplatePageModel.of(view, thm, SelectedPage.Admin, BodyModel.of(he, null));
 			String response = TemplatePage.view.render(tepm);

@@ -19,7 +19,8 @@ import lto.manager.web.handlers.templates.TemplatePage;
 import lto.manager.web.handlers.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.templates.TemplatePage.TemplatePageModel;
 import lto.manager.web.handlers.templates.models.BodyModel;
-import lto.manager.web.handlers.templates.models.TemplateHeadModel;
+import lto.manager.web.handlers.templates.models.HeadModel;
+import lto.manager.web.resource.CSS;
 
 public class TapesHandler extends BaseHandler {
 	public static final String PATH = "/tapes";
@@ -38,7 +39,7 @@ public class TapesHandler extends BaseHandler {
 
 		view
 			.div()
-				.a().attrHref(TapesCreateHandler.PATH).text("Add New Tape").__()
+				.a().attrClass(CSS.BUTTON).attrHref(TapesCreateHandler.PATH).text("Add New Tape").__()
 				.table().dynamic(table -> {
 					table.attrBorder(EnumBorderType._1).tr()
 						.th().text("Tape ID").__()
@@ -46,6 +47,9 @@ public class TapesHandler extends BaseHandler {
 						.th().text("Type").__()
 						.th().text("Serial").__()
 						.th().text("Manufacturer").__()
+						.th().text("Size (TB)").__()
+						.th().text("Space Used (TB)").__()
+						.th().text("Action").__()
 					.__();
 					for (RecordTape item : tapes) {
 						table.tr()
@@ -54,8 +58,12 @@ public class TapesHandler extends BaseHandler {
 							.td().text(item.getTapeType().getType()).__()
 							.td().text(item.getSerial()).__()
 							.td().text(item.getManufacturer().getManufacturer()).__()
-							.td().a().attrHref(TapesDeleteHandler.PATH + "?" + TapesDeleteHandler.ID + "=" + item.getID()).text("Delete").__().__()
-							.td().a().attrHref(FilesHandler.PATH + "?" + FilesHandler.TAPE_ID + "=" + item.getID()).text("Show Files").__()
+							.td().text(item.getTotalSpaceTB()).__()
+							.td().text(item.getUsedSpaceTB()).__()
+							.td()
+								.a().attrClass(CSS.BUTTON + CSS.BACKGROUND_CAUTION).attrHref(TapesDeleteHandler.PATH + "?" + TapesDeleteHandler.ID + "=" + item.getID()).text("Delete").__()
+								.a().attrClass(CSS.BUTTON).attrHref(FilesHandler.PATH + "?" + FilesHandler.TAPE_ID + "=" + item.getID()).text("Show Files")
+							.__()
 						.__();
 					}
 				}).__()
@@ -66,7 +74,7 @@ public class TapesHandler extends BaseHandler {
 	@Override
 	public void requestHandle(HttpExchange he) throws IOException {
 		try {
-			TemplateHeadModel thm = TemplateHeadModel.of("Tapes");
+			HeadModel thm = HeadModel.of("Tapes");
 			TemplatePageModel tepm = TemplatePageModel.of(view, thm, SelectedPage.Tapes, BodyModel.of(he, null));
 			String response = TemplatePage.view.render(tepm);
 

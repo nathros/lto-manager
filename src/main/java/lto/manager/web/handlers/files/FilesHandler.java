@@ -20,7 +20,8 @@ import lto.manager.web.handlers.templates.TemplatePage;
 import lto.manager.web.handlers.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.templates.TemplatePage.TemplatePageModel;
 import lto.manager.web.handlers.templates.models.BodyModel;
-import lto.manager.web.handlers.templates.models.TemplateHeadModel;
+import lto.manager.web.handlers.templates.models.HeadModel;
+import lto.manager.web.resource.CSS;
 
 public class FilesHandler extends BaseHandler {
 	public static final String PATH = "/files";
@@ -44,12 +45,12 @@ public class FilesHandler extends BaseHandler {
 
 		view
 			.div()
-				.a().attrHref(FilesAddHandler.PATH).text("Add files").__()
-				.p().text("files list from tape ID").__()
+				.a().attrClass(CSS.BUTTON).attrHref(FilesAddHandler.PATH).text("Add files").__()
 				.form().of(form -> {
-					form.input().attrType(EnumTypeInputType.TEXT).attrName(TAPE_ID).dynamic(input -> input.attrValue(tapeId)).__();
+						form.label().text("Show files for tape ID:").__();
+						form.input().attrType(EnumTypeInputType.TEXT).attrName(TAPE_ID).dynamic(input -> input.attrValue(tapeId)).__();
 					})
-					.button().attrType(EnumTypeButtonType.SUBMIT).text("Submit").__()
+					.button().attrClass(CSS.BUTTON).attrType(EnumTypeButtonType.SUBMIT).text("Submit").__()
 				.__()
 
 
@@ -71,7 +72,7 @@ public class FilesHandler extends BaseHandler {
 	@Override
 	public void requestHandle(HttpExchange he) throws IOException {
 		try {
-			TemplateHeadModel thm = TemplateHeadModel.of("Files");
+			HeadModel thm = HeadModel.of("Files");
 			TemplatePageModel tepm = TemplatePageModel.of(view, thm, SelectedPage.Files, BodyModel.of(he, null));
 			String response = TemplatePage.view.render(tepm);
 
