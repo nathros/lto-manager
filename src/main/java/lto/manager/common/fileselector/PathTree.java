@@ -22,10 +22,13 @@ public class PathTree {
 	private Path path;
 	private LocalDateTime creationDateTime;
 	private LocalDateTime modifiedDateTime;
+	private int depth;
+	private int childNumber;
 
-	public PathTree(String filePath) {
+	public PathTree(String filePath, int depth) {
 		file = new File(filePath);
 		path = Paths.get(file.getAbsolutePath());
+		this.depth = depth;
 
 		try {
 			BasicFileAttributeView basicfile = Files.getFileAttributeView(path, BasicFileAttributeView.class, LinkOption.NOFOLLOW_LINKS);
@@ -44,9 +47,18 @@ public class PathTree {
 
 		if (file.isDirectory()) {
 			children = new ArrayList<PathTree>();
+			List<PathTree> dir = new ArrayList<PathTree>();
+			List<PathTree> singleFile = new ArrayList<PathTree>();
 			for (File f: file.listFiles()) {
-				children.add(new PathTree(f.getAbsolutePath()));
+				if (f.isDirectory()) {
+					dir.add(new PathTree(f.getAbsolutePath(), depth + 1));
+				} else {
+					singleFile.add(new PathTree(f.getAbsolutePath(), depth + 1));
+				}
+				//children.add(new PathTree(f.getAbsolutePath(), depth + 1));
 			}
+			children.addAll(dir);
+			children.addAll(singleFile);
 		}
 	}
 
@@ -74,6 +86,18 @@ public class PathTree {
 
 	public List<PathTree> getChildren() {
 		return children;
+	}
+
+	public int getDepth() {
+		return depth;
+	}
+
+	public int getChildNumber() {
+		return childNumber;
+	}
+
+	public String getIDStr() {
+		return depth + "-" + childNumber;
 	}
 
 	@Override
