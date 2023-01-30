@@ -32,17 +32,104 @@ ul {
 }
 .wtree li span {
 	display: block;
+	position: relative;
 	border: 1px solid #ddd;
 	padding: 10px;
 	color: #888;
 	text-decoration: none;
 }
-
-.wtree li span:hover,
-.wtree li span:focus {
+.wtree li > span:hover,
+.wtree li > span:focus {
 	background: #eee;
 	color: #000;
 	border: 1px solid #aaa;
+}
+.wtree li span span { /* Sort button */
+	margin-right: 2rem;
+	padding: 0;
+	background-size: 75%;
+	background-repeat: no-repeat;
+	background-position: center;
+	float: right;
+	width: 24px;
+	height: 24px;
+	border: none;
+	opacity: 0%;
+}
+.wtree li span span em { /* Tool-tip for sort button */
+	position: absolute;
+	top: -28px;
+	left: -37px;
+	width: 120px;
+	background-color: black;
+	color: white;
+	height: 20px;
+	display: block;
+	border-radius: 6px;
+	font-size: smaller;
+	opacity: 0;
+	text-align: center;
+	pointer-events: none;
+	transition: 0s opacity;
+}
+.wtree li span span em:after { /* Tool-tip arrow */
+	content: "";
+	position: absolute;
+	top: 100%;
+	left: 50%;
+	margin-left: -5px;
+	border-width: 5px;
+	border-style: solid;
+	border-color: black transparent transparent transparent;
+}
+.wtree li span span:hover em {
+	opacity: 100%;
+	transition-delay: 500ms;
+}
+.wtree li span span.size {
+	background-image: url('/assets/img/database-fill.svg');
+}
+.wtree li span span.modified {
+	background-image: url('/assets/img/clock-history.svg');
+}
+.wtree li span span.name {
+	background-image: url('/assets/img/sort-alpha-down.svg');
+}
+.wtree li span span:before,
+.wtree li span span:after {
+	content: "";
+	background-size: 75%;
+	background-repeat: no-repeat;
+	background-position: center;
+	width: 18px;
+	height: 100%;
+	opacity: 50% !important;
+}
+.wtree li span span:before {
+	display: block;
+	margin-left: 20px;
+	background-image: url('/assets/img/arrow-down.svg');
+	*background-color: blue;
+	padding: 0;
+}
+.wtree li span span:after {
+	display: block;
+	margin-left: 28px;
+	margin-top: -100%;
+	background-image: url('/assets/img/arrow-up.svg');
+}
+.wtree li span span.selected:after {
+	opacity: 100% !important;
+}
+.wtree li span:hover span {
+	*display: block;
+}
+.wtree li span:hover span:hover {
+	background-color: red;
+	opacity: 100%;
+}
+.wtree li span:hover span {
+	opacity: 100%;
 }
 .wtree li span:hover + ul li span,
 .wtree li span:focus + ul li span {

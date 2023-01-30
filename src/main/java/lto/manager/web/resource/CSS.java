@@ -7,5 +7,7 @@ public class CSS {
 
 
 
-	public final static String FV_DIR = "fv-dir ";
+	public final static String FV_ICON_SIZE = "size ";
+	public final static String FV_ICON_MODIFIED = "modified ";
+	public final static String FV_ICON_NAME = "name ";
 }
