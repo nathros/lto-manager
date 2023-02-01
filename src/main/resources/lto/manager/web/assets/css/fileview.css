@@ -55,6 +55,7 @@ ul {
 	height: 24px;
 	border: none;
 	opacity: 0%;
+	cursor: pointer;
 }
 .wtree li span span em { /* Tool-tip for sort button */
 	position: absolute;
@@ -68,6 +69,7 @@ ul {
 	border-radius: 6px;
 	font-size: smaller;
 	opacity: 0;
+	user-select: none;
 	text-align: center;
 	pointer-events: none;
 	transition: 0s opacity;
@@ -118,18 +120,20 @@ ul {
 	margin-top: -100%;
 	background-image: url('/assets/img/arrow-up.svg');
 }
-.wtree li span span.selected:after {
+.wtree li span span.up:after {
 	opacity: 100% !important;
+	filter: drop-shadow(0px 0px 0.1px black) drop-shadow(0px 0px 0.1px black);
 }
-.wtree li span:hover span {
-	*display: block;
+.wtree li span span.down:before {
+	opacity: 100% !important;
+	filter: drop-shadow(0px 0px 0.1px black) drop-shadow(0px 0px 0.1px black);
 }
 .wtree li span:hover span:hover {
-	background-color: red;
+	background-color: transparent;
 	opacity: 100%;
 }
 .wtree li span:hover span {
-	opacity: 100%;
+	opacity: 50%;
 }
 .wtree li span:hover + ul li span,
 .wtree li span:focus + ul li span {
@@ -143,8 +147,21 @@ ul {
 .wtree li span:focus + ul li:before {
 	border-color: #aaa;
 }
-
 li span a:hover {
-	background-color: red;
 	cursor: pointer;
+}
+.wtree-details-container {
+	position: absolute;
+	right: 0.5em;
+	top: 50%;
+	transform: translate(0,-50%);
+}
+.wtree-details {
+	font-style: normal;
+	font-size: small;
+}
+.wtree-details:last-child {
+	padding-left: 5px;
+	margin-left: 5px;
+	border-left: 1px solid #aaa;
 }

@@ -11,6 +11,8 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +25,7 @@ public class PathTree {
 	private LocalDateTime creationDateTime;
 	private LocalDateTime modifiedDateTime;
 	private int depth;
-	private int childNumber;
+	private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
 	public PathTree(String filePath, int depth) {
 		file = new File(filePath);
@@ -49,15 +51,14 @@ public class PathTree {
 			children = new ArrayList<PathTree>();
 			List<PathTree> dir = new ArrayList<PathTree>();
 			List<PathTree> singleFile = new ArrayList<PathTree>();
-			for (File f: file.listFiles()) {
+			for (File f: file.listFiles()) { // Separate files and directories
 				if (f.isDirectory()) {
 					dir.add(new PathTree(f.getAbsolutePath(), depth + 1));
 				} else {
 					singleFile.add(new PathTree(f.getAbsolutePath(), depth + 1));
 				}
-				//children.add(new PathTree(f.getAbsolutePath(), depth + 1));
 			}
-			children.addAll(dir);
+			children.addAll(dir); // Make sure directories are always first
 			children.addAll(singleFile);
 		}
 	}
@@ -92,12 +93,30 @@ public class PathTree {
 		return depth;
 	}
 
-	public int getChildNumber() {
-		return childNumber;
+	public String getFileSizeHR() {
+		long size = file.length();
+		double dSize = size;
+		int count = 0;
+		while (dSize > 1024) {
+			dSize /= 1024;
+			count++;
+		}
+		switch (count) {
+		case 0: return String.format("%.0f bytes", dSize);
+		case 1: return String.format("%.2f KB", dSize);
+		case 2: return String.format("%.2f MB", dSize);
+		case 3: return String.format("%.2f GB", dSize);
+		default: return String.format("%.2f TB", dSize);
+		}
 	}
 
-	public String getIDStr() {
-		return depth + "-" + childNumber;
+	public String getModifiedDateTimeStr() {
+		return modifiedDateTime.format(formatter);
+	}
+
+	public long getModifiedDateTimeLong() {
+		ZonedDateTime zdt = ZonedDateTime.of(modifiedDateTime, ZoneId.systemDefault());
+        return zdt.toInstant().toEpochMilli();
 	}
 
 	@Override

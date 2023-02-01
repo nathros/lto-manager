@@ -18,7 +18,7 @@ public class TemplateFileList {
 		 try {
 			if (fileTree.getFile().isDirectory()) {
 				view.defineRoot().ul().of(ul -> {
-					if (fileTree.getDepth() == 0) ul.attrClass("wtree");
+					if (fileTree.getDepth() == 0) ul.attrClass(CSS.FV_ROOT);
 
 					for (PathTree child: fileTree.getChildren()) {
 						var li = ul.li();
@@ -29,24 +29,31 @@ public class TemplateFileList {
 									.attrHref(LINK + Util.encodeUrl(child.getFile().getAbsolutePath())).text(child.getFile().getName())
 								.__()
 								.span()
-									.attrClass(CSS.FV_ICON_SIZE).attrOnclick("sort(this)")
-									.em().text("Sort by file size") .__()
+									.attrClass(CSS.FV_ICON_SIZE).attrOnclick("sort(this,'data-size')")
+									.em().text("Sort by file size").__()
 								.__()
 								.span()
-									.attrClass(CSS.FV_ICON_MODIFIED).attrOnclick("sort(this)")
-									.em().text("Sort by modified") .__()
+									.attrClass(CSS.FV_ICON_MODIFIED).attrOnclick("sort(this,'data-time')")
+									.em().text("Sort by modified").__()
 								.__()
 								.span()
-									.attrClass(CSS.FV_ICON_NAME).attrOnclick("sort(this)")
-									.em().text("Sort by name") .__()
+									.attrClass(CSS.FV_ICON_NAME).attrOnclick("sort(this,'data-name')")
+									.em().text("Sort by name").__()
 								.__()
 							.__();
-						} else {
+						} else { // File
 							li.span()
-							.a()
-								.attrHref(LINK + Util.encodeUrl(child.getFile().getAbsolutePath())).text(child.getFile().getName())
-							.__()
-						.__();
+								.addAttr("data-size", String.valueOf(child.getFileSizeBytes()))
+								.addAttr("data-time", String.valueOf(child.getModifiedDateTimeLong()))
+								.addAttr("data-name", String.valueOf(child.getFile().getName()))
+								.a()
+									.attrHref(LINK + Util.encodeUrl(child.getFile().getAbsolutePath())).text(child.getFile().getName())
+								.__()
+								.b().attrClass(CSS.FV_FILE_DETAILS_CONTAINER)
+									.em().attrClass(CSS.FV_FILE_DETAILS).text(child.getFileSizeHR()).__()
+									.em().attrClass(CSS.FV_FILE_DETAILS).text(child.getModifiedDateTimeStr()).__()
+								.__()
+							.__();
 						}
 
 						if (child.getFile().isDirectory()) {
