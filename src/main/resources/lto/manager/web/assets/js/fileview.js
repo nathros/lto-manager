@@ -17,22 +17,17 @@ function ascSort(a, b) {
 }
 
 function ascDec(a, b) {
-	let x = parseInt(a);
-	let y = parseInt(b);
-	if (isNaN(x) || isNaN(y)) {
-		return a > b ? -1 : 1;
-	}
-	return x < y ? -1 : 1;
+	return ascSort(a, b) * -1;
 }
 
 function sort(sender, type) {
-	let add, sortLambda;
+	let add, sortFunction;
 	if (sender.classList.contains("down")) {
 		add = "up";
-		sortLambda = ascSort;
+		sortFunction = ascSort;
 	} else {
 		add = "down";
-		sortLambda = ascDec;
+		sortFunction = ascDec;
 	}
 
 	let otherButtons = sender.parentElement.getElementsByTagName("span");
@@ -49,8 +44,36 @@ function sort(sender, type) {
 			let emB = b.getElementsByTagName("span");
 			let strA = emA[0].getAttribute(type);
 			let strB = emB[0].getAttribute(type);
-			let x = sortLambda(strA, strB);
+			let x = sortFunction(strA, strB);
 			return x;
 		})
 		.forEach(li => ul.appendChild(li));
+}
+
+function selectDir(sender) {
+	let dirCheckboxes = sender.parentElement.parentElement.getElementsByTagName("input");
+	for (let item of dirCheckboxes) {
+		item.checked = sender.checked
+	}
+	selectFile(sender);
+}
+
+function selectFile(sender) {
+	let list = sender.parentElement.parentElement.parentElement;
+	let dirCheckboxes = list.getElementsByTagName("input");
+	let checked = 0;
+	let unchecked = 0;
+	for (let item of dirCheckboxes) {
+		item.checked ? checked++ : unchecked++;
+	}
+	let dir = list.parentElement.getElementsByTagName("input");
+	if (checked !=0 && unchecked != 0) {
+		dir[0].indeterminate = true;
+	} else if (checked != 0) {
+		dir[0].indeterminate = false;
+		dir[0].checked = true;
+	} else if (unchecked != 0) {
+		dir[0].indeterminate = false;
+		dir[0].checked = false;
+	}
 }

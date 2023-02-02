@@ -28,6 +28,7 @@ public class FilesAddHandler extends BaseHandler {
 	public static DynamicHtml<BodyModel> view = DynamicHtml.view(FilesAddHandler::body);
 	public static final String DIR = "dir";
 	private static final String TAPE_ID = "tapeid";
+	public static final String FILE_SELECTED = "f";
 
 	static void body(DynamicHtml<BodyModel> view, BodyModel model) {
 		final String dir = model.getQueryNoNull(DIR);

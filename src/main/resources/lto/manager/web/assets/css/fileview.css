@@ -30,7 +30,7 @@ ul {
 .wtree li:last-child:after {
 	display: none;
 }
-.wtree li span {
+.wtree span {
 	display: block;
 	position: relative;
 	border: 1px solid #ddd;
@@ -44,7 +44,13 @@ ul {
 	color: #000;
 	border: 1px solid #aaa;
 }
-.wtree li span span { /* Sort button */
+.wtree > span:hover,
+.wtree > span:focus {
+	background: #eee;
+	color: #000;
+	border: 1px solid #aaa;
+}
+.wtree span span { /* Sort button */
 	margin-right: 2rem;
 	padding: 0;
 	background-size: 75%;
@@ -57,7 +63,7 @@ ul {
 	opacity: 0%;
 	cursor: pointer;
 }
-.wtree li span span em { /* Tool-tip for sort button */
+.wtree span span em { /* Tool-tip for sort button */
 	position: absolute;
 	top: -28px;
 	left: -37px;
@@ -74,7 +80,7 @@ ul {
 	pointer-events: none;
 	transition: 0s opacity;
 }
-.wtree li span span em:after { /* Tool-tip arrow */
+.wtree span span em:after { /* Tool-tip arrow */
 	content: "";
 	position: absolute;
 	top: 100%;
@@ -84,21 +90,21 @@ ul {
 	border-style: solid;
 	border-color: black transparent transparent transparent;
 }
-.wtree li span span:hover em {
+.wtree span span:hover em {
 	opacity: 100%;
 	transition-delay: 500ms;
 }
-.wtree li span span.size {
+.wtree span span.size {
 	background-image: url('/assets/img/database-fill.svg');
 }
-.wtree li span span.modified {
+.wtree span span.modified {
 	background-image: url('/assets/img/clock-history.svg');
 }
-.wtree li span span.name {
+.wtree span span.name {
 	background-image: url('/assets/img/sort-alpha-down.svg');
 }
-.wtree li span span:before,
-.wtree li span span:after {
+.wtree span span:before,
+.wtree span span:after {
 	content: "";
 	background-size: 75%;
 	background-repeat: no-repeat;
@@ -107,36 +113,41 @@ ul {
 	height: 100%;
 	opacity: 50% !important;
 }
-.wtree li span span:before {
+.wtree span span:before {
 	display: block;
 	margin-left: 20px;
 	background-image: url('/assets/img/arrow-down.svg');
-	*background-color: blue;
 	padding: 0;
 }
-.wtree li span span:after {
+.wtree span span:after {
 	display: block;
 	margin-left: 28px;
 	margin-top: -100%;
 	background-image: url('/assets/img/arrow-up.svg');
 }
-.wtree li span span.up:after {
+.wtree span span.up:after {
 	opacity: 100% !important;
 	filter: drop-shadow(0px 0px 0.1px black) drop-shadow(0px 0px 0.1px black);
 }
-.wtree li span span.down:before {
+.wtree span span.down:before {
 	opacity: 100% !important;
 	filter: drop-shadow(0px 0px 0.1px black) drop-shadow(0px 0px 0.1px black);
 }
-.wtree li span:hover span:hover {
+.wtree span:hover span:hover {
 	background-color: transparent;
 	opacity: 100%;
 }
-.wtree li span:hover span {
+.wtree span:hover span {
 	opacity: 50%;
 }
 .wtree li span:hover + ul li span,
 .wtree li span:focus + ul li span {
+	background: #eee;
+	color: #000;
+	border: 1px solid #aaa;
+}
+.wtree span:hover + ul li span,
+.wtree span:focus + ul li span {
 	background: #eee;
 	color: #000;
 	border: 1px solid #aaa;
@@ -147,14 +158,14 @@ ul {
 .wtree li span:focus + ul li:before {
 	border-color: #aaa;
 }
-li span a:hover {
+.wtree span a:hover {
 	cursor: pointer;
 }
 .wtree-details-container {
 	position: absolute;
 	right: 0.5em;
 	top: 50%;
-	transform: translate(0,-50%);
+	transform: translate(0, -50%);
 }
 .wtree-details {
 	font-style: normal;
