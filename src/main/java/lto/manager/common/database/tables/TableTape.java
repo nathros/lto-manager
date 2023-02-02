@@ -78,7 +78,7 @@ public class TableTape {
 		public static RecordTape of(int id, int manufacturerID, int typeID, String barcode,
 				String serial, int totalSpace, int usedSpace, LocalDateTime dateAdded) {
 			RecordManufacturer rm = RecordManufacturer.of(manufacturerID, "");
-			RecordTapeType t = RecordTapeType.of(typeID, "");
+			RecordTapeType t = RecordTapeType.of(typeID, "", "", "");
 			return new RecordTape(id, rm, t, barcode, serial, totalSpace, usedSpace, dateAdded);
 		}
 
@@ -208,7 +208,9 @@ public class TableTape {
 
 			i = result.getInt(TableTapeType.COLUMN_NAME_ID);
 			name = result.getString(TableTapeType.COLUMN_NAME_TYPE);
-			RecordTapeType tt = RecordTapeType.of(i, name);
+			String des = result.getString(TableTapeType.COLUMN_NAME_DESIGNATION);
+			String worm = result.getString(TableTapeType.COLUMN_NAME_DESIGNATION_WORM);
+			RecordTapeType tt = RecordTapeType.of(i, name, des, worm);
 
 			i = result.getInt(COLUMN_NAME_ID);
 			String barcode = result.getString(COLUMN_NAME_BARCODE);
@@ -245,7 +247,9 @@ public class TableTape {
 
 			i = result.getInt(TableTapeType.COLUMN_NAME_ID);
 			name = result.getString(TableTapeType.COLUMN_NAME_TYPE);
-			RecordTapeType tt = RecordTapeType.of(i, name);
+			String des = result.getString(TableTapeType.COLUMN_NAME_DESIGNATION);
+			String worm = result.getString(TableTapeType.COLUMN_NAME_DESIGNATION_WORM);
+			RecordTapeType tt = RecordTapeType.of(i, name, des, worm);
 
 			i = result.getInt(COLUMN_NAME_ID);
 			String barcode = result.getString(COLUMN_NAME_BARCODE);

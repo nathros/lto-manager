@@ -24,6 +24,9 @@ public class TemplateFileList {
 						var li = ul.li();
 						if (child.getFile().isDirectory()) {
 							li.span()
+								.addAttr("data-size", "0")
+								.addAttr("data-time", "0")
+								.addAttr("data-name", "")
 								.a().attrOnclick("hideFileTree(this)").text("+").__()
 								.a()
 									.attrHref(LINK + Util.encodeUrl(child.getFile().getAbsolutePath())).text(child.getFile().getName())

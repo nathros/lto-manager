@@ -23,7 +23,6 @@ public class TemplateHead {
 						.link().attrRel(EnumRelType.STYLESHEET).attrHref(Asset.CSS_MOBILE).addAttr(BaseHandler.MEDIA_KEY, BaseHandler.CSS_MOBILE_MEDIA).__()
 						.of(extra -> {
 							for (String css: model.getExtraStylesList()) {
-
 								extra.link().attrRel(EnumRelType.STYLESHEET).attrHref(css).__();
 							}
 							if (model.getExtraScriptsList().size() > 0) {

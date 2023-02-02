@@ -104,7 +104,7 @@ public class Database {
 	}
 
 	public static boolean addNewType(String name) throws SQLException {
-		return TableTapeType.addNewType(connection, name);
+		return TableTapeType.addNewType(connection, name, "", "");
 	}
 
 	public static List<RecordTapeType> getAllTapeTypes() throws SQLException {

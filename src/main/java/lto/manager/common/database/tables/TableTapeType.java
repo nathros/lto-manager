@@ -22,27 +22,37 @@ public class TableTapeType {
 	public static final String TABLE_NAME = "table_tape_type";
 	public static final String COLUMN_NAME_ID = "id_tape_type";
 	public static final String COLUMN_NAME_TYPE = "type";
+	public static final String COLUMN_NAME_DESIGNATION = "des";
+	public static final String COLUMN_NAME_DESIGNATION_WORM = "worm";
 
 	public static final int COLUMN_INDEX_ID = 0;
 	public static final int COLUMN_INDEX_TYPE = 1;
+	public static final int COLUMN_INDEX_DESIGNATION = 2;
+	public static final int COLUMN_INDEX_DESIGNATION_WORM = 3;
 
 	public static class RecordTapeType {
 		private int id;
 		private String type;
+		private String designation;
+		private String designationWORM;
 
-		public RecordTapeType(int id, String type) {
+		public RecordTapeType(int id, String type, String designation, String designationWORM) {
 			this.id = id;
 			this.type = type;
+			this.designation = designation;
+			this.designationWORM = designationWORM;
 		}
 
-		public static RecordTapeType of(int id, String type) {
-			return new RecordTapeType(id, type);
+		public static RecordTapeType of(int id, String type, String designation, String designationWORM) {
+			return new RecordTapeType(id, type, designation, designationWORM);
 		}
 
 		public int getID() { return id; }
 		public void setID(int id) { this.id = id; }
 		public String getType() { return type; }
 		public void setType(String type) { this.type = type; }
+		public String getDesignation() { return designation; }
+		public String getDesignationWORM() { return designationWORM; }
 	}
 
 	private static DbTable getSelf() {
@@ -57,6 +67,8 @@ public class TableTapeType {
 		String key[] = new String[] { COLUMN_NAME_ID};
 		table.primaryKey(COLUMN_NAME_ID, key);
 		table.addColumn(COLUMN_NAME_TYPE, Types.VARCHAR, 128);
+		table.addColumn(COLUMN_NAME_DESIGNATION, Types.VARCHAR, 2);
+		table.addColumn(COLUMN_NAME_DESIGNATION_WORM, Types.VARCHAR, 2);
 
 		return table;
 	}
@@ -68,20 +80,28 @@ public class TableTapeType {
 		var statment = con.createStatement();
 
 		if (!statment.execute(q)) {
+			char letter = 'T';
 			for (int i = 1; i < 10; i++) {
-				if (addNewType(con, "LTO-" + i) == false) return false;
+				String worm = "";
+				if (i > 3) {
+					worm = "L" + letter;
+					letter++;
+				}
+				if (addNewType(con, "LTO-" + i, "L" + i, worm) == false) return false;
 			}
-			return addNewType(con, "LTO-7 Type M8");
+			return addNewType(con, "LTO-7 Type M8", "M8", "");
 		}
 
 		return false;
 	}
 
-	public static boolean addNewType(Connection con, String name) throws SQLException {
+	public static boolean addNewType(Connection con, String name, String designation, String designationWORM) throws SQLException {
 		var statment = con.createStatement();
 
 		InsertQuery iq = new InsertQuery(table);
 		iq.addColumn(table.getColumns().get(COLUMN_INDEX_TYPE), name);
+		iq.addColumn(table.getColumns().get(COLUMN_INDEX_DESIGNATION), designation);
+		iq.addColumn(table.getColumns().get(COLUMN_INDEX_DESIGNATION_WORM), designationWORM);
 		String sql = iq.validate().toString();
 		if (!statment.execute(sql)) {
 			return true;
@@ -102,7 +122,9 @@ public class TableTapeType {
 		while (result.next()) {
 			int id = result.getInt(COLUMN_NAME_ID);
 			String type = result.getString(COLUMN_NAME_TYPE);
-			RecordTapeType tmp = RecordTapeType.of(id, type);
+			String des = result.getString(COLUMN_NAME_DESIGNATION);
+			String worm = result.getString(COLUMN_NAME_DESIGNATION_WORM);
+			RecordTapeType tmp = RecordTapeType.of(id, type, des, worm);
 			list.add(tmp);
 		}
 
@@ -120,7 +142,9 @@ public class TableTapeType {
 
 		id = result.getInt(COLUMN_NAME_ID);
 		String manu = result.getString(COLUMN_NAME_TYPE);
-		RecordTapeType tmp = RecordTapeType.of(id, manu);
+		String des = result.getString(COLUMN_NAME_DESIGNATION);
+		String worm = result.getString(COLUMN_NAME_DESIGNATION_WORM);
+		RecordTapeType tmp = RecordTapeType.of(id, manu, des, worm);
 
 		return tmp;
 	}

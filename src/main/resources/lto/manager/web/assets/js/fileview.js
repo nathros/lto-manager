@@ -43,7 +43,7 @@ function sort(sender, type) {
 
 	let parent = sender.parentElement.parentElement;
 	let ul = parent.getElementsByTagName("ul")[0];
-	Array.from(ul.getElementsByTagName("li"))
+	Array.from(ul.children)
 		.sort((a, b) => {
 			let emA = a.getElementsByTagName("span");
 			let emB = b.getElementsByTagName("span");
