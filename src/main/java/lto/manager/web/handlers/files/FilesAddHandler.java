@@ -42,36 +42,41 @@ public class FilesAddHandler extends BaseHandler {
 		}
 
 		final PathTree fileTree = tmpTree;
+		final var finalView = view;
 
-		view
-			.div()
-				.form()
-					.fieldset().dynamic(fieldset -> {
-						File currentDir = new File(dir);
-						if (dir.equals("")) currentDir = Util.getWorkingDir();
+		try {
+			view
+				.div()
+					.form()
+						.fieldset().dynamic(fieldset -> {
+							File currentDir = new File(dir);
+							if (dir.equals("")) currentDir = Util.getWorkingDir();
 
-						fieldset.label().text("DIR: " + currentDir.getAbsolutePath()).__().br().__();
-						fieldset.label().a().attrHref("?" + DIR + "=" + Util.encodeUrl(currentDir.getParent())).text("&cularr; UP").__().__();
-						fieldset.br().__();
-						fieldset.hr().__();
+							fieldset.label().text("DIR: " + currentDir.getAbsolutePath()).__().br().__();
+							fieldset.label().a().attrHref("?" + DIR + "=" + Util.encodeUrl(currentDir.getParent())).text("&cularr; UP").__().__();
+							fieldset.br().__();
+							fieldset.hr().__();
 
-						if (fileTree != null) {
-							fieldset.p().text(fileTree.getFile().getName()).__();
-							view.addPartial(TemplateFileList.view, fileTree);
-						}
-					}).__()
-				.__()
+							if (fileTree != null) {
+								finalView.addPartial(TemplateFileList.view, fileTree);
+							}
+						}).__()
+					.__()
 
-				.form()
-					.b().text("Directory: ").__()
-					.input().attrStyle("width:26rem").attrType(EnumTypeInputType.TEXT).attrName(DIR).dynamic(input -> input.attrValue(dir)).__()
-					.text("Copy from above DIR")
-					.br().__()
-					.b().text("Tape ID: ").__()
-					.input().attrType(EnumTypeInputType.TEXT).attrName(TAPE_ID).dynamic(input -> input.attrValue(tapeId)).__()
-					.button().attrType(EnumTypeButtonType.SUBMIT).text("Submit").__()
-				.__()
-			.__(); // div
+					.form()
+						.b().text("Directory: ").__()
+						.input().attrStyle("width:26rem").attrType(EnumTypeInputType.TEXT).attrName(DIR).dynamic(input -> input.attrValue(dir)).__()
+						.text("Copy from above DIR")
+						.br().__()
+						.b().text("Tape ID: ").__()
+						.input().attrType(EnumTypeInputType.TEXT).attrName(TAPE_ID).dynamic(input -> input.attrValue(tapeId)).__()
+						.button().attrType(EnumTypeButtonType.SUBMIT).text("Submit").__()
+					.__()
+				.__(); // div
+		} catch (Exception e) {
+			view = DynamicHtml.view(FilesAddHandler::body);
+			throw e;
+		}
 	}
 
 	@Override

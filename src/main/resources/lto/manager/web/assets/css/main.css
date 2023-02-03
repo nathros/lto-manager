@@ -154,19 +154,43 @@ a {
 	text-decoration: none;
 	transition: all 250ms;
 	user-select: none;
-	-webkit-user-select: none;
 	touch-action: manipulation;
 	vertical-align: baseline;
 	width: auto;
 }
+.btn-s {
+	align-items: center;
+	background-clip: padding-box;
+	background-color: black;
+	border: 1px solid transparent;
+	border-radius: .25rem;
+	box-shadow: rgba(0, 0, 0, 0.02) 0 1px 3px 0;
+	box-sizing: border-box;
+	color: #fff;
+	cursor: pointer;
+	display: inline-flex;
+	justify-content: center;
+	margin: 0;
+	position: relative;
+	text-decoration: none;
+	transition: all 250ms;
+	user-select: none;
+	touch-action: manipulation;
+	vertical-align: baseline;
+	width: 24px;
+} /**https://cdn.ourcodeworld.com/public-media/gallery/gallery-573b12c47e54c.png*/
 .btn:hover,
-.btn:focus {
+.btn:focus,
+.btn-s:hover,
+.btn-s:focus {
 	box-shadow: inset 100px 100px 0px 0px rgba(255, 255, 255, 0.3), rgba(0, 0, 0, 0.1) 0 4px 12px;
 }
-.btn:hover {
+.btn:hover,
+.btn-s:hover {
 	transform: translateY(-1px);
 }
-.btn:active {
+.btn:active,
+.btn-s:active {
 	background-color: rgb(32, 74, 135);
 	box-shadow: rgba(0, 0, 0, .06) 0 2px 4px;
 	transform: translateY(0);
@@ -176,6 +200,9 @@ a {
 }
 .background-active {
 	background-color: teal;
+}
+.background-gray {
+	background-color: gray;
 }
 table {
 	border-collapse: collapse;

@@ -96,6 +96,7 @@ ul {
 }
 .wtree span span.size {
 	background-image: url('/assets/img/database-fill.svg');
+	margin-right: 1.5rem;
 }
 .wtree span span.modified {
 	background-image: url('/assets/img/clock-history.svg');
@@ -175,4 +176,11 @@ ul {
 	padding-left: 5px;
 	margin-left: 5px;
 	border-left: 1px solid #aaa;
+}
+.wtree > span {
+	margin-bottom: -6px;
+}
+.wtree-icon {
+	height: 24px;
+	vertical-align: bottom;
 }

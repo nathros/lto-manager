@@ -5,7 +5,6 @@ import org.xmlet.htmlapifaster.Div;
 import htmlflow.DynamicHtml;
 import htmlflow.HtmlView;
 import lto.manager.common.fileselector.PathTree;
-import lto.manager.web.handlers.files.FilesAddHandler;
 import lto.manager.web.resource.CSS;
 
 public class TemplateFileList {
@@ -14,9 +13,7 @@ public class TemplateFileList {
 
 	 static void template(DynamicHtml<PathTree> view, PathTree fileTree) {
 		final var finalView = view;
-		final String LINK = FilesAddHandler.PATH + "?" + FilesAddHandler.DIR + "=";
 		try {
-
 			Div<HtmlView<PathTree>> wrapper = null;
 			if (fileTree.getDepth() == 0) {
 				wrapper = view.div().attrClass(CSS.FV_ROOT);

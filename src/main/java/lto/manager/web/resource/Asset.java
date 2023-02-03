@@ -12,4 +12,5 @@ public class Asset {
 	public static final String JS_ADD_TAPE = AssetHandler.PATH + "/js/add_tape.js";
 
 	public static final String IMG_FAVICO_SVG = AssetHandler.PATH + "/img/favico.svg";
+	public static final String IMG_TYPES = AssetHandler.PATH + "/img/types/";
 }

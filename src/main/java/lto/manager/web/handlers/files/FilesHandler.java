@@ -42,30 +42,34 @@ public class FilesHandler extends BaseHandler {
 			}
 		}
 
+		try {
+			view
+				.div()
+					.a().attrClass(CSS.BUTTON).attrHref(FilesAddHandler.PATH).text("Add files").__()
+					.form().of(form -> {
+							form.label().text("Show files for tape ID:").__();
+							form.input().attrType(EnumTypeInputType.TEXT).attrName(TAPE_ID).dynamic(input -> input.attrValue(tapeId)).__();
+						})
+						.button().attrClass(CSS.BUTTON).attrType(EnumTypeButtonType.SUBMIT).text("Submit").__()
+					.__()
 
-		view
-			.div()
-				.a().attrClass(CSS.BUTTON).attrHref(FilesAddHandler.PATH).text("Add files").__()
-				.form().of(form -> {
-						form.label().text("Show files for tape ID:").__();
-						form.input().attrType(EnumTypeInputType.TEXT).attrName(TAPE_ID).dynamic(input -> input.attrValue(tapeId)).__();
-					})
-					.button().attrClass(CSS.BUTTON).attrType(EnumTypeButtonType.SUBMIT).text("Submit").__()
-				.__()
 
-
-				.table().dynamic(table -> {
-					table.attrBorder(EnumBorderType._1).tr()
-						.th().text("Path").__()
-					.__();
-					for (File f: files) {
-						table.tr()
-							.td().text(f.getAbsolutePath()).__()
+					.table().dynamic(table -> {
+						table.attrBorder(EnumBorderType._1).tr()
+							.th().text("Path").__()
 						.__();
-					}
-					if (files.size() == 0) table.tr().td().text("Empty").__().__();
-				}).__()
-			.__(); // div
+						for (File f: files) {
+							table.tr()
+								.td().text(f.getAbsolutePath()).__()
+							.__();
+						}
+						if (files.size() == 0) table.tr().td().text("Empty").__().__();
+					}).__()
+				.__(); // div
+		} catch (Exception e) {
+			view = DynamicHtml.view(FilesHandler::body);
+			throw e;
+		}
 
 	}
 

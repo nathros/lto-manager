@@ -2,8 +2,10 @@ function hideFileTree(sender) {
 	let list = sender.parentElement.nextElementSibling;
 	if (list.style.display == "none") {
 		list.style.display = "block";
+		sender.innerHTML = "+";
 	} else {
 		list.style.display = "none";
+		sender.innerHTML = "-";
 	}
 }
 

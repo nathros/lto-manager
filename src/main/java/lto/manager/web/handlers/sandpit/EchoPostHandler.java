@@ -23,7 +23,7 @@ public class EchoPostHandler extends BaseHandler {
 		InputStreamReader isr = new InputStreamReader(he.getRequestBody(), "utf-8");
 		BufferedReader br = new BufferedReader(isr);
 		String query = br.readLine();
-		//parseQuery(query, parameters);
+		parseQuery(query, parameters);
 
 		// send response
 		String response = "";

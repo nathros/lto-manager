@@ -1,10 +1,14 @@
 package lto.manager.web.handlers;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.sun.net.httpserver.HttpExchange;
 
@@ -60,4 +64,25 @@ public class AssetHandler extends BaseHandler {
 		if (is != null) is.close();
 	}
 
+	public static List<String> getCachedFileListInDir(String dir) {
+		try {
+			final String res = path + dir;
+			URL url = loader.getResource(res);
+			File file = null;
+			try {
+				file = new File(url.toURI()); // Resources in Jar
+			} catch (Exception e) {
+				file = new File(url.getPath()); // Resources in file
+		    }
+		    File[] listOfFiles = file.listFiles();
+		    List<String> filesNamesList = new ArrayList<String>();
+		    for (File f : listOfFiles) {
+			    filesNamesList.add(f.getName());
+		    }
+		    return filesNamesList;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new ArrayList<String>(); // No resources found
+	}
 }
