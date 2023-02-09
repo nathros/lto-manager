@@ -13,6 +13,7 @@ import org.xmlet.htmlapifaster.EnumBorderType;
 import com.sun.net.httpserver.HttpExchange;
 
 import htmlflow.DynamicHtml;
+import lto.manager.common.Util;
 import lto.manager.common.database.Database;
 import lto.manager.common.database.tables.TableFile;
 import lto.manager.common.database.tables.TableFile.RecordFile;
@@ -33,11 +34,11 @@ public class FilesBrowserHandler extends BaseHandler {
 	public static final String DIR = "dir";
 
 	static void body(DynamicHtml<BodyModel> view, BodyModel model) {
-		final String dir = model.getQueryNoNull(DIR);
+		final String dirQ = model.getQueryNoNull(DIR);
 
 		final List<RecordFile> filesList = new ArrayList<RecordFile>();
 		try {
-			final String location = dir.equals("") ? "/" : dir;
+			final String location = dirQ.equals("") ? "/" : dirQ;
 			filesList.addAll(TableFile.getFilesInDir(Database.connection, location));
 		} catch (SQLException e1) {
 			e1.printStackTrace();
@@ -45,22 +46,38 @@ public class FilesBrowserHandler extends BaseHandler {
 			e1.printStackTrace();
 		}
 
-		Supplier<String> parentDir = () -> {
-			if (dir != null) {
-				int index = dir.lastIndexOf("/");
-				if (index > 0) {
-					return dir.substring(0, index);
-				}
+		Supplier<String> getDirD = () -> {
+			if (!dirQ.equals("")) {
+				return dirQ;
 		    }
 		    return "/";
 		};
-		final String parent = parentDir.get();
+		final String dirD = getDirD.get();
 
 		try {
 			view
 				.div()
-					.a().attrClass(CSS.BUTTON).attrHref("?" + DIR + "=" + parent).text("Parent").__()
-					.p().text("Path " + dir).__()
+					.p().text("Path " + dirQ).__()
+					.div().dynamic(div -> {
+						final String complete = dirD;
+						int startIndex = 0;
+						int endIndex = 0;
+						String crumb = "";
+						while (true) {
+							String name = complete.substring(startIndex, endIndex + 1);
+							crumb += Util.encodeUrl(name);
+							startIndex = endIndex + 1;
+							endIndex = complete.indexOf("/", startIndex);
+							div
+								.a()
+									.attrClass(CSS.BUTTON + (endIndex < 0 ? CSS.BACKGROUND_ACTIVE : ""))
+									.attrHref("?" + DIR + "=" + crumb)
+									.text(name)
+								.__();
+							if (endIndex < 0) break;
+						}
+
+					}).__()
 					.table().dynamic(table -> {
 						table.attrBorder(EnumBorderType._1).tr()
 							.th().text("Filename").__()
@@ -70,7 +87,10 @@ public class FilesBrowserHandler extends BaseHandler {
 							table.tr()
 								.td().of(td -> {
 									if (f.isDirectory()) {
-										td.b().a().attrHref("?" + DIR + "=" + f.getFilePath()).text(f.getFileName()).__().__();
+										var path = f.getAbsolutePath();
+										var link = Util.encodeUrl(path);
+										var name = f.getFileNameTrim();
+										td.b().a().attrHref("?" + DIR + "=" + link).text(name).__().__();
 									} else {
 										td.text(f.getFileName());
 									}

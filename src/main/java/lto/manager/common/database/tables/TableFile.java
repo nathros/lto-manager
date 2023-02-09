@@ -54,6 +54,7 @@ public class TableFile {
 		private LocalDateTime modified;
 		private int tapeID;
 		private int crc32;
+		private boolean isDirectory;
 
 		public RecordFile(int id, String fileName, String filePath, int size, LocalDateTime created, LocalDateTime modified, int tapeID, int crc32) {
 			this.id = id;
@@ -64,18 +65,29 @@ public class TableFile {
 			this.modified = modified;
 			this.tapeID = tapeID;
 			this.crc32 = crc32;
+			setIsDirectory();
 		}
 
 		public static RecordFile of(int id, String fileName, String filePath, int size, LocalDateTime created, LocalDateTime modified, int tapeID, int crc32) {
 			return new RecordFile(id, fileName, filePath, size, created, modified, tapeID, crc32);
 		}
 
+		private void setIsDirectory() {
+			isDirectory = fileName.charAt(fileName.length() - 1) == '/';
+		}
+
 		public int getID() { return id;	}
 		public void setID(int id) { this.id = id; }
-		public String getFileName() {
-			if ("".equals(fileName)) {
-				int index = filePath.lastIndexOf("/");
-				return filePath.substring(index + 1);
+		public String getFileName() { return fileName; }
+		public String getFileNameCut() {
+			if (isDirectory) {
+				return fileName.substring(1);
+			}
+			return fileName;
+		}
+		public String getFileNameTrim() {
+			if (isDirectory) {
+				return fileName.substring(0, fileName.length() - 1).substring(1);
 			}
 			return fileName;
 		}
@@ -93,7 +105,14 @@ public class TableFile {
 		public int getCRC32() { return crc32; }
 		public void setCRC32(int crc32) { this.crc32 = crc32; }
 		public String getCRC32StrHex() { return Integer.toHexString(crc32); }
-		public boolean isDirectory() { return "".equals(fileName); }
+		public boolean isDirectory() { return isDirectory; }
+		public String getAbsolutePath() {
+			if (isDirectory) {
+				return filePath + getFileNameCut();
+			} else {
+				return filePath + fileName;
+			}
+		}
 	}
 
 	static DbTable getSelf() {
@@ -149,19 +168,34 @@ public class TableFile {
 
 	public static boolean addFiles(Connection con, int tapeID, List<String> files, String workingDir) throws SQLException, IOException {
 		var statment = con.createStatement();
+		try {
+			int index = workingDir.lastIndexOf("/");
+			workingDir = workingDir.substring(0, index);
+		} catch (Exception e) {
+			workingDir = "/";
+		}
 
 		for (String fileStr: files) {
 			InsertQuery iq = new InsertQuery(table);
 			File file = new File(fileStr);
+
+			String abs;
+			String name;
 			if (file.isDirectory()) {
-				var virtual = file.getAbsolutePath().substring(workingDir.length());
-				iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_PATH), virtual);
-				iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_NAME), "");
+				name  = "/" + file.getName() + "/";
+				abs = file.getParentFile().getAbsolutePath();
 			} else {
-				iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_NAME), file.getName());
-				var virtual = file.getParentFile().getAbsolutePath().substring(workingDir.length());
-				iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_PATH), virtual);
+				name = file.getName();
+				abs = file.getParentFile().getAbsolutePath();
 			}
+			String virtualPath;
+			try {
+				virtualPath = abs.substring(workingDir.length());
+			} catch (Exception e) {
+				virtualPath = "";
+			}
+			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_NAME), name);
+			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_PATH), virtualPath + "/");
 			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_SIZE), Files.size(file.toPath()));
 			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_DATE_CREATE), "");
 			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_DATE_MODFIY), "");
@@ -207,12 +241,10 @@ public class TableFile {
 		List<RecordFile> files = new ArrayList<RecordFile>();
 
 		SelectQuery uq = new SelectQuery();
-		String like = String.format("%s%%", dir);
-		String notLike = String.format("%s%%/%%", dir);
+		String like = String.format("%s", dir);
 		uq.addAllTableColumns(table);
 		uq
 			.addCondition(BinaryCondition.like(table.getColumns().get(COLUMN_INDEX_FILE_PATH), like))
-			.addCondition(BinaryCondition.notLike(table.getColumns().get(COLUMN_INDEX_FILE_PATH), notLike))
 			.addOrderings(table.getColumns().get(COLUMN_INDEX_FILE_PATH))
 			.addOrderings(table.getColumns().get(COLUMN_INDEX_FILE_NAME));
 		String sql = uq.validate().toString();
