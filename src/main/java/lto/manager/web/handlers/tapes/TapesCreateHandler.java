@@ -62,7 +62,8 @@ public class TapesCreateHandler extends BaseHandler {
 
 		if (model.hasQuery()) {
 			try {
-				Database.addTape(RecordTape.of(-1, manuIndex, typeIndex, barcode, serial, 0, 0, null));
+				var tape = RecordTape.of(null, manuIndex, typeIndex, barcode, serial, 0, 0, null);
+				Database.addTape(tape);
 				s = true;
 			} catch (Exception e) {
 				e.printStackTrace();

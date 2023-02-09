@@ -19,9 +19,11 @@ import com.healthmarketscience.sqlbuilder.dbspec.basic.DbJoin;
 import com.healthmarketscience.sqlbuilder.dbspec.basic.DbSchema;
 import com.healthmarketscience.sqlbuilder.dbspec.basic.DbTable;
 
+import lto.manager.common.database.DBStatus;
 import lto.manager.common.database.Database;
 import lto.manager.common.database.tables.TableManufacturer.RecordManufacturer;
 import lto.manager.common.database.tables.TableTapeType.RecordTapeType;
+import lto.manager.common.log.Log;
 
 public class TableTape {
 	public static DbTable table = getSelf();
@@ -48,6 +50,8 @@ public class TableTape {
 	public static final int COLUMN_INDEX_SPACE_REMAINING = 6;
 	public static final int COLUMN_INDEX_DATE_ADDED = 7;
 
+	public static final int NO_ID = -1;
+
 	public static class RecordTape {
 		private int id;
 		private RecordManufacturer manufacturer;
@@ -70,15 +74,17 @@ public class TableTape {
 			this.dateAdded = dateAdded;
 		}
 
-		public static RecordTape of(int id, RecordManufacturer manufacturer, RecordTapeType type, String barcode,
+		public static RecordTape of(Integer id, RecordManufacturer manufacturer, RecordTapeType type, String barcode,
 				String serial, int totalSpace, int usedSpace, LocalDateTime dateAdded) {
+			if (id == null) id = NO_ID;
 			return new RecordTape(id, manufacturer, type, barcode, serial, totalSpace, usedSpace, dateAdded);
 		}
 
-		public static RecordTape of(int id, int manufacturerID, int typeID, String barcode,
+		public static RecordTape of(Integer id, int manufacturerID, int typeID, String barcode,
 				String serial, int totalSpace, int usedSpace, LocalDateTime dateAdded) {
 			RecordManufacturer rm = RecordManufacturer.of(manufacturerID, "");
 			RecordTapeType t = RecordTapeType.of(typeID, "", "", "");
+			if (id == null) id = NO_ID;
 			return new RecordTape(id, rm, t, barcode, serial, totalSpace, usedSpace, dateAdded);
 		}
 
@@ -150,10 +156,13 @@ public class TableTape {
 		return false;
 	}
 
-	public static boolean addTape(Connection con, RecordTape newTape) throws SQLException {
+	public static DBStatus addTape(Connection con, RecordTape newTape) throws SQLException {
 		var statment = con.createStatement();
 
 		InsertQuery iq = new InsertQuery(table);
+		if (newTape.getID() != NO_ID)
+			iq.addColumn(table.getColumns().get(COLUMN_INDEX_ID), newTape.getID());
+
 		iq.addColumn(table.getColumns().get(COLUMN_INDEX_TYPE), newTape.getTapeType().getID());
 		iq.addColumn(table.getColumns().get(COLUMN_INDEX_BARCODE), newTape.getBarcode());
 		iq.addColumn(table.getColumns().get(COLUMN_INDEX_SERIAL), newTape.getSerial());
@@ -164,11 +173,20 @@ public class TableTape {
 
 		String sql = iq.validate().toString();
 
-		if (!statment.execute(sql)) {
-			return true;
+		try {
+			if (!statment.execute(sql)) {
+				return DBStatus.OK();
+			} else {
+				return DBStatus.Error(null, "Failed to insert: " + sql);
+			}
 		}
-
-		return true;
+		catch (Exception e) {
+			Log.l.severe(e.getMessage() + " SQL: " + sql);
+			if (e.getMessage().contains("foreign")) {
+				return DBStatus.Error(e, "Missing tape type or manufacturer");
+			}
+			return DBStatus.Error(e, sql);
+		}
 	}
 
 	public static boolean delTape(Connection con, int id) throws SQLException {

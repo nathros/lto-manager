@@ -2,12 +2,7 @@ package lto.manager.web.handlers;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -63,45 +58,6 @@ public abstract class BaseHandler implements HttpHandler {
 			os.close();
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
-	}
-
-	public static void parseQuery(String query, Map<String, Object> parameters) {
-		if (query != null) {
-			String pairs[] = query.split("[&]");
-
-			for (String pair : pairs) {
-				String param[] = pair.split("[=]");
-
-				String key = null;
-				String value = null;
-				if (param.length > 1) {
-					try {
-						key = URLDecoder.decode(param[0], System.getProperty("file.encoding"));
-						value = URLDecoder.decode(param[1], System.getProperty("file.encoding"));
-					} catch (UnsupportedEncodingException e) {
-						e.printStackTrace();
-						continue;
-					}
-				}
-
-				if (!parameters.containsKey(key)) {
-					parameters.put(key, value);
-				} else if (key != null) {
-					Object o = parameters.get(key);
-					if (o instanceof String) {
-						List<String> list = new ArrayList<String>();
-						list.add((String) o);
-						list.add(value);
-						parameters.put(key, list);
-					} else {
-						@SuppressWarnings("unchecked")
-						List<String> list = (List<String>) o;
-						list.add(value);
-
-					}
-				}
-			}
 		}
 	}
 }

@@ -1,8 +1,6 @@
 package lto.manager.web.handlers.sandpit;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.util.HashMap;
@@ -20,10 +18,9 @@ public class EchoPostHandler extends BaseHandler {
 	public void requestHandle(HttpExchange he) throws IOException {
 		// parse request
 		Map<String, Object> parameters = new HashMap<String, Object>();
-		InputStreamReader isr = new InputStreamReader(he.getRequestBody(), "utf-8");
-		BufferedReader br = new BufferedReader(isr);
-		String query = br.readLine();
-		parseQuery(query, parameters);
+		//InputStreamReader isr = new InputStreamReader(he.getRequestBody(), "utf-8");
+		//BufferedReader br = new BufferedReader(isr);
+		//String query = br.readLine();
 
 		// send response
 		String response = "";

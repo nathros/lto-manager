@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.util.List;
 
+import org.xmlet.htmlapifaster.EnumMethodType;
 import org.xmlet.htmlapifaster.EnumTypeButtonType;
 import org.xmlet.htmlapifaster.EnumTypeInputType;
 
@@ -12,6 +14,7 @@ import com.sun.net.httpserver.HttpExchange;
 
 import htmlflow.DynamicHtml;
 import lto.manager.common.Util;
+import lto.manager.common.database.Database;
 import lto.manager.common.fileselector.PathTree;
 import lto.manager.web.handlers.BaseHandler;
 import lto.manager.web.handlers.templates.TemplateFileList;
@@ -21,6 +24,7 @@ import lto.manager.web.handlers.templates.TemplatePage.TemplatePageModel;
 import lto.manager.web.handlers.templates.models.BodyModel;
 import lto.manager.web.handlers.templates.models.HeadModel;
 import lto.manager.web.resource.Asset;
+import lto.manager.web.resource.CSS;
 
 public class FilesAddHandler extends BaseHandler {
 	public static final String PATH = "/files/add";
@@ -33,6 +37,8 @@ public class FilesAddHandler extends BaseHandler {
 	static void body(DynamicHtml<BodyModel> view, BodyModel model) {
 		final String dir = model.getQueryNoNull(DIR);
 		final String tapeId = model.getQueryNoNull(TAPE_ID);
+		final List<String> files = model.getQueryArray(FILE_SELECTED);
+		final String dirD = dir.equals("") ? Util.getWorkingDir().getAbsolutePath() + "/testdir" : dir;
 
 		PathTree tmpTree = null;
 		if (!"".equals(dir)) {
@@ -41,17 +47,26 @@ public class FilesAddHandler extends BaseHandler {
 			tmpTree = new PathTree(Util.getWorkingDir().getAbsolutePath() + "/testdir", 0);
 		}
 
+		if (model.isPOSTMethod()) {
+			try {
+				var id = Integer.valueOf(tapeId);
+				Database.addFilesToTape(id, files, dirD);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
 		final PathTree fileTree = tmpTree;
 		final var finalView = view;
 
 		try {
 			view
 				.div()
-					.form()
+					.form().attrMethod(EnumMethodType.POST)
 						.fieldset().dynamic(fieldset -> {
 							File currentDir = new File(dir);
 							if (dir.equals("")) currentDir = Util.getWorkingDir();
-
+							fieldset.input().attrType(EnumTypeInputType.HIDDEN).attrName(DIR).attrValue(dirD).__();
 							fieldset.label().text("DIR: " + currentDir.getAbsolutePath()).__().br().__();
 							fieldset.label().a().attrHref("?" + DIR + "=" + Util.encodeUrl(currentDir.getParent())).text("&cularr; UP").__().__();
 							fieldset.br().__();
@@ -60,16 +75,29 @@ public class FilesAddHandler extends BaseHandler {
 							if (fileTree != null) {
 								finalView.addPartial(TemplateFileList.view, fileTree);
 							}
+
+							fieldset
+								.b().text("Tape ID: ").__()
+								.input()
+									.attrType(EnumTypeInputType.TEXT)
+									.attrName(TAPE_ID)
+									.of(input -> input.attrValue(tapeId))
+								.__()
+								.button()
+									.attrClass(CSS.BUTTON)
+									.attrType(EnumTypeButtonType.SUBMIT)
+									.text("Submit")
+								.__();
 						}).__()
 					.__()
 
 					.form()
 						.b().text("Directory: ").__()
-						.input().attrStyle("width:26rem").attrType(EnumTypeInputType.TEXT).attrName(DIR).dynamic(input -> input.attrValue(dir)).__()
+						.input().attrStyle("width:26rem").attrType(EnumTypeInputType.TEXT).attrName(DIR).of(input -> input.attrValue(dir)).__()
 						.text("Copy from above DIR")
 						.br().__()
 						.b().text("Tape ID: ").__()
-						.input().attrType(EnumTypeInputType.TEXT).attrName(TAPE_ID).dynamic(input -> input.attrValue(tapeId)).__()
+						.input().attrType(EnumTypeInputType.TEXT).attrName(TAPE_ID).of(input -> input.attrValue(tapeId)).__()
 						.button().attrType(EnumTypeButtonType.SUBMIT).text("Submit").__()
 					.__()
 				.__(); // div

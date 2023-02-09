@@ -37,13 +37,6 @@ public class Database {
 			TableTape.createTable(connection);
 			TableFile.createTable(connection);
 			TableOptions.createTable(connection);
-
-			//var manu = TableManufacturer.getAll(connection);
-			//var type = TableTapeType.getAll(connection);
-			//var now = LocalDateTime.now();
-			//RecordTape t = new RecordTape(-1, manu.get(1), type.get(6), "#barcode#", "#serial#", 1000, 50, now);
-			//TableTape.addTape(connection, t);
-			//TableTape.getTapeAtID(connection, 1);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
@@ -79,7 +72,7 @@ public class Database {
 		return null;
 	}
 
-	public static boolean addTape(RecordTape newTape) throws SQLException {
+	public static DBStatus addTape(RecordTape newTape) throws SQLException {
 		return TableTape.addTape(connection, newTape);
 	}
 
@@ -111,8 +104,8 @@ public class Database {
 		return TableTapeType.getAll(connection);
 	}
 
-	public static boolean addFilesToTape(int tapeID, List<File> files) throws SQLException, IOException {
-		return TableFile.addFiles(connection, tapeID, files);
+	public static boolean addFilesToTape(int tapeID, List<String> files, String workingDir) throws SQLException, IOException {
+		return TableFile.addFiles(connection, tapeID, files, workingDir);
 	}
 
 	public static List<File> getFilesOnTape(int tapeID) throws SQLException, IOException {

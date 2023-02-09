@@ -12,10 +12,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.healthmarketscience.sqlbuilder.BinaryCondition;
+import com.healthmarketscience.sqlbuilder.CreateIndexQuery;
 import com.healthmarketscience.sqlbuilder.CreateTableQuery;
 import com.healthmarketscience.sqlbuilder.InsertQuery;
 import com.healthmarketscience.sqlbuilder.SelectQuery;
+import com.healthmarketscience.sqlbuilder.dbspec.Constraint.Type;
 import com.healthmarketscience.sqlbuilder.dbspec.basic.DbColumn;
+import com.healthmarketscience.sqlbuilder.dbspec.basic.DbConstraint;
 import com.healthmarketscience.sqlbuilder.dbspec.basic.DbSchema;
 import com.healthmarketscience.sqlbuilder.dbspec.basic.DbTable;
 
@@ -69,7 +72,13 @@ public class TableFile {
 
 		public int getID() { return id;	}
 		public void setID(int id) { this.id = id; }
-		public String getFileName() { return fileName; }
+		public String getFileName() {
+			if ("".equals(fileName)) {
+				int index = filePath.lastIndexOf("/");
+				return filePath.substring(index + 1);
+			}
+			return fileName;
+		}
 		public void setFileName(String fileName) { this.fileName = fileName; }
 		public String getFilePath() { return filePath; }
 		public void setFilePath(String filePath) { this.filePath = filePath; }
@@ -84,6 +93,7 @@ public class TableFile {
 		public int getCRC32() { return crc32; }
 		public void setCRC32(int crc32) { this.crc32 = crc32; }
 		public String getCRC32StrHex() { return Integer.toHexString(crc32); }
+		public boolean isDirectory() { return "".equals(fileName); }
 	}
 
 	static DbTable getSelf() {
@@ -97,8 +107,10 @@ public class TableFile {
 
 		String key[] = new String[] { COLUMN_NAME_ID};
 		table.primaryKey(COLUMN_NAME_ID, key);
-		table.addColumn(COLUMN_NAME_FILE_NAME, Types.VARCHAR, 256);
-		table.addColumn(COLUMN_NAME_FILE_PATH, Types.VARCHAR, 256);
+		var nameColumn = table.addColumn(COLUMN_NAME_FILE_NAME, Types.VARCHAR, 256);
+		nameColumn.notNull();
+		var pathColumn = table.addColumn(COLUMN_NAME_FILE_PATH, Types.VARCHAR, 4096);
+		pathColumn.notNull();
 		table.addColumn(COLUMN_NAME_FILE_SIZE, Types.INTEGER, null);
 		table.addColumn(COLUMN_NAME_FILE_DATE_CREATE, Types.TIMESTAMP, null);
 		table.addColumn(COLUMN_NAME_FILE_DATE_MODIFY, Types.TIMESTAMP, null);
@@ -110,6 +122,10 @@ public class TableFile {
 		table.foreignKey(TableTape.COLUMN_NAME_ID, columns, tableTape, columnsRef);
 
 		table.addColumn(COLUMN_NAME_FILE_CRC32, Types.INTEGER, null);
+
+		// Make path and filename part of unique pair
+		var unique = new DbConstraint(table, "path_name_pair", Type.UNIQUE, nameColumn, pathColumn);
+		table.addConstraint(unique);
 		return table;
 	}
 
@@ -120,20 +136,33 @@ public class TableFile {
 		var statment = con.createStatement();
 
 		if (!statment.execute(q)) {
-			return true;
+			q = new CreateIndexQuery(TableFile.table, "index_" + COLUMN_NAME_FILE_PATH)
+					.addColumns(TableFile.table.getColumns().get(COLUMN_INDEX_FILE_PATH))
+					.validate().toString();
+			if (!statment.execute(q)) {
+				return true;
+			}
 		}
 
 		return false;
 	}
 
-	public static boolean addFiles(Connection con, int tapeID, List<File> files) throws SQLException, IOException {
+	public static boolean addFiles(Connection con, int tapeID, List<String> files, String workingDir) throws SQLException, IOException {
 		var statment = con.createStatement();
 
-		for (File f: files) {
+		for (String fileStr: files) {
 			InsertQuery iq = new InsertQuery(table);
-			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_NAME), f.getName());
-			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_PATH), f.getPath());
-			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_SIZE), Files.size(f.toPath()));
+			File file = new File(fileStr);
+			if (file.isDirectory()) {
+				var virtual = file.getAbsolutePath().substring(workingDir.length());
+				iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_PATH), virtual);
+				iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_NAME), "");
+			} else {
+				iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_NAME), file.getName());
+				var virtual = file.getParentFile().getAbsolutePath().substring(workingDir.length());
+				iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_PATH), virtual);
+			}
+			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_SIZE), Files.size(file.toPath()));
 			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_DATE_CREATE), "");
 			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_DATE_MODFIY), "");
 			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_TAPE_LOC), tapeID);
@@ -161,8 +190,45 @@ public class TableFile {
 		ResultSet result = statment.executeQuery(sql);
 
 		while (result.next()) {
-			String path = result.getString(COLUMN_INDEX_FILE_PATH);
-			files.add(new File(path));
+			String name = result.getString(COLUMN_NAME_FILE_NAME);
+			String path = result.getString(COLUMN_NAME_FILE_PATH);
+
+			if (name == null) name = "";
+
+			files.add(new File(path + File.separator + name));
+		}
+
+		return files;
+	}
+
+	public static List<RecordFile> getFilesInDir(Connection con, String dir) throws SQLException, IOException {
+		var statment = con.createStatement();
+
+		List<RecordFile> files = new ArrayList<RecordFile>();
+
+		SelectQuery uq = new SelectQuery();
+		String like = String.format("%s%%", dir);
+		String notLike = String.format("%s%%/%%", dir);
+		uq.addAllTableColumns(table);
+		uq
+			.addCondition(BinaryCondition.like(table.getColumns().get(COLUMN_INDEX_FILE_PATH), like))
+			.addCondition(BinaryCondition.notLike(table.getColumns().get(COLUMN_INDEX_FILE_PATH), notLike))
+			.addOrderings(table.getColumns().get(COLUMN_INDEX_FILE_PATH))
+			.addOrderings(table.getColumns().get(COLUMN_INDEX_FILE_NAME));
+		String sql = uq.validate().toString();
+
+		ResultSet result = statment.executeQuery(sql);
+
+		while (result.next()) {
+			int id = result.getInt(COLUMN_NAME_ID);
+			String name = result.getString(COLUMN_NAME_FILE_NAME);
+			String path = result.getString(COLUMN_NAME_FILE_PATH);
+			int size = result.getInt(COLUMN_NAME_FILE_SIZE);
+			//LocalDateTime created;
+			//LocalDateTime modified;
+			int tapeID = result.getInt(COLUMN_NAME_FILE_TAPE_LOC);
+			int crc32 = result.getInt(COLUMN_NAME_FILE_CRC32);
+			files.add(RecordFile.of(id, name, path, size, null, null, tapeID, crc32));
 		}
 
 		return files;

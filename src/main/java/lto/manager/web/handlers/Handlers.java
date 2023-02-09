@@ -5,6 +5,7 @@ import java.util.HashMap;
 import com.sun.net.httpserver.HttpHandler;
 
 import lto.manager.web.handlers.files.FilesAddHandler;
+import lto.manager.web.handlers.files.FilesBrowserHandler;
 import lto.manager.web.handlers.files.FilesHandler;
 import lto.manager.web.handlers.jobs.JobsHandler;
 import lto.manager.web.handlers.sandpit.DatabaseTestHandler;
@@ -32,6 +33,7 @@ public class Handlers {
 
 		ret.put(FilesHandler.PATH, new FilesHandler());
 		ret.put(FilesAddHandler.PATH, new FilesAddHandler());
+		ret.put(FilesBrowserHandler.PATH, new FilesBrowserHandler());
 
 		ret.put(JobsHandler.PATH, new JobsHandler());
 

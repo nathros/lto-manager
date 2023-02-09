@@ -46,6 +46,7 @@ public class FilesHandler extends BaseHandler {
 			view
 				.div()
 					.a().attrClass(CSS.BUTTON).attrHref(FilesAddHandler.PATH).text("Add files").__()
+					.a().attrClass(CSS.BUTTON).attrHref(FilesBrowserHandler.PATH).text("Browse").__()
 					.form().of(form -> {
 							form.label().text("Show files for tape ID:").__();
 							form.input().attrType(EnumTypeInputType.TEXT).attrName(TAPE_ID).dynamic(input -> input.attrValue(tapeId)).__();
