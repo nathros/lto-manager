@@ -11,14 +11,16 @@ import com.healthmarketscience.sqlbuilder.dbspec.basic.DbSchema;
 import com.healthmarketscience.sqlbuilder.dbspec.basic.DbSpec;
 
 import lto.manager.common.database.tables.TableFile;
+import lto.manager.common.database.tables.TableJobs;
+import lto.manager.common.database.tables.TableJobsMetadata;
 import lto.manager.common.database.tables.TableManufacturer;
-import lto.manager.common.database.tables.TableManufacturer.RecordManufacturer;
 import lto.manager.common.database.tables.TableOptions;
 import lto.manager.common.database.tables.TableTape;
-import lto.manager.common.database.tables.TableTape.RecordTape;
 import lto.manager.common.database.tables.TableTapeType;
-import lto.manager.common.database.tables.TableTapeType.RecordTapeType;
 import lto.manager.common.database.tables.TableVersion;
+import lto.manager.common.database.tables.records.RecordManufacturer;
+import lto.manager.common.database.tables.records.RecordTape;
+import lto.manager.common.database.tables.records.RecordTapeType;
 import lto.manager.common.log.Log;
 
 public class Database {
@@ -27,21 +29,21 @@ public class Database {
 	public static DbSchema schema = spec.addDefaultSchema();
 
 	public static boolean createTables() {
+		boolean op = true;
 		try {
-			if (!TableVersion.createTable(connection)) {
-				return false;
-			}
-			TableVersion.getVersion(connection);
-			TableTapeType.createTable(connection);
-			TableManufacturer.createTable(connection);
-			TableTape.createTable(connection);
-			TableFile.createTable(connection);
-			TableOptions.createTable(connection);
+			op = (op && TableVersion.createTable(connection));
+			op = (op && TableTapeType.createTable(connection));
+			op = (op && TableManufacturer.createTable(connection));
+			op = (op && TableTape.createTable(connection));
+			op = (op && TableFile.createTable(connection));
+			op = (op && TableOptions.createTable(connection));
+			op = (op && TableJobs.createTable(connection));
+			op = (op && TableJobsMetadata.createTable(connection));
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
 		}
-		return true;
+		return op;
 	}
 
 	public static Connection openDatabase(String fileName) {

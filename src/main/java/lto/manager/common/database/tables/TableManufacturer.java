@@ -16,6 +16,7 @@ import com.healthmarketscience.sqlbuilder.dbspec.basic.DbSchema;
 import com.healthmarketscience.sqlbuilder.dbspec.basic.DbTable;
 
 import lto.manager.common.database.Database;
+import lto.manager.common.database.tables.records.RecordManufacturer;
 
 public class TableManufacturer {
 	public static final DbTable table = getSelf();
@@ -25,25 +26,6 @@ public class TableManufacturer {
 
 	public static final int COLUMN_INDEX_ID = 0;
 	public static final int COLUMN_INDEX_TYPE = 1;
-
-	public static class RecordManufacturer {
-		private int id;
-		private String manufacturer;
-
-		public RecordManufacturer(int id, String manufacturer) {
-			this.id = id;
-			this.manufacturer = manufacturer;
-		}
-
-		public static RecordManufacturer of(int id, String manufacturer) {
-			return new RecordManufacturer(id, manufacturer);
-		}
-
-		public int getID() { return id; }
-		public void setID(int id) { this.id = id; }
-		public String getManufacturer() { return manufacturer; }
-		public void setManufacturer(String manufacturer) { this.manufacturer = manufacturer; }
-	}
 
 	static private DbTable getSelf() {
 		DbSchema schema = Database.schema;

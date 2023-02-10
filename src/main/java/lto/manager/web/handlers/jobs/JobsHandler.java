@@ -17,6 +17,7 @@ import lto.manager.web.handlers.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.templates.TemplatePage.TemplatePageModel;
 import lto.manager.web.handlers.templates.models.BodyModel;
 import lto.manager.web.handlers.templates.models.HeadModel;
+import lto.manager.web.resource.CSS;
 
 public class JobsHandler extends BaseHandler {
 	public static final String PATH = "/jobs";
@@ -42,6 +43,7 @@ public class JobsHandler extends BaseHandler {
 
 		view
 			.div().dynamic(div -> {
+				div.a().attrClass(CSS.BUTTON).attrHref(JobsAddNewHandler.PATH).text("Add new job").__();
 				if (job.operationInProgress()) div.p().text("Job Running").__().br().__();
 				else div.p().text("Job NOT Running").__().br().__();
 				div.p().text("Total copied: " + info.getTotalCopied()).__();

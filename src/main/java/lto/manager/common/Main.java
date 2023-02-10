@@ -12,7 +12,7 @@ public class Main {
 				lto.manager.web.MainWeb.main(args);
 				return;
 			} else if (args[0].equals(GUI)) {
-				lto.manager.gui.MainGUI.main(args);
+				//lto.manager.gui.MainGUI.main(args);
 				return;
 			}
 		}

@@ -16,7 +16,7 @@ import htmlflow.DynamicHtml;
 import lto.manager.common.Util;
 import lto.manager.common.database.Database;
 import lto.manager.common.database.tables.TableFile;
-import lto.manager.common.database.tables.TableFile.RecordFile;
+import lto.manager.common.database.tables.records.RecordFile;
 import lto.manager.web.handlers.BaseHandler;
 import lto.manager.web.handlers.templates.TemplatePage;
 import lto.manager.web.handlers.templates.TemplatePage.SelectedPage;

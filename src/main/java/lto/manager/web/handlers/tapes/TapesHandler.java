@@ -12,7 +12,7 @@ import com.sun.net.httpserver.HttpExchange;
 
 import htmlflow.DynamicHtml;
 import lto.manager.common.database.Database;
-import lto.manager.common.database.tables.TableTape.RecordTape;
+import lto.manager.common.database.tables.records.RecordTape;
 import lto.manager.web.handlers.BaseHandler;
 import lto.manager.web.handlers.files.FilesHandler;
 import lto.manager.web.handlers.templates.TemplatePage;

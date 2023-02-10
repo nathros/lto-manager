@@ -7,6 +7,7 @@ import com.sun.net.httpserver.HttpHandler;
 import lto.manager.web.handlers.files.FilesAddHandler;
 import lto.manager.web.handlers.files.FilesBrowserHandler;
 import lto.manager.web.handlers.files.FilesHandler;
+import lto.manager.web.handlers.jobs.JobsAddNewHandler;
 import lto.manager.web.handlers.jobs.JobsHandler;
 import lto.manager.web.handlers.sandpit.DatabaseTestHandler;
 import lto.manager.web.handlers.sandpit.EchoGetHandler;
@@ -26,7 +27,6 @@ public class Handlers {
 		ret.put(AssetHandler.PATH, new AssetHandler());
 		ret.put(AdminHandler.PATH, new AdminHandler());
 
-
 		ret.put(TapesHandler.PATH, new TapesHandler());
 		ret.put(TapesCreateHandler.PATH, new TapesCreateHandler());
 		ret.put(TapesDeleteHandler.PATH, new TapesDeleteHandler());
@@ -36,6 +36,7 @@ public class Handlers {
 		ret.put(FilesBrowserHandler.PATH, new FilesBrowserHandler());
 
 		ret.put(JobsHandler.PATH, new JobsHandler());
+		ret.put(JobsAddNewHandler.PATH, new JobsAddNewHandler());
 
 		ret.put(EchoHeaderHandler.PATH, new EchoHeaderHandler());
 		ret.put(EchoGetHandler.PATH, new EchoGetHandler());

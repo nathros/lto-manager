@@ -16,6 +16,7 @@ import com.healthmarketscience.sqlbuilder.dbspec.basic.DbSchema;
 import com.healthmarketscience.sqlbuilder.dbspec.basic.DbTable;
 
 import lto.manager.common.database.Database;
+import lto.manager.common.database.tables.records.RecordTapeType;
 
 public class TableTapeType {
 	public static final DbTable table = getSelf();
@@ -29,31 +30,6 @@ public class TableTapeType {
 	public static final int COLUMN_INDEX_TYPE = 1;
 	public static final int COLUMN_INDEX_DESIGNATION = 2;
 	public static final int COLUMN_INDEX_DESIGNATION_WORM = 3;
-
-	public static class RecordTapeType {
-		private int id;
-		private String type;
-		private String designation;
-		private String designationWORM;
-
-		public RecordTapeType(int id, String type, String designation, String designationWORM) {
-			this.id = id;
-			this.type = type;
-			this.designation = designation;
-			this.designationWORM = designationWORM;
-		}
-
-		public static RecordTapeType of(int id, String type, String designation, String designationWORM) {
-			return new RecordTapeType(id, type, designation, designationWORM);
-		}
-
-		public int getID() { return id; }
-		public void setID(int id) { this.id = id; }
-		public String getType() { return type; }
-		public void setType(String type) { this.type = type; }
-		public String getDesignation() { return designation; }
-		public String getDesignationWORM() { return designationWORM; }
-	}
 
 	private static DbTable getSelf() {
 		DbSchema schema = Database.schema;
@@ -80,18 +56,19 @@ public class TableTapeType {
 		var statment = con.createStatement();
 
 		if (!statment.execute(q)) {
-			char letter = 'T';
-			for (int i = 1; i < 10; i++) {
-				String worm = "";
-				if (i > 3) {
-					worm = "L" + letter;
-					letter++;
+			if (addNewType(con, "LTO-7 Type M8", "M8", "")) { // Prepopulate values
+				char letter = 'T';
+				for (int i = 1; i < 10; i++) {
+					String worm = "";
+					if (i > 3) {
+						worm = "L" + letter;
+						letter++;
+					}
+					if (addNewType(con, "LTO-" + i, "L" + i, worm) == false) return false;
 				}
-				if (addNewType(con, "LTO-" + i, "L" + i, worm) == false) return false;
+				return true;
 			}
-			return addNewType(con, "LTO-7 Type M8", "M8", "");
 		}
-
 		return false;
 	}
 

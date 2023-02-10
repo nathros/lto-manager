@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,8 +20,9 @@ import com.healthmarketscience.sqlbuilder.dbspec.basic.DbTable;
 
 import lto.manager.common.database.DBStatus;
 import lto.manager.common.database.Database;
-import lto.manager.common.database.tables.TableManufacturer.RecordManufacturer;
-import lto.manager.common.database.tables.TableTapeType.RecordTapeType;
+import lto.manager.common.database.tables.records.RecordManufacturer;
+import lto.manager.common.database.tables.records.RecordTape;
+import lto.manager.common.database.tables.records.RecordTapeType;
 import lto.manager.common.log.Log;
 
 public class TableTape {
@@ -52,62 +52,6 @@ public class TableTape {
 
 	public static final int NO_ID = -1;
 
-	public static class RecordTape {
-		private int id;
-		private RecordManufacturer manufacturer;
-		private RecordTapeType type;
-		private String barcode;
-		private String serial;
-		private int totalSpace;
-		private int usedSpace;
-		private LocalDateTime dateAdded;
-
-		public RecordTape(int id, RecordManufacturer manufacturer, RecordTapeType type, String barcode,
-				String serial, int totalSpace, int usedSpace, LocalDateTime dateAdded) {
-			this.id = id;
-			this.manufacturer = manufacturer;
-			this.type = type;
-			this.barcode = barcode;
-			this.serial = serial;
-			this.totalSpace = totalSpace;
-			this.usedSpace = usedSpace;
-			this.dateAdded = dateAdded;
-		}
-
-		public static RecordTape of(Integer id, RecordManufacturer manufacturer, RecordTapeType type, String barcode,
-				String serial, int totalSpace, int usedSpace, LocalDateTime dateAdded) {
-			if (id == null) id = NO_ID;
-			return new RecordTape(id, manufacturer, type, barcode, serial, totalSpace, usedSpace, dateAdded);
-		}
-
-		public static RecordTape of(Integer id, int manufacturerID, int typeID, String barcode,
-				String serial, int totalSpace, int usedSpace, LocalDateTime dateAdded) {
-			RecordManufacturer rm = RecordManufacturer.of(manufacturerID, "");
-			RecordTapeType t = RecordTapeType.of(typeID, "", "", "");
-			if (id == null) id = NO_ID;
-			return new RecordTape(id, rm, t, barcode, serial, totalSpace, usedSpace, dateAdded);
-		}
-
-		public int getID() { return id; }
-		public void setID(int id) { this.id = id; }
-		public RecordManufacturer getManufacturer() { return manufacturer; }
-		public void setManufacturer(RecordManufacturer manufacturer) { this.manufacturer = manufacturer; }
-		public RecordTapeType getTapeType() { return type; }
-		public void setTapeType(RecordTapeType type) { this.type = type; }
-		public String getBarcode() { return barcode; }
-		public void setBarcode(String barcode) { this.barcode = barcode; }
-		public String getSerial() { return serial; }
-		public void setTapeType(String serial) { this.serial = serial; }
-		public int getTotalSpace() { return totalSpace; }
-		public float getTotalSpaceTB() { return (float) totalSpace / (1024 * 1024 * 1024); }
-		public void setTotalSpace(int totalSpace) { this.totalSpace = totalSpace; }
-		public int getUsedSpace() { return usedSpace; }
-		public float getUsedSpaceTB() { return (float) usedSpace / (1024 * 1024 * 1024); }
-		public void setUsedSpace(int remainingSpace) { this.usedSpace = remainingSpace; }
-		public LocalDateTime getDateAdded() { return dateAdded; }
-		public void setDateAdded(LocalDateTime dateAdded) { this.dateAdded = dateAdded; }
-	}
-
 	static DbTable getSelf() {
 		DbSchema schema = Database.schema;
 		DbTable table = schema.addTable(TABLE_NAME);
@@ -120,11 +64,11 @@ public class TableTape {
 
 		DbColumn tapeTypeForegnColumn = table.addColumn(COLUMN_NAME_TYPE, Types.INTEGER, null);
 		DbTable tableTapeType =  TableTapeType.table;
-		DbColumn columns[] = new DbColumn[] { tapeTypeForegnColumn};
+		DbColumn columns[] = new DbColumn[] { tapeTypeForegnColumn };
 		DbColumn columnsRef[] = new DbColumn[] { tableTapeType.getColumns().get(TableTapeType.COLUMN_INDEX_ID)};
 		table.foreignKey(TableTapeType.COLUMN_NAME_ID, columns, tableTapeType, columnsRef);
 
-		table.addColumn(COLUMN_NAME_BARCODE, Types.VARCHAR, 128);
+		table.addColumn(COLUMN_NAME_BARCODE, Types.VARCHAR, 6);
 		table.addColumn(COLUMN_NAME_SERIAL, Types.VARCHAR, 128);
 
 		tapeTypeForegnColumn = table.addColumn(COLUMN_NAME_MANUFACTURER, Types.INTEGER, null);

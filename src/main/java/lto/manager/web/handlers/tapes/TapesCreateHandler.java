@@ -13,9 +13,9 @@ import com.sun.net.httpserver.HttpExchange;
 
 import htmlflow.DynamicHtml;
 import lto.manager.common.database.Database;
-import lto.manager.common.database.tables.TableManufacturer.RecordManufacturer;
-import lto.manager.common.database.tables.TableTape.RecordTape;
-import lto.manager.common.database.tables.TableTapeType.RecordTapeType;
+import lto.manager.common.database.tables.records.RecordManufacturer;
+import lto.manager.common.database.tables.records.RecordTape;
+import lto.manager.common.database.tables.records.RecordTapeType;
 import lto.manager.web.handlers.BaseHandler;
 import lto.manager.web.handlers.templates.TemplatePage;
 import lto.manager.web.handlers.templates.TemplatePage.SelectedPage;
