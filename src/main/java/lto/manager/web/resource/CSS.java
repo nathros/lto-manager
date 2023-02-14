@@ -15,4 +15,12 @@ public class CSS {
 	public final static String FV_FILE_DETAILS_CONTAINER = "wtree-details-container ";
 	public final static String FV_FILE_DETAILS = "wtree-details ";
 	public final static String FV_FILE_ICON = "wtree-icon ";
+
+	public final static String TABS_CONTAINER = "tabbed ";
+	public final static String TABS_HEADERS = "tabs ";
+	public final static String TABS_TAB = "tab ";
+	public final static String TABS_CONTENT = "tab-content ";
+	public final static String TABS_SETUP_ICON = "tab-setup-icon ";
+	public final static String TABS_SOURCE_ICON = "tab-source-icon ";
+	public final static String TABS_DESTINATION_ICON = "tab-dest-icon ";
 }

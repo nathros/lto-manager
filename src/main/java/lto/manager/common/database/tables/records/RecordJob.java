@@ -4,26 +4,18 @@ import java.time.LocalDateTime;
 
 public class RecordJob {
 	public enum RecordJobType {
-		BACKUP,
-		BACKUP_1,
-		BACKUP_2,
-		BACKUP_3,
-		BACKUP_4,
-		BACKUP_5,
-		BACKUP_6,
-		BACKUP_7,
-		BACKUP_8,
-		BACKUP_9,
-		RESTORE,
-		RESTORE_1,
-		RESTORE_2,
-		RESTORE_3,
-		RESTORE_4,
-		RESTORE_5,
-		RESTORE_6,
-		RESTORE_7,
-		RESTORE_8,
-		RESTORE_9
+		BACKUP("Backup"), RESTORE("Restore");
+
+		private final String val;
+
+	    private RecordJobType(String val) {
+	        this.val = val;
+	    }
+
+	    @Override
+	    public String toString() {
+	        return val;
+	    }
 	}
 
 	public enum RecordJobStatus {

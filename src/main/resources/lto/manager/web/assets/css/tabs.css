@@ -1,0 +1,70 @@
+.tabbed {
+	overflow-x: hidden;
+	border-bottom: 1px solid #ccc;
+}
+.tabbed [type="radio"] {
+	display: none;
+}
+.tabs {
+	display: flex;
+	align-items: stretch;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	border-bottom: 2px solid #ccc;
+	overflow-y: clip;
+}
+.tab > label {
+	display: flex;
+	justify-content: center;
+	margin-bottom: -1px;
+	padding: 12px 0;
+	opacity: 50%;
+	background: white;
+	color: #666;
+	font-weight: 600;
+	letter-spacing: 1px;
+	cursor: pointer;
+	transition: all 0.3s;
+	filter: grayscale(1);
+}
+.tab {
+	width: 100%;
+}
+.tab:hover label {
+	opacity: 100%;
+	filter: grayscale(0);
+}
+li > label > img {
+	width: 15px;
+	padding-right: 8px;
+}
+.tab-content {
+	display: none;
+	color: #777;
+	background-color: #eee;
+}
+.tabbed [type="radio"]:nth-of-type(1):checked ~ .tabs .tab:nth-of-type(1) label,
+.tabbed [type="radio"]:nth-of-type(2):checked ~ .tabs .tab:nth-of-type(2) label,
+.tabbed [type="radio"]:nth-of-type(3):checked ~ .tabs .tab:nth-of-type(3) label,
+.tabbed [type="radio"]:nth-of-type(4):checked ~ .tabs .tab:nth-of-type(4) label {
+	background: #eee;
+	color: #222;
+	filter: grayscale(0);
+	opacity: 100%;
+}
+.tabbed [type="radio"]:nth-of-type(1):checked ~ .tab-content:nth-of-type(1),
+.tabbed [type="radio"]:nth-of-type(2):checked ~ .tab-content:nth-of-type(2),
+.tabbed [type="radio"]:nth-of-type(3):checked ~ .tab-content:nth-of-type(3),
+.tabbed [type="radio"]:nth-of-type(4):checked ~ .tab-content:nth-of-type(4) {
+	display: block;
+}
+.tab-setup-icon {
+	content: url(/assets/img/gear-fill.svg);
+}
+.tab-source-icon {
+	content: url(/assets/img/file-earmark-plus-fill.svg);
+}
+.tab-dest-icon {
+	content: url(/assets/img/folder-symlink-fill.svg);
+}

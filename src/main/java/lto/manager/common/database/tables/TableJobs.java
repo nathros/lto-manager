@@ -5,6 +5,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.healthmarketscience.sqlbuilder.BinaryCondition;
 import com.healthmarketscience.sqlbuilder.CreateTableQuery;
@@ -83,6 +85,30 @@ public class TableJobs {
 			return true;
 		}
 		return false;
+	}
+
+	public static List<RecordJob> getAtAll(Connection con) throws SQLException {
+		var statment = con.createStatement();
+
+		SelectQuery uq = new SelectQuery();
+		uq.addAllTableColumns(table);
+		String sql = uq.validate().toString();
+		ResultSet result = statment.executeQuery(sql);
+
+		List<RecordJob> jobs = new ArrayList<RecordJob>();
+		while (result.next()) {
+			String name = result.getString(COLUMN_NAME_NAME);
+			int id = result.getInt(COLUMN_NAME_ID);
+			RecordJobType type = RecordJobType.values()[result.getInt(COLUMN_NAME_TYPE)];
+			RecordJobStatus status = RecordJobStatus.values()[result.getInt(COLUMN_NAME_STATUS)];
+			LocalDateTime start = null; //result.getTimestamp(COLUMN_NAME_START_DATE_TIME);
+			LocalDateTime end = null; //result.getTimestamp(COLUMN_NAME_COMPLETED_DATE_TIME);
+			String comment = result.getString(COLUMN_NAME_COMMENT);
+
+			RecordJob job = RecordJob.of(id, name, type, status, start, end, comment);
+			jobs.add(job);
+		}
+		return jobs;
 	}
 
 	public static RecordJob getAtID(Connection con, int id) throws SQLException {

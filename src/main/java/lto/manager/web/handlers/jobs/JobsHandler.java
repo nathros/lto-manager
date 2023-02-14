@@ -3,14 +3,16 @@ package lto.manager.web.handlers.jobs;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-
-import org.xmlet.htmlapifaster.EnumTypeButtonType;
-import org.xmlet.htmlapifaster.EnumTypeInputType;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.sun.net.httpserver.HttpExchange;
 
 import htmlflow.DynamicHtml;
-import lto.manager.common.RsyncJob;
+import lto.manager.common.database.Database;
+import lto.manager.common.database.tables.TableJobs;
+import lto.manager.common.database.tables.records.RecordJob;
 import lto.manager.web.handlers.BaseHandler;
 import lto.manager.web.handlers.templates.TemplatePage;
 import lto.manager.web.handlers.templates.TemplatePage.SelectedPage;
@@ -26,46 +28,38 @@ public class JobsHandler extends BaseHandler {
 	private final static String STOP = "stop";
 	private final static String START = "start";
 
-	private static RsyncJob job = new RsyncJob();
-
 	static void body(DynamicHtml<BodyModel> view, BodyModel model) {
 		final String stop = model.getQueryNoNull(STOP);
 		final String start = model.getQueryNoNull(START);
 
+		List<RecordJob> results = new ArrayList<RecordJob>();
 		try {
-			if (stop.equals(BodyModel.QUERY_ON)) job.stop();
-			if (start.equals(BodyModel.QUERY_ON)) job.start();
-		} catch (Exception e) {
-			e.printStackTrace();
+			results = TableJobs.getAtAll(Database.connection);
+		} catch (SQLException e) {
 		}
 
-		final var info = job.getLatestInfo();
+		final List<RecordJob> jobs = results;
 
 		view
 			.div().dynamic(div -> {
-				div.a().attrClass(CSS.BUTTON).attrHref(JobsAddNewHandler.PATH).text("Add new job").__();
-				if (job.operationInProgress()) div.p().text("Job Running").__().br().__();
-				else div.p().text("Job NOT Running").__().br().__();
-				div.p().text("Total copied: " + info.getTotalCopied()).__();
-				div.p().text("Percent: " + info.getPercentCompleted()).__();
-				div.p().text("Speed: " + info.getTransferSpeed()).__();
-				div.p().text("ETA: " + info.getEstimatedTimeRemaining()).__();
-
-				String exitCodeStr = "";
-				Integer exitCode = job.getExitCode();
-				if (exitCode != null) exitCodeStr = String.valueOf(exitCode);
-				div.p().text("Exit Code: " + exitCodeStr).__();
-
-				div.hr().__();
-				div.p().text("err: " + job.getLatestError()).__();
 				div
-					.form()
-						.input().attrType(EnumTypeInputType.CHECKBOX).attrName(STOP).__()
-						.button().attrType(EnumTypeButtonType.SUBMIT).text("Stop").__()
-						.input().attrType(EnumTypeInputType.CHECKBOX).attrName(START).__()
-						.button().attrType(EnumTypeButtonType.SUBMIT).text("Start").__()
-					.__();
-				div.form().button().attrType(EnumTypeButtonType.SUBMIT).text("Refresh").__().__();
+					.a().attrClass(CSS.BUTTON).attrHref(JobsAddNewHandler.PATH).text("Add new job").__()
+					.table()
+						.tr()
+							.th().text("ID").__()
+							.th().text("Name").__()
+							.th().text("Type").__()
+						.__()
+						.of(row -> {
+							for (RecordJob job: jobs) {
+								row
+									.tr()
+										.td().text(job.getID()).__()
+										.td().text(job.getName()).__()
+										.td().text(job.getType()).__()
+									.__();
+							}
+						});
 			}).__(); //  div
 
 	}
