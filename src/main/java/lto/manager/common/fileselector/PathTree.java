@@ -27,7 +27,7 @@ public class PathTree {
 	private int depth;
 	private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-	public PathTree(String filePath, int depth) {
+	public PathTree(String filePath, int depth, int maxDepth) {
 		file = new File(filePath);
 		path = Paths.get(file.getAbsolutePath());
 		this.depth = depth;
@@ -51,16 +51,22 @@ public class PathTree {
 			children = new ArrayList<PathTree>();
 			List<PathTree> dir = new ArrayList<PathTree>();
 			List<PathTree> singleFile = new ArrayList<PathTree>();
-			for (File f: file.listFiles()) { // Separate files and directories
-				if (f.isDirectory()) {
-					dir.add(new PathTree(f.getAbsolutePath(), depth + 1));
-				} else {
-					singleFile.add(new PathTree(f.getAbsolutePath(), depth + 1));
+			if ((depth + 1) <= maxDepth) {
+				for (File f: file.listFiles()) { // Separate files and directories
+					if (f.isDirectory()) {
+						dir.add(new PathTree(f.getAbsolutePath(), depth + 1, maxDepth));
+					} else {
+						singleFile.add(new PathTree(f.getAbsolutePath(), depth + 1, maxDepth));
+					}
 				}
 			}
 			children.addAll(dir); // Make sure directories are always first
 			children.addAll(singleFile);
 		}
+	}
+
+	public PathTree(String filePath) {
+		this(filePath, 0, 1);
 	}
 
 	public File getFile() {

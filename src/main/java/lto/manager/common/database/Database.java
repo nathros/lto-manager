@@ -48,23 +48,20 @@ public class Database {
 
 	public static Connection openDatabase(String fileName) {
 		try {
-			//try {
-			//	Files.delete(Paths.get(fileName));  //TODO remove delete database
-			//} catch (Exception e) { }
-
 			File dbFile = new File(fileName);
 			boolean newDatabase = !dbFile.exists();
 
-			Class.forName("org.sqlite.JDBC");
+			//Class.forName("org.sqlite.JDBC");
 			String url = "jdbc:sqlite:" + fileName;
 			Connection con = DriverManager.getConnection(url);
 			connection = con;
 			if (newDatabase) {
 				Log.l.info("Database does not exist, creating new");
-				createTables();
+				if (!createTables()) {
+					Log.l.severe("Failed to create database");
+				}
 			}
 			con.createStatement().executeUpdate("PRAGMA foreign_keys = ON;");
-			//TableOptions.createTable(con);
 			Log.l.info("Successfully opened database: " + fileName);
             return con;
 		} catch (Exception e1) {

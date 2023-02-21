@@ -9,8 +9,8 @@ import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 
 import lto.manager.common.log.Log;
-import lto.manager.web.handlers.HTTPSRedirectHandler;
 import lto.manager.web.handlers.Handlers;
+import lto.manager.web.handlers.http.HTTPSRedirectHandler;
 
 public class SimpleHttpServer {
 	private HttpServer server;
@@ -23,7 +23,7 @@ public class SimpleHttpServer {
 			if (redirectOnly) {
 				server.createContext("/", new HTTPSRedirectHandler());
 			} else {
-				for(Map.Entry<String, HttpHandler> entry : Handlers.handlers.entrySet()) {
+				for(Map.Entry<String, HttpHandler> entry : Handlers.httpHandlers.entrySet()) {
 					String key = entry.getKey();
 				    HttpHandler value = entry.getValue();
 				    server.createContext(key, value);

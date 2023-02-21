@@ -35,6 +35,7 @@ public class MainWeb {
 				httpsServer.Start(portHTTPS, keyStoreFile, storePass.toCharArray(), keyPass.toCharArray());
 			}
 			Database.openDatabase(dbPath);
+			SimpleWebSocketServer.main(null);
 		}
 	}
 

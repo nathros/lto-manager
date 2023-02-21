@@ -1,5 +1,4 @@
 .tabbed {
-	overflow-x: hidden;
 	border-bottom: 1px solid #ccc;
 }
 .tabbed [type="radio"] {
@@ -42,7 +41,8 @@ li > label > img {
 .tab-content {
 	display: none;
 	color: #777;
-	background-color: #eee;
+	*background-color: #eee;
+	padding-top: 0.25rem;
 }
 .tabbed [type="radio"]:nth-of-type(1):checked ~ .tabs .tab:nth-of-type(1) label,
 .tabbed [type="radio"]:nth-of-type(2):checked ~ .tabs .tab:nth-of-type(2) label,

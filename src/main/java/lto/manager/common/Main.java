@@ -1,10 +1,12 @@
 package lto.manager.common;
 
+import java.lang.management.ManagementFactory;
+
 public class Main {
 	public static final String WEB = "web";
 	public static final String GUI = "gui";
 
-	public static final boolean DEBUG_MODE = java.lang.management.ManagementFactory.getRuntimeMXBean().getInputArguments().toString().indexOf("-agentlib:jdwp") > 0;
+	public static final boolean DEBUG_MODE = ManagementFactory.getRuntimeMXBean().getInputArguments().toString().indexOf("-agentlib:jdwp") > 0;
 
 	public static void main(String[] args) {
 		if (args.length > 0) {

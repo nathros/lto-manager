@@ -28,8 +28,10 @@ public class TableFile {
 	public static DbTable table = getSelf();
 	public static final String TABLE_NAME = "table_file";
 	public static final String COLUMN_NAME_ID = "id_file";
-	public static final String COLUMN_NAME_FILE_NAME = "file_name";
-	public static final String COLUMN_NAME_FILE_PATH = "file_path";
+	public static final String COLUMN_NAME_FILE_NAME_VIRTUAL = "file_name_virt";
+	public static final String COLUMN_NAME_FILE_PATH_VIRTUAL = "file_path_virt";
+	public static final String COLUMN_NAME_FILE_NAME_PHYSICAL = "file_name_phy";
+	public static final String COLUMN_NAME_FILE_PATH_PHYSICAL = "file_path_phy";
 	public static final String COLUMN_NAME_FILE_SIZE = "file_size";
 	public static final String COLUMN_NAME_FILE_DATE_CREATE = "file_created";
 	public static final String COLUMN_NAME_FILE_DATE_MODIFY = "file_modified";
@@ -37,13 +39,15 @@ public class TableFile {
 	public static final String COLUMN_NAME_FILE_CRC32 = "file_crc32";
 
 	public static final int COLUMN_INDEX_ID = 0;
-	public static final int COLUMN_INDEX_FILE_NAME = 1;
-	public static final int COLUMN_INDEX_FILE_PATH = 2;
-	public static final int COLUMN_INDEX_FILE_SIZE = 3;
-	public static final int COLUMN_INDEX_FILE_DATE_CREATE = 4;
-	public static final int COLUMN_INDEX_FILE_DATE_MODFIY = 5;
-	public static final int COLUMN_INDEX_FILE_TAPE_LOC = 6;
-	public static final int COLUMN_INDEX_FILE_CRC32 = 7;
+	public static final int COLUMN_INDEX_FILE_NAME_VIRTUAl = 1;
+	public static final int COLUMN_INDEX_FILE_PATH_VIRTUAL = 2;
+	public static final int COLUMN_INDEX_FILE_NAME_PHYSICAL = 3;
+	public static final int COLUMN_INDEX_FILE_PATH_PHYSICAL = 4;
+	public static final int COLUMN_INDEX_FILE_SIZE = 5;
+	public static final int COLUMN_INDEX_FILE_DATE_CREATE = 6;
+	public static final int COLUMN_INDEX_FILE_DATE_MODFIY = 7;
+	public static final int COLUMN_INDEX_FILE_TAPE_LOC = 8;
+	public static final int COLUMN_INDEX_FILE_CRC32 = 9;
 
 	static DbTable getSelf() {
 		DbSchema schema = Database.schema;
@@ -56,10 +60,12 @@ public class TableFile {
 
 		String key[] = new String[] { COLUMN_NAME_ID};
 		table.primaryKey(COLUMN_NAME_ID, key);
-		var nameColumn = table.addColumn(COLUMN_NAME_FILE_NAME, Types.VARCHAR, 256);
+		var nameColumn = table.addColumn(COLUMN_NAME_FILE_NAME_VIRTUAL, Types.VARCHAR, 256);
 		nameColumn.notNull();
-		var pathColumn = table.addColumn(COLUMN_NAME_FILE_PATH, Types.VARCHAR, 4096);
+		var pathColumn = table.addColumn(COLUMN_NAME_FILE_PATH_VIRTUAL, Types.VARCHAR, 4096);
 		pathColumn.notNull();
+		table.addColumn(COLUMN_NAME_FILE_NAME_PHYSICAL, Types.VARCHAR, 256);
+		table.addColumn(COLUMN_NAME_FILE_PATH_PHYSICAL, Types.VARCHAR, 4096);
 		table.addColumn(COLUMN_NAME_FILE_SIZE, Types.INTEGER, null);
 		table.addColumn(COLUMN_NAME_FILE_DATE_CREATE, Types.TIMESTAMP_WITH_TIMEZONE, null);
 		table.addColumn(COLUMN_NAME_FILE_DATE_MODIFY, Types.TIMESTAMP_WITH_TIMEZONE, null);
@@ -80,13 +86,13 @@ public class TableFile {
 
 	public static boolean createTable(Connection con) throws SQLException {
 		String q = new CreateTableQuery(TableFile.table, true).validate().toString();
-		q = q.replace(COLUMN_NAME_ID + ")", COLUMN_NAME_ID + " AUTOINCREMENT)"); // TODO better way of autoincrement
+		q = q.replace(COLUMN_NAME_ID + ")", COLUMN_NAME_ID + " AUTOINCREMENT)");
 
 		var statment = con.createStatement();
 
 		if (!statment.execute(q)) {
-			q = new CreateIndexQuery(TableFile.table, "index_" + COLUMN_NAME_FILE_PATH)
-					.addColumns(TableFile.table.getColumns().get(COLUMN_INDEX_FILE_PATH))
+			q = new CreateIndexQuery(TableFile.table, "index_" + COLUMN_NAME_FILE_PATH_VIRTUAL)
+					.addColumns(TableFile.table.getColumns().get(COLUMN_INDEX_FILE_PATH_VIRTUAL))
 					.validate().toString();
 			if (!statment.execute(q)) {
 				return true;
@@ -124,8 +130,8 @@ public class TableFile {
 			} catch (Exception e) {
 				virtualPath = "";
 			}
-			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_NAME), name);
-			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_PATH), virtualPath + "/");
+			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_NAME_VIRTUAl), name);
+			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_PATH_VIRTUAL), virtualPath + "/");
 			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_SIZE), Files.size(file.toPath()));
 			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_DATE_CREATE), "");
 			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_DATE_MODFIY), "");
@@ -154,8 +160,8 @@ public class TableFile {
 		ResultSet result = statment.executeQuery(sql);
 
 		while (result.next()) {
-			String name = result.getString(COLUMN_NAME_FILE_NAME);
-			String path = result.getString(COLUMN_NAME_FILE_PATH);
+			String name = result.getString(COLUMN_NAME_FILE_NAME_VIRTUAL);
+			String path = result.getString(COLUMN_NAME_FILE_PATH_VIRTUAL);
 
 			if (name == null) name = "";
 
@@ -174,23 +180,25 @@ public class TableFile {
 		String like = String.format("%s", dir);
 		uq.addAllTableColumns(table);
 		uq
-			.addCondition(BinaryCondition.like(table.getColumns().get(COLUMN_INDEX_FILE_PATH), like))
-			.addOrderings(table.getColumns().get(COLUMN_INDEX_FILE_PATH))
-			.addOrderings(table.getColumns().get(COLUMN_INDEX_FILE_NAME));
+			.addCondition(BinaryCondition.like(table.getColumns().get(COLUMN_INDEX_FILE_PATH_VIRTUAL), like))
+			.addOrderings(table.getColumns().get(COLUMN_INDEX_FILE_PATH_VIRTUAL))
+			.addOrderings(table.getColumns().get(COLUMN_INDEX_FILE_NAME_VIRTUAl));
 		String sql = uq.validate().toString();
 
 		ResultSet result = statment.executeQuery(sql);
 
 		while (result.next()) {
 			int id = result.getInt(COLUMN_NAME_ID);
-			String name = result.getString(COLUMN_NAME_FILE_NAME);
-			String path = result.getString(COLUMN_NAME_FILE_PATH);
+			String nameV = result.getString(COLUMN_NAME_FILE_NAME_VIRTUAL);
+			String pathV = result.getString(COLUMN_NAME_FILE_PATH_VIRTUAL);
+			String nameP = result.getString(COLUMN_NAME_FILE_NAME_PHYSICAL);
+			String pathP = result.getString(COLUMN_NAME_FILE_PATH_PHYSICAL);
 			int size = result.getInt(COLUMN_NAME_FILE_SIZE);
 			//LocalDateTime created;
 			//LocalDateTime modified;
 			int tapeID = result.getInt(COLUMN_NAME_FILE_TAPE_LOC);
 			int crc32 = result.getInt(COLUMN_NAME_FILE_CRC32);
-			files.add(RecordFile.of(id, name, path, size, null, null, tapeID, crc32));
+			files.add(RecordFile.of(id, nameV, pathV, nameP, pathP, size, null, null, tapeID, crc32));
 		}
 
 		return files;

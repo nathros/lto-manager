@@ -7,7 +7,7 @@ public class CSS {
 	public final static String BACKGROUND_ACTIVE = "background-active ";
 	public final static String BACKGROUND_GRAY = "background-gray ";
 
-
+	public final static String FV_ID = "id-wtree";
 	public final static String FV_ROOT = "wtree ";
 	public final static String FV_ICON_SIZE = "size ";
 	public final static String FV_ICON_MODIFIED = "modified ";
