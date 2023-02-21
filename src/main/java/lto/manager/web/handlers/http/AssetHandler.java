@@ -12,6 +12,7 @@ import java.util.List;
 
 import com.sun.net.httpserver.HttpExchange;
 
+import lto.manager.common.log.Log;
 import lto.manager.web.resource.Asset;
 
 public class AssetHandler extends BaseHTTPHandler {
@@ -60,6 +61,7 @@ public class AssetHandler extends BaseHTTPHandler {
 			OutputStream os = he.getResponseBody();
 			os.write(response.getBytes());
 			os.close();
+			Log.l.severe("Asset Handler cannot find: " + resource);
 		}
 		if (is != null) is.close();
 	}

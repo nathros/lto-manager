@@ -6,26 +6,26 @@ import org.xmlet.htmlapifaster.EnumTypeInputType;
 
 import htmlflow.DynamicHtml;
 import htmlflow.HtmlView;
-import lto.manager.common.fileselector.PathTree;
+import lto.manager.common.fileview.PathTreeBase;
 import lto.manager.web.handlers.http.AssetHandler;
 import lto.manager.web.resource.Asset;
 import lto.manager.web.resource.CSS;
 import lto.manager.web.resource.JS;
 
-public class HostFileListItem {
+public class FileListItem {
 
-	public static HtmlView<HostFileListModel> view = DynamicHtml.view(HostFileListItem::template);
+	public static HtmlView<FileListModel> view = DynamicHtml.view(FileListItem::template);
 
 	private static final String DATA_SIZE = "data-size";
 	private static final String DATA_TIME = "data-time";
 	private static final String DATA_NAME = "data-name";
 	private static final List<String> fileTypeCache = AssetHandler.getCachedFileListInDir(Asset.IMG_TYPES);
 
-	 static void template(DynamicHtml<HostFileListModel> view, HostFileListModel fileTree) {
+	 static void template(DynamicHtml<FileListModel> view, FileListModel fileTree) {
 		//final String LINK = FilesAddHandler.PATH + "?" + FilesAddHandler.DIR + "=";
-		final String ABS_PATH = fileTree.getTree().getFile().getAbsolutePath();
+		final String ABS_PATH = fileTree.getTree().getAbsolutePath();
 		try {
-			if (fileTree.getTree().getFile().isDirectory()) {
+			if (fileTree.getTree().isDirectory()) {
 				view.defineRoot()
 					.span()
 						.addAttr(DATA_SIZE, "0")
@@ -34,31 +34,31 @@ public class HostFileListItem {
 						.input()
 							.attrType(EnumTypeInputType.CHECKBOX)
 							.attrOnclick("selectDir(this)")
-							.attrName(HostFileListModel.FILE_SELECTED)
+							.attrName(FileListModel.FILE_SELECTED)
 							.attrValue(ABS_PATH)
 							.of(in -> {if (fileTree.isSelected()) in.attrChecked(true);})
 						.__()
 						.a()
 							.attrClass(CSS.BUTTON_SMALL + CSS.BACKGROUND_GRAY)
 							//.attrOnclick("hideFileTree(this)")
-							.attrOnclick(JS.fnHostExpandDir(ABS_PATH))
+							.attrOnclick(JS.fnFileViewExpandDir(ABS_PATH))
 							.text("+")
 						.__()
 						.img().attrClass(CSS.FV_FILE_ICON).attrSrc(getFileTypeIcon(fileTree.getTree())).__()
 						.a()
-							.attrOnclick(JS.fnHostFileListChangeDir(ABS_PATH))
-							.text(fileTree.getTree().getFile().getName())
+							.attrOnclick(JS.fnFileViewListChangeDir(ABS_PATH))
+							.text(fileTree.getTree().getName())
 						.__()
 						.span()
-							.attrClass(CSS.FV_ICON_SIZE).attrOnclick("sort(this,'data-size')")
+							.attrClass(CSS.FV_ICON_SIZE).attrOnclick(JS.fnFileViewSort(DATA_SIZE))
 							.em().text("Sort by file size").__()
 						.__()
 						.span()
-							.attrClass(CSS.FV_ICON_MODIFIED).attrOnclick("sort(this,'data-time')")
+							.attrClass(CSS.FV_ICON_MODIFIED).attrOnclick(JS.fnFileViewSort(DATA_TIME))
 							.em().text("Sort by modified").__()
 						.__()
 						.span()
-							.attrClass(CSS.FV_ICON_NAME).attrOnclick("sort(this,'data-name')")
+							.attrClass(CSS.FV_ICON_NAME).attrOnclick(JS.fnFileViewSort(DATA_NAME))
 							.em().text("Sort by name").__()
 						.__()
 					.__();
@@ -67,18 +67,18 @@ public class HostFileListItem {
 					.span()
 						.addAttr(DATA_SIZE, String.valueOf(fileTree.getTree().getFileSizeBytes()))
 						.addAttr(DATA_TIME, String.valueOf(fileTree.getTree().getModifiedDateTimeLong()))
-						.addAttr(DATA_NAME, fileTree.getTree().getFile().getName())
+						.addAttr(DATA_NAME, fileTree.getTree().getName())
 						.input()
 							.attrType(EnumTypeInputType.CHECKBOX)
 							.attrOnclick("selectFile(this)")
-							.attrName(HostFileListModel.FILE_SELECTED)
+							.attrName(FileListModel.FILE_SELECTED)
 							.attrValue(ABS_PATH)
 							.of(in -> {if (fileTree.isSelected()) in.attrChecked(true);})
 						.__()
 						.img().attrClass(CSS.FV_FILE_ICON).attrSrc(getFileTypeIcon(fileTree.getTree())).__()
 						//.a()
 							//.attrHref(LINK + Util.encodeUrl(ABS_PATH))
-							.text(fileTree.getTree().getFile().getName())
+							.text(fileTree.getTree().getName())
 						//.__()
 						.b().attrClass(CSS.FV_FILE_DETAILS_CONTAINER)
 							.em().attrClass(CSS.FV_FILE_DETAILS).text(fileTree.getTree().getFileSizeHR()).__()
@@ -87,16 +87,16 @@ public class HostFileListItem {
 					.__();
 			}
 		 } catch (Exception e) {
-			 view = DynamicHtml.view(HostFileListItem::template);
+			 view = DynamicHtml.view(FileListItem::template);
 			 throw e;
 		}
 	 }
 
-	 static private String getFileTypeIcon(PathTree file) { // FIXME https://www.xfce-look.org/p/1498619
-		 if (file.getFile().isDirectory()) {
+	 static private String getFileTypeIcon(PathTreeBase file) { // FIXME https://www.xfce-look.org/p/1498619
+		 if (file.isDirectory()) {
 			 return Asset.IMG_TYPES + "folder.svg";
 		 } else {
-			 final String filename = file.getFile().getName();
+			 final String filename = file.getName();
 			 int index = filename.lastIndexOf(".");
 			 if (index >= 0) {
 				 final String ext = filename.substring(index + 1) + ".svg";

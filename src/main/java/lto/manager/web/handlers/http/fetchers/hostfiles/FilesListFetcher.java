@@ -11,27 +11,28 @@ import htmlflow.DynamicHtml;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.templates.models.BodyModel;
 
-public class HostFilesListFetcher extends BaseHTTPHandler {
-	public static final String PATH = "/fetcher/hfileslist";
+public class FilesListFetcher extends BaseHTTPHandler {
+	public static final String PATH = "/fetcher/fileslist";
 
-	public static DynamicHtml<BodyModel> view = DynamicHtml.view(HostFilesListFetcher::body);
+	public static DynamicHtml<BodyModel> view = DynamicHtml.view(FilesListFetcher::body);
 
 	static void body(DynamicHtml<BodyModel> view, BodyModel model) {
-		final List<String> selected = model.getQueryArray(HostFileListModel.FILE_SELECTED);
-		final String path = model.getQuery(HostFileListModel.FILE_PATH);
-		final String breadcrumbs = model.getQueryNoNull(HostFileListModel.BREADCRUMBS_LAST);
-		final String depthStr = model.getQueryNoNull(HostFileListModel.MAX_DEPTH);
-		final String rootStr = model.getQueryNoNull(HostFileListModel.SHOW_ROOT);
+		final List<String> selected = model.getQueryArray(FileListModel.FILE_SELECTED);
+		final String path = model.getQuery(FileListModel.FILE_PATH);
+		final String breadcrumbs = model.getQueryNoNull(FileListModel.BREADCRUMBS_LAST);
+		final String depthStr = model.getQueryNoNull(FileListModel.MAX_DEPTH);
+		final String rootStr = model.getQueryNoNull(FileListModel.SHOW_ROOT);
 		final boolean showRoot = rootStr.equals("1");
 		int depth = 1;
 		try { depth = Integer.parseInt(depthStr); } catch (Exception e) {}
-		final HostFileListModel hflModel = new HostFileListModel(path, showRoot, breadcrumbs, selected, depth);
+		var options = FileListOptions.of(showRoot, breadcrumbs, selected, depth, false);
+		final FileListModel hflModel = new FileListModel(path, options);
 		try {
 			view.dynamic(v -> {
-				v.addPartial(HostFileList.view, hflModel);
+				v.addPartial(FileList.view, hflModel);
 			});
 		} catch (Exception e) {
-			view = DynamicHtml.view(HostFilesListFetcher::body);
+			view = DynamicHtml.view(FilesListFetcher::body);
 			throw e;
 		}
 	}
@@ -46,7 +47,7 @@ public class HostFilesListFetcher extends BaseHTTPHandler {
 			os.write(response.getBytes());
 			os.close();
 		} catch (Exception e) {
-			view = DynamicHtml.view(HostFilesListFetcher::body);
+			view = DynamicHtml.view(FilesListFetcher::body);
 			throw e;
 		}
 	}

@@ -8,7 +8,7 @@ import lto.manager.common.Main;
 import lto.manager.web.handlers.http.AdminHandler;
 import lto.manager.web.handlers.http.AssetHandler;
 import lto.manager.web.handlers.http.RootHandler;
-import lto.manager.web.handlers.http.fetchers.hostfiles.HostFilesListFetcher;
+import lto.manager.web.handlers.http.fetchers.hostfiles.FilesListFetcher;
 import lto.manager.web.handlers.http.fetchers.virtualfiles.VirtualFilesBrowserFetcher;
 import lto.manager.web.handlers.http.files.FilesAddHandler;
 import lto.manager.web.handlers.http.files.FilesBrowserHandler;
@@ -49,7 +49,7 @@ public class Handlers {
 		ret.put(JobsAddNewHandler.PATH, new JobsAddNewHandler());
 
 		ret.put(VirtualFilesBrowserFetcher.PATH, new VirtualFilesBrowserFetcher());
-		ret.put(HostFilesListFetcher.PATH, new HostFilesListFetcher());
+		ret.put(FilesListFetcher.PATH, new FilesListFetcher());
 
 		if (Main.DEBUG_MODE) {
 			ret.put(EchoHeaderHandler.PATH, new EchoHeaderHandler());

@@ -112,8 +112,8 @@ public class FilesBrowserHandler extends BaseHTTPHandler {
 	public void requestHandle(HttpExchange he) throws IOException {
 		try {
 			HeadModel thm = HeadModel.of("Files Browser");
-			thm.AddCSS(Asset.CSS_VIRTUAL_FILE_VIEW);
-			thm.AddScript(Asset.JS_VIRTUAL_FILE_VIEW);
+			thm.AddCSS(Asset.CSS_FILE_VIEW);
+			thm.AddScript(Asset.JS_FILE_VIEW);
 			TemplatePageModel tepm = TemplatePageModel.of(view, thm, SelectedPage.Files, BodyModel.of(he, null));
 			String response = TemplatePage.view.render(tepm);
 

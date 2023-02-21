@@ -7,42 +7,42 @@ import org.xmlet.htmlapifaster.EnumTypeInputType;
 
 import htmlflow.DynamicHtml;
 import htmlflow.HtmlView;
-import lto.manager.common.fileselector.PathTree;
+import lto.manager.common.fileview.PathTreeBase;
 import lto.manager.web.resource.CSS;
 import lto.manager.web.resource.JS;
 
-public class HostFileList {
+public class FileList {
 
-	public static HtmlView<HostFileListModel> view = DynamicHtml.view(HostFileList::template);
+	public static HtmlView<FileListModel> view = DynamicHtml.view(FileList::template);
 
-	static void template(DynamicHtml<HostFileListModel> view, HostFileListModel model) {
+	static void template(DynamicHtml<FileListModel> view, FileListModel model) {
 		final var finalView = view;
 		try {
-			Div<HtmlView<HostFileListModel>> wrapper = null;
+			Div<HtmlView<FileListModel>> wrapper = null;
 			if (model.getTree().getDepth() == 0) {
-				if (model.getShowRoot()) {
+				if (model.getOptions().showRoot()) {
 					wrapper = view.div().attrId(CSS.FV_ID).attrClass(CSS.FV_ROOT);
-					String bread = model.getBreadcrumbs();
-					if (!bread.contains(model.getTree().getFile().getAbsolutePath())) {
-						bread = model.getTree().getFile().getAbsolutePath();
+					String bread = model.getOptions().breadcrumbs();
+					if (!bread.contains(model.getTree().getAbsolutePath())) {
+						bread = model.getTree().getAbsolutePath();
 					}
 					final String breadcrumbsPath = bread;
 					wrapper
 						.input()
 							.attrStyle("width:500px")
 							.attrType(EnumTypeInputType.HIDDEN)
-							.attrId(HostFileListModel.BREADCRUMBS_LAST)
+							.attrId(FileListModel.BREADCRUMBS_LAST)
 							.attrValue(breadcrumbsPath)
 						.__()
 						.button()
 							.attrClass(CSS.BUTTON + CSS.BACKGROUND_CAUTION)
-							.attrOnclick(JS.fnHostFileListChangeDir(model.getTree().getFile().getParent()))
+							.attrOnclick(JS.fnFileViewListChangeDir(model.getTree().getParent()))
 							.text("&#x2191")
 						.__()
 						.of(n -> {
 							String[] split = breadcrumbsPath.split(File.separator);
 
-							int currentIndex = model.getTree().getFile().getAbsolutePath().split(File.separator).length;
+							int currentIndex = model.getTree().getAbsolutePath().split(File.separator).length;
 							currentIndex--;
 							if (currentIndex == 0) currentIndex++;
 							String path = "";
@@ -52,28 +52,28 @@ public class HostFileList {
 
 								n.button()
 									.attrClass(CSS.BUTTON + (i == currentIndex ? CSS.BACKGROUND_ACTIVE : ""))
-									.attrOnclick(JS.fnHostFileListChangeDir(path))
+									.attrOnclick(JS.fnFileViewListChangeDir(path))
 									.text(split[i])
 								.__();
 							}
 						});
 				}
-				finalView.addPartial(HostFileListItem.view, model);
+				finalView.addPartial(FileListItem.view, model);
 			}
 
-			if (model.getTree().getFile().isDirectory()) {
+			if (model.getTree().isDirectory()) {
 				view.defineRoot().ul().of(ul -> {
 					var children = model.getTree().getChildren();
 					if (children.size() == 0 && model.getTree().getDepth() == 0) {
 						ul.li().span().text("Empty").__().__(); // Open empty dir
 					} else {
-						for (PathTree child: children) {
+						for (PathTreeBase child: children) {
 							if (model.showItem(child)) {
 								var li = ul.li();
 								model.setTree(child);
-								finalView.addPartial(HostFileListItem.view, model);
-								if (child.getFile().isDirectory()) {
-									finalView.addPartial(HostFileList.view, model);
+								finalView.addPartial(FileListItem.view, model);
+								if (child.isDirectory()) {
+									finalView.addPartial(FileList.view, model);
 								}
 								li.__();
 							}
@@ -82,11 +82,11 @@ public class HostFileList {
 				}).__();
 
 			} else {
-				view.defineRoot().li().span().text(model.getTree().getFile().getName()).__().__();
+				view.defineRoot().li().span().text(model.getTree().getName()).__().__();
 			}
 			if (wrapper != null) wrapper.__();
 		 } catch (Exception e) {
-			 view = DynamicHtml.view(HostFileList::template);
+			 view = DynamicHtml.view(FileList::template);
 			 throw e;
 		}
 	 }

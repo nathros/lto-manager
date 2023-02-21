@@ -15,9 +15,10 @@ import com.sun.net.httpserver.HttpExchange;
 import htmlflow.DynamicHtml;
 import lto.manager.common.Util;
 import lto.manager.common.database.Database;
-import lto.manager.common.fileselector.PathTree;
+import lto.manager.common.fileview.PathTreeBase;
+import lto.manager.common.fileview.PathTreePhysical;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
-import lto.manager.web.handlers.http.fetchers.hostfiles.HostFileListModel;
+import lto.manager.web.handlers.http.fetchers.hostfiles.FileListModel;
 import lto.manager.web.handlers.http.templates.TemplatePage;
 import lto.manager.web.handlers.http.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.http.templates.TemplatePage.TemplatePageModel;
@@ -36,14 +37,14 @@ public class FilesAddHandler extends BaseHTTPHandler {
 	static void body(DynamicHtml<BodyModel> view, BodyModel model) {
 		final String dir = model.getQueryNoNull(DIR);
 		final String tapeId = model.getQueryNoNull(TAPE_ID);
-		final List<String> files = model.getQueryArray(HostFileListModel.FILE_SELECTED);
+		final List<String> files = model.getQueryArray(FileListModel.FILE_SELECTED);
 		final String dirD = dir.equals("") ? Util.getWorkingDir().getAbsolutePath() + "/testdir" : dir;
 
-		PathTree tmpTree = null;
+		PathTreeBase tmpTree = null;
 		if (!"".equals(dir)) {
-			tmpTree = new PathTree(dir, 0, 1);
+			tmpTree = new PathTreePhysical(dir, 0, 1);
 		} else {
-			tmpTree = new PathTree(Util.getWorkingDir().getAbsolutePath() + "/testdir", 0, 1);
+			tmpTree = new PathTreePhysical(Util.getWorkingDir().getAbsolutePath() + "/testdir", 0, 1);
 		}
 
 		if (model.isPOSTMethod()) {
@@ -55,7 +56,7 @@ public class FilesAddHandler extends BaseHTTPHandler {
 			}
 		}
 
-		final PathTree fileTree = tmpTree;
+		final PathTreeBase fileTree = tmpTree;
 		//final var finalView = view;
 
 		try {
@@ -110,8 +111,8 @@ public class FilesAddHandler extends BaseHTTPHandler {
 	public void requestHandle(HttpExchange he) throws IOException {
 		try {
 			HeadModel thm = HeadModel.of("Files Add");
-			thm.AddCSS(Asset.CSS_VIRTUAL_FILE_VIEW);
-			thm.AddScript(Asset.JS_VIRTUAL_FILE_VIEW);
+			thm.AddCSS(Asset.CSS_FILE_VIEW);
+			thm.AddScript(Asset.JS_FILE_VIEW);
 			TemplatePageModel tepm = TemplatePageModel.of(view, thm, SelectedPage.Files, BodyModel.of(he, null));
 			String response = TemplatePage.view.render(tepm);
 

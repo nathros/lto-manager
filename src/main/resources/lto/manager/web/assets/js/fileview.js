@@ -94,7 +94,7 @@ function hostChangeDir(path) {
 		}
 	}
 
-	fetch("/fetcher/hfileslist",
+	fetch("/fetcher/fileslist",
 	{
 		method: "post",
 		headers: {
@@ -132,7 +132,7 @@ function expandDir(sender, path) {
 	params.append(HOST_FILEVIEW_QUERY_MAX_DEPTH, "1");
 	params.append(HOST_FILEVIEW_QUERY_IS_ROOT, "0");
 
-	fetch("/fetcher/hfileslist",
+	fetch("/fetcher/fileslist",
 	{
 		method: "post",
 		headers: {
@@ -147,6 +147,4 @@ function expandDir(sender, path) {
 		console.log(error);
 	})
 }
-
-
 

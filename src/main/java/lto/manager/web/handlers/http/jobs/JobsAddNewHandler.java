@@ -13,8 +13,9 @@ import htmlflow.DynamicHtml;
 import lto.manager.common.Util;
 import lto.manager.common.database.tables.records.RecordJob.RecordJobType;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
-import lto.manager.web.handlers.http.fetchers.hostfiles.HostFileList;
-import lto.manager.web.handlers.http.fetchers.hostfiles.HostFileListModel;
+import lto.manager.web.handlers.http.fetchers.hostfiles.FileList;
+import lto.manager.web.handlers.http.fetchers.hostfiles.FileListModel;
+import lto.manager.web.handlers.http.fetchers.hostfiles.FileListOptions;
 import lto.manager.web.handlers.http.templates.TemplatePage;
 import lto.manager.web.handlers.http.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.http.templates.TemplatePage.TemplatePageModel;
@@ -107,7 +108,7 @@ public class JobsAddNewHandler extends BaseHTTPHandler {
 					// TAB 2
 					.div().attrClass(CSS.TABS_CONTENT)
 						.of(div -> {
-							view.addPartial(HostFileList.view, new HostFileListModel(fileTree, true, "", null, depth));
+							view.addPartial(FileList.view, new FileListModel(fileTree, FileListOptions.of(true, "", null, depth, false)));
 						})
 					.__()
 
@@ -126,10 +127,10 @@ public class JobsAddNewHandler extends BaseHTTPHandler {
 			HeadModel thm = HeadModel.of("Jobs");
 			thm.AddCSS(Asset.CSS_TABS);
 			//thm.AddCSS(Asset.CSS_VIRTUAL_FILE_VIEW);
-			thm.AddCSS(Asset.CSS_HOST_FILE_VIEW);
+			thm.AddCSS(Asset.CSS_FILE_VIEW);
 			thm.AddScript(Asset.JS_ADD_JOB);
 			//thm.AddScript(Asset.JS_VIRTUAL_FILE_VIEW);
-			thm.AddScript(Asset.JS_HOST_FILE_VIEW);
+			thm.AddScript(Asset.JS_FILE_VIEW);
 			TemplatePageModel tepm = TemplatePageModel.of(view, thm, SelectedPage.Jobs, BodyModel.of(he, null));
 			String response = TemplatePage.view.render(tepm);
 
