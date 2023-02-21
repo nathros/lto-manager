@@ -39,7 +39,7 @@ public class TableTape {
 	public static final String COLUMN_NAME_MANUFACTURER = TableManufacturer.COLUMN_NAME_ID;
 	public static final String COLUMN_NAME_TOTAL_SPACE = "bytes_total";
 	public static final String COLUMN_NAME_SPACE_USED = "bytes_used";
-	public static final String COLUMN_NAME_DATE_ADDED = "date_added";
+	public static final String COLUMN_NAME_DATE_ADDED = "date_added"; // TODO add last read and last write date time
 
 	public static final int COLUMN_INDEX_ID = 0;
 	public static final int COLUMN_INDEX_TYPE = 1;
@@ -77,8 +77,8 @@ public class TableTape {
 		columnsRef = new DbColumn[] { tableTapeType.getColumns().get(TableManufacturer.COLUMN_INDEX_ID)};
 		table.foreignKey(TableManufacturer.COLUMN_NAME_ID, columns, tableTapeType, columnsRef);
 
-		table.addColumn(COLUMN_NAME_TOTAL_SPACE, Types.INTEGER, null);
-		table.addColumn(COLUMN_NAME_SPACE_USED, Types.INTEGER, null);
+		table.addColumn(COLUMN_NAME_TOTAL_SPACE, Types.BIGINT, null);
+		table.addColumn(COLUMN_NAME_SPACE_USED, Types.BIGINT, null);
 		table.addColumn(COLUMN_NAME_DATE_ADDED, Types.TIME, null);
 
 		manufacturerJoin = Database.spec.addJoin(null, TABLE_NAME, null, TableManufacturer.TABLE_NAME, TableManufacturer.COLUMN_NAME_ID);
@@ -177,8 +177,8 @@ public class TableTape {
 			i = result.getInt(COLUMN_NAME_ID);
 			String barcode = result.getString(COLUMN_NAME_BARCODE);
 			String serial = result.getString(COLUMN_NAME_SERIAL);
-			int space = result.getInt(COLUMN_NAME_TOTAL_SPACE);
-			int left = result.getInt(COLUMN_NAME_SPACE_USED);
+			long space = result.getLong(COLUMN_NAME_TOTAL_SPACE);
+			long left = result.getLong(COLUMN_NAME_SPACE_USED);
 			//Time time = result.getTime(COLUMN_NAME_DATE_ADDED);
 			tape = RecordTape.of(i, rm, tt, barcode, serial, space, left, null);
 		}
@@ -216,8 +216,8 @@ public class TableTape {
 			i = result.getInt(COLUMN_NAME_ID);
 			String barcode = result.getString(COLUMN_NAME_BARCODE);
 			String serial = result.getString(COLUMN_NAME_SERIAL);
-			int space = result.getInt(COLUMN_NAME_TOTAL_SPACE);
-			int left = result.getInt(COLUMN_NAME_SPACE_USED);
+			long space = result.getLong(COLUMN_NAME_TOTAL_SPACE);
+			long left = result.getLong(COLUMN_NAME_SPACE_USED);
 			//Time time = result.getTime(COLUMN_NAME_DATE_ADDED);
 			tape.add(RecordTape.of(i, rm, tt, barcode, serial, space, left, null));
 		}

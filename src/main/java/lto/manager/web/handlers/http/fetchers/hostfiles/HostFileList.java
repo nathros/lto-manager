@@ -64,18 +64,23 @@ public class HostFileList {
 			if (model.getTree().getFile().isDirectory()) {
 				view.defineRoot().ul().of(ul -> {
 					var children = model.getTree().getChildren();
-					for (PathTree child: children) {
-						if (model.showItem(child)) {
-							var li = ul.li();
-							model.setTree(child);
-							finalView.addPartial(HostFileListItem.view, model);
-							if (child.getFile().isDirectory()) {
-								finalView.addPartial(HostFileList.view, model);
+					if (children.size() == 0 && model.getTree().getDepth() == 0) {
+						ul.li().span().text("Empty").__().__(); // Open empty dir
+					} else {
+						for (PathTree child: children) {
+							if (model.showItem(child)) {
+								var li = ul.li();
+								model.setTree(child);
+								finalView.addPartial(HostFileListItem.view, model);
+								if (child.getFile().isDirectory()) {
+									finalView.addPartial(HostFileList.view, model);
+								}
+								li.__();
 							}
-							li.__();
 						}
 					}
 				}).__();
+
 			} else {
 				view.defineRoot().li().span().text(model.getTree().getFile().getName()).__().__();
 			}

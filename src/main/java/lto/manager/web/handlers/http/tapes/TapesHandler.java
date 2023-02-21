@@ -47,8 +47,8 @@ public class TapesHandler extends BaseHTTPHandler {
 						.th().text("Type").__()
 						.th().text("Serial").__()
 						.th().text("Manufacturer").__()
-						.th().text("Size (TB)").__()
-						.th().text("Space Used (TB)").__()
+						.th().text("Size (GB)").__()
+						.th().text("Space Used (GB)").__()
 						.th().text("Action").__()
 					.__();
 					for (RecordTape item : tapes) {
@@ -58,8 +58,8 @@ public class TapesHandler extends BaseHTTPHandler {
 							.td().text(item.getTapeType().getType()).__()
 							.td().text(item.getSerial()).__()
 							.td().text(item.getManufacturer().getManufacturer()).__()
-							.td().text(item.getTotalSpaceTB()).__()
-							.td().text(item.getUsedSpaceTB()).__()
+							.td().text((int)item.getTotalSpaceGB()).__()
+							.td().text((int)item.getUsedSpaceGB()).__()
 							.td()
 								.a().attrClass(CSS.BUTTON + CSS.BACKGROUND_CAUTION).attrHref(TapesDeleteHandler.PATH + "?" + TapesDeleteHandler.ID + "=" + item.getID()).text("Delete").__()
 								.a().attrClass(CSS.BUTTON).attrHref(FilesHandler.PATH + "?" + FilesHandler.TAPE_ID + "=" + item.getID()).text("Show Files")

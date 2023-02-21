@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 public class RecordJob {
 	public enum RecordJobType {
-		BACKUP("Backup"), RESTORE("Restore");
+		BACKUP("Backup"), RESTORE("Restore"), DELETE("Delete");
 
 		private final String val;
 

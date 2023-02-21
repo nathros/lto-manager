@@ -62,7 +62,7 @@ public class TapesCreateHandler extends BaseHTTPHandler {
 
 		if (model.hasQuery()) {
 			try {
-				var tape = RecordTape.of(null, manuIndex, typeIndex, barcode, serial, 0, 0, null);
+				var tape = RecordTape.of(null, m.get(manuIndex), t.get(typeIndex), barcode, serial, 0, null);
 				Database.addTape(tape);
 				s = true;
 			} catch (Exception e) {
@@ -74,7 +74,6 @@ public class TapesCreateHandler extends BaseHTTPHandler {
 		final String errorMessage = er;
 		final boolean addedTapeSuccess = s;
 
-
 		try {
 			view
 				.div()
@@ -83,32 +82,40 @@ public class TapesCreateHandler extends BaseHTTPHandler {
 						.select().attrId("select-type").attrName(TAPETYPE).dynamic(select -> {
 							select.attrOnchange("onSelectType()")
 								.option().attrValue("").attrSelected(typeIndex == -1).attrDisabled(true).text("Select").__();
+							int index = 0;
 							for (RecordTapeType item: typesList) {
-								if (item.getID() == typeIndex) {
-									select.option()
-										.addAttr("data-des", item.getDesignation())
-										.addAttr("data-worm", item.getDesignationWORM())
-										.attrSelected(true).attrValue(String.valueOf(item.getID())).text(item.getType())
-									.__();
-								} else {
-									select.option()
-										.addAttr("data-des", item.getDesignation())
-										.addAttr("data-worm", item.getDesignationWORM())
-										.attrValue(String.valueOf(item.getID())).text(item.getType())
-									.__();
-								}
+								final int indexCopy = index;
+								select.option()
+									.of(sel -> {
+										if (indexCopy == typeIndex) {
+											sel.attrSelected(true);
+										}
+									})
+									.addAttr("data-des", item.getDesignation())
+									.addAttr("data-worm", item.getDesignationWORM())
+									.attrValue(String.valueOf(index))
+									.text(item.getType())
+								.__();
+								index++;
 							}
 						}).__().br().__()
 
 						.b().attrStyle("width:150px;display:inline-block").text("LTO Manufacturer: ").__()
 						.select().attrName(MANU).dynamic(select -> {
 							select.option().attrValue("").attrSelected(manuIndex == -1).attrDisabled(true).text("Select").__();
+							int index = 0;
 							for (RecordManufacturer item: manuList) {
-								if (item.getID() == manuIndex) {
-									select.option().attrSelected(true).attrValue(String.valueOf(item.getID())).text(item.getManufacturer()).__();
-								} else {
-									select.option().attrValue(String.valueOf(item.getID())).text(item.getManufacturer()).__();
-								}
+								final int indexCopy = index;
+								select.option()
+									.of(sel -> {
+										if (indexCopy == manuIndex) {
+											sel.attrSelected(true);
+										}
+									})
+									.attrValue(String.valueOf(index))
+									.text(item.getManufacturer())
+								.__();
+								index++;
 							}
 						}).__().br().__()
 

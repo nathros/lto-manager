@@ -10,12 +10,13 @@ public class RecordTape {
 	private RecordTapeType type;
 	private String barcode;
 	private String serial;
-	private int totalSpace;
-	private int usedSpace;
+	private long totalSpace;
+	private long usedSpace;
 	private LocalDateTime dateAdded;
+	public static final int CALC_SIZE = -1;
 
 	public RecordTape(int id, RecordManufacturer manufacturer, RecordTapeType type, String barcode,
-			String serial, int totalSpace, int usedSpace, LocalDateTime dateAdded) {
+			String serial, long totalSpace, long usedSpace, LocalDateTime dateAdded) {
 		this.id = id;
 		this.manufacturer = manufacturer;
 		this.type = type;
@@ -27,17 +28,15 @@ public class RecordTape {
 	}
 
 	public static RecordTape of(Integer id, RecordManufacturer manufacturer, RecordTapeType type, String barcode,
-			String serial, int totalSpace, int usedSpace, LocalDateTime dateAdded) {
+			String serial, long usedSpace, LocalDateTime dateAdded) {
 		if (id == null) id = TableTape.NO_ID;
-		return new RecordTape(id, manufacturer, type, barcode, serial, totalSpace, usedSpace, dateAdded);
+		return new RecordTape(id, manufacturer, type, barcode, serial, type.calcCapacityBytes(), usedSpace, dateAdded);
 	}
 
-	public static RecordTape of(Integer id, int manufacturerID, int typeID, String barcode,
-			String serial, int totalSpace, int usedSpace, LocalDateTime dateAdded) {
-		RecordManufacturer rm = RecordManufacturer.of(manufacturerID, "");
-		RecordTapeType t = RecordTapeType.of(typeID, "", "", "");
+	public static RecordTape of(Integer id, RecordManufacturer manufacturer, RecordTapeType type, String barcode,
+			String serial, long totalSpace, long usedSpace, LocalDateTime dateAdded) {
 		if (id == null) id = TableTape.NO_ID;
-		return new RecordTape(id, rm, t, barcode, serial, totalSpace, usedSpace, dateAdded);
+		return new RecordTape(id, manufacturer, type, barcode, serial, totalSpace, usedSpace, dateAdded);
 	}
 
 	public int getID() { return id; }
@@ -50,11 +49,11 @@ public class RecordTape {
 	public void setBarcode(String barcode) { this.barcode = barcode; }
 	public String getSerial() { return serial; }
 	public void setTapeType(String serial) { this.serial = serial; }
-	public int getTotalSpace() { return totalSpace; }
-	public float getTotalSpaceTB() { return (float) totalSpace / (1024 * 1024 * 1024); }
+	public long getTotalSpace() { return totalSpace; }
+	public float getTotalSpaceGB() { return (float) totalSpace / (1024 * 1024 * 1024); }
 	public void setTotalSpace(int totalSpace) { this.totalSpace = totalSpace; }
-	public int getUsedSpace() { return usedSpace; }
-	public float getUsedSpaceTB() { return (float) usedSpace / (1024 * 1024 * 1024); }
+	public long getUsedSpace() { return usedSpace; }
+	public float getUsedSpaceGB() { return (float) usedSpace / (1024 * 1024 * 1024); }
 	public void setUsedSpace(int remainingSpace) { this.usedSpace = remainingSpace; }
 	public LocalDateTime getDateAdded() { return dateAdded; }
 	public void setDateAdded(LocalDateTime dateAdded) { this.dateAdded = dateAdded; }
