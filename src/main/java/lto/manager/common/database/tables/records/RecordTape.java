@@ -10,19 +10,18 @@ public class RecordTape {
 	private RecordTapeType type;
 	private String barcode;
 	private String serial;
-	private long totalSpace;
 	private long usedSpace;
 	private LocalDateTime dateAdded;
 	public static final int CALC_SIZE = -1;
+	public static final int EMPTY = -1;
 
 	public RecordTape(int id, RecordManufacturer manufacturer, RecordTapeType type, String barcode,
-			String serial, long totalSpace, long usedSpace, LocalDateTime dateAdded) {
+			String serial, long usedSpace, LocalDateTime dateAdded) {
 		this.id = id;
 		this.manufacturer = manufacturer;
 		this.type = type;
 		this.barcode = barcode;
 		this.serial = serial;
-		this.totalSpace = totalSpace;
 		this.usedSpace = usedSpace;
 		this.dateAdded = dateAdded;
 	}
@@ -30,13 +29,13 @@ public class RecordTape {
 	public static RecordTape of(Integer id, RecordManufacturer manufacturer, RecordTapeType type, String barcode,
 			String serial, long usedSpace, LocalDateTime dateAdded) {
 		if (id == null) id = TableTape.NO_ID;
-		return new RecordTape(id, manufacturer, type, barcode, serial, type.calcCapacityBytes(), usedSpace, dateAdded);
+		return new RecordTape(id, manufacturer, type, barcode, serial, usedSpace, dateAdded);
 	}
 
 	public static RecordTape of(Integer id, RecordManufacturer manufacturer, RecordTapeType type, String barcode,
 			String serial, long totalSpace, long usedSpace, LocalDateTime dateAdded) {
 		if (id == null) id = TableTape.NO_ID;
-		return new RecordTape(id, manufacturer, type, barcode, serial, totalSpace, usedSpace, dateAdded);
+		return new RecordTape(id, manufacturer, type, barcode, serial, usedSpace, dateAdded);
 	}
 
 	public int getID() { return id; }
@@ -49,9 +48,8 @@ public class RecordTape {
 	public void setBarcode(String barcode) { this.barcode = barcode; }
 	public String getSerial() { return serial; }
 	public void setTapeType(String serial) { this.serial = serial; }
-	public long getTotalSpace() { return totalSpace; }
-	public float getTotalSpaceGB() { return (float) totalSpace / (1024 * 1024 * 1024); }
-	public void setTotalSpace(int totalSpace) { this.totalSpace = totalSpace; }
+	public long getTotalSpace() { return type.getCapacity(); }
+	public float getTotalSpaceGB() { return (float) type.getCapacity() / (1024 * 1024 * 1024); }
 	public long getUsedSpace() { return usedSpace; }
 	public float getUsedSpaceGB() { return (float) usedSpace / (1024 * 1024 * 1024); }
 	public void setUsedSpace(int remainingSpace) { this.usedSpace = remainingSpace; }

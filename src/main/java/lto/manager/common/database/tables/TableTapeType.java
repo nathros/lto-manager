@@ -25,11 +25,13 @@ public class TableTapeType {
 	public static final String COLUMN_NAME_TYPE = "type";
 	public static final String COLUMN_NAME_DESIGNATION = "des";
 	public static final String COLUMN_NAME_DESIGNATION_WORM = "worm";
+	public static final String COLUMN_NAME_CAPACITY = "capacity_bytes";
 
 	public static final int COLUMN_INDEX_ID = 0;
 	public static final int COLUMN_INDEX_TYPE = 1;
 	public static final int COLUMN_INDEX_DESIGNATION = 2;
 	public static final int COLUMN_INDEX_DESIGNATION_WORM = 3;
+	public static final int COLUMN_INDEX_CAPACITY = 4;
 
 	private static DbTable getSelf() {
 		DbSchema schema = Database.schema;
@@ -45,6 +47,7 @@ public class TableTapeType {
 		table.addColumn(COLUMN_NAME_TYPE, Types.VARCHAR, 128);
 		table.addColumn(COLUMN_NAME_DESIGNATION, Types.VARCHAR, 2);
 		table.addColumn(COLUMN_NAME_DESIGNATION_WORM, Types.VARCHAR, 2);
+		table.addColumn(COLUMN_NAME_CAPACITY, Types.BIGINT, null);
 
 		return table;
 	}
@@ -55,8 +58,10 @@ public class TableTapeType {
 
 		var statment = con.createStatement();
 
+		final long bytesPerGiB = 1000 * 1000 * 1000;
+		final long[] tapeSizeGB = {100, 200, 400, 800, 1500, 2500, 6000, 12000, 18000};
 		if (!statment.execute(q)) {
-			if (addNewType(con, "LTO-7 Type M8", "M8", "")) { // Prepopulate values
+			if (addNewType(con, "LTO-7 Type M8", "M8", "", 9000 * bytesPerGiB)) { // Prepopulate values
 				char letter = 'T';
 				for (int i = 1; i < 10; i++) {
 					String worm = "";
@@ -64,7 +69,7 @@ public class TableTapeType {
 						worm = "L" + letter;
 						letter++;
 					}
-					if (addNewType(con, "LTO-" + i, "L" + i, worm) == false) return false;
+					if (addNewType(con, "LTO-" + i, "L" + i, worm, tapeSizeGB[i - 1] * bytesPerGiB) == false) return false;
 				}
 				return true;
 			}
@@ -72,13 +77,15 @@ public class TableTapeType {
 		return false;
 	}
 
-	public static boolean addNewType(Connection con, String name, String designation, String designationWORM) throws SQLException {
+	public static boolean addNewType(Connection con, String name, String designation, String designationWORM, long capacity) throws SQLException {
 		var statment = con.createStatement();
 
 		InsertQuery iq = new InsertQuery(table);
 		iq.addColumn(table.getColumns().get(COLUMN_INDEX_TYPE), name);
 		iq.addColumn(table.getColumns().get(COLUMN_INDEX_DESIGNATION), designation);
 		iq.addColumn(table.getColumns().get(COLUMN_INDEX_DESIGNATION_WORM), designationWORM);
+		iq.addColumn(table.getColumns().get(COLUMN_INDEX_CAPACITY), capacity);
+
 		String sql = iq.validate().toString();
 		if (!statment.execute(sql)) {
 			return true;
@@ -101,7 +108,8 @@ public class TableTapeType {
 			String type = result.getString(COLUMN_NAME_TYPE);
 			String des = result.getString(COLUMN_NAME_DESIGNATION);
 			String worm = result.getString(COLUMN_NAME_DESIGNATION_WORM);
-			RecordTapeType tmp = RecordTapeType.of(id, type, des, worm);
+			long capacity = result.getLong(TableTapeType.COLUMN_NAME_CAPACITY);
+			RecordTapeType tmp = RecordTapeType.of(id, type, des, worm, capacity);
 			list.add(tmp);
 		}
 
@@ -121,7 +129,8 @@ public class TableTapeType {
 		String manu = result.getString(COLUMN_NAME_TYPE);
 		String des = result.getString(COLUMN_NAME_DESIGNATION);
 		String worm = result.getString(COLUMN_NAME_DESIGNATION_WORM);
-		RecordTapeType tmp = RecordTapeType.of(id, manu, des, worm);
+		long capacity = result.getLong(TableTapeType.COLUMN_NAME_CAPACITY);
+		RecordTapeType tmp = RecordTapeType.of(id, manu, des, worm, capacity);
 
 		return tmp;
 	}

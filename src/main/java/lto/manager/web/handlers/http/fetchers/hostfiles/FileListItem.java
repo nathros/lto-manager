@@ -40,7 +40,6 @@ public class FileListItem {
 						.__()
 						.a()
 							.attrClass(CSS.BUTTON_SMALL + CSS.BACKGROUND_GRAY)
-							//.attrOnclick("hideFileTree(this)")
 							.attrOnclick(JS.fnFileViewExpandDir(ABS_PATH))
 							.text("+")
 						.__()

@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.healthmarketscience.sqlbuilder.BinaryCondition;
@@ -23,6 +24,7 @@ import com.healthmarketscience.sqlbuilder.dbspec.basic.DbTable;
 
 import lto.manager.common.database.Database;
 import lto.manager.common.database.tables.records.RecordFile;
+import lto.manager.common.database.tables.records.RecordTape;
 
 public class TableFile {
 	public static DbTable table = getSelf();
@@ -90,16 +92,22 @@ public class TableFile {
 
 		var statment = con.createStatement();
 
-		if (!statment.execute(q)) {
-			q = new CreateIndexQuery(TableFile.table, "index_" + COLUMN_NAME_FILE_PATH_VIRTUAL)
-					.addColumns(TableFile.table.getColumns().get(COLUMN_INDEX_FILE_PATH_VIRTUAL))
-					.validate().toString();
-			if (!statment.execute(q)) {
-				return true;
-			}
-		}
+		boolean result = statment.execute(q);
+		if (result) return false;
+		q = new CreateIndexQuery(TableFile.table, "index_" + COLUMN_NAME_FILE_PATH_VIRTUAL)
+			.addColumns(TableFile.table.getColumns().get(COLUMN_INDEX_FILE_PATH_VIRTUAL))
+			.validate().toString();
+		result = statment.execute(q);
+		if (result) return false;
 
-		return false;
+		RecordFile rootDir = RecordFile.of("/", "/", "", "", 0, null, null, RecordTape.EMPTY, 0);
+		try {
+			addFiles(con, 0, Arrays.asList(rootDir));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
 	}
 
 	public static boolean addFiles(Connection con, int tapeID, List<String> files, String workingDir) throws SQLException, IOException {
@@ -145,6 +153,31 @@ public class TableFile {
 
 		return true;
 	}
+
+	public static boolean addFiles(Connection con, int tapeID, List<RecordFile> files) throws SQLException, IOException {
+		var statment = con.createStatement();
+
+		for (RecordFile file: files) {
+			InsertQuery iq = new InsertQuery(table);
+			if (file.getID() == Database.NEW_RECORD_ID) iq.addColumn(table.getColumns().get(COLUMN_INDEX_ID), file.getID());
+			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_NAME_VIRTUAl), file.getVirtualFileName());
+			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_PATH_VIRTUAL), file.getVirtualFilePath());
+			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_NAME_PHYSICAL), file.getPhysicalFileName());
+			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_PATH_PHYSICAL), file.getPhysicalFilePath());
+			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_SIZE), file.getFileSize());
+			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_DATE_CREATE), "");
+			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_DATE_MODFIY), "");
+			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_TAPE_LOC), tapeID);
+			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_CRC32), file.getCRC32());
+			String sql = iq.validate().toString();
+			if (statment.execute(sql)) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
 
 	public static List<File> getFilesOnTape(Connection con, int tapeID) throws SQLException, IOException {
 		var statment = con.createStatement();

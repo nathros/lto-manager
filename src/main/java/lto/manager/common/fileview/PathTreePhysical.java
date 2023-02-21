@@ -9,7 +9,6 @@ public class PathTreePhysical extends PathTreeBase {
 	public PathTreePhysical(String filePath, int depth, int maxDepth) {
 		super();
 		File fileLocal = new File(filePath);
-		//path = Paths.get(fileLocal.getAbsolutePath());
 		this.depth = depth;
 		this.file = new PathTreeFile(fileLocal);
 

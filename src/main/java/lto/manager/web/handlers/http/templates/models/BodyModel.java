@@ -253,7 +253,6 @@ public class BodyModel {
 						@SuppressWarnings("unchecked")
 						List<String> list = (List<String>) o;
 						list.add(value);
-
 					}
 				}
 			}

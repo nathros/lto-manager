@@ -34,11 +34,6 @@ public class FileList {
 							.attrId(FileListModel.BREADCRUMBS_LAST)
 							.attrValue(breadcrumbsPath)
 						.__()
-						.button()
-							.attrClass(CSS.BUTTON + CSS.BACKGROUND_CAUTION)
-							.attrOnclick(JS.fnFileViewListChangeDir(model.getTree().getParent()))
-							.text("&#x2191")
-						.__()
 						.of(n -> {
 							String[] split = breadcrumbsPath.split(File.separator);
 

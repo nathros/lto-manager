@@ -70,11 +70,8 @@ public class SimpleWebSocketServer extends WebSocketServer {
 	public static void main(String[] args) {
 		String host = "0.0.0.0";
 		int port = 8887;
-
-
 		WebSocketServer server = new SimpleWebSocketServer(new InetSocketAddress(host, port));
-
-		server.run();
+		server.start();
 
 	}
 }

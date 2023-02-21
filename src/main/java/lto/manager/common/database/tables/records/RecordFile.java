@@ -2,6 +2,8 @@ package lto.manager.common.database.tables.records;
 
 import java.time.LocalDateTime;
 
+import lto.manager.common.database.Database;
+
 public class RecordFile {
 	private int id;
 	private String fileNameVirtual;
@@ -31,6 +33,10 @@ public class RecordFile {
 
 	public static RecordFile of(int id, String fileNameVirt, String filePathVirt, String fileNamePhy, String filePathPhy, int size, LocalDateTime created, LocalDateTime modified, int tapeID, int crc32) {
 		return new RecordFile(id, fileNameVirt, filePathVirt, fileNamePhy, filePathPhy, size, created, modified, tapeID, crc32);
+	}
+
+	public static RecordFile of(String fileNameVirt, String filePathVirt, String fileNamePhy, String filePathPhy, int size, LocalDateTime created, LocalDateTime modified, int tapeID, int crc32) {
+		return new RecordFile(Database.NEW_RECORD_ID, fileNameVirt, filePathVirt, fileNamePhy, filePathPhy, size, created, modified, tapeID, crc32);
 	}
 
 	private void setIsDirectory() {

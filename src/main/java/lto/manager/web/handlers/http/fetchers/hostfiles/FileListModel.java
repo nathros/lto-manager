@@ -27,7 +27,7 @@ public class FileListModel {
 		public FileListOptions getOptions() { return options; }
 		public void setTree(PathTreeBase tree) { this.tree = tree; }
 		public boolean isSelected() {
-			String path = tree.toString();
+			String path = tree.getAbsolutePath();
 			boolean result = options.selected().contains(path);
 			return result;
 		}

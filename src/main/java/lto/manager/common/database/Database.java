@@ -27,6 +27,7 @@ public class Database {
 	public static Connection connection;
 	public static DbSpec spec = new DbSpec();
 	public static DbSchema schema = spec.addDefaultSchema();
+	public static final int NEW_RECORD_ID = -1;
 
 	public static boolean createTables() {
 		boolean op = true;
@@ -61,6 +62,7 @@ public class Database {
 					Log.l.severe("Failed to create database");
 				}
 			}
+			// Enforce foreign keys check on insert
 			con.createStatement().executeUpdate("PRAGMA foreign_keys = ON;");
 			Log.l.info("Successfully opened database: " + fileName);
             return con;
@@ -96,7 +98,7 @@ public class Database {
 	}
 
 	public static boolean addNewType(String name) throws SQLException {
-		return TableTapeType.addNewType(connection, name, "", "");
+		return TableTapeType.addNewType(connection, name, "", "", 0);
 	}
 
 	public static List<RecordTapeType> getAllTapeTypes() throws SQLException {

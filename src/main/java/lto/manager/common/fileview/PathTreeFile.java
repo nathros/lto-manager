@@ -21,7 +21,7 @@ public class PathTreeFile {
 	private boolean isDirectory;
 	private Path path;
 
-	public PathTreeFile(File f) {
+	public PathTreeFile(File f) { // Physical file
 		path = Paths.get(f.getAbsolutePath());
 		try {
 			fileSize = Files.size(path);
