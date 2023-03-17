@@ -23,7 +23,7 @@ public class FileListItem {
 
 	 static void template(DynamicHtml<FileListModel> view, FileListModel fileTree) {
 		//final String LINK = FilesAddHandler.PATH + "?" + FilesAddHandler.DIR + "=";
-		final String ABS_PATH = fileTree.getTree().getAbsolutePath();
+		final String ABS_PATH = fileTree.getTree().getAbsolutePath() + (fileTree.getOptions().isVirtual() ? "/" : "");
 		try {
 			if (fileTree.getTree().isDirectory()) {
 				view.defineRoot()
@@ -31,21 +31,25 @@ public class FileListItem {
 						.addAttr(DATA_SIZE, "0")
 						.addAttr(DATA_TIME, "0")
 						.addAttr(DATA_NAME, "")
-						.input()
-							.attrType(EnumTypeInputType.CHECKBOX)
-							.attrOnclick("selectDir(this)")
-							.attrName(FileListModel.FILE_SELECTED)
-							.attrValue(ABS_PATH)
-							.of(in -> {if (fileTree.isSelected()) in.attrChecked(true);})
-						.__()
+						.of(s -> {
+							if (!fileTree.getOptions().isVirtual()) {
+								s.input()
+									.attrType(EnumTypeInputType.CHECKBOX)
+									.attrOnclick("selectDir(this," + fileTree.getOptions().isVirtual() + ")")
+									.attrName(FileListModel.FILE_SELECTED)
+									.attrValue(ABS_PATH)
+									.of(in -> {if (fileTree.isSelected()) in.attrChecked(true);})
+								.__();
+							}
+						})
 						.a()
 							.attrClass(CSS.BUTTON_SMALL + CSS.BACKGROUND_GRAY)
-							.attrOnclick(JS.fnFileViewExpandDir(ABS_PATH))
+							.attrOnclick(JS.fnFileViewExpandDir(ABS_PATH, fileTree.getOptions().isVirtual()))
 							.text("+")
 						.__()
 						.img().attrClass(CSS.FV_FILE_ICON).attrSrc(getFileTypeIcon(fileTree.getTree())).__()
 						.a()
-							.attrOnclick(JS.fnFileViewListChangeDir(ABS_PATH))
+							.attrOnclick(JS.fnFileViewListChangeDir(ABS_PATH, fileTree.getOptions().isVirtual()))
 							.text(fileTree.getTree().getName())
 						.__()
 						.span()
@@ -67,13 +71,17 @@ public class FileListItem {
 						.addAttr(DATA_SIZE, String.valueOf(fileTree.getTree().getFileSizeBytes()))
 						.addAttr(DATA_TIME, String.valueOf(fileTree.getTree().getModifiedDateTimeLong()))
 						.addAttr(DATA_NAME, fileTree.getTree().getName())
-						.input()
-							.attrType(EnumTypeInputType.CHECKBOX)
-							.attrOnclick("selectFile(this)")
-							.attrName(FileListModel.FILE_SELECTED)
-							.attrValue(ABS_PATH)
-							.of(in -> {if (fileTree.isSelected()) in.attrChecked(true);})
-						.__()
+						.of(s -> {
+							if (!fileTree.getOptions().isVirtual()) {
+								s.input()
+									.attrType(EnumTypeInputType.CHECKBOX)
+									.attrOnclick("selectFile(this)")
+									.attrName(FileListModel.FILE_SELECTED)
+									.attrValue(ABS_PATH)
+									.of(in -> {if (fileTree.isSelected()) in.attrChecked(true);})
+								.__();
+							}
+						})
 						.img().attrClass(CSS.FV_FILE_ICON).attrSrc(getFileTypeIcon(fileTree.getTree())).__()
 						//.a()
 							//.attrHref(LINK + Util.encodeUrl(ABS_PATH))

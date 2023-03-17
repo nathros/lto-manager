@@ -66,8 +66,7 @@ ul {
 .wtree span span em { /* Tool-tip for sort button */
 	position: absolute;
 	top: -28px;
-	left: -37px;
-	width: 120px;
+	width: max-content;
 	background-color: black;
 	color: white;
 	height: 20px;
@@ -79,6 +78,7 @@ ul {
 	text-align: center;
 	pointer-events: none;
 	transition: 0s opacity;
+	padding: 0px 8px;
 }
 .wtree span span em:after { /* Tool-tip arrow */
 	content: "";
@@ -98,11 +98,20 @@ ul {
 	background-image: url('/assets/img/database-fill.svg');
 	margin-right: 1.5rem;
 }
+.wtree span span.size em {
+	left: -42px;
+}
 .wtree span span.modified {
 	background-image: url('/assets/img/clock-history.svg');
 }
+.wtree span span.modified em {
+	left: -47px;
+}
 .wtree span span.name {
 	background-image: url('/assets/img/sort-alpha-down.svg');
+}
+.wtree span span.name em {
+	left: -37px;
 }
 .wtree span span:before,
 .wtree span span:after {

@@ -3,15 +3,18 @@ package lto.manager.common.database.tables;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import com.healthmarketscience.sqlbuilder.BinaryCondition;
+import com.healthmarketscience.sqlbuilder.ComboCondition;
 import com.healthmarketscience.sqlbuilder.CreateIndexQuery;
 import com.healthmarketscience.sqlbuilder.CreateTableQuery;
 import com.healthmarketscience.sqlbuilder.InsertQuery;
@@ -24,7 +27,6 @@ import com.healthmarketscience.sqlbuilder.dbspec.basic.DbTable;
 
 import lto.manager.common.database.Database;
 import lto.manager.common.database.tables.records.RecordFile;
-import lto.manager.common.database.tables.records.RecordTape;
 
 public class TableFile {
 	public static DbTable table = getSelf();
@@ -100,7 +102,8 @@ public class TableFile {
 		result = statment.execute(q);
 		if (result) return false;
 
-		RecordFile rootDir = RecordFile.of("/", "/", "", "", 0, null, null, RecordTape.EMPTY, 0);
+		LocalDateTime now = LocalDateTime.now();
+		RecordFile rootDir = RecordFile.of("", "/", "", "", 0, now, now, 0, 0);
 		try {
 			addFiles(con, 0, Arrays.asList(rootDir));
 		} catch (Exception e) {
@@ -159,14 +162,14 @@ public class TableFile {
 
 		for (RecordFile file: files) {
 			InsertQuery iq = new InsertQuery(table);
-			if (file.getID() == Database.NEW_RECORD_ID) iq.addColumn(table.getColumns().get(COLUMN_INDEX_ID), file.getID());
+			if (file.getID() != Database.NEW_RECORD_ID) iq.addColumn(table.getColumns().get(COLUMN_INDEX_ID), file.getID());
 			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_NAME_VIRTUAl), file.getVirtualFileName());
 			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_PATH_VIRTUAL), file.getVirtualFilePath());
 			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_NAME_PHYSICAL), file.getPhysicalFileName());
 			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_PATH_PHYSICAL), file.getPhysicalFilePath());
 			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_SIZE), file.getFileSize());
-			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_DATE_CREATE), "");
-			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_DATE_MODFIY), "");
+			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_DATE_CREATE), file.getCreatedDateTime());
+			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_DATE_MODFIY), file.getModifiedDateTime());
 			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_TAPE_LOC), tapeID);
 			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_CRC32), file.getCRC32());
 			String sql = iq.validate().toString();
@@ -211,27 +214,44 @@ public class TableFile {
 
 		SelectQuery uq = new SelectQuery();
 		String like = String.format("%s", dir);
+
+		String parentName = dir;
+		String parentPath = dir;
+		if (!dir.equals("/")) {
+			parentName = "/" + Paths.get(dir).getFileName().toString() + "/";
+			parentPath = Paths.get(dir).getParent().toString() + "/";
+			if (parentPath.equals("//")) parentPath = "/";
+		}
+
+		var andConditions = ComboCondition.and(
+				BinaryCondition.equalTo(table.getColumns().get(COLUMN_INDEX_FILE_PATH_VIRTUAL), parentPath),
+				BinaryCondition.equalTo(table.getColumns().get(COLUMN_INDEX_FILE_NAME_VIRTUAl), parentName));
+		var orConditions = ComboCondition.or(andConditions,
+				BinaryCondition.like(table.getColumns().get(COLUMN_INDEX_FILE_PATH_VIRTUAL), like));
+
 		uq.addAllTableColumns(table);
 		uq
-			.addCondition(BinaryCondition.like(table.getColumns().get(COLUMN_INDEX_FILE_PATH_VIRTUAL), like))
+			.addCondition(orConditions)
 			.addOrderings(table.getColumns().get(COLUMN_INDEX_FILE_PATH_VIRTUAL))
 			.addOrderings(table.getColumns().get(COLUMN_INDEX_FILE_NAME_VIRTUAl));
 		String sql = uq.validate().toString();
 
-		ResultSet result = statment.executeQuery(sql);
+		ResultSet resultChildren = statment.executeQuery(sql);
 
-		while (result.next()) {
-			int id = result.getInt(COLUMN_NAME_ID);
-			String nameV = result.getString(COLUMN_NAME_FILE_NAME_VIRTUAL);
-			String pathV = result.getString(COLUMN_NAME_FILE_PATH_VIRTUAL);
-			String nameP = result.getString(COLUMN_NAME_FILE_NAME_PHYSICAL);
-			String pathP = result.getString(COLUMN_NAME_FILE_PATH_PHYSICAL);
-			int size = result.getInt(COLUMN_NAME_FILE_SIZE);
-			//LocalDateTime created;
-			//LocalDateTime modified;
-			int tapeID = result.getInt(COLUMN_NAME_FILE_TAPE_LOC);
-			int crc32 = result.getInt(COLUMN_NAME_FILE_CRC32);
-			files.add(RecordFile.of(id, nameV, pathV, nameP, pathP, size, null, null, tapeID, crc32));
+		while (resultChildren.next()) {
+			int id = resultChildren.getInt(COLUMN_NAME_ID);
+			String nameV = resultChildren.getString(COLUMN_NAME_FILE_NAME_VIRTUAL);
+			String pathV = resultChildren.getString(COLUMN_NAME_FILE_PATH_VIRTUAL);
+			String nameP = resultChildren.getString(COLUMN_NAME_FILE_NAME_PHYSICAL);
+			String pathP = resultChildren.getString(COLUMN_NAME_FILE_PATH_PHYSICAL);
+			int size = resultChildren.getInt(COLUMN_NAME_FILE_SIZE);
+			String createdStr = resultChildren.getString(COLUMN_NAME_FILE_DATE_CREATE);
+			LocalDateTime created = LocalDateTime.parse(createdStr);
+			String modifiedStr = resultChildren.getString(COLUMN_NAME_FILE_DATE_MODIFY);
+			LocalDateTime modified = LocalDateTime.parse(modifiedStr);
+			int tapeID = resultChildren.getInt(COLUMN_NAME_FILE_TAPE_LOC);
+			int crc32 = resultChildren.getInt(COLUMN_NAME_FILE_CRC32);
+			files.add(RecordFile.of(id, nameV, pathV, nameP, pathP, size, created, modified, tapeID, crc32));
 		}
 
 		return files;

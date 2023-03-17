@@ -12,6 +12,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
+import lto.manager.common.database.tables.records.RecordFile;
 import lto.manager.common.log.Log;
 
 public class PathTreeFile {
@@ -43,6 +44,14 @@ public class PathTreeFile {
 			Log.l.severe("Failed to get file attributes for: " + f.getAbsolutePath());
 			e.printStackTrace();
 		}
+	}
+
+	public PathTreeFile(RecordFile f) {
+		this.fileSize = f.getFileSize();
+		this.creationDateTime = f.getCreatedDateTime();
+		this.modifiedDateTime = f.getModifiedDateTime();
+		this.isDirectory = f.isDirectory();
+		this.path = Paths.get(f.getAbsolutePath());
 	}
 
 	public long getFileSize() { return fileSize; }

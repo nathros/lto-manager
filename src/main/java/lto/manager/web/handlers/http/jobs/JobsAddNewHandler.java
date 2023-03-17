@@ -45,13 +45,14 @@ public class JobsAddNewHandler extends BaseHTTPHandler {
 		final String start = model.getQueryNoNull(TYPE);
 		final int typeIndex = type.equals("") ? -1 : Integer.valueOf(type);
 		final String fileTree = Util.getWorkingDir().getAbsolutePath() + "/testdir";
+		final String fileTreeVirtual = "/";
 
 		view
 			.div()
 				.div().attrClass(CSS.TABS_CONTAINER)
 					.input().attrType(EnumTypeInputType.RADIO).attrId("tab1").attrName("css-tab").__()
-					.input().attrType(EnumTypeInputType.RADIO).attrId("tab2").attrName("css-tab").attrChecked(true).__()
-					.input().attrType(EnumTypeInputType.RADIO).attrId("tab3").attrName("css-tab").__()
+					.input().attrType(EnumTypeInputType.RADIO).attrId("tab2").attrName("css-tab").__()
+					.input().attrType(EnumTypeInputType.RADIO).attrId("tab3").attrName("css-tab").attrChecked(true).__()
 					.ul().attrClass(CSS.TABS_HEADERS)
 						.li().attrClass(CSS.TABS_TAB)
 							.label().attrFor(TAB1)
@@ -114,6 +115,9 @@ public class JobsAddNewHandler extends BaseHTTPHandler {
 
 					// TAB 3
 					.div().attrClass(CSS.TABS_CONTENT)
+						.of(div -> {
+							view.addPartial(FileList.view, new FileListModel(fileTreeVirtual, FileListOptions.of(true, "", null, depth, true)));
+						})
 						.button().attrClass(CSS.BUTTON).attrType(EnumTypeButtonType.SUBMIT).text("Submit").__()
 					.__()
 				.__() // div TABS_CONTAINER

@@ -18,7 +18,9 @@ import lto.manager.common.database.Database;
 import lto.manager.common.fileview.PathTreeBase;
 import lto.manager.common.fileview.PathTreePhysical;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
+import lto.manager.web.handlers.http.fetchers.hostfiles.FileList;
 import lto.manager.web.handlers.http.fetchers.hostfiles.FileListModel;
+import lto.manager.web.handlers.http.fetchers.hostfiles.FileListOptions;
 import lto.manager.web.handlers.http.templates.TemplatePage;
 import lto.manager.web.handlers.http.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.http.templates.TemplatePage.TemplatePageModel;
@@ -42,7 +44,7 @@ public class FilesAddHandler extends BaseHTTPHandler {
 
 		PathTreeBase tmpTree = null;
 		if (!"".equals(dir)) {
-			tmpTree = new PathTreePhysical(dir, 0, 1);
+			tmpTree = new PathTreePhysical(dir, 0, 4);
 		} else {
 			tmpTree = new PathTreePhysical(Util.getWorkingDir().getAbsolutePath() + "/testdir", 0, 1);
 		}
@@ -57,7 +59,7 @@ public class FilesAddHandler extends BaseHTTPHandler {
 		}
 
 		final PathTreeBase fileTree = tmpTree;
-		//final var finalView = view;
+		final var finalView = view;
 
 		try {
 			view
@@ -73,7 +75,7 @@ public class FilesAddHandler extends BaseHTTPHandler {
 							fieldset.hr().__();
 
 							if (fileTree != null) {
-								//finalView.addPartial(HostFileList.view, new HostFileListModel(fileTree, false, "", null));
+								finalView.addPartial(FileList.view, new FileListModel(dirD, FileListOptions.of(true, "", null, 4, false)));
 							}
 
 							fieldset

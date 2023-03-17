@@ -7,9 +7,8 @@ import java.util.List;
 public class PathTreePhysical extends PathTreeBase {
 
 	public PathTreePhysical(String filePath, int depth, int maxDepth) {
-		super();
+		super(depth);
 		File fileLocal = new File(filePath);
-		this.depth = depth;
 		this.file = new PathTreeFile(fileLocal);
 
 		if (fileLocal.isDirectory()) {

@@ -47,7 +47,7 @@ public class FileList {
 
 								n.button()
 									.attrClass(CSS.BUTTON + (i == currentIndex ? CSS.BACKGROUND_ACTIVE : ""))
-									.attrOnclick(JS.fnFileViewListChangeDir(path))
+									.attrOnclick(JS.fnFileViewListChangeDir(path, model.getOptions().isVirtual()))
 									.text(split[i])
 								.__();
 							}

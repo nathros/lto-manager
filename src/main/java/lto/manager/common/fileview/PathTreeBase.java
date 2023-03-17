@@ -12,6 +12,10 @@ public abstract class PathTreeBase {
 	protected int depth;
 	protected static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
+	public PathTreeBase(int depth) {
+		this.depth = depth;
+	}
+
 	public long getFileSizeBytes() {
 		return file.getFileSize();
 	}

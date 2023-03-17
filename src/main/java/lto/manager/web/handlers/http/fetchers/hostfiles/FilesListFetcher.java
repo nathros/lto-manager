@@ -22,10 +22,12 @@ public class FilesListFetcher extends BaseHTTPHandler {
 		final String breadcrumbs = model.getQueryNoNull(FileListModel.BREADCRUMBS_LAST);
 		final String depthStr = model.getQueryNoNull(FileListModel.MAX_DEPTH);
 		final String rootStr = model.getQueryNoNull(FileListModel.SHOW_ROOT);
-		final boolean showRoot = rootStr.equals("1");
+		final String isVirtualStr = model.getQueryNoNull(FileListModel.IS_VIRTUAL);
+		final boolean isVirtual = isVirtualStr.equals(Boolean.TRUE.toString());
+		final boolean showRoot = rootStr.equals(Boolean.TRUE.toString());
 		int depth = 1;
 		try { depth = Integer.parseInt(depthStr); } catch (Exception e) {}
-		var options = FileListOptions.of(showRoot, breadcrumbs, selected, depth, false);
+		var options = FileListOptions.of(showRoot, breadcrumbs, selected, depth, isVirtual);
 		final FileListModel hflModel = new FileListModel(path, options);
 		try {
 			view.dynamic(v -> {

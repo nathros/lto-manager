@@ -69,7 +69,7 @@ public class TableTapeType {
 						worm = "L" + letter;
 						letter++;
 					}
-					if (addNewType(con, "LTO-" + i, "L" + i, worm, tapeSizeGB[i - 1] * bytesPerGiB) == false) return false;
+					if (!addNewType(con, "LTO-" + i, "L" + i, worm, tapeSizeGB[i - 1] * bytesPerGiB)) return false;
 				}
 				return true;
 			}

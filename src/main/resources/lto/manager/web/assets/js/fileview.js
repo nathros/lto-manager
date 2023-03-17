@@ -4,6 +4,7 @@ const HOST_FILEVIEW_QUERY_PATH = "f@path";
 const HOST_FILEVIEW_QUERY_BREADCRUMBS = "f@bread";
 const HOST_FILEVIEW_QUERY_MAX_DEPTH = "f@depth";
 const HOST_FILEVIEW_QUERY_IS_ROOT = "f@root";
+const HOST_FILEVIEW_QUERY_IS_VIRTUAL = "f@isvirtual";
 
 function ascSort(a, b) {
 	let x = parseInt(a);
@@ -76,13 +77,14 @@ function selectFile(sender) {
 	}
 }
 
-function hostChangeDir(path) {
+function hostChangeDir(path, virtual) {
 	let root = document.getElementById(HOST_FILEVIEW_ROOT_ID);
 	let checkboxes = root.getElementsByTagName("input");
 	let params = new URLSearchParams();
 	params.append(HOST_FILEVIEW_QUERY_PATH, path);
 	params.append(HOST_FILEVIEW_QUERY_MAX_DEPTH, "1");
-	params.append(HOST_FILEVIEW_QUERY_IS_ROOT, "1");
+	params.append(HOST_FILEVIEW_QUERY_IS_ROOT, true);
+	params.append(HOST_FILEVIEW_QUERY_IS_VIRTUAL, virtual);
 
 	let bread = document.getElementById(HOST_FILEVIEW_QUERY_BREADCRUMBS);
 	let breadValue = "";
@@ -121,7 +123,7 @@ function hideFileTree(sender) {
 	}
 }
 
-function expandDir(sender, path) {
+function expandDir(sender, path, virtual) {
 	let items = sender.parentElement.parentElement.getElementsByTagName("li");
 	if (items.length > 0) { // Children already populated
 		hideFileTree(sender);
@@ -130,7 +132,8 @@ function expandDir(sender, path) {
 	let params = new URLSearchParams();
 	params.append(HOST_FILEVIEW_QUERY_PATH, path);
 	params.append(HOST_FILEVIEW_QUERY_MAX_DEPTH, "1");
-	params.append(HOST_FILEVIEW_QUERY_IS_ROOT, "0");
+	params.append(HOST_FILEVIEW_QUERY_IS_ROOT, false);
+	params.append(HOST_FILEVIEW_QUERY_IS_VIRTUAL, virtual);
 
 	fetch("/fetcher/fileslist",
 	{
