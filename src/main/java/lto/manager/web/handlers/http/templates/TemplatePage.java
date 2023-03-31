@@ -12,6 +12,7 @@ import lto.manager.web.handlers.http.sandpit.SandpitHandler;
 import lto.manager.web.handlers.http.tapes.TapesHandler;
 import lto.manager.web.handlers.http.templates.models.BodyModel;
 import lto.manager.web.handlers.http.templates.models.HeadModel;
+import lto.manager.web.resource.CSS;
 
 public class TemplatePage {
 	public static enum SelectedPage {
@@ -67,32 +68,32 @@ public class TemplatePage {
 								.ul().attrId("nav-menu")
 									.li()
 										.a().dynamic(a -> a.attrHref(AdminHandler.PATH)
-											.attrClass("icon-admin" + (model.page == SelectedPage.Admin ? selected : ""))
+											.attrClass(CSS.ICON_ADMIN + (model.page == SelectedPage.Admin ? selected : ""))
 											.text("Admin"))
 										.__()
 									.__()
 									.li()
 										.a().dynamic(a -> a.attrHref(TapesHandler.PATH)
-											.attrClass("icon-tape" + (model.page == SelectedPage.Tapes ? selected : ""))
+											.attrClass(CSS.ICON_TAPE + (model.page == SelectedPage.Tapes ? selected : ""))
 											.text("Tapes"))
 										.__()
 									.__()
 									.li()
 										.a().dynamic(a -> a.attrHref(FilesHandler.PATH)
-											.attrClass("icon-folder" + (model.page == SelectedPage.Files ? selected : ""))
+											.attrClass(CSS.ICON_FOLDER + (model.page == SelectedPage.Files ? selected : ""))
 											.text("Files"))
 										.__()
 									.__()
 									.li()
 										.a().dynamic(a -> a.attrHref(JobsHandler.PATH)
-											.attrClass("icon-jobs" + (model.page == SelectedPage.Jobs ? selected : ""))
+											.attrClass(CSS.ICON_JOBS + (model.page == SelectedPage.Jobs ? selected : ""))
 											.text("Jobs"))
 										.__()
 									.__()
 									.li().dynamic(li -> {
 										if (Main.DEBUG_MODE) {
 											li.a()
-											.attrHref(SandpitHandler.PATH).attrClass("icon-sandpit" + (model.page == SelectedPage.Sandpit ? selected : ""))
+											.attrHref(SandpitHandler.PATH).attrClass(CSS.ICON_SANDPIT + (model.page == SelectedPage.Sandpit ? selected : ""))
 											.text("Sandpit")
 											.__();
 										}

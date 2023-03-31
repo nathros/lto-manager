@@ -196,3 +196,34 @@ ul {
 .wtree a:hover {
 	text-decoration: underline;
 }
+
+.wtree-breadcrumb-container {
+	position: relative;
+	margin-bottom: 6px;
+}
+.edit-path-btn {
+	transition: 0s;
+}
+.edit-path-container {
+	display: none;
+	position: absolute;
+	top: 0;
+	height: 100%;
+	width: 100%;
+}
+.edit-path-container input {
+	width: calc(100% - 5rem);
+	height: calc(100% - 8px);
+	margin-top: 1px;
+}
+.edit-path-btn:focus + .edit-path-container {
+	display: block;
+}
+.edit-path-btn:focus {
+	opacity: 0;
+}
+.edit-path-container:focus-within,
+.edit-path-container:active,
+.edit-path-container:has(.active) {
+  display: block !important;
+}

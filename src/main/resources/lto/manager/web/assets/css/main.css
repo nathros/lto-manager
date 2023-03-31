@@ -93,6 +93,12 @@ a {
 .icon-sandpit:before {
 	background-image: url('/assets/img/bucket-spade-fill.svg');
 }
+.icon-edit:before {
+	background-image: url('/assets/img/pencil-fill.svg');
+}
+.icon-check:before {
+	background-image: url('/assets/img/check-lg.svg');
+}
 #nav-toggle a:hover:before,
 #nav-toggle a.selected:before  {
 	opacity: 1;
@@ -194,6 +200,15 @@ a {
 	background-color: rgb(32, 74, 135);
 	box-shadow: rgba(0, 0, 0, .06) 0 2px 4px;
 	transform: translateY(0);
+}
+.btn-image:before {
+	content: '';
+	background-size: contain;
+	height: 1rem;
+    width: 1rem;
+    filter: invert(100%);
+    background-repeat: no-repeat;
+    background-position: center;
 }
 .background-caution {
 	background-color: darkorange;

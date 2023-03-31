@@ -36,21 +36,44 @@ public class FileList {
 						.__()
 						.of(n -> {
 							String[] split = breadcrumbsPath.split(File.separator);
-
+							String currentPath = "";
+							var container = n.div().attrClass(CSS.FV_BREADCRUMB_CONTAINER);
 							int currentIndex = model.getTree().getAbsolutePath().split(File.separator).length;
 							currentIndex--;
 							if (currentIndex == 0) currentIndex++;
 							String path = "";
 							for (int i = 0; i < split.length; i++) {
 								path += split[i] + File.separator;
+								if (i == currentIndex) currentPath = path;
 								if (split[i].equals("")) split[i] = File.separator;
-
-								n.button()
+								container.button()
 									.attrClass(CSS.BUTTON + (i == currentIndex ? CSS.BACKGROUND_ACTIVE : ""))
 									.attrOnclick(JS.fnFileViewListChangeDir(path, model.getOptions().isVirtual()))
 									.text(split[i])
 								.__();
 							}
+							container.button()
+								.attrClass(CSS.BUTTON + CSS.BUTTON_IMAGE + CSS.ICON_EDIT + CSS.FV_BREADCRUMB_EDIT_BTN)
+								.attrOnclick(JS.fnFileViewSelectPathEditBox())
+								.attrOnfocus(JS.fnFileViewSelectPathEditBox())
+								.attrStyle("float:right")
+							.__();
+
+							container.div()
+								.attrClass(CSS.FV_BREADCRUMB_EDIT_CONTAINER)
+								.input()
+									.attrType(EnumTypeInputType.TEXT)
+									.attrValue(currentPath)
+									.attrOnkeyup(JS.fnFileViewKeyDownEditBox())
+								.__()
+								.button()
+									.attrClass(CSS.BUTTON + CSS.BUTTON_IMAGE + CSS.ICON_CHECK)
+									.attrOnclick(JS.fnFileViewListChangeDirManual(model.getOptions().isVirtual()))
+									.attrStyle("float:right")
+								.__()
+							.__();
+
+							container.__();
 						});
 				}
 				finalView.addPartial(FileListItem.view, model);

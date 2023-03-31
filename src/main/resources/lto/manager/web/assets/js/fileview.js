@@ -77,6 +77,28 @@ function selectFile(sender) {
 	}
 }
 
+function selectPathEditBox(sender) {
+	let input = sender.nextElementSibling.childNodes[1];
+	// Blur event fires before the focus happens so the element hides as you try to focus it
+	input.classList.add('active');
+	input.focus();
+	input.classList.remove('active');
+	input.selectionStart = input.selectionEnd = input.value.length;
+}
+
+function keydownPathEditBox(sender, event) {
+	if (event.key === 'Escape') {
+		sender.blur();
+		sender.parentElement.parentElement.focus();
+    } else if (event.key === 'Enter') {
+		sender.nextElementSibling.click();
+    }
+}
+
+function hostChangeDirManual(sender, virtual) {
+	hostChangeDir(sender.previousElementSibling.value, virtual);
+}
+
 function hostChangeDir(path, virtual) {
 	let root = document.getElementById(HOST_FILEVIEW_ROOT_ID);
 	let checkboxes = root.getElementsByTagName("input");
