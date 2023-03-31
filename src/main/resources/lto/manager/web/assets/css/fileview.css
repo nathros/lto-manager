@@ -201,9 +201,6 @@ ul {
 	position: relative;
 	margin-bottom: 6px;
 }
-.edit-path-btn {
-	transition: 0s;
-}
 .edit-path-container {
 	display: none;
 	position: absolute;
@@ -221,6 +218,7 @@ ul {
 }
 .edit-path-btn:focus {
 	opacity: 0;
+	transition: 0s;
 }
 .edit-path-container:focus-within,
 .edit-path-container:active,

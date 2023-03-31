@@ -37,6 +37,7 @@ public class FileListModel {
 			}
 		}
 
+		public String getIDPostFix() { return getOptions().isVirtual() ? "-v" : "-p"; }
 		public PathTreeBase getTree() { return tree; }
 		public FileListOptions getOptions() { return options; }
 		public void setTree(PathTreeBase tree) { this.tree = tree; }

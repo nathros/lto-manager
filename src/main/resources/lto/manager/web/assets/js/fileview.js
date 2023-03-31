@@ -6,6 +6,10 @@ const HOST_FILEVIEW_QUERY_MAX_DEPTH = "f@depth";
 const HOST_FILEVIEW_QUERY_IS_ROOT = "f@root";
 const HOST_FILEVIEW_QUERY_IS_VIRTUAL = "f@isvirtual";
 
+function getIDPostFix(virtual) {
+	return (virtual === true ? "-v" : "-p")
+}
+
 function ascSort(a, b) {
 	let x = parseInt(a);
 	let y = parseInt(b);
@@ -100,7 +104,7 @@ function hostChangeDirManual(sender, virtual) {
 }
 
 function hostChangeDir(path, virtual) {
-	let root = document.getElementById(HOST_FILEVIEW_ROOT_ID);
+	let root = document.getElementById(HOST_FILEVIEW_ROOT_ID + getIDPostFix(virtual));
 	let checkboxes = root.getElementsByTagName("input");
 	let params = new URLSearchParams();
 	params.append(HOST_FILEVIEW_QUERY_PATH, path);
@@ -108,7 +112,7 @@ function hostChangeDir(path, virtual) {
 	params.append(HOST_FILEVIEW_QUERY_IS_ROOT, true);
 	params.append(HOST_FILEVIEW_QUERY_IS_VIRTUAL, virtual);
 
-	let bread = document.getElementById(HOST_FILEVIEW_QUERY_BREADCRUMBS);
+	let bread = document.getElementById(HOST_FILEVIEW_QUERY_BREADCRUMBS + getIDPostFix(virtual));
 	let breadValue = "";
 	if (bread != null) breadValue = bread.value;
 	params.append(HOST_FILEVIEW_QUERY_BREADCRUMBS, breadValue);
@@ -128,7 +132,7 @@ function hostChangeDir(path, virtual) {
 	}).then((response) => {
 		return response.text();
 	}).then((div) => {
-		root.innerHTML = div;
+		root.outerHTML = div;
 	}).catch((error) => {
 		console.log(error);
 	})

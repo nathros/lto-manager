@@ -21,7 +21,9 @@ public class FileList {
 			Div<HtmlView<FileListModel>> wrapper = null;
 			if (model.getTree().getDepth() == 0) {
 				if (model.getOptions().showRoot()) {
-					wrapper = view.div().attrId(CSS.FV_ID).attrClass(CSS.FV_ROOT);
+					wrapper = view.div()
+							.attrId(CSS.FV_ID + model.getIDPostFix())
+							.attrClass(CSS.FV_ROOT);
 					String bread = model.getOptions().breadcrumbs();
 					if (!bread.contains(model.getTree().getAbsolutePath())) {
 						bread = model.getTree().getAbsolutePath();
@@ -31,7 +33,7 @@ public class FileList {
 						.input()
 							.attrStyle("width:500px")
 							.attrType(EnumTypeInputType.HIDDEN)
-							.attrId(FileListModel.BREADCRUMBS_LAST)
+							.attrId(FileListModel.BREADCRUMBS_LAST + model.getIDPostFix())
 							.attrValue(breadcrumbsPath)
 						.__()
 						.of(n -> {
@@ -52,7 +54,7 @@ public class FileList {
 									.text(split[i])
 								.__();
 							}
-							container.button()
+							container.button() // TODO on click this button is not hidden despite opacity 0 CSS, caused by JavaScript selectPathEditBox
 								.attrClass(CSS.BUTTON + CSS.BUTTON_IMAGE + CSS.ICON_EDIT + CSS.FV_BREADCRUMB_EDIT_BTN)
 								.attrOnclick(JS.fnFileViewSelectPathEditBox())
 								.attrOnfocus(JS.fnFileViewSelectPathEditBox())
