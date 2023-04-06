@@ -75,7 +75,7 @@ public class FilesAddHandler extends BaseHTTPHandler {
 							fieldset.hr().__();
 
 							if (fileTree != null) {
-								finalView.addPartial(FileList.view, new FileListModel(dirD, FileListOptions.of(true, "", null, 4, false)));
+								finalView.addPartial(FileList.view, new FileListModel(dirD, FileListOptions.of(true, "", null, 4, false, false)));
 							}
 
 							fieldset

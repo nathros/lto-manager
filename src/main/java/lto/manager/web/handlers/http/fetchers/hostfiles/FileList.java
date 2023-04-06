@@ -24,6 +24,55 @@ public class FileList {
 					wrapper = view.div()
 							.attrId(CSS.FV_ID + model.getIDPostFix())
 							.attrClass(CSS.FV_ROOT);
+
+					wrapper // Context menu
+						.div() // All divs need tab index to be focusable, so can be hidden on blur
+							.attrId(CSS.FV_ID_CONTEXT_CONTAINER + model.getIDPostFix())
+							.attrClass(CSS.FV_CONTEXT_CONTAINER)
+							.attrTabIndex(-1)
+							.attrOnmouseup(JS.fnFileContextMenuHide(model.getOptions().isVirtual()))
+							.div().attrClass(CSS.FV_CONTEXT_MENU)
+								.attrTabIndex(-1)
+									.div()
+										.attrClass(CSS.FV_CONTEXT_MENU_ITEM)
+										.attrTabIndex(-1)
+										.attrOnclick(JS.fnFileNewVirtualDir())
+										.text("New Folder")
+									.__()
+									.div()
+										.attrClass(CSS.FV_CONTEXT_MENU_INPUT)
+										.input()
+											.attrType(EnumTypeInputType.TEXT)
+											.attrPlaceholder("Name")
+										.__()
+										.button()
+											.attrClass(CSS.BUTTON_SMALL + CSS.BUTTON_IMAGE + CSS.BACKGROUND_GREEN + CSS.ICON_CHECK)
+										.__()
+									.__()
+									.div()
+										.attrClass(CSS.FV_CONTEXT_MENU_ITEM)
+										.attrTabIndex(-1)
+										.text("Rename Folder")
+									.__()
+									.div()
+										.attrClass(CSS.FV_CONTEXT_MENU_INPUT)
+										.input()
+											.attrType(EnumTypeInputType.TEXT)
+											.attrPlaceholder("Name")
+										.__()
+										.button()
+											.attrClass(CSS.BUTTON_SMALL + CSS.BUTTON_IMAGE + CSS.BACKGROUND_GREEN + CSS.ICON_CHECK)
+										.__()
+									.__()
+									.div()
+										.attrClass(CSS.FV_CONTEXT_MENU_ITEM)
+										.attrTabIndex(-1)
+										.text("Delete Folder")
+									.__()
+							.__()
+						.__();
+
+					// Breadcrumbs
 					String bread = model.getOptions().breadcrumbs();
 					if (!bread.contains(model.getTree().getAbsolutePath())) {
 						bread = model.getTree().getAbsolutePath();
@@ -38,11 +87,13 @@ public class FileList {
 						.__()
 						.of(n -> {
 							String[] split = breadcrumbsPath.split(File.separator);
+							if (split.length == 0) split = new String[]{ "/" };
 							String currentPath = "";
 							var container = n.div().attrClass(CSS.FV_BREADCRUMB_CONTAINER);
 							int currentIndex = model.getTree().getAbsolutePath().split(File.separator).length;
 							currentIndex--;
 							if (currentIndex == 0) currentIndex++;
+							else if (currentIndex <= 0) currentIndex = 0;
 							String path = "";
 							for (int i = 0; i < split.length; i++) {
 								path += split[i] + File.separator;
@@ -77,6 +128,12 @@ public class FileList {
 
 							container.__();
 						});
+					if (model.getOptions().isVirtual()) {
+						wrapper.div()
+							.p().text("ffsdfd").__()
+						.__();
+					}
+
 				}
 				finalView.addPartial(FileListItem.view, model);
 			}

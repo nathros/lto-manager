@@ -1,4 +1,5 @@
 const HOST_FILEVIEW_ROOT_ID = "id-wtree";
+const HOST_FILEVIEW_CONEXT_CONTAINER_ID = "wtree-context-container";
 const HOST_FILEVIEW_QUERY_SELECTED = "f@"
 const HOST_FILEVIEW_QUERY_PATH = "f@path";
 const HOST_FILEVIEW_QUERY_BREADCRUMBS = "f@bread";
@@ -177,3 +178,25 @@ function expandDir(sender, path, virtual) {
 	})
 }
 
+function contextMenu(sender, virtual, event) {
+	console.log(sender);
+	if (!virtual) return true;
+	let container = document.getElementById(HOST_FILEVIEW_CONEXT_CONTAINER_ID + getIDPostFix(virtual));
+	let menu = container.childNodes[1];
+	container.style.display = "block";
+	menu.style.top = event.pageY + 1 + "px";
+	menu.style.left = event.pageX + 1 + "px";
+	return false;
+}
+
+function contextMenuHide(virtual) {
+	let container = document.getElementById(HOST_FILEVIEW_CONEXT_CONTAINER_ID + getIDPostFix(virtual));
+	let menu = container.childNodes[1];
+	if (!menu.contains(document.activeElement)) {
+		container.style.display = ""; // Lost focus so hide context menu
+	}
+}
+
+function newVirtualDir(sender) {
+	console.log(sender);
+}

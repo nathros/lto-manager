@@ -7,6 +7,8 @@ public class CSS {
 	public final static String BACKGROUND_CAUTION = "background-caution ";
 	public final static String BACKGROUND_ACTIVE = "background-active ";
 	public final static String BACKGROUND_GRAY = "background-gray ";
+	public final static String BACKGROUND_ERROR = "background-error ";
+	public final static String BACKGROUND_GREEN = "background-green ";
 
 	public final static String ICON_FOLDER = "icon-folder ";
 	public final static String ICON_TAPE = "icon-tape ";
@@ -17,6 +19,7 @@ public class CSS {
 	public final static String ICON_CHECK = "icon-check ";
 
 	public final static String FV_ID = "id-wtree";
+	public final static String FV_ID_CONTEXT_CONTAINER = "wtree-context-container";
 	public final static String FV_ROOT = "wtree ";
 	public final static String FV_ICON_SIZE = "size ";
 	public final static String FV_ICON_MODIFIED = "modified ";
@@ -27,6 +30,10 @@ public class CSS {
 	public final static String FV_BREADCRUMB_CONTAINER = "wtree-breadcrumb-container ";
 	public final static String FV_BREADCRUMB_EDIT_BTN = "edit-path-btn ";
 	public final static String FV_BREADCRUMB_EDIT_CONTAINER = "edit-path-container ";
+	public final static String FV_CONTEXT_CONTAINER = "wtree-context-container ";
+	public final static String FV_CONTEXT_MENU = "wtree-context-menu ";
+	public final static String FV_CONTEXT_MENU_ITEM = "wtree-context-item ";
+	public final static String FV_CONTEXT_MENU_INPUT = "wtree-context-input ";
 
 	public final static String TABS_CONTAINER = "tabbed ";
 	public final static String TABS_HEADERS = "tabs ";

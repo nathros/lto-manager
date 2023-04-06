@@ -30,8 +30,9 @@ public class FileListItem {
 					.span()
 						.addAttr(DATA_SIZE, "0")
 						.addAttr(DATA_TIME, "0")
-						.addAttr(DATA_NAME, "")
+						.addAttr(DATA_NAME, ABS_PATH)
 						.of(s -> {
+							s.addAttr("oncontextmenu", JS.fnFileContextMenu(fileTree.getOptions().isVirtual()));
 							if (!fileTree.getOptions().isVirtual()) {
 								s.input()
 									.attrType(EnumTypeInputType.CHECKBOX)
@@ -39,14 +40,14 @@ public class FileListItem {
 									.attrName(FileListModel.FILE_SELECTED)
 									.attrValue(ABS_PATH)
 									.of(in -> {if (fileTree.isSelected()) in.attrChecked(true);})
+								.__()
+								.a()
+									.attrClass(CSS.BUTTON_SMALL + CSS.BACKGROUND_GRAY)
+									.attrOnclick(JS.fnFileViewExpandDir(ABS_PATH, fileTree.getOptions().isVirtual()))
+									.text("+")
 								.__();
 							}
 						})
-						.a()
-							.attrClass(CSS.BUTTON_SMALL + CSS.BACKGROUND_GRAY)
-							.attrOnclick(JS.fnFileViewExpandDir(ABS_PATH, fileTree.getOptions().isVirtual()))
-							.text("+")
-						.__()
 						.img().attrClass(CSS.FV_FILE_ICON).attrSrc(getFileTypeIcon(fileTree.getTree())).__()
 						.a()
 							.attrOnclick(JS.fnFileViewListChangeDir(ABS_PATH, fileTree.getOptions().isVirtual()))

@@ -10,7 +10,8 @@ public record FileListOptions(
 	String breadcrumbs,
 	@NotNull List<String> selected,
 	int maxDepth,
-	boolean isVirtual
+	boolean isVirtual,
+	boolean dirTasks
 ) {
 
 	public static FileListOptions of(
@@ -18,9 +19,10 @@ public record FileListOptions(
 		String breadcrumbs,
 		List<String> selected,
 		int maxDepth,
-		boolean isVirtual)
+		boolean isVirtual,
+		boolean dirTasks)
 	{
 		if (selected == null) selected = new ArrayList<String>();
-		return new FileListOptions(showRoot, breadcrumbs, selected, maxDepth, isVirtual);
+		return new FileListOptions(showRoot, breadcrumbs, selected, maxDepth, isVirtual, dirTasks);
 	}
 }

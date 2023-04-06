@@ -51,8 +51,8 @@ public class JobsAddNewHandler extends BaseHTTPHandler {
 			.div()
 				.div().attrClass(CSS.TABS_CONTAINER)
 					.input().attrType(EnumTypeInputType.RADIO).attrId("tab1").attrName("css-tab").__()
-					.input().attrType(EnumTypeInputType.RADIO).attrId("tab2").attrName("css-tab").attrChecked(true).__()
-					.input().attrType(EnumTypeInputType.RADIO).attrId("tab3").attrName("css-tab").__()
+					.input().attrType(EnumTypeInputType.RADIO).attrId("tab2").attrName("css-tab").__()
+					.input().attrType(EnumTypeInputType.RADIO).attrId("tab3").attrName("css-tab").attrChecked(true).__()
 					.ul().attrClass(CSS.TABS_HEADERS)
 						.li().attrClass(CSS.TABS_TAB)
 							.label().attrFor(TAB1)
@@ -109,14 +109,14 @@ public class JobsAddNewHandler extends BaseHTTPHandler {
 					// TAB 2
 					.div().attrClass(CSS.TABS_CONTENT)
 						.of(div -> {
-							view.addPartial(FileList.view, new FileListModel(fileTree, FileListOptions.of(true, "", null, depth, false)));
+							view.addPartial(FileList.view, new FileListModel(fileTree, FileListOptions.of(true, "", null, depth, false, false)));
 						})
 					.__()
 
 					// TAB 3
 					.div().attrClass(CSS.TABS_CONTENT)
 						.of(div -> {
-							view.addPartial(FileList.view, new FileListModel(fileTreeVirtual, FileListOptions.of(true, "", null, depth, true)));
+							view.addPartial(FileList.view, new FileListModel(fileTreeVirtual, FileListOptions.of(true, "", null, depth, true, true)));
 						})
 						.button().attrClass(CSS.BUTTON).attrType(EnumTypeButtonType.SUBMIT).text("Submit").__()
 					.__()

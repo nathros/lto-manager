@@ -27,7 +27,7 @@ public class FilesListFetcher extends BaseHTTPHandler {
 		final boolean showRoot = rootStr.equals(Boolean.TRUE.toString());
 		int depth = 1;
 		try { depth = Integer.parseInt(depthStr); } catch (Exception e) {}
-		var options = FileListOptions.of(showRoot, breadcrumbs, selected, depth, isVirtual);
+		var options = FileListOptions.of(showRoot, breadcrumbs, selected, depth, isVirtual, isVirtual);
 		final FileListModel hflModel = new FileListModel(path, options);
 		try {
 			view.dynamic(v -> {

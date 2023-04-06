@@ -1,7 +1,9 @@
+:root {
+  --menu-border-radius: 6px;
+}
 ul {
 	margin-left: 20px;
 }
-
 .wtree li {
 	list-style-type: none;
 	margin: 10px 0 10px 10px;
@@ -67,11 +69,11 @@ ul {
 	position: absolute;
 	top: -28px;
 	width: max-content;
-	background-color: black;
+	background-color: var(--common-background-colour);
 	color: white;
 	height: 20px;
 	display: block;
-	border-radius: 6px;
+	border-radius: var(--menu-border-radius);
 	font-size: smaller;
 	opacity: 0;
 	user-select: none;
@@ -223,5 +225,45 @@ ul {
 .edit-path-container:focus-within,
 .edit-path-container:active,
 .edit-path-container:has(.active) {
-  display: block !important;
+	display: block !important;
+}
+.wtree-context-container {
+	display: none;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	position: absolute;
+	z-index: 50;
+}
+.wtree-context-menu {
+	display: flex;
+	flex-direction: column;
+	background-color: var(--common-background-colour);
+	position: fixed;
+	border-radius: var(--menu-border-radius);
+	box-shadow: var(--common-shadow);
+}
+.wtree-context-menu div {
+	padding: 1rem;
+	color: white;
+	font-size: small;
+}
+.wtree-context-menu div:hover {
+	cursor: pointer;
+	box-shadow: var(--common-highlight), var(--common-shadow);
+}
+.wtree-context-input {
+	display: none;
+	gap: 6px;
+}
+.wtree-context-item:focus + .wtree-context-input {
+	display: flex;
+}
+.wtree-context-input:focus-within,
+.wtree-context-input:active {
+	display: flex !important;
+}
+.wtree-context-input button {
+	width: unset;
 }

@@ -67,6 +67,6 @@ public class PathTreeFile {
 	public String getName() {
 		var name = path.getFileName();
 		if (name == null) return "";
-		return path.getFileName().toString();
+		return name.toString();
 	}
 }

@@ -1,19 +1,22 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
 
+:root {
+  --common-background-colour: #101820;
+  --common-selected-colour: rgb(0, 119, 161);
+  --common-highlight: inset 100px 100px 0px 0px rgba(255, 255, 255, 0.3);
+  --common-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;
+}
 * {
 	font-family: 'Open Sans', sans-serif;
 	-webkit-tap-highlight-color: transparent;
 }
-
 body {
 	margin: 0;
 }
-
 a {
 	color: inherit;
 	*text-decoration: inherit;
 }
-
 .header-root {
 	position: fixed;
 	width: 100%;
@@ -30,7 +33,7 @@ a {
 	flex-direction: row-reverse;
 }
 .nav-area {
-	background-color: #101820;
+	background-color: var(--common-background-colour);
 	min-width: 12rem;
 }
 .nav-area ul {
@@ -104,7 +107,7 @@ a {
 	opacity: 1;
 }
 #nav-menu li a.selected {
-	background-color: rgb(0, 119, 161);
+	background-color: var(--common-selected-colour);
 }
 #nav-toggle a:hover,
 #nav-toggle a.selected {
@@ -143,7 +146,7 @@ a {
 .btn {
 	align-items: center;
 	background-clip: padding-box;
-	background-color: black;
+	background-color: var(--common-background-colour);
 	border: 1px solid transparent;
 	border-radius: .25rem;
 	box-shadow: rgba(0, 0, 0, 0.02) 0 1px 3px 0;
@@ -189,7 +192,7 @@ a {
 .btn:focus,
 .btn-s:hover,
 .btn-s:focus {
-	box-shadow: inset 100px 100px 0px 0px rgba(255, 255, 255, 0.3), rgba(0, 0, 0, 0.1) 0 4px 12px;
+	box-shadow: var(--common-highlight), var(--common-shadow);
 }
 .btn:hover,
 .btn-s:hover {
@@ -210,6 +213,9 @@ a {
     background-repeat: no-repeat;
     background-position: center;
 }
+.background-error {
+	background-color: red;
+}
 .background-caution {
 	background-color: darkorange;
 }
@@ -218,6 +224,9 @@ a {
 }
 .background-gray {
 	background-color: gray;
+}
+.background-green {
+	background-color: green;
 }
 table {
 	border-collapse: collapse;
