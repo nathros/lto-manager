@@ -101,6 +101,10 @@ public class FileListItem {
 	 }
 
 	 static private String getFileTypeIcon(PathTreeBase file) { // FIXME https://www.xfce-look.org/p/1498619
+		 String customIcon = file.getCustomIcon();
+		 if (customIcon != null) {
+			 return Asset.IMG_TYPES + customIcon + ".svg";
+		 }
 		 if (file.isDirectory()) {
 			 return Asset.IMG_TYPES + "folder.svg";
 		 } else {

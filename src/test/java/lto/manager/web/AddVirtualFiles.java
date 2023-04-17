@@ -54,7 +54,7 @@ public class AddVirtualFiles {
 		LocalDateTime now = LocalDateTime.now();
 		for (int i = 0; i < fileStr.length; i+=2) {
 			var size = fileStr[i].equals("") ? 0 : rand.nextInt(1024 * 10);
-			var f = RecordFile.of(fileStr[i], fileStr[i + 1], fileStr[i], fileStr[i + 1], size, now, now, tapeID, rand.nextInt());
+			var f = RecordFile.of(fileStr[i], fileStr[i + 1], fileStr[i], fileStr[i + 1], size, now, now, tapeID, rand.nextInt(), "");
 			newFiles.add(f);
 		}
 		TableFile.addFiles(Database.connection, tapeID, newFiles);

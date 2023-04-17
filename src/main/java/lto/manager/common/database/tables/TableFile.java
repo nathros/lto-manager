@@ -41,6 +41,7 @@ public class TableFile {
 	public static final String COLUMN_NAME_FILE_DATE_MODIFY = "file_modified";
 	public static final String COLUMN_NAME_FILE_TAPE_LOC = "file_tape_id";
 	public static final String COLUMN_NAME_FILE_CRC32 = "file_crc32";
+	public static final String COLUMN_NAME_FILE_CUSTOM_ICON = "file_custom_icon";
 
 	public static final int COLUMN_INDEX_ID = 0;
 	public static final int COLUMN_INDEX_FILE_NAME_VIRTUAl = 1;
@@ -52,6 +53,7 @@ public class TableFile {
 	public static final int COLUMN_INDEX_FILE_DATE_MODFIY = 7;
 	public static final int COLUMN_INDEX_FILE_TAPE_LOC = 8;
 	public static final int COLUMN_INDEX_FILE_CRC32 = 9;
+	public static final int COLUMN_INDEX_FILE_CUSTOM_ICON = 10;
 
 	static DbTable getSelf() {
 		DbSchema schema = Database.schema;
@@ -81,6 +83,7 @@ public class TableFile {
 		table.foreignKey(TableTape.COLUMN_NAME_ID, columns, tableTape, columnsRef);
 
 		table.addColumn(COLUMN_NAME_FILE_CRC32, Types.INTEGER, null);
+		table.addColumn(COLUMN_NAME_FILE_CUSTOM_ICON, Types.VARCHAR, 32);
 
 		// Make path and filename part of unique pair
 		var unique = new DbConstraint(table, "path_name_pair", Type.UNIQUE, nameColumn, pathColumn);
@@ -103,7 +106,7 @@ public class TableFile {
 		if (result) return false;
 
 		LocalDateTime now = LocalDateTime.now();
-		RecordFile rootDir = RecordFile.of("", "/", "", "", 0, now, now, 0, 0);
+		RecordFile rootDir = RecordFile.of("", "/", "", "", 0, now, now, 0, 0, "folder-root");
 		try {
 			addFiles(con, 0, Arrays.asList(rootDir));
 		} catch (Exception e) {
@@ -148,6 +151,7 @@ public class TableFile {
 			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_DATE_MODFIY), "");
 			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_TAPE_LOC), tapeID);
 			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_CRC32), 0);
+			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_CUSTOM_ICON), "");
 			String sql = iq.validate().toString();
 			if (statment.execute(sql)) {
 				return false;
@@ -251,7 +255,8 @@ public class TableFile {
 			LocalDateTime modified = LocalDateTime.parse(modifiedStr);
 			int tapeID = resultChildren.getInt(COLUMN_NAME_FILE_TAPE_LOC);
 			int crc32 = resultChildren.getInt(COLUMN_NAME_FILE_CRC32);
-			files.add(RecordFile.of(id, nameV, pathV, nameP, pathP, size, created, modified, tapeID, crc32));
+			String icon = resultChildren.getString(COLUMN_NAME_FILE_CUSTOM_ICON);
+			files.add(RecordFile.of(id, nameV, pathV, nameP, pathP, size, created, modified, tapeID, crc32, icon));
 		}
 
 		return files;

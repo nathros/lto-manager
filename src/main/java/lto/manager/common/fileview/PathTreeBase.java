@@ -11,6 +11,7 @@ public abstract class PathTreeBase {
 	protected PathTreeFile file;
 	protected int depth;
 	protected static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+	protected String customIcon;
 
 	public PathTreeBase(int depth) {
 		this.depth = depth;
@@ -66,6 +67,7 @@ public abstract class PathTreeBase {
 	public String getParent() { return file.getParent(); }
 	public boolean isDirectory() { return file.isDirectory(); }
 	public String getName() { return file.getName(); }
+	public String getCustomIcon() { return customIcon; }
 
 	@Override
     public String toString() {

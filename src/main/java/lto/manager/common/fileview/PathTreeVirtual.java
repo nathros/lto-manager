@@ -13,6 +13,7 @@ public class PathTreeVirtual extends PathTreeBase {
 		if (files.size() > 0) {
 			var first = files.get(0);
 			file = new PathTreeFile(first);
+			customIcon = first.getCustomIcon();
 			children = new ArrayList<PathTreeBase>();
 			for (int i = 1; i < files.size(); i++) {
 				var list = new ArrayList<RecordFile>();

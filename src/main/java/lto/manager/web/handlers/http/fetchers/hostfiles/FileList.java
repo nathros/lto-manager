@@ -87,7 +87,7 @@ public class FileList {
 						.__()
 						.of(n -> {
 							String[] split = breadcrumbsPath.split(File.separator);
-							if (split.length == 0) split = new String[]{ "/" };
+							if (split.length == 0) split = new String[]{ "" };
 							String currentPath = "";
 							var container = n.div().attrClass(CSS.FV_BREADCRUMB_CONTAINER);
 							int currentIndex = model.getTree().getAbsolutePath().split(File.separator).length;

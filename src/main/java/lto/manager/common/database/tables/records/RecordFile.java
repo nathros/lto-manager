@@ -15,9 +15,10 @@ public class RecordFile {
 	private LocalDateTime modified;
 	private int tapeID;
 	private int crc32;
+	private String customIcon;
 	private boolean isDirectory;
 
-	public RecordFile(int id, String fileNameVirt, String filePathVirt, String fileNamePhy, String filePathPhy, long size, LocalDateTime created, LocalDateTime modified, int tapeID, int crc32) {
+	public RecordFile(int id, String fileNameVirt, String filePathVirt, String fileNamePhy, String filePathPhy, long size, LocalDateTime created, LocalDateTime modified, int tapeID, int crc32, String customIcon) {
 		this.id = id;
 		this.fileNameVirtual = fileNameVirt;
 		this.filePathVirtual = filePathVirt;
@@ -28,15 +29,16 @@ public class RecordFile {
 		this.modified = modified;
 		this.tapeID = tapeID;
 		this.crc32 = crc32;
+		this.customIcon = customIcon;
 		setIsDirectory();
 	}
 
-	public static RecordFile of(int id, String fileNameVirt, String filePathVirt, String fileNamePhy, String filePathPhy, long size, LocalDateTime created, LocalDateTime modified, int tapeID, int crc32) {
-		return new RecordFile(id, fileNameVirt, filePathVirt, fileNamePhy, filePathPhy, size, created, modified, tapeID, crc32);
+	public static RecordFile of(int id, String fileNameVirt, String filePathVirt, String fileNamePhy, String filePathPhy, long size, LocalDateTime created, LocalDateTime modified, int tapeID, int crc32, String customIcon) {
+		return new RecordFile(id, fileNameVirt, filePathVirt, fileNamePhy, filePathPhy, size, created, modified, tapeID, crc32, customIcon);
 	}
 
-	public static RecordFile of(String fileNameVirt, String filePathVirt, String fileNamePhy, String filePathPhy, long size, LocalDateTime created, LocalDateTime modified, int tapeID, int crc32) {
-		return new RecordFile(Database.NEW_RECORD_ID, fileNameVirt, filePathVirt, fileNamePhy, filePathPhy, size, created, modified, tapeID, crc32);
+	public static RecordFile of(String fileNameVirt, String filePathVirt, String fileNamePhy, String filePathPhy, long size, LocalDateTime created, LocalDateTime modified, int tapeID, int crc32, String customIcon) {
+		return new RecordFile(Database.NEW_RECORD_ID, fileNameVirt, filePathVirt, fileNamePhy, filePathPhy, size, created, modified, tapeID, crc32, customIcon);
 	}
 
 	private void setIsDirectory() {
@@ -77,6 +79,7 @@ public class RecordFile {
 	public int getCRC32() { return crc32; }
 	public void setCRC32(int crc32) { this.crc32 = crc32; }
 	public String getCRC32StrHex() { return Integer.toHexString(crc32); }
+	public String getCustomIcon() { return customIcon; }
 	public boolean isDirectory() { return isDirectory; }
 	public String getAbsolutePath() {
 		if (isDirectory) {
