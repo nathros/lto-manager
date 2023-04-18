@@ -9,6 +9,7 @@ public class Asset {
 	public static final String CSS_FILE_VIEW = AssetHandler.PATH + "/css/fileview.css";
 	public static final String CSS_TABS = AssetHandler.PATH + "/css/tabs.css";
 
+	public static final String JS_MAIN = AssetHandler.PATH + "/js/main.js";
 	public static final String JS_FILE_VIEW = AssetHandler.PATH + "/js/fileview.js";
 	public static final String JS_ADD_TAPE = AssetHandler.PATH + "/js/add_tape.js";
 	public static final String JS_ADD_JOB = AssetHandler.PATH + "/js/add_job.js";

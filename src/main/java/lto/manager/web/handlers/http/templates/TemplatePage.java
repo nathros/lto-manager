@@ -1,5 +1,6 @@
 package lto.manager.web.handlers.http.templates;
 
+import org.xmlet.htmlapifaster.EnumTypeButtonType;
 import org.xmlet.htmlapifaster.EnumTypeInputType;
 
 import htmlflow.DynamicHtml;
@@ -13,6 +14,7 @@ import lto.manager.web.handlers.http.tapes.TapesHandler;
 import lto.manager.web.handlers.http.templates.models.BodyModel;
 import lto.manager.web.handlers.http.templates.models.HeadModel;
 import lto.manager.web.resource.CSS;
+import lto.manager.web.resource.JS;
 
 public class TemplatePage {
 	public static enum SelectedPage {
@@ -56,6 +58,24 @@ public class TemplatePage {
 				.html().attrLang(BaseHTTPHandler.LANG_VALUE)
 				.dynamic(head -> viewTmp.addPartial(TemplateHead.view, model.getHeadModel()))
 					.body()
+						.div().attrId(CSS.TOAST_ID)
+							.button().attrId(CSS.TOAST_ID_CROSS)
+								.attrType(EnumTypeButtonType.BUTTON).attrOnclick(JS.commonHideToast()).text("x")
+							.__()
+							.p().attrId(CSS.TOAST_ID_MESSAGE).text("Empty").__()
+							.div()
+								.button()
+									.attrId(CSS.TOAST_ID_OK)
+									.attrClass(CSS.BUTTON + CSS.BACKGROUND_ACTIVE)
+									.attrOnclick(JS.commonHideToast()).text("OK")
+								.__()
+								.button()
+									.attrId(CSS.TOAST_ID_CANCEL)
+									.attrClass(CSS.BUTTON + CSS.BACKGROUND_ACTIVE)
+									.attrOnclick(JS.commonHideToast()).text("Cancel")
+								.__()
+							.__()
+						.__() // Toast
 						.header().attrClass("header-root")
 						.div().attrClass("header-root-container")
 							.div().attrId("nav-toggle")

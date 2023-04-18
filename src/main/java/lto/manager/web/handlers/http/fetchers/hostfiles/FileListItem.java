@@ -1,6 +1,6 @@
 package lto.manager.web.handlers.http.fetchers.hostfiles;
 
-import java.util.List;
+import java.util.HashSet;
 
 import org.xmlet.htmlapifaster.EnumTypeInputType;
 
@@ -19,7 +19,7 @@ public class FileListItem {
 	private static final String DATA_SIZE = "data-size";
 	private static final String DATA_TIME = "data-time";
 	private static final String DATA_NAME = "data-name";
-	private static final List<String> fileTypeCache = AssetHandler.getCachedFileListInDir(Asset.IMG_TYPES);
+	private static final HashSet<String> fileTypeCache = AssetHandler.getCachedFileListInDir(Asset.IMG_TYPES);
 
 	 static void template(DynamicHtml<FileListModel> view, FileListModel fileTree) {
 		//final String LINK = FilesAddHandler.PATH + "?" + FilesAddHandler.DIR + "=";
@@ -37,6 +37,7 @@ public class FileListItem {
 								s.input()
 									.attrType(EnumTypeInputType.CHECKBOX)
 									.attrOnclick("selectDir(this," + fileTree.getOptions().isVirtual() + ")")
+									.attrOnchange(JS.fnFileCheckBoxChange())
 									.attrName(FileListModel.FILE_SELECTED)
 									.attrValue(ABS_PATH)
 									.of(in -> {if (fileTree.isSelected()) in.attrChecked(true);})
@@ -53,18 +54,28 @@ public class FileListItem {
 							.attrOnclick(JS.fnFileViewListChangeDir(ABS_PATH, fileTree.getOptions().isVirtual()))
 							.text(fileTree.getTree().getName())
 						.__()
-						.span()
-							.attrClass(CSS.FV_ICON_SIZE).attrOnclick(JS.fnFileViewSort(DATA_SIZE))
-							.em().text("Sort by file size").__()
-						.__()
-						.span()
-							.attrClass(CSS.FV_ICON_MODIFIED).attrOnclick(JS.fnFileViewSort(DATA_TIME))
-							.em().text("Sort by modified").__()
-						.__()
-						.span()
-							.attrClass(CSS.FV_ICON_NAME).attrOnclick(JS.fnFileViewSort(DATA_NAME))
-							.em().text("Sort by name").__()
-						.__()
+						.of(con -> {
+							boolean show = fileTree.getOptions().isVirtual();
+							if (show) {
+								show = fileTree.getTree().getDepth() == 0;
+							} else {
+								show = true;
+							}
+							if (show) {
+								con.span()
+									.attrClass(CSS.FV_ICON_SIZE).attrOnclick(JS.fnFileViewSort(DATA_SIZE))
+									.em().text("Sort by file size").__()
+								.__()
+								.span()
+									.attrClass(CSS.FV_ICON_MODIFIED).attrOnclick(JS.fnFileViewSort(DATA_TIME))
+									.em().text("Sort by modified").__()
+								.__()
+								.span()
+									.attrClass(CSS.FV_ICON_NAME).attrOnclick(JS.fnFileViewSort(DATA_NAME))
+									.em().text("Sort by name").__()
+								.__();
+							}
+						})
 					.__();
 			} else {
 				view.defineRoot()
@@ -77,6 +88,7 @@ public class FileListItem {
 								s.input()
 									.attrType(EnumTypeInputType.CHECKBOX)
 									.attrOnclick("selectFile(this)")
+									.attrOnchange(JS.fnFileCheckBoxChange())
 									.attrName(FileListModel.FILE_SELECTED)
 									.attrValue(ABS_PATH)
 									.of(in -> {if (fileTree.isSelected()) in.attrChecked(true);})

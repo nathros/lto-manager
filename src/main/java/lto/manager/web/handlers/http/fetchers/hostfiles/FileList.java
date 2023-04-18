@@ -63,11 +63,19 @@ public class FileList {
 										.button()
 											.attrClass(CSS.BUTTON_SMALL + CSS.BUTTON_IMAGE + CSS.BACKGROUND_GREEN + CSS.ICON_CHECK)
 										.__()
+										.button()
+											.attrClass(CSS.BUTTON_SMALL + CSS.BUTTON_IMAGE + CSS.BACKGROUND_CAUTION + CSS.ICON_CROSS)
+										.__()
 									.__()
 									.div()
 										.attrClass(CSS.FV_CONTEXT_MENU_ITEM)
 										.attrTabIndex(-1)
 										.text("Delete Folder")
+									.__()
+									.div()
+										.attrClass(CSS.FV_CONTEXT_MENU_ITEM)
+										.attrTabIndex(-1)
+										.text("Change Icon")
 									.__()
 							.__()
 						.__();
@@ -161,7 +169,20 @@ public class FileList {
 			} else {
 				view.defineRoot().li().span().text(model.getTree().getName()).__().__();
 			}
-			if (wrapper != null) wrapper.__();
+			if (wrapper != null) {
+				if (!model.getOptions().isVirtual()) {
+					wrapper.div()
+						.attrId(CSS.FV_ID_SELECT_TOTAL)
+						.div()
+							.text("Total Size: ")
+							.b()
+								.text("0")
+							.__()
+						.__()
+					.__();
+				}
+				wrapper.__();
+			}
 		 } catch (Exception e) {
 			 view = DynamicHtml.view(FileList::template);
 			 throw e;

@@ -10,4 +10,7 @@ public class JS {
 	public static String fnFileContextMenu(boolean isVirtual) { return "return contextMenu(this," + isVirtual + ",event);"; }
 	public static String fnFileContextMenuHide(boolean isVirtual) { return "contextMenuHide(" + isVirtual + ");"; }
 	public static String fnFileNewVirtualDir() { return "newVirtualDir(this);"; }
+	public static String fnFileCheckBoxChange() { return "recalculateSelectedFileSize();"; }
+
+	public static String commonHideToast() { return "hideToast();"; }
 }

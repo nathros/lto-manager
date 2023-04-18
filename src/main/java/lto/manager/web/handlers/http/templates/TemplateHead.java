@@ -25,6 +25,7 @@ public class TemplateHead {
 							for (String css: model.getExtraStylesList()) {
 								extra.link().attrRel(EnumRelType.STYLESHEET).attrHref(css).__();
 							}
+							extra.script().attrSrc(Asset.JS_MAIN).__();
 							if (model.getExtraScriptsList().size() > 0) {
 								for (String js: model.getExtraScriptsList()) {
 									extra.script().attrSrc(js).__();

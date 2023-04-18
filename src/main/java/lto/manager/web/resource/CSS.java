@@ -10,6 +10,12 @@ public class CSS {
 	public final static String BACKGROUND_ERROR = "background-error ";
 	public final static String BACKGROUND_GREEN = "background-green ";
 
+	public final static String TOAST_ID = "toast";
+	public final static String TOAST_ID_MESSAGE = "toast-message";
+	public final static String TOAST_ID_CROSS = "toast-cross";
+	public final static String TOAST_ID_OK = "toast-ok";
+	public final static String TOAST_ID_CANCEL = "toast-cancel";
+
 	public final static String ICON_FOLDER = "icon-folder ";
 	public final static String ICON_TAPE = "icon-tape ";
 	public final static String ICON_JOBS = "icon-jobs ";
@@ -17,9 +23,11 @@ public class CSS {
 	public final static String ICON_SANDPIT = "icon-sandpit ";
 	public final static String ICON_EDIT = "icon-edit ";
 	public final static String ICON_CHECK = "icon-check ";
+	public final static String ICON_CROSS = "icon-cross ";
 
 	public final static String FV_ID = "id-wtree";
 	public final static String FV_ID_CONTEXT_CONTAINER = "wtree-context-container";
+	public final static String FV_ID_SELECT_TOTAL = "id-wtree-total";
 	public final static String FV_ROOT = "wtree ";
 	public final static String FV_ICON_SIZE = "size ";
 	public final static String FV_ICON_MODIFIED = "modified ";

@@ -5,6 +5,7 @@
   --common-selected-colour: rgb(0, 119, 161);
   --common-highlight: inset 100px 100px 0px 0px rgba(255, 255, 255, 0.3);
   --common-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;
+  --menu-border-radius: 6px;
 }
 * {
 	font-family: 'Open Sans', sans-serif;
@@ -101,6 +102,9 @@ a {
 }
 .icon-check:before {
 	background-image: url('/assets/img/check-lg.svg');
+}
+.icon-cross:before {
+	background-image: url('/assets/img/x.svg');
 }
 #nav-toggle a:hover:before,
 #nav-toggle a.selected:before  {
@@ -245,4 +249,70 @@ table th {
 	text-align: left;
 	background-color: #04AA6D;
 	color: white;
+}
+#toast {
+	display: block !important;
+	visibility: visible;
+	opacity: 0;
+	min-width: min(75%, 25rem);
+	transform: translateX(-50%);
+	color: white;
+	background-color: black;
+	text-align: center;
+	border-radius: var(--menu-border-radius);
+	position: fixed;
+	z-index: 1000;
+	left: 50%;
+	top: 4rem;
+	max-width: 5rem;
+	pointer-events: none;
+}
+#toast.error {
+	background-color: #e51c23;
+}
+#toast.warning {
+	background-color: #ff9800;
+}
+#toast.good {
+	background-color: #4caf50;
+}
+#toast.show {
+	animation: showtoast 0.5s;
+	opacity: 1;
+	transition: opacity 0.5s;
+	pointer-events: all;
+}
+#toast.hide {
+	opacity: 0;
+	transition: all 0.5s;
+	pointer-events: none;
+}
+@keyframes showtoast {
+	from { transform: translateY(-2rem) translateX(-50%); }
+	to { transform: translateY(0) translateX(-50%); }
+}
+#toast-cross {
+	position: fixed;
+	top: 0px;
+	right: 0px;
+	width: 2.5rem;
+	height: 2.5rem;
+	float: right;
+	background-color: transparent;
+	font-size: 2rem;
+	line-height: 2rem;
+	border: none;
+	color: white;
+	opacity: 70%;
+	cursor: pointer;
+}
+#toast-cross:hover {
+	opacity: 1;
+}
+#toast div {
+	padding: 8px;
+}
+#toast-message {
+	padding-left: 3rem;
+	padding-right: 3rem;
 }

@@ -7,8 +7,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 
 import com.sun.net.httpserver.HttpExchange;
 
@@ -66,7 +65,7 @@ public class AssetHandler extends BaseHTTPHandler {
 		if (is != null) is.close();
 	}
 
-	public static List<String> getCachedFileListInDir(String dir) {
+	public static HashSet<String> getCachedFileListInDir(String dir) {
 		try {
 			final String res = path + dir;
 			URL url = loader.getResource(res);
@@ -77,7 +76,7 @@ public class AssetHandler extends BaseHTTPHandler {
 				file = new File(url.getPath()); // Resources in file
 		    }
 		    File[] listOfFiles = file.listFiles();
-		    List<String> filesNamesList = new ArrayList<String>();
+		    HashSet<String> filesNamesList = new HashSet<String>();
 		    for (File f : listOfFiles) {
 			    filesNamesList.add(f.getName());
 		    }
@@ -85,6 +84,6 @@ public class AssetHandler extends BaseHTTPHandler {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return new ArrayList<String>(); // No resources found
+		return new HashSet<String>(); // No resources found
 	}
 }

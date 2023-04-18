@@ -1,5 +1,6 @@
 const HOST_FILEVIEW_ROOT_ID = "id-wtree";
 const HOST_FILEVIEW_CONEXT_CONTAINER_ID = "wtree-context-container";
+const HOST_FILEVIEW_SELECT_TOTAL = "id-wtree-total";
 const HOST_FILEVIEW_QUERY_SELECTED = "f@"
 const HOST_FILEVIEW_QUERY_PATH = "f@path";
 const HOST_FILEVIEW_QUERY_BREADCRUMBS = "f@bread";
@@ -104,7 +105,14 @@ function hostChangeDirManual(sender, virtual) {
 	hostChangeDir(sender.previousElementSibling.value, virtual);
 }
 
-function hostChangeDir(path, virtual) {
+async function hostChangeDir(path, virtual) {
+	if (virtual === false) {
+		let size = calculateSelectedFileSizeTotal();
+		if (size > 0) {
+			let response = await showToast(Toast.Warning, 'Some files are selected, these will be reset' , -1);
+			if (response == ToastResponse.Cancel) return;
+		}
+	}
 	let root = document.getElementById(HOST_FILEVIEW_ROOT_ID + getIDPostFix(virtual));
 	let checkboxes = root.getElementsByTagName("input");
 	let params = new URLSearchParams();
@@ -176,6 +184,42 @@ function expandDir(sender, path, virtual) {
 	}).catch((error) => {
 		console.log(error);
 	})
+}
+
+function bytesToHumanReadable(bytes) {
+	let count = 0;
+	while (bytes > 1024) {
+		bytes /= 1024;
+		count++;
+	}
+	switch (count) {
+	case 0: return bytes + " bytes";
+	case 1: return parseFloat(bytes).toFixed(2) + " KB";
+	case 2: return parseFloat(bytes).toFixed(2) + " MB";
+	case 3: return parseFloat(bytes).toFixed(2) + " GB";
+	default: return parseFloat(bytes).toFixed(2) + " TB";
+	}
+}
+
+function calculateSelectedFileSizeTotal() {
+	let container = document.getElementById(HOST_FILEVIEW_ROOT_ID + getIDPostFix(false));
+	let size = 0;
+	let spans = container.getElementsByTagName('span');
+	for (let item of spans) {
+		let child = item.firstElementChild;
+		if (child?.type === 'checkbox') {
+			if (child.checked) {
+				size += parseInt(item.getAttribute('data-size'));
+			}
+		}
+	}
+	return size;
+}
+
+function recalculateSelectedFileSize() {
+	let message = document.getElementById(HOST_FILEVIEW_SELECT_TOTAL);
+	let size = calculateSelectedFileSizeTotal();
+	message.getElementsByTagName("b")[0].innerText = bytesToHumanReadable(size);
 }
 
 function contextMenu(sender, virtual, event) {
