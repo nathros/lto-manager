@@ -1,20 +1,18 @@
 package lto.manager.web.handlers.http.jobs;
 
 import java.io.IOException;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.xmlet.htmlapifaster.Div;
+
 import com.sun.net.httpserver.HttpExchange;
 
-import htmlflow.DynamicHtml;
 import lto.manager.common.database.Database;
 import lto.manager.common.database.tables.TableJobs;
 import lto.manager.common.database.tables.records.RecordJob;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
-import lto.manager.web.handlers.http.templates.TemplatePage;
 import lto.manager.web.handlers.http.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.http.templates.TemplatePage.TemplatePageModel;
 import lto.manager.web.handlers.http.templates.models.BodyModel;
@@ -23,12 +21,10 @@ import lto.manager.web.resource.CSS;
 
 public class JobsHandler extends BaseHTTPHandler {
 	public static final String PATH = "/jobs";
-	public static DynamicHtml<BodyModel> view = DynamicHtml.view(JobsHandler::body);
-
 	//private final static String STOP = "stop";
 	//private final static String START = "start";
 
-	static void body(DynamicHtml<BodyModel> view, BodyModel model) {
+	static Void content(Div<?> view, BodyModel model) {
 		//final String stop = model.getQueryNoNull(STOP);
 		//final String start = model.getQueryNoNull(START);
 
@@ -41,7 +37,7 @@ public class JobsHandler extends BaseHTTPHandler {
 		final List<RecordJob> jobs = results;
 
 		view
-			.div().dynamic(div -> {
+			.div().of(div -> {
 				div
 					.a().attrClass(CSS.BUTTON).attrHref(JobsAddNewHandler.PATH).text("Add new job").__()
 					.table()
@@ -61,24 +57,14 @@ public class JobsHandler extends BaseHTTPHandler {
 							}
 						});
 			}).__(); //  div
-
+		return null;
 	}
 
 	@Override
 	public void requestHandle(HttpExchange he) throws IOException {
-		try {
-			HeadModel thm = HeadModel.of("Jobs");
-			TemplatePageModel tepm = TemplatePageModel.of(view, thm, SelectedPage.Jobs, BodyModel.of(he, null));
-			String response = TemplatePage.view.render(tepm);
-
-			he.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length());
-			OutputStream os = he.getResponseBody();
-			os.write(response.getBytes());
-			os.close();
-		} catch (Exception e) {
-			view = DynamicHtml.view(JobsHandler::body);
-			throw e;
-		}
+		HeadModel thm = HeadModel.of("Jobs");
+		TemplatePageModel tpm = TemplatePageModel.of(JobsHandler::content, thm, SelectedPage.Jobs, BodyModel.of(he, null));
+		requestHandleCompletePage(he, tpm);
 	}
 
 }

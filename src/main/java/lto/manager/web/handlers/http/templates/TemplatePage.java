@@ -1,9 +1,14 @@
 package lto.manager.web.handlers.http.templates;
 
+import java.util.function.BiFunction;
+
+import org.xmlet.htmlapifaster.Div;
 import org.xmlet.htmlapifaster.EnumTypeButtonType;
 import org.xmlet.htmlapifaster.EnumTypeInputType;
 
-import htmlflow.DynamicHtml;
+import htmlflow.HtmlFlow;
+import htmlflow.HtmlPage;
+import htmlflow.HtmlView;
 import lto.manager.common.Main;
 import lto.manager.web.handlers.http.AdminHandler;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
@@ -27,113 +32,111 @@ public class TemplatePage {
 	}
 
 	public static class TemplatePageModel {
-		final DynamicHtml<BodyModel> dynamicHtml;
 		final HeadModel head;
 		final SelectedPage page;
 		final BodyModel body;
+		final BiFunction<Div<?>, BodyModel, Void> contentFunction;
 
-		private TemplatePageModel(DynamicHtml<BodyModel> dynamicHtml, HeadModel head, SelectedPage page, BodyModel body) {
-			this.dynamicHtml = dynamicHtml;
+		private TemplatePageModel(HeadModel head, SelectedPage page, BodyModel body, BiFunction<Div<?>, BodyModel, Void> contentFunction) {
 			this.head = head;
 			this.page = page;
 			this.body = body;
+			this.contentFunction = contentFunction;
 		}
 
-		public static TemplatePageModel of(DynamicHtml<BodyModel> dynamicHtml, HeadModel head, SelectedPage page, BodyModel body) {
-			return new TemplatePageModel(dynamicHtml, head, page, body);
+		public static TemplatePageModel of(BiFunction<Div<?>, BodyModel, Void> func, HeadModel head, SelectedPage page, BodyModel body) {
+			return new TemplatePageModel(head, page, body, func);
 		}
 
 		public BodyModel getBodyModel() { return body; }
 		public HeadModel getHeadModel() { return head; }
+		public BiFunction<Div<?>, BodyModel, Void> getContent() { return contentFunction; }
+		public static BiFunction<Div<?>, BodyModel, Void> parametrisedMethod(BiFunction<Div<?>, BodyModel, Void> function) { return function; }
 	}
 
-	public static DynamicHtml<TemplatePageModel> view = DynamicHtml.view(TemplatePage::template);
+	public static HtmlView view = HtmlFlow.view(TemplatePage::template);
 
-	static void template(DynamicHtml<TemplatePageModel> view, TemplatePageModel model) {
+	static void template(HtmlPage view) {
 		final String selected = " selected";
-		final DynamicHtml<TemplatePageModel> viewTmp = view;
 
-		try {
-			view
-				.html().attrLang(BaseHTTPHandler.LANG_VALUE)
-				.dynamic(head -> viewTmp.addPartial(TemplateHead.view, model.getHeadModel()))
-					.body()
-						.div().attrId(CSS.TOAST_ID)
-							.button().attrId(CSS.TOAST_ID_CROSS)
-								.attrType(EnumTypeButtonType.BUTTON).attrOnclick(JS.commonHideToast()).text("x")
+		view
+			.html().attrLang(BaseHTTPHandler.LANG_VALUE)
+			.<TemplatePageModel>dynamic((root, bodyModel) -> TemplateHead.template(root, bodyModel.getHeadModel()))
+				.body()
+					.div().attrId(CSS.TOAST_ID)
+						.button().attrId(CSS.TOAST_ID_CROSS)
+							.attrType(EnumTypeButtonType.BUTTON).attrOnclick(JS.commonHideToast()).text("x")
+						.__()
+						.p().attrId(CSS.TOAST_ID_MESSAGE).text("Empty").__()
+						.div()
+							.button()
+								.attrId(CSS.TOAST_ID_OK)
+								.attrClass(CSS.BUTTON + CSS.BACKGROUND_ACTIVE)
+								.attrOnclick(JS.commonHideToast()).text("OK")
 							.__()
-							.p().attrId(CSS.TOAST_ID_MESSAGE).text("Empty").__()
-							.div()
-								.button()
-									.attrId(CSS.TOAST_ID_OK)
-									.attrClass(CSS.BUTTON + CSS.BACKGROUND_ACTIVE)
-									.attrOnclick(JS.commonHideToast()).text("OK")
-								.__()
-								.button()
-									.attrId(CSS.TOAST_ID_CANCEL)
-									.attrClass(CSS.BUTTON + CSS.BACKGROUND_ACTIVE)
-									.attrOnclick(JS.commonHideToast()).text("Cancel")
-								.__()
+							.button()
+								.attrId(CSS.TOAST_ID_CANCEL)
+								.attrClass(CSS.BUTTON + CSS.BACKGROUND_ACTIVE)
+								.attrOnclick(JS.commonHideToast()).text("Cancel")
 							.__()
-						.__() // Toast
-						.header().attrClass("header-root")
-						.div().attrClass("header-root-container")
-							.div().attrId("nav-toggle")
-								.input().attrType(EnumTypeInputType.CHECKBOX).__()
-								.div() // Menu Icon
-									.span().__()
-									.span().__()
-									.span().__()
-								.__() // div
-								.ul().attrId("nav-menu")
-									.li()
-										.a().dynamic(a -> a.attrHref(AdminHandler.PATH)
+						.__()
+					.__() // Toast
+					.header().attrClass("header-root")
+					.div().attrClass("header-root-container")
+						.div().attrId("nav-toggle")
+							.input().attrType(EnumTypeInputType.CHECKBOX).__()
+							.div() // Menu Icon
+								.span().__()
+								.span().__()
+								.span().__()
+							.__() // div
+							.ul()
+								.attrId("nav-menu")
+								.<TemplatePageModel>dynamic((ul, model) -> {
+									ul.li()
+										.a().of(a -> a.attrHref(AdminHandler.PATH)
 											.attrClass(CSS.ICON_ADMIN + (model.page == SelectedPage.Admin ? selected : ""))
 											.text("Admin"))
 										.__()
 									.__()
 									.li()
-										.a().dynamic(a -> a.attrHref(TapesHandler.PATH)
+										.a().of(a -> a.attrHref(TapesHandler.PATH)
 											.attrClass(CSS.ICON_TAPE + (model.page == SelectedPage.Tapes ? selected : ""))
 											.text("Tapes"))
 										.__()
 									.__()
 									.li()
-										.a().dynamic(a -> a.attrHref(FilesHandler.PATH)
+										.a().of(a -> a.attrHref(FilesHandler.PATH)
 											.attrClass(CSS.ICON_FOLDER + (model.page == SelectedPage.Files ? selected : ""))
 											.text("Files"))
 										.__()
 									.__()
 									.li()
-										.a().dynamic(a -> a.attrHref(JobsHandler.PATH)
+										.a().of(a -> a.attrHref(JobsHandler.PATH)
 											.attrClass(CSS.ICON_JOBS + (model.page == SelectedPage.Jobs ? selected : ""))
 											.text("Jobs"))
 										.__()
 									.__()
-									.li().dynamic(li -> {
+									.li().of(li -> {
 										if (Main.DEBUG_MODE) {
-											li.a()
-											.attrHref(SandpitHandler.PATH).attrClass(CSS.ICON_SANDPIT + (model.page == SelectedPage.Sandpit ? selected : ""))
-											.text("Sandpit")
-											.__();
+											li
+												.a()
+													.attrHref(SandpitHandler.PATH).attrClass(CSS.ICON_SANDPIT + (model.page == SelectedPage.Sandpit ? selected : ""))
+													.text("Sandpit")
+												.__();
 										}
-									})
-								.__()
-							.__() // div nav-toggle
-						.__() // div header-root-container
-					.__() // header
-					.div().attrClass("main-content")
-						.div().attrClass("nav-area").__()
-						.div().attrClass("main-content-wrapper")
-							.dynamic(div -> viewTmp.addPartial(model.dynamicHtml, model.getBodyModel()))
-						.__() // div
-					.__() //div
-				.__() // body
-			.__(); // html
-
-		} catch (Exception e) {
-			TemplatePage.view = DynamicHtml.view(TemplatePage::template);
-			throw e;
-		}
+									}).__();
+							}).__() // ul
+						.__() // div nav-toggle
+					.__() // div header-root-container
+				.__() // header-root
+				.div().attrClass("main-content")
+					.div().attrClass("nav-area").__()
+					.div().attrClass("main-content-wrapper")
+						.<TemplatePageModel>dynamic((div, bodyModel) -> bodyModel.getContent().apply(div, bodyModel.getBodyModel()))
+					.__() // div
+				.__() //div
+			.__() // body
+		.__(); // html
 	}
 }

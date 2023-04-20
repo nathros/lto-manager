@@ -35,14 +35,14 @@ public class AssetHandler extends BaseHTTPHandler {
 				extension = extension.substring(index + 1);
 				final String contentType = "Content-Type";
 				switch (extension) {
-					case "css": { he.getResponseHeaders().set(contentType, "text/css"); break; }
-					case "js": { he.getResponseHeaders().set(contentType, "text/javascript"); break; }
+					case "css":  { he.getResponseHeaders().set(contentType, "text/css"); break; }
+					case "js":   { he.getResponseHeaders().set(contentType, "text/javascript"); break; }
 					case "apng": { he.getResponseHeaders().set(contentType, "image/apng"); break; }
 					case "avif": { he.getResponseHeaders().set(contentType, "image/avif"); break; }
-					case "gif": { he.getResponseHeaders().set(contentType, "image/gif"); break; }
-					case "jpg": { he.getResponseHeaders().set(contentType, "image/jpeg"); break; }
-					case "png": { he.getResponseHeaders().set(contentType, "image/png"); break; }
-					case "svg": { he.getResponseHeaders().set(contentType, "image/svg+xml"); break; }
+					case "gif":  { he.getResponseHeaders().set(contentType, "image/gif"); break; }
+					case "jpg":  { he.getResponseHeaders().set(contentType, "image/jpeg"); break; }
+					case "png":  { he.getResponseHeaders().set(contentType, "image/png"); break; }
+					case "svg":  { he.getResponseHeaders().set(contentType, "image/svg+xml"); break; }
 					case "webp": { he.getResponseHeaders().set(contentType, "image/webp"); break; }
 				}
 			}

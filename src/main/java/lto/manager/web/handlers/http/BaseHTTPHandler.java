@@ -8,8 +8,12 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
 import lto.manager.common.log.Log;
+import lto.manager.web.handlers.http.templates.TemplateFetcher;
+import lto.manager.web.handlers.http.templates.TemplateFetcher.TemplateFetcherModel;
 import lto.manager.web.handlers.http.templates.TemplateInternalError;
 import lto.manager.web.handlers.http.templates.TemplateInternalError.TemplateInternalErrorModel;
+import lto.manager.web.handlers.http.templates.TemplatePage;
+import lto.manager.web.handlers.http.templates.TemplatePage.TemplatePageModel;
 
 public abstract class BaseHTTPHandler implements HttpHandler {
 	public static final String LANG_VALUE = "en";
@@ -48,6 +52,22 @@ public abstract class BaseHTTPHandler implements HttpHandler {
 	}
 
 	public abstract void requestHandle(HttpExchange he) throws Exception;
+
+	protected void requestHandleCompletePage(HttpExchange he, TemplatePageModel tpm) throws IOException {
+		String response = TemplatePage.view.render(tpm);
+		he.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length());
+		OutputStream os = he.getResponseBody();
+		os.write(response.getBytes());
+		os.close();
+	}
+
+	protected void requestHandleCompleteFetcher(HttpExchange he, TemplateFetcherModel tfm) throws IOException {
+		String response = TemplateFetcher.view.render(tfm);
+		he.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length());
+		OutputStream os = he.getResponseBody();
+		os.write(response.getBytes());
+		os.close();
+	}
 
 	protected void errorHandle(HttpExchange he, Exception exception) {
 		try {

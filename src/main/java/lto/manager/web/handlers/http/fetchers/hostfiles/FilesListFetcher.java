@@ -1,22 +1,20 @@
 package lto.manager.web.handlers.http.fetchers.hostfiles;
 
 import java.io.IOException;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
 import java.util.List;
+
+import org.xmlet.htmlapifaster.Div;
 
 import com.sun.net.httpserver.HttpExchange;
 
-import htmlflow.DynamicHtml;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
+import lto.manager.web.handlers.http.templates.TemplateFetcher.TemplateFetcherModel;
 import lto.manager.web.handlers.http.templates.models.BodyModel;
 
 public class FilesListFetcher extends BaseHTTPHandler {
 	public static final String PATH = "/fetcher/fileslist";
 
-	public static DynamicHtml<BodyModel> view = DynamicHtml.view(FilesListFetcher::body);
-
-	static void body(DynamicHtml<BodyModel> view, BodyModel model) {
+	static Void content(Div<?> view, BodyModel model) {
 		final List<String> selected = model.getQueryArray(FileListModel.FILE_SELECTED);
 		final String path = model.getQuery(FileListModel.FILE_PATH);
 		final String breadcrumbs = model.getQueryNoNull(FileListModel.BREADCRUMBS_LAST);
@@ -29,28 +27,14 @@ public class FilesListFetcher extends BaseHTTPHandler {
 		try { depth = Integer.parseInt(depthStr); } catch (Exception e) {}
 		var options = FileListOptions.of(showRoot, breadcrumbs, selected, depth, isVirtual, isVirtual);
 		final FileListModel hflModel = new FileListModel(path, options);
-		try {
-			view.dynamic(v -> {
-				v.addPartial(FileList.view, hflModel);
-			});
-		} catch (Exception e) {
-			view = DynamicHtml.view(FilesListFetcher::body);
-			throw e;
-		}
+		view.of(v -> FileList.content(v, hflModel));
+		return null;
 	}
 
 	@Override
 	public void requestHandle(HttpExchange he) throws IOException {
-		try {
-			BodyModel bm = BodyModel.of(he, null);
-			String response = view.render(bm);
-			he.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length());
-			OutputStream os = he.getResponseBody();
-			os.write(response.getBytes());
-			os.close();
-		} catch (Exception e) {
-			view = DynamicHtml.view(FilesListFetcher::body);
-			throw e;
-		}
+		BodyModel bm = BodyModel.of(he, null);
+		requestHandleCompleteFetcher(he, new TemplateFetcherModel(FilesListFetcher::content, bm));
+
 	}
 }

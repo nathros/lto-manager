@@ -1,21 +1,18 @@
 package lto.manager.web.handlers.http;
 
 import java.io.IOException;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
 
+import org.xmlet.htmlapifaster.Div;
 import org.xmlet.htmlapifaster.EnumTypeButtonType;
 import org.xmlet.htmlapifaster.EnumTypeInputType;
 
 import com.sun.net.httpserver.HttpExchange;
 
-import htmlflow.DynamicHtml;
 import lto.manager.common.Util;
 import lto.manager.common.database.Options;
 import lto.manager.common.database.tables.TableOptions;
 import lto.manager.common.ltfs.ListTapeDevices;
 import lto.manager.common.ltfs.ListTapeDevices.TapeDevicesInfo;
-import lto.manager.web.handlers.http.templates.TemplatePage;
 import lto.manager.web.handlers.http.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.http.templates.TemplatePage.TemplatePageModel;
 import lto.manager.web.handlers.http.templates.models.BodyModel;
@@ -23,9 +20,8 @@ import lto.manager.web.handlers.http.templates.models.HeadModel;
 import lto.manager.web.resource.Asset;
 
 public class AdminHandler extends BaseHTTPHandler {
+	public static AdminHandler self = new AdminHandler();
 	public static final String PATH = "/admin";
-	public static DynamicHtml<BodyModel> view = DynamicHtml.view(AdminHandler::body);
-
 	private final static String LIST_DRIVES = "list-drives";
 
 	private final static String CHANGE_OPTIONS = "change-options";
@@ -34,9 +30,8 @@ public class AdminHandler extends BaseHTTPHandler {
 
 	private static ListTapeDevices devices = new ListTapeDevices();
 
-	static void body(DynamicHtml<BodyModel> view, BodyModel model) {
+	static Void content(Div<?> view, BodyModel model) {
 		final boolean showDrives = model.getQueryNoNull(LIST_DRIVES).equals(BodyModel.QUERY_ON);
-
 		if (showDrives) {
 			try {
 				if (!devices.operationInProgress()) devices.start();
@@ -56,7 +51,7 @@ public class AdminHandler extends BaseHTTPHandler {
 		}
 
 		view
-		.div().dynamic(div -> {
+		.div().of(div -> {
 			final int maxMemoryMB = (int) (Util.getJVMMaxMemory() / 1024 / 1024);
 			final int allocatedMB = (int) (Util.getJVMAllocatedMemory() / 1024 / 1024);
 			final int usedMemMB = (int) ((Util.getJVMAllocatedMemory() - Util.getUsedMemory()) / 1024 / 1024);
@@ -119,24 +114,15 @@ public class AdminHandler extends BaseHTTPHandler {
 					.__()
 				.__();
 		}).__(); //  div
-
+		return null;
 	}
 
 	@Override
 	public void requestHandle(HttpExchange he) throws IOException {
-		try {
-			HeadModel thm = HeadModel.of("Admin");
-			thm.AddCSS(Asset.CSS_PIE);
-			TemplatePageModel tepm = TemplatePageModel.of(view, thm, SelectedPage.Admin, BodyModel.of(he, null));
-			String response = TemplatePage.view.render(tepm);
-
-			he.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length());
-			OutputStream os = he.getResponseBody();
-			os.write(response.getBytes());
-			os.close();
-		} catch (Exception e) {
-			view = DynamicHtml.view(AdminHandler::body);
-			throw e;
-		}
+		HeadModel thm = HeadModel.of("Admin");
+		thm.AddCSS(Asset.CSS_PIE);
+		TemplatePageModel tpm = TemplatePageModel.of(AdminHandler::content, thm, SelectedPage.Admin, BodyModel.of(he, null));
+		requestHandleCompletePage(he, tpm);
 	}
+
 }

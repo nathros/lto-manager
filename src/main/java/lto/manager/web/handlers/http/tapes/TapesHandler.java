@@ -1,21 +1,18 @@
 package lto.manager.web.handlers.http.tapes;
 
 import java.io.IOException;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.xmlet.htmlapifaster.Div;
 import org.xmlet.htmlapifaster.EnumBorderType;
 
 import com.sun.net.httpserver.HttpExchange;
 
-import htmlflow.DynamicHtml;
 import lto.manager.common.database.Database;
 import lto.manager.common.database.tables.records.RecordTape;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.files.FilesHandler;
-import lto.manager.web.handlers.http.templates.TemplatePage;
 import lto.manager.web.handlers.http.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.http.templates.TemplatePage.TemplatePageModel;
 import lto.manager.web.handlers.http.templates.models.BodyModel;
@@ -25,9 +22,7 @@ import lto.manager.web.resource.CSS;
 public class TapesHandler extends BaseHTTPHandler {
 	public static final String PATH = "/tapes";
 
-	public static DynamicHtml<BodyModel> view = DynamicHtml.view(TapesHandler::body);
-
-	static void body(DynamicHtml<BodyModel> view, BodyModel model) {
+	static Void body(Div<?> view, BodyModel model) {
 		List<RecordTape> tmp = null;
 		try {
 			tmp = Database.getTapeAtIDRange(0, 100);
@@ -40,7 +35,7 @@ public class TapesHandler extends BaseHTTPHandler {
 		view
 			.div()
 				.a().attrClass(CSS.BUTTON).attrHref(TapesCreateHandler.PATH).text("Add New Tape").__()
-				.table().dynamic(table -> {
+				.table().of(table -> {
 					table.attrBorder(EnumBorderType._1).tr()
 						.th().text("Tape ID").__()
 						.th().text("Barcode").__()
@@ -68,23 +63,13 @@ public class TapesHandler extends BaseHTTPHandler {
 					}
 				}).__()
 			.__(); // div
-
+		return null;
 	}
 
 	@Override
 	public void requestHandle(HttpExchange he) throws IOException {
-		try {
-			HeadModel thm = HeadModel.of("Tapes");
-			TemplatePageModel tepm = TemplatePageModel.of(view, thm, SelectedPage.Tapes, BodyModel.of(he, null));
-			String response = TemplatePage.view.render(tepm);
-
-			he.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length());
-			OutputStream os = he.getResponseBody();
-			os.write(response.getBytes());
-			os.close();
-		} catch (Exception e) {
-			TapesHandler.view = DynamicHtml.view(TapesHandler::body);
-			throw e;
-		}
+		HeadModel thm = HeadModel.of("Tapes");
+		TemplatePageModel tpm = TemplatePageModel.of(TapesHandler::body, thm, SelectedPage.Tapes, BodyModel.of(he, null));
+		requestHandleCompletePage(he, tpm);
 	}
 }

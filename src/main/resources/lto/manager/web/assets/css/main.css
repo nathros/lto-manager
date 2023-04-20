@@ -43,12 +43,14 @@ a {
 .main-content {
 	position: relative;
 	display: flex;
+	height: 100vh;
 }
 .main-content-wrapper {
 	padding: 0.5rem;
 	flex: 1;
 	height: calc(100vh - 4rem);
 	overflow-y: scroll;
+	margin-top: 3rem;
 }
 #nav-toggle {
 	display: flex;
