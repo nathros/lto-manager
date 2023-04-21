@@ -20,6 +20,8 @@ public class PathTreeVirtual extends PathTreeBase {
 				list.add(files.get(i));
 				children.add(new PathTreeVirtual(null, depth + 1, maxDepth, list));
 			}
+		} else {
+			file = PathTreeFile.EmptyFile(filePath);
 		}
 	}
 

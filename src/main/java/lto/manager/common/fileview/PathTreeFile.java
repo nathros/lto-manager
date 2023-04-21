@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributeView;
@@ -26,6 +27,9 @@ public class PathTreeFile {
 		path = Paths.get(f.getAbsolutePath());
 		try {
 			fileSize = Files.size(path);
+		} catch (NoSuchFileException ne) {
+			setSelfAsEmptyFile(f.getAbsolutePath());
+			return;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -52,6 +56,23 @@ public class PathTreeFile {
 		this.modifiedDateTime = f.getModifiedDateTime();
 		this.isDirectory = f.isDirectory();
 		this.path = Paths.get(f.getAbsolutePath());
+	}
+
+	private PathTreeFile() {}
+
+	private void setSelfAsEmptyFile(final String filePath) {
+		var now = LocalDateTime.now();
+		this.fileSize = PathTreeBase.MISSING_FILE;
+		this.creationDateTime = now;
+		this.modifiedDateTime = now;
+		this.isDirectory = false;
+		this.path = Paths.get(filePath);
+	}
+
+	public static PathTreeFile EmptyFile(final String filePath) {
+		var empty = new PathTreeFile();
+		empty.setSelfAsEmptyFile(filePath);
+		return empty;
 	}
 
 	public long getFileSize() { return fileSize; }

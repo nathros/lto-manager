@@ -13,7 +13,6 @@ public class FileList {
 
 	public static Void content(Div<?> view, FileListModel model) {
 		final var finalView = view;
-
 		Div<?> wrapper = null;
 		if (model.getTree().getDepth() == 0) {
 			if (model.getOptions().showRoot()) {
@@ -132,12 +131,15 @@ public class FileList {
 
 						container.__();
 					});
+				if (!model.getTree().exists()) {
+					wrapper.p().text("Directory does not exist").__();
+					return null;
+				}
 				if (model.getOptions().isVirtual()) {
 					wrapper.div()
 						.p().text("ffsdfd").__()
 					.__();
 				}
-
 			}
 			finalView.of(div -> FileListItem.content(div, model));
 		}
@@ -153,9 +155,6 @@ public class FileList {
 							var li = ul.li();
 							model.setTree(child);
 							finalView.of(div -> FileListItem.content(div, model));
-							if (child.isDirectory()) {
-								//finalView.of(div -> FileListItem.content(div, model));
-							}
 							li.__();
 						}
 					}
@@ -176,7 +175,6 @@ public class FileList {
 						.__()
 					.__();
 			}
-			//wrapper.__();
 		}
 		return null;
 	 }

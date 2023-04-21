@@ -35,6 +35,5 @@ public class FilesListFetcher extends BaseHTTPHandler {
 	public void requestHandle(HttpExchange he) throws IOException {
 		BodyModel bm = BodyModel.of(he, null);
 		requestHandleCompleteFetcher(he, new TemplateFetcherModel(FilesListFetcher::content, bm));
-
 	}
 }

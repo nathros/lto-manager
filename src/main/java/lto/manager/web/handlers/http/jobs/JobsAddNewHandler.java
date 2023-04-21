@@ -46,7 +46,7 @@ public class JobsAddNewHandler extends BaseHTTPHandler {
 		view
 			.div()
 				.div().attrClass(CSS.TABS_CONTAINER)
-					.input().attrType(EnumTypeInputType.RADIO).attrId("tab1").attrName("css-tab").__()
+					.input().attrType(EnumTypeInputType.RADIO).attrId("tab1").attrName("css-tab").addAttr(name, fileTreeVirtual) .__()
 					.input().attrType(EnumTypeInputType.RADIO).attrId("tab2").attrName("css-tab").attrChecked(true).__()
 					.input().attrType(EnumTypeInputType.RADIO).attrId("tab3").attrName("css-tab").__()
 					.ul().attrClass(CSS.TABS_HEADERS)

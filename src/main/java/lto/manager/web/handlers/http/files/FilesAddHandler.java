@@ -53,7 +53,6 @@ public class FilesAddHandler extends BaseHTTPHandler {
 		}
 
 		final PathTreeBase fileTree = tmpTree;
-		final var finalView = view;
 
 		view
 			.div()

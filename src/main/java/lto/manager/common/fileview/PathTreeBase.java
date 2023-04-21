@@ -12,6 +12,7 @@ public abstract class PathTreeBase {
 	protected int depth;
 	protected static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 	protected String customIcon;
+	public static Long MISSING_FILE = Long.MIN_VALUE;
 
 	public PathTreeBase(int depth) {
 		this.depth = depth;
@@ -68,6 +69,7 @@ public abstract class PathTreeBase {
 	public boolean isDirectory() { return file.isDirectory(); }
 	public String getName() { return file.getName(); }
 	public String getCustomIcon() { return customIcon; }
+	public boolean exists() { return file.getFileSize() != PathTreeBase.MISSING_FILE; }
 
 	@Override
     public String toString() {
