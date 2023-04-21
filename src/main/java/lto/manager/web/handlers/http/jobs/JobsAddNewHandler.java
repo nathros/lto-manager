@@ -20,6 +20,7 @@ import lto.manager.web.handlers.http.templates.models.BodyModel;
 import lto.manager.web.handlers.http.templates.models.HeadModel;
 import lto.manager.web.resource.Asset;
 import lto.manager.web.resource.CSS;
+import lto.manager.web.resource.HTML;
 
 public class JobsAddNewHandler extends BaseHTTPHandler {
 	public static final String PATH = "/jobs/add";
@@ -46,25 +47,25 @@ public class JobsAddNewHandler extends BaseHTTPHandler {
 		view
 			.div()
 				.div().attrClass(CSS.TABS_CONTAINER)
-					.input().attrType(EnumTypeInputType.RADIO).attrId("tab1").attrName("css-tab").addAttr(name, fileTreeVirtual) .__()
-					.input().attrType(EnumTypeInputType.RADIO).attrId("tab2").attrName("css-tab").attrChecked(true).__()
+					.input().attrType(EnumTypeInputType.RADIO).attrId("tab1").attrName("css-tab") .__()
+					.input().attrType(EnumTypeInputType.RADIO).attrId("tab2").attrName("css-tab").of(i -> HTML.check(i, true)).__()
 					.input().attrType(EnumTypeInputType.RADIO).attrId("tab3").attrName("css-tab").__()
 					.ul().attrClass(CSS.TABS_HEADERS)
 						.li().attrClass(CSS.TABS_TAB)
 							.label().attrFor(TAB1)
-								.img().attrClass(CSS.TABS_SETUP_ICON).__()
+								.img().attrClass(CSS.TABS_SETUP_ICON).attrSrc("/").attrAlt("").__()
 								.text("1: Setup")
 							.__()
 						.__()
 						.li().attrClass(CSS.TABS_TAB)
 							.label().attrFor(TAB2)
-								.img().attrClass(CSS.TABS_SOURCE_ICON).__()
+								.img().attrClass(CSS.TABS_SOURCE_ICON).attrSrc("/").attrAlt("").__()
 								.text("2: Source")
 							.__()
 						.__()
 						.li().attrClass(CSS.TABS_TAB)
 							.label().attrFor(TAB3)
-								.img().attrClass(CSS.TABS_DESTINATION_ICON).__()
+								.img().attrClass(CSS.TABS_DESTINATION_ICON).attrSrc("/").attrAlt("").__()
 								.text("3: Destination")
 							.__()
 						.__()
@@ -78,14 +79,11 @@ public class JobsAddNewHandler extends BaseHTTPHandler {
 
 						.b().attrStyle("width:150px;display:inline-block").text("Job Type: ").__()
 						.select().attrName(TYPE).of(select -> {
-							select.option().attrValue("").attrSelected(typeIndex == -1).attrDisabled(true).text("Select").__();
+							select.option().attrValue("").of(s -> HTML.option(s, typeIndex == -1, true)).text("Select").__();
 							for (int i = 0; i < RecordJobType.values().length; i++) {
 								final RecordJobType e = RecordJobType.values()[i];
-								if (i == typeIndex) {
-									select.option().attrSelected(true).attrValue(String.valueOf(i)).text(e.toString()).__();
-								} else {
-									select.option().attrValue(String.valueOf(i)).text(e.toString()).__();
-								}
+								final var current = i;
+								select.option().of(s -> HTML.option(s, current == typeIndex, false)).attrValue(String.valueOf(i)).text(e.toString()).__();
 							}
 						}).__().br().__()
 

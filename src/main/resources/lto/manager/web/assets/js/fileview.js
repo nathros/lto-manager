@@ -180,6 +180,7 @@ function expandDir(sender, path, virtual) {
 	}).then((response) => {
 		return response.text();
 	}).then((div) => {
+		div = div.substring(6, div.length - 6); // Remove <div>...</div>
 		sender.parentElement.parentElement.innerHTML = div;
 	}).catch((error) => {
 		console.log(error);

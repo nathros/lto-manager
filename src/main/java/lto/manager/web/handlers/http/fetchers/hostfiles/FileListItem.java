@@ -9,6 +9,7 @@ import lto.manager.common.fileview.PathTreeBase;
 import lto.manager.web.handlers.http.AssetHandler;
 import lto.manager.web.resource.Asset;
 import lto.manager.web.resource.CSS;
+import lto.manager.web.resource.HTML;
 import lto.manager.web.resource.JS;
 
 public class FileListItem {
@@ -35,7 +36,7 @@ public class FileListItem {
 								.attrOnchange(JS.fnFileCheckBoxChange())
 								.attrName(FileListModel.FILE_SELECTED)
 								.attrValue(ABS_PATH)
-								.of(in -> {if (fileTree.isSelected()) in.attrChecked(true);})
+								.of(in -> HTML.check(in, fileTree.isSelected()))
 							.__()
 							.a()
 								.attrClass(CSS.BUTTON_SMALL + CSS.BACKGROUND_GRAY)
@@ -44,7 +45,7 @@ public class FileListItem {
 							.__();
 						}
 					})
-					.img().attrClass(CSS.FV_FILE_ICON).attrSrc(getFileTypeIcon(fileTree.getTree())).__()
+					.img().attrClass(CSS.FV_FILE_ICON).attrSrc(getFileTypeIcon(fileTree.getTree())).attrAlt("").__()
 					.a()
 						.attrOnclick(JS.fnFileViewListChangeDir(ABS_PATH, fileTree.getOptions().isVirtual()))
 						.text(fileTree.getTree().getName())
@@ -86,11 +87,11 @@ public class FileListItem {
 								.attrOnchange(JS.fnFileCheckBoxChange())
 								.attrName(FileListModel.FILE_SELECTED)
 								.attrValue(ABS_PATH)
-								.of(in -> {if (fileTree.isSelected()) in.attrChecked(true);})
+								.of(in -> {if (fileTree.isSelected()) in.of(i -> HTML.check(i, true));})
 							.__();
 						}
 					})
-					.img().attrClass(CSS.FV_FILE_ICON).attrSrc(getFileTypeIcon(fileTree.getTree())).__()
+					.img().attrClass(CSS.FV_FILE_ICON).attrSrc(getFileTypeIcon(fileTree.getTree())).attrAlt("").__()
 					//.a()
 						//.attrHref(LINK + Util.encodeUrl(ABS_PATH))
 						.text(fileTree.getTree().getName())

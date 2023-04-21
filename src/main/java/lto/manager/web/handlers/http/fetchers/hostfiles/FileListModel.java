@@ -26,7 +26,7 @@ public class FileListModel {
 			if (options.isVirtual()) {
 				try {
 					var files = TableFile.getFilesInDir(Database.connection, baseDir);
-					this.tree = new PathTreeVirtual(baseDir, 0, options.maxDepth() + 1 - 1, files);
+					this.tree = new PathTreeVirtual(baseDir, 0, options.maxDepth(), files);
 				} catch (SQLException e) {
 					e.printStackTrace();
 				} catch (IOException e) {

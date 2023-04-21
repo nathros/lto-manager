@@ -18,6 +18,7 @@ import lto.manager.web.handlers.http.templates.TemplatePage.TemplatePageModel;
 import lto.manager.web.handlers.http.templates.models.BodyModel;
 import lto.manager.web.handlers.http.templates.models.HeadModel;
 import lto.manager.web.resource.Asset;
+import lto.manager.web.resource.HTML;
 
 public class AdminHandler extends BaseHTTPHandler {
 	public static AdminHandler self = new AdminHandler();
@@ -100,14 +101,14 @@ public class AdminHandler extends BaseHTTPHandler {
 						.label().attrFor(ENABLE_LOG_REQUESTS).text("Enable request logging").__()
 						.input().of(input -> {
 							input.attrType(EnumTypeInputType.CHECKBOX).attrName(ENABLE_LOG_REQUESTS).attrId(ENABLE_LOG_REQUESTS);
-							if (Options.getBool(TableOptions.INDEX_ENABLE_LOG_REQUESTS)) input.attrChecked(true);
+							if (Options.getBool(TableOptions.INDEX_ENABLE_LOG_REQUESTS)) input.of(i -> HTML.check(i, true));
 						}).__()
 						.br().__()
 
 						.label().attrFor(ENABLE_LOG_EXTERNAL_PROCESS).text("Enable external process logging").__()
 						.input().of(input -> {
 							input.attrType(EnumTypeInputType.CHECKBOX).attrName(ENABLE_LOG_EXTERNAL_PROCESS).attrId(ENABLE_LOG_EXTERNAL_PROCESS);
-							if (Options.getBool(TableOptions.INDEX_ENABLE_LOG_EXTERNAL_PROCESS)) input.attrChecked(true);
+							if (Options.getBool(TableOptions.INDEX_ENABLE_LOG_EXTERNAL_PROCESS)) input.of(i -> HTML.check(i, true));
 						}).__()
 						.br().__()
 						.button().attrType(EnumTypeButtonType.SUBMIT).text("Submit").__()
