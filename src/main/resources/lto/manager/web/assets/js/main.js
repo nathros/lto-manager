@@ -9,7 +9,7 @@ const ToastResponse = {
 	Cancel: "cancel"
 }
 
-async function showToast(level, message, time) {
+async function showToast(level, message, time, url) {
 	var toast = document.getElementById("toast");
 	var toastMessage = document.getElementById("toast-message");
 	if ((toast != null) && (toastMessage != null)) {
@@ -25,7 +25,7 @@ async function showToast(level, message, time) {
 			showToast.toastTimeout = setTimeout(function(){ toast.className = "hide " + level }, time);
 		} else {
 			document.getElementById("toast-cross").style.display = "none";
-			let response = await toastButtonPromise();
+			let response = await toastButtonPromise(url);
 			return response;
 		}
 	} else {
@@ -43,16 +43,25 @@ function hideToast() {
 	}
 }
 
-function toastButtonPromise() {
+function toastConfirm(url) {
+	showToast(Toast.Warning, "Are you sure?", -1, url);
+}
+
+function toastButtonPromise(url) {
+	let link = url;
 	return new Promise((resolve/*, reject*/) => {
 		let ok = document.getElementById("toast-ok");
 		let cancel = document.getElementById("toast-cancel");
 		let okFn = () => {
 			resolve(ToastResponse.Ok);
+			if (link !== undefined) {
+				window.location = link;
+			}
 			cancel.click(); // Remove other listener
 			hideToast();
 		};
 		let canelFn = () => {
+			link = undefined;
 			resolve(ToastResponse.Cancel);
 			ok.click(); // Remove other listener
 			hideToast();

@@ -30,6 +30,7 @@ public class SimpleWebSocketServer extends WebSocketServer {
 			query = path.substring(index + 1, path.length());
 			path = path.substring(0, index);
 		}
+		System.out.println(query);
 		var handler = Handlers.websocketHandlers.get(path);
 		if (handler != null) {
 			handler.addNewConnection(conn);

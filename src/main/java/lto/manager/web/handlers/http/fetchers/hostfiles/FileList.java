@@ -3,6 +3,7 @@ package lto.manager.web.handlers.http.fetchers.hostfiles;
 import java.io.File;
 
 import org.xmlet.htmlapifaster.Div;
+import org.xmlet.htmlapifaster.EnumTypeButtonType;
 import org.xmlet.htmlapifaster.EnumTypeInputType;
 
 import lto.manager.common.fileview.PathTreeBase;
@@ -83,9 +84,9 @@ public class FileList {
 				final String breadcrumbsPath = bread;
 				wrapper
 					.input()
-						.attrStyle("width:500px")
 						.attrType(EnumTypeInputType.HIDDEN)
 						.attrId(FileListModel.BREADCRUMBS_LAST + model.getIDPostFix())
+						.attrName(FileListModel.BREADCRUMBS_LAST + model.getIDPostFix())
 						.attrValue(breadcrumbsPath)
 					.__()
 					.of(n -> {
@@ -104,12 +105,16 @@ public class FileList {
 							if (split[i].equals("")) split[i] = File.separator;
 							container.button()
 								.attrClass(CSS.BUTTON + (i == currentIndex ? CSS.BACKGROUND_ACTIVE : ""))
+								.attrType(EnumTypeButtonType.BUTTON)
+								.attrTitle("")
 								.attrOnclick(JS.fnFileViewListChangeDir(path, model.getOptions().isVirtual()))
 								.text(split[i])
 							.__();
 						}
 						container.button() // TODO on click this button is not hidden despite opacity 0 CSS, caused by JavaScript selectPathEditBox
 							.attrClass(CSS.BUTTON + CSS.BUTTON_IMAGE + CSS.ICON_EDIT + CSS.FV_BREADCRUMB_EDIT_BTN)
+							.attrType(EnumTypeButtonType.BUTTON)
+							.attrTitle("Manually enter directory")
 							.attrOnclick(JS.fnFileViewSelectPathEditBox())
 							.attrOnfocus(JS.fnFileViewSelectPathEditBox())
 							.attrStyle("float:right")
@@ -121,9 +126,12 @@ public class FileList {
 								.attrType(EnumTypeInputType.TEXT)
 								.attrValue(currentPath)
 								.attrOnkeyup(JS.fnFileViewKeyDownEditBox())
+								.attrOnkeydown("return event.key != 'Enter';")
 							.__()
 							.button()
 								.attrClass(CSS.BUTTON + CSS.BUTTON_IMAGE + CSS.ICON_CHECK)
+								.attrType(EnumTypeButtonType.BUTTON)
+								.attrTitle("Confirm directoty change")
 								.attrOnclick(JS.fnFileViewListChangeDirManual(model.getOptions().isVirtual()))
 								.attrStyle("float:right")
 							.__()

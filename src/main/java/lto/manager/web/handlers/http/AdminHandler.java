@@ -19,6 +19,7 @@ import lto.manager.web.handlers.http.templates.models.BodyModel;
 import lto.manager.web.handlers.http.templates.models.HeadModel;
 import lto.manager.web.resource.Asset;
 import lto.manager.web.resource.HTML;
+import lto.manager.web.resource.Query;
 
 public class AdminHandler extends BaseHTTPHandler {
 	public static AdminHandler self = new AdminHandler();
@@ -32,7 +33,7 @@ public class AdminHandler extends BaseHTTPHandler {
 	private static ListTapeDevices devices = new ListTapeDevices();
 
 	static Void content(Div<?> view, BodyModel model) {
-		final boolean showDrives = model.getQueryNoNull(LIST_DRIVES).equals(BodyModel.QUERY_ON);
+		final boolean showDrives = model.getQueryNoNull(LIST_DRIVES).equals(Query.CHECKED);
 		if (showDrives) {
 			try {
 				if (!devices.operationInProgress()) devices.start();
@@ -40,14 +41,14 @@ public class AdminHandler extends BaseHTTPHandler {
 		}
 
 		final String writeOptions = model.getQueryNoNull(CHANGE_OPTIONS);
-		if (writeOptions.equals(BodyModel.QUERY_ON)) {
+		if (writeOptions.equals(Query.CHECKED)) {
 			String enableRequests = model.getQueryNoNull(ENABLE_LOG_REQUESTS);
 			String enableExtLog = model.getQueryNoNull(ENABLE_LOG_EXTERNAL_PROCESS);
 
-			if (enableRequests.equals(BodyModel.QUERY_ON)) Options.setBool(TableOptions.INDEX_ENABLE_LOG_REQUESTS, true);
+			if (enableRequests.equals(Query.CHECKED)) Options.setBool(TableOptions.INDEX_ENABLE_LOG_REQUESTS, true);
 			else Options.setBool(TableOptions.INDEX_ENABLE_LOG_REQUESTS, false);
 
-			if (enableExtLog.equals(BodyModel.QUERY_ON)) Options.setBool(TableOptions.INDEX_ENABLE_LOG_EXTERNAL_PROCESS, true);
+			if (enableExtLog.equals(Query.CHECKED)) Options.setBool(TableOptions.INDEX_ENABLE_LOG_EXTERNAL_PROCESS, true);
 			else Options.setBool(TableOptions.INDEX_ENABLE_LOG_EXTERNAL_PROCESS, false);
 		}
 
@@ -69,7 +70,7 @@ public class AdminHandler extends BaseHTTPHandler {
 			.__(); // div
 			div
 				.form()
-					.input().attrType(EnumTypeInputType.HIDDEN).attrName(LIST_DRIVES).attrValue(BodyModel.QUERY_ON).__()
+					.input().attrType(EnumTypeInputType.HIDDEN).attrName(LIST_DRIVES).attrValue(Query.CHECKED).__()
 					.button().attrType(EnumTypeButtonType.SUBMIT).text("list Drives").__()
 				.__();
 			div
@@ -96,7 +97,7 @@ public class AdminHandler extends BaseHTTPHandler {
 				.form()
 					.fieldset()
 						.legend().text("Options").__()
-						.input().attrType(EnumTypeInputType.HIDDEN).attrName(CHANGE_OPTIONS).attrValue(BodyModel.QUERY_ON).__()
+						.input().attrType(EnumTypeInputType.HIDDEN).attrName(CHANGE_OPTIONS).attrValue(Query.CHECKED).__()
 
 						.label().attrFor(ENABLE_LOG_REQUESTS).text("Enable request logging").__()
 						.input().of(input -> {

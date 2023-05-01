@@ -18,33 +18,54 @@ import lto.manager.web.handlers.http.templates.TemplatePage.TemplatePageModel;
 import lto.manager.web.handlers.http.templates.models.BodyModel;
 import lto.manager.web.handlers.http.templates.models.HeadModel;
 import lto.manager.web.resource.CSS;
+import lto.manager.web.resource.JS;
 
 public class JobsHandler extends BaseHTTPHandler {
 	public static final String PATH = "/jobs";
-	//private final static String STOP = "stop";
-	//private final static String START = "start";
+	private final static String DELETE_ID = "del";
 
 	static Void content(Div<?> view, BodyModel model) {
-		//final String stop = model.getQueryNoNull(STOP);
-		//final String start = model.getQueryNoNull(START);
+		final String del = model.getQueryNoNull(DELETE_ID);
+		boolean delResult = false;
+		if (!del.equals("")) {
+			final int deleteID = Integer.parseInt(del);
+			try {
+				delResult = TableJobs.deleteJob(Database.connection, deleteID);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		final boolean delRes = delResult;
+
 
 		List<RecordJob> results = new ArrayList<RecordJob>();
 		try {
 			results = TableJobs.getAtAll(Database.connection);
 		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 
 		final List<RecordJob> jobs = results;
-
+		final String detailsLink = JobsDetailsHandler.PATH + "?" + JobsDetailsHandler.ID + "=";
+		final String deleteLink = JobsHandler.PATH + "?" + JobsHandler.DELETE_ID + "=";
 		view
 			.div().of(div -> {
 				div
-					.a().attrClass(CSS.BUTTON).attrHref(JobsAddNewHandler.PATH).text("Add new job").__()
+					.of(d -> {
+						if (!del.equals("")) {
+							d.p().text(delRes ? "success" : "failure").__();
+						}
+					})
+					.a().attrClass(CSS.BUTTON).attrHref(JobsTypeHandler.PATH).text("Add new job").__()
 					.table()
 						.tr()
 							.th().text("ID").__()
 							.th().text("Name").__()
 							.th().text("Type").__()
+							.th().text("Scheduled Start").__()
+							.th().text("Completed Date").__()
+							.th().text("Comment").__()
+							.th().text("Action").__()
 						.__()
 						.of(row -> {
 							for (RecordJob job: jobs) {
@@ -53,6 +74,21 @@ public class JobsHandler extends BaseHTTPHandler {
 										.td().text(job.getID()).__()
 										.td().text(job.getName()).__()
 										.td().text(job.getType()).__()
+										.td().text(job.getStartDateTimeStr()).__()
+										.td().text(job.getEndDateTimeStr()).__()
+										.td().text(job.getComment()).__()
+										.td()
+											.a()
+												.attrClass(CSS.BUTTON)
+												.attrHref(detailsLink + job.getID())
+												.text("Details")
+											.__()
+											.a()
+												.attrClass(CSS.BUTTON + CSS.BACKGROUND_CAUTION)
+												.attrOnclick(JS.confirmToast(deleteLink + job.getID()))
+												.text("Delete")
+											.__()
+										.__()
 									.__();
 							}
 						});

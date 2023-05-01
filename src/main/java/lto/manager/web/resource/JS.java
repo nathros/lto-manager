@@ -13,4 +13,5 @@ public class JS {
 	public static String fnFileCheckBoxChange() { return "recalculateSelectedFileSize();"; }
 
 	public static String commonHideToast() { return "hideToast();"; }
+	public static String confirmToast(String url) { return "toastConfirm('" + url + "')"; }
 }

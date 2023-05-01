@@ -3,7 +3,9 @@ package lto.manager.common.database.tables;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.sql.Types;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -109,7 +111,7 @@ public class TableTape {
 		iq.addColumn(table.getColumns().get(COLUMN_INDEX_SERIAL), newTape.getSerial());
 		iq.addColumn(table.getColumns().get(COLUMN_INDEX_MANUFACTURER), newTape.getManufacturer().getID());
 		iq.addColumn(table.getColumns().get(COLUMN_INDEX_SPACE_REMAINING), newTape.getUsedSpace());
-		iq.addColumn(table.getColumns().get(COLUMN_INDEX_DATE_ADDED), newTape.getDateAdded());
+		iq.addColumn(table.getColumns().get(COLUMN_INDEX_DATE_ADDED), Timestamp.valueOf(newTape.getDateAdded()));
 
 		String sql = iq.validate().toString();
 
@@ -214,8 +216,14 @@ public class TableTape {
 			String barcode = result.getString(COLUMN_NAME_BARCODE);
 			String serial = result.getString(COLUMN_NAME_SERIAL);
 			long left = result.getLong(COLUMN_NAME_SPACE_USED);
-			//Time time = result.getTime(COLUMN_NAME_DATE_ADDED);
-			tape.add(RecordTape.of(i, rm, tt, barcode, serial, left, null));
+			LocalDateTime time = null;
+			try {
+				time = result.getTimestamp(COLUMN_NAME_DATE_ADDED).toLocalDateTime();
+			} catch (NullPointerException e) { // Do nothing
+			} catch (Exception e) {
+				Log.l.severe("Table tape get record " + i + "start timestamp error: " + e.getMessage());
+			}
+			tape.add(RecordTape.of(i, rm, tt, barcode, serial, left, time));
 		}
 
 		return tape;

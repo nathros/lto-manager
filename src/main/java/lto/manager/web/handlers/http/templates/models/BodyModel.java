@@ -22,15 +22,11 @@ public class BodyModel {
 	private final String method;
 	private final RequestBody body;
 
-	public static final String QUERY_ON = "on";
-	public static final String QUERY_OFF = "off";
-
 	public class RequestBody {
 		private final String contentType;
 		private final Map<String, Object> queriesBody;
 		private final byte[] payload;
 		private String filename;
-		private String disposition;
 		private String name;
 
 		public RequestBody(final byte[] body, String contentType) throws IOException {
@@ -43,7 +39,6 @@ public class BodyModel {
 				parseQuery(bodyStr, queriesBody);
 				this.payload = null;
 				this.filename = null;
-				this.disposition = null;
 			} else {
 				int payloadStartIndex = 0;
 				int payloadEndIndex = 0;
@@ -87,15 +82,12 @@ public class BodyModel {
 								filename = keyValue[1].substring(1, keyValue[1].length() - 1);
 							} else if (keyValue[0].trim().equals("name")) {
 								name = keyValue[1].substring(1, keyValue[1].length() - 1);
-							} else if (keyValue.length == 1) {
-								disposition = keyValue[0];
 							}
 						}
 					}
 				} else {
 					this.payload = null;
 					this.filename = null;
-					this.disposition = null;
 				}
 			}
 		}
@@ -169,10 +161,9 @@ public class BodyModel {
 	}
 
 	public String getQueryNoNull(String key) {
-		Map<String, Object> queries = isGETMethod() ? queriesURL : body.getQueries();
-		String q = (String) queries.get(key);
-		if (q == null) return "";
-		else return Util.decodeUrl(q);
+		String query = getQuery(key);
+		if (query == null) return "";
+		else return Util.decodeUrl(query);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -186,6 +177,14 @@ public class BodyModel {
 		} else {
 			return (List<String>) o;
 		}
+	}
+
+	public List<String> getQueryArrayNotNull(String key) {
+		List<String> queries = getQueryArray(key);
+		if (queries == null) {
+			return new ArrayList<String>();
+		}
+		return queries;
 	}
 
 	public boolean hasQuery() {

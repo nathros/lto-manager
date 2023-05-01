@@ -17,3 +17,8 @@ function onSelectType() {
 	if (data === "") data = "Not Supported";
 	document.getElementById("des").value = data;
 }
+
+function onSelectImmediate(sender) {
+	let dateField = document.getElementById("start");
+	dateField.disabled = sender.checked;
+}

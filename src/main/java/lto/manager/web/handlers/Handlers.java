@@ -12,8 +12,10 @@ import lto.manager.web.handlers.http.fetchers.hostfiles.FilesListFetcher;
 import lto.manager.web.handlers.http.files.FilesAddHandler;
 import lto.manager.web.handlers.http.files.FilesBrowserHandler;
 import lto.manager.web.handlers.http.files.FilesHandler;
-import lto.manager.web.handlers.http.jobs.JobsAddNewHandler;
+import lto.manager.web.handlers.http.jobs.JobsDetailsHandler;
 import lto.manager.web.handlers.http.jobs.JobsHandler;
+import lto.manager.web.handlers.http.jobs.JobsNewBackupHandler;
+import lto.manager.web.handlers.http.jobs.JobsTypeHandler;
 import lto.manager.web.handlers.http.sandpit.DatabaseTestHandler;
 import lto.manager.web.handlers.http.sandpit.EchoGetHandler;
 import lto.manager.web.handlers.http.sandpit.EchoHeaderHandler;
@@ -45,7 +47,9 @@ public class Handlers {
 		ret.put(FilesBrowserHandler.PATH, new FilesBrowserHandler());
 
 		ret.put(JobsHandler.PATH, new JobsHandler());
-		ret.put(JobsAddNewHandler.PATH, new JobsAddNewHandler());
+		ret.put(JobsTypeHandler.PATH, new JobsTypeHandler());
+		ret.put(JobsNewBackupHandler.PATH, new JobsNewBackupHandler());
+		ret.put(JobsDetailsHandler.PATH, new JobsDetailsHandler());
 
 		ret.put(FilesListFetcher.PATH, new FilesListFetcher());
 
