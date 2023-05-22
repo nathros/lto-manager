@@ -131,7 +131,7 @@ async function hostChangeDir(path, virtual) {
 		}
 	}
 
-	fetch("/fetcher/fileslist",
+	fetch("/ajax/fileslist",
 	{
 		method: "post",
 		headers: {
@@ -170,7 +170,7 @@ function expandDir(sender, path, virtual) {
 	params.append(HOST_FILEVIEW_QUERY_IS_ROOT, false);
 	params.append(HOST_FILEVIEW_QUERY_IS_VIRTUAL, virtual);
 
-	fetch("/fetcher/fileslist",
+	fetch("/ajax/fileslist",
 	{
 		method: "post",
 		headers: {

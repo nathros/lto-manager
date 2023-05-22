@@ -88,7 +88,10 @@ a {
 	background-image: url('/assets/img/folder-fill.svg');
 }
 .icon-tape:before {
-	background-image: url('/assets/img/favico.svg');
+	background-image: url('/assets/img/cassette-fill.svg');
+}
+.icon-drive:before {
+	background-image: url('/assets/img/hdd-fill.svg');
 }
 .icon-jobs:before {
 	background-image: url('/assets/img/list-fill.svg');

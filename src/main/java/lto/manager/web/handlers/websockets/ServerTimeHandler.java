@@ -21,8 +21,8 @@ public class ServerTimeHandler extends BaseWebsocketHandler {
 		};
 
 		try {
-			ep.start("repeat.sh");
-		} catch (IOException e) {
+			ep.start(null, "repeat.sh");
+		} catch (IOException | InterruptedException e) {
 			e.printStackTrace();
 		}
 		return false;

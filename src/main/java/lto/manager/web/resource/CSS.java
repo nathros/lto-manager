@@ -18,6 +18,7 @@ public class CSS {
 
 	public final static String ICON_FOLDER = "icon-folder ";
 	public final static String ICON_TAPE = "icon-tape ";
+	public final static String ICON_DRIVE = "icon-drive ";
 	public final static String ICON_JOBS = "icon-jobs ";
 	public final static String ICON_ADMIN = "icon-admin ";
 	public final static String ICON_SANDPIT = "icon-sandpit ";
@@ -50,4 +51,6 @@ public class CSS {
 	public final static String TABS_SETUP_ICON = "tab-setup-icon ";
 	public final static String TABS_SOURCE_ICON = "tab-source-icon ";
 	public final static String TABS_DESTINATION_ICON = "tab-dest-icon ";
+
+	public final static String DRIVE_CONTAINER = "drive-container ";
 }

@@ -12,6 +12,7 @@ import htmlflow.HtmlView;
 import lto.manager.common.Main;
 import lto.manager.web.handlers.http.AdminHandler;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
+import lto.manager.web.handlers.http.drives.DrivesHandler;
 import lto.manager.web.handlers.http.files.FilesHandler;
 import lto.manager.web.handlers.http.jobs.JobsHandler;
 import lto.manager.web.handlers.http.sandpit.SandpitHandler;
@@ -25,6 +26,7 @@ public class TemplatePage {
 	public static enum SelectedPage {
 		Admin,
 		Tapes,
+		Drives,
 		Files,
 		Sandpit,
 		Jobs,
@@ -103,6 +105,12 @@ public class TemplatePage {
 										.a().of(a -> a.attrHref(TapesHandler.PATH)
 											.attrClass(CSS.ICON_TAPE + (model.page == SelectedPage.Tapes ? selected : ""))
 											.text("Tapes"))
+										.__()
+									.__()
+									.li()
+										.a().of(a -> a.attrHref(DrivesHandler.PATH)
+											.attrClass(CSS.ICON_DRIVE + (model.page == SelectedPage.Drives ? selected : ""))
+											.text("Drives"))
 										.__()
 									.__()
 									.li()

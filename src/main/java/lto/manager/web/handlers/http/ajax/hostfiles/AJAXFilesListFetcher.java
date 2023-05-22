@@ -1,4 +1,4 @@
-package lto.manager.web.handlers.http.fetchers.hostfiles;
+package lto.manager.web.handlers.http.ajax.hostfiles;
 
 import java.io.IOException;
 import java.util.List;
@@ -11,8 +11,8 @@ import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.templates.TemplateFetcher.TemplateFetcherModel;
 import lto.manager.web.handlers.http.templates.models.BodyModel;
 
-public class FilesListFetcher extends BaseHTTPHandler {
-	public static final String PATH = "/fetcher/fileslist";
+public class AJAXFilesListFetcher extends BaseHTTPHandler {
+	public static final String PATH = "/ajax/fileslist";
 
 	static Void content(Div<?> view, BodyModel model) {
 		final List<String> selected = model.getQueryArray(FileListModel.FILE_SELECTED);
@@ -34,6 +34,6 @@ public class FilesListFetcher extends BaseHTTPHandler {
 	@Override
 	public void requestHandle(HttpExchange he) throws IOException {
 		BodyModel bm = BodyModel.of(he, null);
-		requestHandleCompleteFetcher(he, new TemplateFetcherModel(FilesListFetcher::content, bm));
+		requestHandleCompleteFetcher(he, new TemplateFetcherModel(AJAXFilesListFetcher::content, bm));
 	}
 }

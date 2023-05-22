@@ -8,7 +8,9 @@ import lto.manager.common.Main;
 import lto.manager.web.handlers.http.AdminHandler;
 import lto.manager.web.handlers.http.AssetHandler;
 import lto.manager.web.handlers.http.RootHandler;
-import lto.manager.web.handlers.http.fetchers.hostfiles.FilesListFetcher;
+import lto.manager.web.handlers.http.ajax.hostfiles.AJAXFilesListFetcher;
+import lto.manager.web.handlers.http.drives.DrivesHandler;
+import lto.manager.web.handlers.http.drives.ajax.GetAttachedDrivesFetcher;
 import lto.manager.web.handlers.http.files.FilesAddHandler;
 import lto.manager.web.handlers.http.files.FilesBrowserHandler;
 import lto.manager.web.handlers.http.files.FilesHandler;
@@ -42,6 +44,9 @@ public class Handlers {
 		ret.put(TapesCreateHandler.PATH, new TapesCreateHandler());
 		ret.put(TapesDeleteHandler.PATH, new TapesDeleteHandler());
 
+		ret.put(DrivesHandler.PATH, new DrivesHandler());
+		ret.put(GetAttachedDrivesFetcher.PATH, new GetAttachedDrivesFetcher());
+
 		ret.put(FilesHandler.PATH, new FilesHandler());
 		ret.put(FilesAddHandler.PATH, new FilesAddHandler());
 		ret.put(FilesBrowserHandler.PATH, new FilesBrowserHandler());
@@ -51,7 +56,7 @@ public class Handlers {
 		ret.put(JobsNewBackupHandler.PATH, new JobsNewBackupHandler());
 		ret.put(JobsDetailsHandler.PATH, new JobsDetailsHandler());
 
-		ret.put(FilesListFetcher.PATH, new FilesListFetcher());
+		ret.put(AJAXFilesListFetcher.PATH, new AJAXFilesListFetcher());
 
 		if (Main.DEBUG_MODE) {
 			ret.put(EchoHeaderHandler.PATH, new EchoHeaderHandler());

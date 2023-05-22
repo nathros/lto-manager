@@ -1,4 +1,4 @@
-package lto.manager.web.handlers.http.fetchers.hostfiles;
+package lto.manager.web.handlers.http.ajax.hostfiles;
 
 import java.io.File;
 

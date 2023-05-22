@@ -1,0 +1,9 @@
+.drive-container {
+	background-color: lightgray;
+	margin: 1rem;
+	display: flex;
+	flex-wrap: wrap;
+}
+.drive-container > * {
+	flex: 50%;
+}

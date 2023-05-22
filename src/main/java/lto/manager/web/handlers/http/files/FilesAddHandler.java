@@ -16,7 +16,7 @@ import lto.manager.common.database.Database;
 import lto.manager.common.fileview.PathTreeBase;
 import lto.manager.common.fileview.PathTreePhysical;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
-import lto.manager.web.handlers.http.fetchers.hostfiles.FileListModel;
+import lto.manager.web.handlers.http.ajax.hostfiles.FileListModel;
 import lto.manager.web.handlers.http.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.http.templates.TemplatePage.TemplatePageModel;
 import lto.manager.web.handlers.http.templates.models.BodyModel;

@@ -3,6 +3,7 @@ package lto.manager.common.ltfs;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Semaphore;
 
 import lto.manager.common.ExternalProcess;
 
@@ -10,8 +11,14 @@ public class ListTapeDevices extends ExternalProcess {
 	private static final String[] cmd = {"bash", "list.sh" };
 	private List<TapeDevicesInfo> devices = new ArrayList<TapeDevicesInfo>();
 
-	public boolean start() throws IOException {
-		return start(cmd);
+	public boolean start() throws IOException, InterruptedException {
+		return start(null, cmd);
+	}
+
+	public Semaphore startBlocking() throws InterruptedException, IOException {
+		Semaphore semaphore = new Semaphore(1, true);
+		start(semaphore, cmd);
+		return semaphore;
 	}
 
 	public class TapeDevicesInfo {
@@ -84,6 +91,5 @@ public class ListTapeDevices extends ExternalProcess {
 			}
 			this.devices = items;
 		}
-
 	}
 }

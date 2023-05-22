@@ -14,6 +14,8 @@ import lto.manager.common.database.Options;
 import lto.manager.common.database.tables.TableOptions;
 
 public abstract class ExternalProcess {
+	public static int EXIT_CODE_OK = 0;
+
 	protected List<String> stdout = new ArrayList<String>();
 	protected List<String> stderr = new ArrayList<String>();
 
@@ -21,9 +23,12 @@ public abstract class ExternalProcess {
 	protected ExecutorService service;
 	protected AtomicBoolean inProgress = new AtomicBoolean();
 	protected Integer exitCode;
+	protected Semaphore binarySemaphore = null;
 
-	public boolean start(String... commands) throws IOException {
+	public boolean start(Semaphore completedSemaphore, String... commands) throws IOException, InterruptedException {
 		if (inProgress.get()) return false;
+		binarySemaphore = completedSemaphore;
+		if (binarySemaphore != null) binarySemaphore.acquire(1);
 		inProgress.set(true);
 
 		stdout.clear();
@@ -45,6 +50,7 @@ public abstract class ExternalProcess {
 				semaphore.acquire(2);
 				stop();
 				onProcessExit();
+				if (binarySemaphore != null) binarySemaphore.release();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
