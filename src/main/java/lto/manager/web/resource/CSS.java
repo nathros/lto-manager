@@ -10,7 +10,9 @@ public class CSS {
 	public final static String BACKGROUND_ERROR = "background-error ";
 	public final static String BACKGROUND_GREEN = "background-green ";
 
-	public final static String TOAST_ID = "toast";
+	public final static String FONT_MONOSPACE = "monospace ";
+
+	public final static String TOAST_ID = "toast"; // TODO match colours with INLINE_MESSAGE
 	public final static String TOAST_ID_MESSAGE = "toast-message";
 	public final static String TOAST_ID_CROSS = "toast-cross";
 	public final static String TOAST_ID_OK = "toast-ok";
@@ -53,4 +55,11 @@ public class CSS {
 	public final static String TABS_DESTINATION_ICON = "tab-dest-icon ";
 
 	public final static String DRIVE_CONTAINER = "drive-container ";
+
+	public final static String LOADING_CONTAINER = "loading-container ";
+
+	public final static String INLINE_MESSAGE = "inline-message ";
+	public final static String INLINE_MESSAGE_DETAILS_LINK = "inline-details-link ";
+	public final static String INLINE_MESSAGE_DETAILS_CONTENT = "inline-details-content ";
+	public final static String ERROR = "error ";
 }

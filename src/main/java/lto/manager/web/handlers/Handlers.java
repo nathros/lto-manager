@@ -5,28 +5,29 @@ import java.util.HashMap;
 import com.sun.net.httpserver.HttpHandler;
 
 import lto.manager.common.Main;
-import lto.manager.web.handlers.http.AdminHandler;
-import lto.manager.web.handlers.http.AssetHandler;
-import lto.manager.web.handlers.http.RootHandler;
-import lto.manager.web.handlers.http.ajax.hostfiles.AJAXFilesListFetcher;
-import lto.manager.web.handlers.http.drives.DrivesHandler;
-import lto.manager.web.handlers.http.drives.ajax.GetAttachedDrivesFetcher;
-import lto.manager.web.handlers.http.files.FilesAddHandler;
-import lto.manager.web.handlers.http.files.FilesBrowserHandler;
-import lto.manager.web.handlers.http.files.FilesHandler;
-import lto.manager.web.handlers.http.jobs.JobsDetailsHandler;
-import lto.manager.web.handlers.http.jobs.JobsHandler;
-import lto.manager.web.handlers.http.jobs.JobsNewBackupHandler;
-import lto.manager.web.handlers.http.jobs.JobsTypeHandler;
-import lto.manager.web.handlers.http.sandpit.DatabaseTestHandler;
-import lto.manager.web.handlers.http.sandpit.EchoGetHandler;
-import lto.manager.web.handlers.http.sandpit.EchoHeaderHandler;
-import lto.manager.web.handlers.http.sandpit.EchoPostHandler;
-import lto.manager.web.handlers.http.sandpit.SandpitHandler;
-import lto.manager.web.handlers.http.sandpit.WebsocketTestHandler;
-import lto.manager.web.handlers.http.tapes.TapesCreateHandler;
-import lto.manager.web.handlers.http.tapes.TapesDeleteHandler;
-import lto.manager.web.handlers.http.tapes.TapesHandler;
+import lto.manager.web.handlers.http.ajax.AJAXFilesListFetcher;
+import lto.manager.web.handlers.http.ajax.AJAXGetAttachedDrivesFetcher;
+import lto.manager.web.handlers.http.ajax.AJAXGetOnloadError;
+import lto.manager.web.handlers.http.pages.AdminHandler;
+import lto.manager.web.handlers.http.pages.AssetHandler;
+import lto.manager.web.handlers.http.pages.RootHandler;
+import lto.manager.web.handlers.http.pages.drives.DrivesHandler;
+import lto.manager.web.handlers.http.pages.files.FilesAddHandler;
+import lto.manager.web.handlers.http.pages.files.FilesBrowserHandler;
+import lto.manager.web.handlers.http.pages.files.FilesHandler;
+import lto.manager.web.handlers.http.pages.jobs.JobsDetailsHandler;
+import lto.manager.web.handlers.http.pages.jobs.JobsHandler;
+import lto.manager.web.handlers.http.pages.jobs.JobsNewBackupHandler;
+import lto.manager.web.handlers.http.pages.jobs.JobsTypeHandler;
+import lto.manager.web.handlers.http.pages.sandpit.DatabaseTestHandler;
+import lto.manager.web.handlers.http.pages.sandpit.EchoGetHandler;
+import lto.manager.web.handlers.http.pages.sandpit.EchoHeaderHandler;
+import lto.manager.web.handlers.http.pages.sandpit.EchoPostHandler;
+import lto.manager.web.handlers.http.pages.sandpit.SandpitHandler;
+import lto.manager.web.handlers.http.pages.sandpit.WebsocketTestHandler;
+import lto.manager.web.handlers.http.pages.tapes.TapesCreateHandler;
+import lto.manager.web.handlers.http.pages.tapes.TapesDeleteHandler;
+import lto.manager.web.handlers.http.pages.tapes.TapesHandler;
 import lto.manager.web.handlers.websockets.BaseWebsocketHandler;
 import lto.manager.web.handlers.websockets.ServerTimeHandler;
 
@@ -45,7 +46,7 @@ public class Handlers {
 		ret.put(TapesDeleteHandler.PATH, new TapesDeleteHandler());
 
 		ret.put(DrivesHandler.PATH, new DrivesHandler());
-		ret.put(GetAttachedDrivesFetcher.PATH, new GetAttachedDrivesFetcher());
+		ret.put(AJAXGetAttachedDrivesFetcher.PATH, new AJAXGetAttachedDrivesFetcher());
 
 		ret.put(FilesHandler.PATH, new FilesHandler());
 		ret.put(FilesAddHandler.PATH, new FilesAddHandler());
@@ -57,6 +58,7 @@ public class Handlers {
 		ret.put(JobsDetailsHandler.PATH, new JobsDetailsHandler());
 
 		ret.put(AJAXFilesListFetcher.PATH, new AJAXFilesListFetcher());
+		ret.put(AJAXGetOnloadError.PATH, new AJAXGetOnloadError());
 
 		if (Main.DEBUG_MODE) {
 			ret.put(EchoHeaderHandler.PATH, new EchoHeaderHandler());

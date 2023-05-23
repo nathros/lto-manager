@@ -12,12 +12,12 @@ public class ListTapeDevices extends ExternalProcess {
 	private List<TapeDevicesInfo> devices = new ArrayList<TapeDevicesInfo>();
 
 	public boolean start() throws IOException, InterruptedException {
-		return start(null, cmd);
+		return start(null, null, cmd);
 	}
 
-	public Semaphore startBlocking() throws InterruptedException, IOException {
+	public Semaphore startBlocking(String uuid) throws InterruptedException, IOException {
 		Semaphore semaphore = new Semaphore(1, true);
-		start(semaphore, cmd);
+		start(semaphore, uuid, cmd);
 		return semaphore;
 	}
 

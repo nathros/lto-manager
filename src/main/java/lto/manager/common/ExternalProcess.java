@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -24,10 +25,15 @@ public abstract class ExternalProcess {
 	protected AtomicBoolean inProgress = new AtomicBoolean();
 	protected Integer exitCode;
 	protected Semaphore binarySemaphore = null;
+	protected String[] cmd;
 
-	public boolean start(Semaphore completedSemaphore, String... commands) throws IOException, InterruptedException {
+	public static HashMap<String, ExternalProcess> processes = new HashMap<String, ExternalProcess>();
+
+	public boolean start(Semaphore completedSemaphore, String uuid, String... commands) throws IOException, InterruptedException {
 		if (inProgress.get()) return false;
 		binarySemaphore = completedSemaphore;
+		cmd = commands;
+		processes.put(uuid, this);
 		if (binarySemaphore != null) binarySemaphore.acquire(1);
 		inProgress.set(true);
 
@@ -127,10 +133,16 @@ public abstract class ExternalProcess {
 		return exitCode != null;
 	}
 
-	public String getLatestError() {
-		int index = stderr.size();
-		if (index > 0) return stderr.get(index - 1);
-		else return "NONE";
+	public List<String> getStdout() {
+		return stdout;
+	}
+
+	public List<String> getStderr() {
+		return stderr;
+	}
+
+	public String getArgsAsString() {
+		return String.join(" ", cmd);
 	}
 
 	public Integer getExitCode() { return exitCode; }

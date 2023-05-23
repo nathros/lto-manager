@@ -1,6 +1,6 @@
 package lto.manager.web.resource;
 
-import lto.manager.web.handlers.http.AssetHandler;
+import lto.manager.web.handlers.http.pages.AssetHandler;
 
 public class Asset {
 	public static final String CSS_MAIN = AssetHandler.PATH + "/css/main.css";
