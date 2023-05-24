@@ -1,6 +1,7 @@
 package lto.manager.web.handlers.http.pages.sandpit;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 
 import org.xmlet.htmlapifaster.Div;
 
@@ -29,7 +30,7 @@ public class SandpitHandler extends BaseHTTPHandler {
 	}
 
 	@Override
-	public void requestHandle(HttpExchange he) throws IOException {
+	public void requestHandle(HttpExchange he) throws IOException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of("Sandpit");
 		TemplatePageModel tpm = TemplatePageModel.of(SandpitHandler::content, thm, SelectedPage.Sandpit, BodyModel.of(he, null));
 		requestHandleCompletePage(he, tpm);

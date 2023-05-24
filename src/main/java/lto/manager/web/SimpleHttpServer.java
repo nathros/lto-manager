@@ -3,6 +3,7 @@ package lto.manager.web;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.Map;
+import java.util.concurrent.Executors;
 import java.util.logging.Level;
 
 import com.sun.net.httpserver.HttpHandler;
@@ -17,7 +18,7 @@ public class SimpleHttpServer {
 
 	public void Start(int port, boolean redirectOnly) {
 		try {
-			server = HttpServer.create(new InetSocketAddress(port), 0);
+			server = HttpServer.create(new InetSocketAddress(port), 10);
 			Log.l.info("HTTP " + (redirectOnly ? "redirect " : "") + "server started at port: http://localhost:" + port);
 
 			if (redirectOnly) {
@@ -29,7 +30,7 @@ public class SimpleHttpServer {
 				    server.createContext(key, value);
 				}
 			}
-			server.setExecutor(null);
+			server.setExecutor(Executors.newCachedThreadPool());
 			server.start();
 		} catch (IOException e) {
 			Log.l.log(Level.SEVERE, e.getMessage(), e);

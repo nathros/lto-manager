@@ -1,6 +1,7 @@
 package lto.manager.web.handlers.http.pages.jobs;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 
 import org.xmlet.htmlapifaster.Div;
 
@@ -27,7 +28,7 @@ public class JobsTypeHandler extends BaseHTTPHandler {
 	}
 
 	@Override
-	public void requestHandle(HttpExchange he) throws IOException {
+	public void requestHandle(HttpExchange he) throws IOException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of("Job Type Selection");
 		TemplatePageModel tpm = TemplatePageModel.of(JobsTypeHandler::content, thm, SelectedPage.Jobs, BodyModel.of(he, null));
 		requestHandleCompletePage(he, tpm);

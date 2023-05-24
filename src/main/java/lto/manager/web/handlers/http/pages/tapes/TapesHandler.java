@@ -3,6 +3,7 @@ package lto.manager.web.handlers.http.pages.tapes;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import org.xmlet.htmlapifaster.Div;
 import org.xmlet.htmlapifaster.EnumBorderType;
@@ -67,7 +68,7 @@ public class TapesHandler extends BaseHTTPHandler {
 	}
 
 	@Override
-	public void requestHandle(HttpExchange he) throws IOException {
+	public void requestHandle(HttpExchange he) throws IOException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of("Tapes");
 		TemplatePageModel tpm = TemplatePageModel.of(TapesHandler::body, thm, SelectedPage.Tapes, BodyModel.of(he, null));
 		requestHandleCompletePage(he, tpm);

@@ -12,7 +12,7 @@ import lto.manager.common.ExternalProcess;
 import lto.manager.common.ltfs.ListTapeDevices;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.partial.inlinemessage.InlineErrorMessage;
-import lto.manager.web.handlers.http.templates.TemplateFetcher.TemplateFetcherModel;
+import lto.manager.web.handlers.http.templates.TemplateAJAX.TemplateFetcherModel;
 import lto.manager.web.handlers.http.templates.models.BodyModel;
 import lto.manager.web.resource.CSS;
 import lto.manager.web.resource.Query;
@@ -24,8 +24,8 @@ public class AJAXGetAttachedDrivesFetcher extends BaseHTTPHandler {
 		final String uuid = model.getQuery(Query.UUID);
 		final ListTapeDevices devices = new ListTapeDevices();
 		try {
-			Semaphore binarySemaphore = devices.startBlocking(uuid);
-			boolean success = binarySemaphore.tryAcquire(5, TimeUnit.SECONDS);
+			Semaphore completedSemaphore = devices.startBlocking(uuid);
+			boolean success = completedSemaphore.tryAcquire(5, TimeUnit.SECONDS);
 			if (success == false || devices.getExitCode() != ExternalProcess.EXIT_CODE_OK) {
 				view.of(v -> InlineErrorMessage.content(v, uuid));
 			} else {

@@ -10,6 +10,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.util.Map;
+import java.util.concurrent.Executors;
 
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
@@ -79,7 +80,7 @@ public class SimpleHttpsServer {
 			    HttpHandler value = entry.getValue();
 			    server.createContext(key, value);
 			}
-			server.setExecutor(null);
+			server.setExecutor(Executors.newCachedThreadPool());
 			server.start();
 		} catch (IOException e) {
 			e.printStackTrace();

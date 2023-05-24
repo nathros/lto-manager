@@ -2,6 +2,7 @@ package lto.manager.web.handlers.http.pages.sandpit;
 
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.util.concurrent.CompletableFuture;
 
 import org.xmlet.htmlapifaster.Div;
 import org.xmlet.htmlapifaster.EnumTypeButtonType;
@@ -48,8 +49,8 @@ public class WebsocketTestHandler extends BaseHTTPHandler {
 		HeadModel thm = HeadModel.of("Websocket Test");
 		thm.AddScript(Asset.JS_WEBSOCKET);
 		TemplatePageModel tepm = TemplatePageModel.of(null, thm, SelectedPage.Sandpit, BodyModel.of(he, null));
-		String response = TemplatePage.view.render(tepm);
-
+		CompletableFuture<String> future = TemplatePage.view.renderAsync(tepm);
+		String response = future.get();
 		he.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length());
 		OutputStream os = he.getResponseBody();
 		os.write(response.getBytes());

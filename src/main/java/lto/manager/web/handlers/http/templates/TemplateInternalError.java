@@ -14,6 +14,7 @@ import htmlflow.HtmlFlow;
 import htmlflow.HtmlPage;
 import htmlflow.HtmlView;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
+import lto.manager.web.handlers.http.partial.PartialHead;
 import lto.manager.web.handlers.http.templates.models.HeadModel;
 
 public class TemplateInternalError {
@@ -36,7 +37,7 @@ public class TemplateInternalError {
 	static void template(HtmlPage view) {
 		view
 		.html().attrLang(BaseHTTPHandler.LANG_VALUE)
-		.dynamic((root, m) -> TemplateHead.template(root, HeadModel.of("HTTP Status 500")))
+		.dynamic((root, m) -> PartialHead.template(root, HeadModel.of("HTTP Status 500")))
 		.body()
 			.div()
 				.attrStyle("font-family:monospace")

@@ -1,4 +1,4 @@
-package lto.manager.web.handlers.http.templates;
+package lto.manager.web.handlers.http.partial;
 
 import org.xmlet.htmlapifaster.EnumRelType;
 import org.xmlet.htmlapifaster.Html;
@@ -8,8 +8,8 @@ import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.templates.models.HeadModel;
 import lto.manager.web.resource.Asset;
 
-public class TemplateHead {
-	static void template(Html<HtmlPage> root, HeadModel model) {
+public class PartialHead {
+	public static void template(Html<HtmlPage> root, HeadModel model) {
 		root
 			.head()
 				.meta().addAttr(BaseHTTPHandler.CHARSET_KEY, BaseHTTPHandler.CHARSET_VALUE).__()

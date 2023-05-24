@@ -7,7 +7,7 @@ function onLoadAJAX() {
 		fetch(url,
 		{
 			method: "get",
-			signal: AbortSignal.timeout(1),
+			signal: AbortSignal.timeout(10000),
 			headers: {
 				"Content-Type": "application/x-www-form-urlencoded"
 	  		}

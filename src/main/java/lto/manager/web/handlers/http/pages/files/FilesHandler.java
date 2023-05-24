@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import org.xmlet.htmlapifaster.Div;
 import org.xmlet.htmlapifaster.EnumBorderType;
@@ -65,7 +66,7 @@ public class FilesHandler extends BaseHTTPHandler {
 	}
 
 	@Override
-	public void requestHandle(HttpExchange he) throws IOException {
+	public void requestHandle(HttpExchange he) throws IOException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of("Files");
 		TemplatePageModel tpm = TemplatePageModel.of(FilesHandler::content, thm, SelectedPage.Files, BodyModel.of(he, null));
 		requestHandleCompletePage(he, tpm);

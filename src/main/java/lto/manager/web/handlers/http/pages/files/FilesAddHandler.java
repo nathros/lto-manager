@@ -3,6 +3,7 @@ package lto.manager.web.handlers.http.pages.files;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import org.xmlet.htmlapifaster.Div;
 import org.xmlet.htmlapifaster.EnumMethodType;
@@ -99,7 +100,7 @@ public class FilesAddHandler extends BaseHTTPHandler {
 	}
 
 	@Override
-	public void requestHandle(HttpExchange he) throws IOException {
+	public void requestHandle(HttpExchange he) throws IOException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of("Files Add");
 		thm.AddCSS(Asset.CSS_FILE_VIEW);
 		thm.AddScript(Asset.JS_FILE_VIEW);

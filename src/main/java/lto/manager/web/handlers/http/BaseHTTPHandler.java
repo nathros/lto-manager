@@ -3,13 +3,15 @@ package lto.manager.web.handlers.http;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
 import lto.manager.common.log.Log;
-import lto.manager.web.handlers.http.templates.TemplateFetcher;
-import lto.manager.web.handlers.http.templates.TemplateFetcher.TemplateFetcherModel;
+import lto.manager.web.handlers.http.templates.TemplateAJAX;
+import lto.manager.web.handlers.http.templates.TemplateAJAX.TemplateFetcherModel;
 import lto.manager.web.handlers.http.templates.TemplateInternalError;
 import lto.manager.web.handlers.http.templates.TemplateInternalError.TemplateInternalErrorModel;
 import lto.manager.web.handlers.http.templates.TemplatePage;
@@ -37,8 +39,8 @@ public abstract class BaseHTTPHandler implements HttpHandler {
 
 	@Override
 	public void handle(HttpExchange he) throws IOException {
-		Log.l.fine("Request (" + String.format("%04d", count) + "): " + he.getRequestHeaders().getFirst("Host")
-				+ he.getRequestURI());
+		Log.l.info("Request (" + String.format("%04d", count) + "): " + he.getRequestHeaders().getFirst("Host")
+			+ he.getRequestURI());
 		count++;
 		try {
 			this.requestHandle(he);
@@ -53,16 +55,18 @@ public abstract class BaseHTTPHandler implements HttpHandler {
 
 	public abstract void requestHandle(HttpExchange he) throws Exception;
 
-	protected void requestHandleCompletePage(HttpExchange he, TemplatePageModel tpm) throws IOException {
-		String response = TemplatePage.view.render(tpm);
+	protected void requestHandleCompletePage(HttpExchange he, TemplatePageModel tpm) throws IOException, InterruptedException, ExecutionException {
+		CompletableFuture<String> future = TemplatePage.view.renderAsync(tpm);
+		String response = future.get();
 		he.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length());
 		OutputStream os = he.getResponseBody();
 		os.write(response.getBytes());
 		os.close();
 	}
 
-	protected void requestHandleCompleteFetcher(HttpExchange he, TemplateFetcherModel tfm) throws IOException {
-		String response = TemplateFetcher.view.render(tfm);
+	protected void requestHandleCompleteFetcher(HttpExchange he, TemplateFetcherModel tfm) throws IOException, InterruptedException, ExecutionException {
+		CompletableFuture<String> future = TemplateAJAX.view.renderAsync(tfm);
+		String response = future.get();
 		he.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length());
 		OutputStream os = he.getResponseBody();
 		os.write(response.getBytes());

@@ -3,6 +3,7 @@ package lto.manager.web.handlers.http.pages.tapes;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import org.xmlet.htmlapifaster.Div;
 import org.xmlet.htmlapifaster.EnumTypeButtonType;
@@ -140,7 +141,7 @@ public class TapesCreateHandler extends BaseHTTPHandler {
 	}
 
 	@Override
-	public void requestHandle(HttpExchange he) throws IOException, SQLException {
+	public void requestHandle(HttpExchange he) throws IOException, SQLException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of("Tapes");
 		thm.AddScript(Asset.JS_ADD_TAPE);
 		TemplatePageModel tpm = TemplatePageModel.of(TapesCreateHandler::body, thm, SelectedPage.Tapes, BodyModel.of(he, null));

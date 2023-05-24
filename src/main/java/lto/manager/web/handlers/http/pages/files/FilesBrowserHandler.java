@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.function.Supplier;
 
 import org.xmlet.htmlapifaster.Div;
@@ -99,7 +100,7 @@ public class FilesBrowserHandler extends BaseHTTPHandler {
 	}
 
 	@Override
-	public void requestHandle(HttpExchange he) throws IOException {
+	public void requestHandle(HttpExchange he) throws IOException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of("Files Browser");
 		thm.AddCSS(Asset.CSS_FILE_VIEW);
 		thm.AddScript(Asset.JS_FILE_VIEW);

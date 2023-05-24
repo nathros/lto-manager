@@ -8,7 +8,7 @@ import org.xmlet.htmlapifaster.EnumTypeInputType;
 
 import htmlflow.HtmlFlow;
 import htmlflow.HtmlPage;
-import htmlflow.HtmlView;
+import htmlflow.HtmlViewAsync;
 import lto.manager.common.Main;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.pages.AdminHandler;
@@ -17,6 +17,7 @@ import lto.manager.web.handlers.http.pages.files.FilesHandler;
 import lto.manager.web.handlers.http.pages.jobs.JobsHandler;
 import lto.manager.web.handlers.http.pages.sandpit.SandpitHandler;
 import lto.manager.web.handlers.http.pages.tapes.TapesHandler;
+import lto.manager.web.handlers.http.partial.PartialHead;
 import lto.manager.web.handlers.http.templates.models.BodyModel;
 import lto.manager.web.handlers.http.templates.models.HeadModel;
 import lto.manager.web.resource.CSS;
@@ -56,14 +57,14 @@ public class TemplatePage {
 		public static BiFunction<Div<?>, BodyModel, Void> parametrisedMethod(BiFunction<Div<?>, BodyModel, Void> function) { return function; }
 	}
 
-	public static HtmlView view = HtmlFlow.view(TemplatePage::template);
+	public static HtmlViewAsync view = HtmlFlow.viewAsync(TemplatePage::template);
 
 	static void template(HtmlPage view) {
 		final String selected = " selected";
 
 		view
 			.html().attrLang(BaseHTTPHandler.LANG_VALUE)
-			.<TemplatePageModel>dynamic((root, bodyModel) -> TemplateHead.template(root, bodyModel.getHeadModel()))
+			.<TemplatePageModel>dynamic((root, bodyModel) -> PartialHead.template(root, bodyModel.getHeadModel()))
 				.body()
 					.div().attrId(CSS.TOAST_ID)
 						.button().attrId(CSS.TOAST_ID_CROSS)

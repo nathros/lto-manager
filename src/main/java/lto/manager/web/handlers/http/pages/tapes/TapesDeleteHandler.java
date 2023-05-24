@@ -2,6 +2,7 @@ package lto.manager.web.handlers.http.pages.tapes;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.concurrent.ExecutionException;
 
 import org.xmlet.htmlapifaster.Div;
 import org.xmlet.htmlapifaster.EnumTypeButtonType;
@@ -62,7 +63,7 @@ public class TapesDeleteHandler extends BaseHTTPHandler {
 	}
 
 	@Override
-	public void requestHandle(HttpExchange he) throws IOException, SQLException {
+	public void requestHandle(HttpExchange he) throws IOException, SQLException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of("Tape Delete");
 		TemplatePageModel tpm = TemplatePageModel.of(TapesDeleteHandler::body, thm, SelectedPage.Tapes, BodyModel.of(he, null));
 		requestHandleCompletePage(he, tpm);

@@ -2,6 +2,7 @@ package lto.manager.web.handlers.http.ajax;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import org.xmlet.htmlapifaster.Div;
 
@@ -11,7 +12,7 @@ import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.partial.filelist.FileList;
 import lto.manager.web.handlers.http.partial.filelist.FileListModel;
 import lto.manager.web.handlers.http.partial.filelist.FileListOptions;
-import lto.manager.web.handlers.http.templates.TemplateFetcher.TemplateFetcherModel;
+import lto.manager.web.handlers.http.templates.TemplateAJAX.TemplateFetcherModel;
 import lto.manager.web.handlers.http.templates.models.BodyModel;
 
 public class AJAXFilesListFetcher extends BaseHTTPHandler {
@@ -35,7 +36,7 @@ public class AJAXFilesListFetcher extends BaseHTTPHandler {
 	}
 
 	@Override
-	public void requestHandle(HttpExchange he) throws IOException {
+	public void requestHandle(HttpExchange he) throws IOException, InterruptedException, ExecutionException {
 		BodyModel bm = BodyModel.of(he, null);
 		requestHandleCompleteFetcher(he, new TemplateFetcherModel(AJAXFilesListFetcher::content, bm));
 	}

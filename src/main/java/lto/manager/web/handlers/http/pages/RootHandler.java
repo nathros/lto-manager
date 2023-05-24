@@ -1,6 +1,7 @@
 package lto.manager.web.handlers.http.pages;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 
 import org.xmlet.htmlapifaster.Div;
 
@@ -25,7 +26,7 @@ public class RootHandler extends BaseHTTPHandler {
 	}
 
 	@Override
-	public void requestHandle(HttpExchange he) throws IOException {
+	public void requestHandle(HttpExchange he) throws IOException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of("Root");
 		TemplatePageModel tpm = TemplatePageModel.of(RootHandler::content, thm, SelectedPage.Admin, BodyModel.of(he, null));
 		requestHandleCompletePage(he, tpm);

@@ -1,6 +1,7 @@
 package lto.manager.web.handlers.http.pages.drives;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 
 import org.xmlet.htmlapifaster.Div;
 
@@ -32,7 +33,7 @@ public class DrivesHandler extends BaseHTTPHandler {
 	}
 
 	@Override
-	public void requestHandle(HttpExchange he) throws IOException {
+	public void requestHandle(HttpExchange he) throws IOException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of("Drives");
 		thm.AddCSS(Asset.CSS_DRIVES);
 		thm.AddScript(Asset.JS_ON_LOAD_AJAX);
