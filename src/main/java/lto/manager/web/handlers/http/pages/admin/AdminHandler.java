@@ -1,4 +1,4 @@
-package lto.manager.web.handlers.http.pages;
+package lto.manager.web.handlers.http.pages.admin;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
@@ -10,8 +10,6 @@ import org.xmlet.htmlapifaster.EnumTypeInputType;
 import com.sun.net.httpserver.HttpExchange;
 
 import lto.manager.common.Util;
-import lto.manager.common.database.Options;
-import lto.manager.common.database.tables.TableOptions;
 import lto.manager.common.ltfs.ListTapeDevices;
 import lto.manager.common.ltfs.ListTapeDevices.TapeDevicesInfo;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
@@ -20,7 +18,7 @@ import lto.manager.web.handlers.http.templates.TemplatePage.TemplatePageModel;
 import lto.manager.web.handlers.http.templates.models.BodyModel;
 import lto.manager.web.handlers.http.templates.models.HeadModel;
 import lto.manager.web.resource.Asset;
-import lto.manager.web.resource.HTML;
+import lto.manager.web.resource.CSS;
 import lto.manager.web.resource.Query;
 
 public class AdminHandler extends BaseHTTPHandler {
@@ -42,18 +40,6 @@ public class AdminHandler extends BaseHTTPHandler {
 			} catch (Exception e) {}
 		}
 
-		final String writeOptions = model.getQueryNoNull(CHANGE_OPTIONS);
-		if (writeOptions.equals(Query.CHECKED)) {
-			String enableRequests = model.getQueryNoNull(ENABLE_LOG_REQUESTS);
-			String enableExtLog = model.getQueryNoNull(ENABLE_LOG_EXTERNAL_PROCESS);
-
-			if (enableRequests.equals(Query.CHECKED)) Options.setBool(TableOptions.INDEX_ENABLE_LOG_REQUESTS, true);
-			else Options.setBool(TableOptions.INDEX_ENABLE_LOG_REQUESTS, false);
-
-			if (enableExtLog.equals(Query.CHECKED)) Options.setBool(TableOptions.INDEX_ENABLE_LOG_EXTERNAL_PROCESS, true);
-			else Options.setBool(TableOptions.INDEX_ENABLE_LOG_EXTERNAL_PROCESS, false);
-		}
-
 		view
 		.div().of(div -> {
 			final int maxMemoryMB = (int) (Util.getJVMMaxMemory() / 1024 / 1024);
@@ -62,6 +48,7 @@ public class AdminHandler extends BaseHTTPHandler {
 
 			int p = (int) (((double)usedMemMB / (double)maxMemoryMB) * 100);
 			div
+				.a().attrClass(CSS.BUTTON).attrHref(UpdateOptionsHandler.PATH).text("Change Settings").__()
 				.p().text("AnalyticsHandler").__()
 				.p().text("JVM max memory: " + maxMemoryMB + "MB").__()
 				.p().text("JVM allocated memory: " + allocatedMB + "MB").__()
@@ -100,19 +87,9 @@ public class AdminHandler extends BaseHTTPHandler {
 					.fieldset()
 						.legend().text("Options").__()
 						.input().attrType(EnumTypeInputType.HIDDEN).attrName(CHANGE_OPTIONS).attrValue(Query.CHECKED).__()
-
 						.label().attrFor(ENABLE_LOG_REQUESTS).text("Enable request logging").__()
-						.input().of(input -> {
-							input.attrType(EnumTypeInputType.CHECKBOX).attrName(ENABLE_LOG_REQUESTS).attrId(ENABLE_LOG_REQUESTS);
-							if (Options.getBool(TableOptions.INDEX_ENABLE_LOG_REQUESTS)) input.of(i -> HTML.check(i, true));
-						}).__()
 						.br().__()
-
 						.label().attrFor(ENABLE_LOG_EXTERNAL_PROCESS).text("Enable external process logging").__()
-						.input().of(input -> {
-							input.attrType(EnumTypeInputType.CHECKBOX).attrName(ENABLE_LOG_EXTERNAL_PROCESS).attrId(ENABLE_LOG_EXTERNAL_PROCESS);
-							if (Options.getBool(TableOptions.INDEX_ENABLE_LOG_EXTERNAL_PROCESS)) input.of(i -> HTML.check(i, true));
-						}).__()
 						.br().__()
 						.button().attrType(EnumTypeButtonType.SUBMIT).text("Submit").__()
 					.__()

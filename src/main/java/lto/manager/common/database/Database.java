@@ -19,6 +19,8 @@ import lto.manager.common.database.tables.TableTape;
 import lto.manager.common.database.tables.TableTapeType;
 import lto.manager.common.database.tables.TableVersion;
 import lto.manager.common.database.tables.records.RecordManufacturer;
+import lto.manager.common.database.tables.records.RecordOptions;
+import lto.manager.common.database.tables.records.RecordOptions.OptionsSetting;
 import lto.manager.common.database.tables.records.RecordTape;
 import lto.manager.common.database.tables.records.RecordTapeType;
 import lto.manager.common.log.Log;
@@ -113,11 +115,15 @@ public class Database {
 		return TableFile.getFilesOnTape(connection, tapeID);
 	}
 
-	public static boolean updateOption(int id, String value) throws SQLException {
-		return TableOptions.updateOption(connection, id, value);
+	public static boolean updateOption(OptionsSetting setting, String value) throws SQLException {
+		return TableOptions.updateOption(connection, setting, value);
 	}
 
-	public static String getOption(int id) throws SQLException {
-		return TableOptions.getOption(connection, id);
+	public static String getOption(OptionsSetting setting) throws SQLException {
+		return TableOptions.getOption(connection, setting);
+	}
+
+	public static List<RecordOptions> getAllOptions() throws SQLException {
+		return TableOptions.getAllOptions(connection);
 	}
 }

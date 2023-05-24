@@ -12,7 +12,7 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import lto.manager.common.database.Options;
-import lto.manager.common.database.tables.TableOptions;
+import lto.manager.common.database.tables.records.RecordOptions.OptionsSetting;
 
 public abstract class ExternalProcess {
 	public static int EXIT_CODE_OK = 0;
@@ -71,7 +71,7 @@ public abstract class ExternalProcess {
 						if (tmp != '\n') str.append(tmp);
 						else {
 							String line = str.toString();
-							if (Options.getBool(TableOptions.INDEX_ENABLE_LOG_EXTERNAL_PROCESS))
+							if (Options.getBool(OptionsSetting.LOG_EXTERNAL_PROCESS))
 								System.out.println("stdout:" + line);
 							stdout.add(line);
 							str = new StringBuilder();
@@ -85,7 +85,7 @@ public abstract class ExternalProcess {
 				}
 			}
 			semaphore.release();
-			if (Options.getBool(TableOptions.INDEX_ENABLE_LOG_EXTERNAL_PROCESS)) System.out.println("stdout: EXIT");
+			if (Options.getBool(OptionsSetting.LOG_EXTERNAL_PROCESS)) System.out.println("stdout: EXIT");
 	    });
 
 		service.submit(() -> { // stderr
@@ -97,7 +97,7 @@ public abstract class ExternalProcess {
 						if (tmp != '\n') str.append(tmp);
 						else {
 							String line = str.toString();
-							if (Options.getBool(TableOptions.INDEX_ENABLE_LOG_EXTERNAL_PROCESS))
+							if (Options.getBool(OptionsSetting.LOG_EXTERNAL_PROCESS))
 								System.out.println("stderr:" + line);
 							stdout.add(line);
 							str = new StringBuilder();
@@ -111,7 +111,7 @@ public abstract class ExternalProcess {
 				}
 			}
 			semaphore.release();
-			if (Options.getBool(TableOptions.INDEX_ENABLE_LOG_EXTERNAL_PROCESS)) System.out.println("stderr: EXIT");
+			if (Options.getBool(OptionsSetting.LOG_EXTERNAL_PROCESS)) System.out.println("stderr: EXIT");
 	    });
 
 		return true;

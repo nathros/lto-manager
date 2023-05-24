@@ -11,7 +11,7 @@ import htmlflow.HtmlPage;
 import htmlflow.HtmlViewAsync;
 import lto.manager.common.Main;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
-import lto.manager.web.handlers.http.pages.AdminHandler;
+import lto.manager.web.handlers.http.pages.admin.AdminHandler;
 import lto.manager.web.handlers.http.pages.drives.DrivesHandler;
 import lto.manager.web.handlers.http.pages.files.FilesHandler;
 import lto.manager.web.handlers.http.pages.jobs.JobsHandler;

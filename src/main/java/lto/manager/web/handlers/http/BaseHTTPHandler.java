@@ -9,7 +9,10 @@ import java.util.concurrent.ExecutionException;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
+import lto.manager.common.database.Options;
+import lto.manager.common.database.tables.records.RecordOptions.OptionsSetting;
 import lto.manager.common.log.Log;
+import lto.manager.web.handlers.http.pages.AssetHandler;
 import lto.manager.web.handlers.http.templates.TemplateAJAX;
 import lto.manager.web.handlers.http.templates.TemplateAJAX.TemplateFetcherModel;
 import lto.manager.web.handlers.http.templates.TemplateInternalError;
@@ -39,8 +42,14 @@ public abstract class BaseHTTPHandler implements HttpHandler {
 
 	@Override
 	public void handle(HttpExchange he) throws IOException {
-		Log.l.info("Request (" + String.format("%04d", count) + "): " + he.getRequestHeaders().getFirst("Host")
-			+ he.getRequestURI());
+		if (Options.getBool(OptionsSetting.LOG_REQUESTS)) {
+			String message = "Request (" + String.format("%04d", count) + "): " + he.getRequestHeaders().getFirst("Host")+ he.getRequestURI();
+			if (Options.getBool(OptionsSetting.LOG_REQUESTS_ASSETS)) {
+				Log.l.info(message);
+			} else if (!he.getRequestURI().toString().contains(AssetHandler.PATH)) {
+				Log.l.info(message);
+			}
+		}
 		count++;
 		try {
 			this.requestHandle(he);

@@ -23,4 +23,11 @@ public class HTML {
 		}
 		return option;
 	}
+
+	public static Option<?> option(Option<?> option, boolean selected) {
+		if (selected) {
+			option = option.addAttr("selected", "");
+		}
+		return option;
+	}
 }

@@ -8,9 +8,10 @@ import lto.manager.common.Main;
 import lto.manager.web.handlers.http.ajax.AJAXFilesListFetcher;
 import lto.manager.web.handlers.http.ajax.AJAXGetAttachedDrivesFetcher;
 import lto.manager.web.handlers.http.ajax.AJAXGetOnloadError;
-import lto.manager.web.handlers.http.pages.AdminHandler;
 import lto.manager.web.handlers.http.pages.AssetHandler;
 import lto.manager.web.handlers.http.pages.RootHandler;
+import lto.manager.web.handlers.http.pages.admin.AdminHandler;
+import lto.manager.web.handlers.http.pages.admin.UpdateOptionsHandler;
 import lto.manager.web.handlers.http.pages.drives.DrivesHandler;
 import lto.manager.web.handlers.http.pages.files.FilesAddHandler;
 import lto.manager.web.handlers.http.pages.files.FilesBrowserHandler;
@@ -39,7 +40,9 @@ public class Handlers {
 		HashMap<String, HttpHandler> ret = new HashMap<String, HttpHandler>();
 		ret.put(RootHandler.PATH, new RootHandler());
 		ret.put(AssetHandler.PATH, new AssetHandler());
+
 		ret.put(AdminHandler.PATH, new AdminHandler());
+		ret.put(UpdateOptionsHandler.PATH, new UpdateOptionsHandler());
 
 		ret.put(TapesHandler.PATH, new TapesHandler());
 		ret.put(TapesCreateHandler.PATH, new TapesCreateHandler());
