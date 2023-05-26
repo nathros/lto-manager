@@ -66,6 +66,12 @@ public class AssetHandler extends BaseHTTPHandler {
 		if (is != null) is.close();
 	}
 
+	public static boolean assetExists(String resourcePath) {
+		var search = path + resourcePath;
+		var is = loader.getResourceAsStream(search);
+		return is != null;
+	}
+
 	public static HashSet<String> getCachedFileListInDir(String dir) {
 		try {
 			final String res = path + dir;

@@ -23,7 +23,8 @@ public class RecordTape {
 		this.barcode = barcode;
 		this.serial = serial;
 		this.usedSpace = usedSpace;
-		this.dateAdded = dateAdded;
+		if (dateAdded == null) this.dateAdded = LocalDateTime.now();
+		else this.dateAdded = dateAdded;
 	}
 
 	public static RecordTape of(Integer id, RecordManufacturer manufacturer, RecordTapeType type, String barcode,

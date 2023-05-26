@@ -19,4 +19,5 @@ public class Asset {
 
 	public static final String IMG_FAVICO_SVG = AssetHandler.PATH + "/img/favico.svg";
 	public static final String IMG_TYPES = AssetHandler.PATH + "/img/types/";
+	public static final String IMG_COMPANY_LOGOS = AssetHandler.PATH + "/img/company-logo/";
 }

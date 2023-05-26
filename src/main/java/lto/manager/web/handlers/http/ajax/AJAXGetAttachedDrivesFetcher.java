@@ -11,9 +11,11 @@ import com.sun.net.httpserver.HttpExchange;
 import lto.manager.common.ExternalProcess;
 import lto.manager.common.ltfs.ListTapeDevices;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
+import lto.manager.web.handlers.http.pages.AssetHandler;
 import lto.manager.web.handlers.http.partial.inlinemessage.InlineErrorMessage;
 import lto.manager.web.handlers.http.templates.TemplateAJAX.TemplateFetcherModel;
 import lto.manager.web.handlers.http.templates.models.BodyModel;
+import lto.manager.web.resource.Asset;
 import lto.manager.web.resource.CSS;
 import lto.manager.web.resource.Query;
 
@@ -31,11 +33,18 @@ public class AJAXGetAttachedDrivesFetcher extends BaseHTTPHandler {
 			} else {
 				view.of(v -> {
 					for (var dev: devices.getDevices()) {
+						final String logo = Asset.IMG_COMPANY_LOGOS + dev.getVendorID().toLowerCase() + ".svg";
 						v.div().attrClass(CSS.DRIVE_CONTAINER)
 							.b().text("Product: ").__()
 							.span().text(dev.getProductName()).__()
 							.b().text("Manufacturer: ").__()
-							.span().text(dev.getVendorID()).__()
+							.of(o -> {
+								if (AssetHandler.assetExists(logo)) {
+									o.img().attrStyle("height:1rem").attrSrc(logo).__();
+								} else {
+									o.span().text(dev.getVendorID()).__();
+								}
+							})
 							.b().text("Serial: ").__()
 							.span().text(dev.getSerialNumber()).__()
 							.b().text("Device Path: ").__()

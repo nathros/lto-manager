@@ -4,10 +4,10 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-import java.util.function.Supplier;
 
 import org.xmlet.htmlapifaster.Div;
 import org.xmlet.htmlapifaster.EnumTypeButtonType;
+import org.xmlet.htmlapifaster.EnumTypeInputType;
 
 import com.sun.net.httpserver.HttpExchange;
 
@@ -28,13 +28,13 @@ public class UpdateOptionsHandler extends BaseHTTPHandler {
 
 	public static final String OPTIONS_INDEX = "options-index";
 
-	private static Supplier<List<RecordOptions>> getOptions = () -> {
+	private static List<RecordOptions> getOptions() {
 		try {
 			return Database.getAllOptions();
 		} catch (SQLException e) {
 			return null;
 		}
-	};
+	}
 
 	static Void content(Div<?> view, BodyModel model) {
 		final List<String> queryList = model.getQueryArrayNotNull(OPTIONS_INDEX);
@@ -46,10 +46,11 @@ public class UpdateOptionsHandler extends BaseHTTPHandler {
 			}
 		}
 
-		final List<RecordOptions> options = getOptions.get();
+		final List<RecordOptions> options = getOptions();
 
 		view.form()
 		.of(f -> {
+			if (queryList.size() > 0) f.i().attrStyle("color:green").text("Updated settings").__().br().__();
 			for (RecordOptions opt: options) {
 				switch (opt.getDataType()) {
 				case Boolean:
@@ -57,17 +58,29 @@ public class UpdateOptionsHandler extends BaseHTTPHandler {
 					final String trueStr = Boolean.toString(true);
 					final String falseStr = Boolean.toString(false);
 					f
-						.b().attrStyle("width:350px;display: inline-block;").text(OptionsSetting.valueOf(opt.getIndex()).toString()).__()
+						.b().attrStyle("width:350px;display:inline-block;").text(OptionsSetting.valueOf(opt.getIndex()).toString()).__()
 						.select().attrName(OPTIONS_INDEX)
 							.option().attrValue(trueStr).of(o -> HTML.option(o, value)).text(trueStr) .__()
 							.option().attrValue(falseStr).of(o -> HTML.option(o, !value)).text(falseStr).__()
 						.__().br().__();
 					break;
 				case Integer:
+					f
+						.b().attrStyle("width:350px;display:inline-block;").text(OptionsSetting.valueOf(opt.getIndex()).toString()).__()
+						.input().attrType(EnumTypeInputType.NUMBER).attrName(OPTIONS_INDEX).attrValue(opt.getValueAsString()).__()
+						.br().__();
 					break;
 				case String:
+					f
+						.b().attrStyle("width:350px;display:inline-block;").text(OptionsSetting.valueOf(opt.getIndex()).toString()).__()
+						.input().attrType(EnumTypeInputType.TEXT).attrName(OPTIONS_INDEX).attrValue(opt.getValueAsString()).__()
+						.br().__();
 					break;
 				default:
+					f
+						.b().attrStyle("width:350px;display:inline-block;").text("Unknown option: " + opt.getIndex()).__()
+						.i().text("[" + opt.getDataType().name() + "] value: " + opt.getValueAsString()).__()
+						.br().__();
 					break;
 				}
 			}

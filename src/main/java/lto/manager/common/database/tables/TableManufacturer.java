@@ -55,6 +55,7 @@ public class TableManufacturer {
 		manufacturer.add("HP");
 		manufacturer.add("Fujifilm");
 		manufacturer.add("Spectra");
+		manufacturer.add("Dell");
 		if (!statment.execute(q)) {
 			for (int i = 0; i < manufacturer.size(); i++) {
 				if (addNewManufacturer(con, manufacturer.get(i)) == false) return false;

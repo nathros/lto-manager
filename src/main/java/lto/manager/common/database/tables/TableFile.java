@@ -106,7 +106,7 @@ public class TableFile {
 		if (result) return false;
 
 		LocalDateTime now = LocalDateTime.now();
-		RecordFile rootDir = RecordFile.of("", "/", "", "", 0, now, now, 0, 0, "folder-root");
+		RecordFile rootDir = RecordFile.of("/", "/", "", "", 0, now, now, 0, 0, "folder-root");
 		try {
 			addFiles(con, 0, Arrays.asList(rootDir));
 		} catch (Exception e) {
@@ -176,6 +176,7 @@ public class TableFile {
 			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_DATE_MODFIY), file.getModifiedDateTime());
 			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_TAPE_LOC), tapeID);
 			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_CRC32), file.getCRC32());
+			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_CUSTOM_ICON), file.getCustomIcon());
 			String sql = iq.validate().toString();
 			if (statment.execute(sql)) {
 				return false;
