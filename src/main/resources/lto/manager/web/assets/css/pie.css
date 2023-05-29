@@ -3,6 +3,24 @@
 	inherits: true;
 	initial-value: 0;
 }
+.pie-item {
+	display: flex;
+	flex-direction: column;
+}
+.pie-item > div:nth-child(1) {
+	margin: auto;
+	position: relative;
+}
+.pie-item > div:nth-child(2) {
+	display: flex;
+	justify-content: center;
+}
+.pie-item > div > table {
+	display: contents;
+}
+.pie-item > div > table td {
+	text-align: right;
+}
 .pie {
 	--p: 20;
 	--b: 22px;
@@ -16,14 +34,14 @@
 	place-content: center;
 	font-size: 25px;
 	font-weight: bold;
-}
-.pie:before,
-.pie:after {
-	content: "";
-	position: absolute;
+	animation: pie-animate 1s .5s both;
+	margin: auto;
 	border-radius: 50%;
 }
 .pie:before {
+	content: "";
+	position: absolute;
+	border-radius: 50%;
 	inset: 0;
 	background-color: #eee !important;
 	background:
@@ -31,24 +49,63 @@
 		conic-gradient(var(--c) calc(var(--p)*1%),#0000 0);
 	-webkit-mask: radial-gradient(farthest-side,#0000 calc(99% - var(--b)),#000 calc(100% - var(--b)));
 	mask: radial-gradient(farthest-side,#0000 calc(99% - var(--b)),#000 calc(100% - var(--b)));
+	background-size: 0 0, auto;
 }
 .pie:hover:before {
 	filter: brightness(0.95);
 }
-.pie:after {
-	inset: calc(50% - var(--b)/2);
-	background: var(--c);
-	transform: rotate(calc(var(--p)*3.6deg)) translateY(calc(50% - var(--w)/2));
+.pie-info {
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	width: 1rem;
+	height: 1rem;
 }
-.pie.animate {
-	animation: p 1s .5s both;
+.pie-info:before {
+	content: "";
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	background-color: black;
+	-webkit-mask-image: url(/assets/img/info-circle-fill.svg);
+	mask-image: url(/assets/img/info-circle-fill.svg);
+	width: 1rem;
+	height: 1rem;
 }
-.pie.no-round:before {
-	background-size: 0 0, auto;
+.pie-info:hover:before {
+	opacity: 0.75;
 }
-.pie.no-round:after {
-	content: none;
+.pie-tooltip {
+	position: relative;
+	top: -80px;
+	left: -128px;
+	width: 16rem;
+	background-color: var(--common-background-colour);
+	color: white;
+	display: block;
+	border-radius: var(--menu-border-radius);
+	font-size: smaller;
+	opacity: 0;
+	user-select: none;
+	text-align: center;
+	pointer-events: none;
+	transition: 0s opacity;
+	padding: 0px 8px;
 }
-@keyframes p {
-	from{--p: 0}
+.pie-tooltip:after { /* Tool-tip arrow */
+	content: "";
+	position: absolute;
+	top: 100%;
+	left: 50%;
+	margin-left: -5px;
+	border-width: 5px;
+	border-style: solid;
+	border-color: black transparent transparent transparent;
+}
+.pie-info:hover .pie-tooltip {
+	opacity: 100%;
+	transition-delay: 500ms;
+}
+@keyframes pie-animate {
+	from {--p: 0}
 }

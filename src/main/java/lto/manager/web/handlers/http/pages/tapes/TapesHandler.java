@@ -36,7 +36,7 @@ public class TapesHandler extends BaseHTTPHandler {
 		view
 			.div()
 				.a().attrClass(CSS.BUTTON).attrHref(TapesCreateHandler.PATH).text("Add New Tape").__()
-				.table().of(table -> {
+				.table().attrClass(CSS.TABLE).of(table -> {
 					table.attrBorder(EnumBorderType._1).tr()
 						.th().text("Tape ID").__()
 						.th().text("Barcode").__()

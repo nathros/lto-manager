@@ -73,7 +73,7 @@ public class FilesBrowserHandler extends BaseHTTPHandler {
 					}
 
 				}).__()
-				.table().of(table -> {
+				.table().attrClass(CSS.TABLE).of(table -> {
 					table.attrBorder(EnumBorderType._1).tr()
 						.th().text("Filename").__()
 						.th().text("Size").__()

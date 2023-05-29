@@ -58,7 +58,7 @@ public class JobsHandler extends BaseHTTPHandler {
 						}
 					})
 					.a().attrClass(CSS.BUTTON).attrHref(JobsTypeHandler.PATH).text("Add new job").__()
-					.table()
+					.table().attrClass(CSS.TABLE)
 						.tr()
 							.th().text("ID").__()
 							.th().text("Name").__()

@@ -50,7 +50,7 @@ public class FilesHandler extends BaseHTTPHandler {
 				.__()
 
 
-				.table().of(table -> {
+				.table().attrClass(CSS.TABLE).of(table -> {
 					table.attrBorder(EnumBorderType._1).tr()
 						.th().text("Path").__()
 					.__();

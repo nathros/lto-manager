@@ -10,6 +10,8 @@ public class CSS {
 	public final static String BACKGROUND_ERROR = "background-error ";
 	public final static String BACKGROUND_GREEN = "background-green ";
 
+	public final static String TABLE = "table ";
+
 	public final static String FONT_MONOSPACE = "monospace ";
 
 	public final static String TOAST_ID = "toast"; // TODO match colours with INLINE_MESSAGE
@@ -53,6 +55,9 @@ public class CSS {
 	public final static String TABS_SETUP_ICON = "tab-setup-icon ";
 	public final static String TABS_SOURCE_ICON = "tab-source-icon ";
 	public final static String TABS_DESTINATION_ICON = "tab-dest-icon ";
+
+	public final static String PIE_CIRCLE = "pie ";
+	public final static String PIE_ITEM = "pie-item ";
 
 	public final static String DRIVE_CONTAINER = "drive-container ";
 
