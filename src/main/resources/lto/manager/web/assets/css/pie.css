@@ -3,17 +3,28 @@
 	inherits: true;
 	initial-value: 0;
 }
+.pie-container {
+	display: flex;
+	gap: 1rem;
+}
 .pie-item {
 	display: flex;
 	flex-direction: column;
 }
 .pie-item > div:nth-child(1) {
-	margin: auto;
+	margin-left: auto;
+	margin-right: auto;
 	position: relative;
 }
 .pie-item > div:nth-child(2) {
 	display: flex;
 	justify-content: center;
+	flex-direction: column;
+}
+.pie-item > div:nth-child(2) > i {
+	text-align: center;
+	padding: 0.5rem;
+	font-size: large;
 }
 .pie-item > div > table {
 	display: contents;
@@ -60,6 +71,7 @@
 	bottom: 0;
 	width: 1rem;
 	height: 1rem;
+	z-index: 1;
 }
 .pie-info:before {
 	content: "";
@@ -77,9 +89,6 @@
 }
 .pie-tooltip {
 	position: relative;
-	top: -80px;
-	left: -128px;
-	width: 16rem;
 	background-color: var(--common-background-colour);
 	color: white;
 	display: block;

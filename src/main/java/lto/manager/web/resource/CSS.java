@@ -56,8 +56,11 @@ public class CSS {
 	public final static String TABS_SOURCE_ICON = "tab-source-icon ";
 	public final static String TABS_DESTINATION_ICON = "tab-dest-icon ";
 
+	public final static String PIE_CONTAINER = "pie-container ";
 	public final static String PIE_CIRCLE = "pie ";
 	public final static String PIE_ITEM = "pie-item ";
+	public final static String PIE_INFO = "pie-info ";
+	public final static String PIE_TOOLTIP = "pie-tooltip ";
 
 	public final static String DRIVE_CONTAINER = "drive-container ";
 
