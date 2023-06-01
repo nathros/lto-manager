@@ -24,17 +24,17 @@ public abstract class ExternalProcess {
 	protected ExecutorService service;
 	protected AtomicBoolean inProgress = new AtomicBoolean();
 	protected Integer exitCode;
-	protected Semaphore binarySemaphore = null;
+	protected Semaphore isCompletedSemaphore = null;
 	protected String[] cmd;
 
 	public static HashMap<String, ExternalProcess> processes = new HashMap<String, ExternalProcess>();
 
 	public boolean start(Semaphore completedSemaphore, String uuid, String... commands) throws IOException, InterruptedException {
 		if (inProgress.get()) return false;
-		binarySemaphore = completedSemaphore;
+		this.isCompletedSemaphore = completedSemaphore;
 		cmd = commands;
 		processes.put(uuid, this);
-		if (binarySemaphore != null) binarySemaphore.acquire(1);
+		if (isCompletedSemaphore != null) isCompletedSemaphore.acquire(1);
 		inProgress.set(true);
 
 		stdout.clear();
@@ -56,7 +56,7 @@ public abstract class ExternalProcess {
 				semaphore.acquire(2);
 				stop();
 				onProcessExit();
-				if (binarySemaphore != null) binarySemaphore.release();
+				if (isCompletedSemaphore != null) isCompletedSemaphore.release();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -71,7 +71,7 @@ public abstract class ExternalProcess {
 						if (tmp != '\n') str.append(tmp);
 						else {
 							String line = str.toString();
-							if (Options.getBool(OptionsSetting.LOG_EXTERNAL_PROCESS))
+							if (Options.getData(OptionsSetting.LOG_EXTERNAL_PROCESS) == Boolean.TRUE)
 								System.out.println("stdout:" + line);
 							stdout.add(line);
 							str = new StringBuilder();
@@ -85,7 +85,7 @@ public abstract class ExternalProcess {
 				}
 			}
 			semaphore.release();
-			if (Options.getBool(OptionsSetting.LOG_EXTERNAL_PROCESS)) System.out.println("stdout: EXIT");
+			if (Options.getData(OptionsSetting.LOG_EXTERNAL_PROCESS) == Boolean.TRUE) System.out.println("stdout: EXIT");
 	    });
 
 		service.submit(() -> { // stderr
@@ -97,7 +97,7 @@ public abstract class ExternalProcess {
 						if (tmp != '\n') str.append(tmp);
 						else {
 							String line = str.toString();
-							if (Options.getBool(OptionsSetting.LOG_EXTERNAL_PROCESS))
+							if (Options.getData(OptionsSetting.LOG_EXTERNAL_PROCESS) == Boolean.TRUE)
 								System.out.println("stderr:" + line);
 							stdout.add(line);
 							str = new StringBuilder();
@@ -111,7 +111,7 @@ public abstract class ExternalProcess {
 				}
 			}
 			semaphore.release();
-			if (Options.getBool(OptionsSetting.LOG_EXTERNAL_PROCESS)) System.out.println("stderr: EXIT");
+			if (Options.getData(OptionsSetting.LOG_EXTERNAL_PROCESS) == Boolean.TRUE) System.out.println("stderr: EXIT");
 	    });
 
 		return true;

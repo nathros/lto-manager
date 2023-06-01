@@ -7,10 +7,10 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.tuple.Pair;
-
 import com.healthmarketscience.sqlbuilder.BinaryCondition;
 import com.healthmarketscience.sqlbuilder.CreateTableQuery;
+import com.healthmarketscience.sqlbuilder.DropQuery;
+import com.healthmarketscience.sqlbuilder.DropQuery.Type;
 import com.healthmarketscience.sqlbuilder.InsertQuery;
 import com.healthmarketscience.sqlbuilder.SelectQuery;
 import com.healthmarketscience.sqlbuilder.UpdateQuery;
@@ -57,8 +57,17 @@ public class TableOptions {
 		if (!statment.execute(q)) {
 			var defaultOptions = Options.defaultValues;
 			for (OptionsSetting key : defaultOptions.keySet()) {
-				Pair<OptionsDataType, String> value = defaultOptions.get(key);
-				if (!insertOption(con, key, value.getLeft(), value.getRight())) return false;
+				Object value = defaultOptions.get(key);
+				OptionsDataType type = null;
+				String valueStr = String.valueOf(value);
+				if (value.getClass().equals(Boolean.class)) {
+					type = OptionsDataType.Boolean;
+				} else if (value.getClass().equals(Integer.class)) {
+					type = OptionsDataType.Integer;
+				} else {
+					type = OptionsDataType.String;
+				}
+				if (!insertOption(con, key, type, valueStr)) return false;
 			}
 		}
 		return true;
@@ -122,6 +131,14 @@ public class TableOptions {
 			options.add(opt);
 		}
 		return options;
+	}
+
+	public static boolean reset(Connection con) throws SQLException {
+		DropQuery dq = new DropQuery(Type.TABLE, table.getAbsoluteName());
+		String q = dq.validate().toString();
+		var statment = con.createStatement();
+		statment.executeUpdate(q);
+		return createTable(con);
 	}
 
 }

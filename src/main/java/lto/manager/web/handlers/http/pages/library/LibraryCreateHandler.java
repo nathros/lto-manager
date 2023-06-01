@@ -1,4 +1,4 @@
-package lto.manager.web.handlers.http.pages.tapes;
+package lto.manager.web.handlers.http.pages.library;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -23,8 +23,8 @@ import lto.manager.web.handlers.http.templates.models.HeadModel;
 import lto.manager.web.resource.Asset;
 import lto.manager.web.resource.CSS;
 
-public class TapesCreateHandler extends BaseHTTPHandler {
-	public static final String PATH = "/tapes/new";
+public class LibraryCreateHandler extends BaseHTTPHandler {
+	public static final String PATH = "/library/new";
 	private static final String SERIAL = "serial";
 	private static final String TAPETYPE = "type";
 	private static final String MANU = "manu";
@@ -144,7 +144,7 @@ public class TapesCreateHandler extends BaseHTTPHandler {
 	public void requestHandle(HttpExchange he) throws IOException, SQLException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of("Tapes");
 		thm.AddScript(Asset.JS_ADD_TAPE);
-		TemplatePageModel tpm = TemplatePageModel.of(TapesCreateHandler::body, thm, SelectedPage.Tapes, BodyModel.of(he, null));
+		TemplatePageModel tpm = TemplatePageModel.of(LibraryCreateHandler::body, thm, SelectedPage.Library, BodyModel.of(he, null));
 		requestHandleCompletePage(he, tpm);
 	}
 }

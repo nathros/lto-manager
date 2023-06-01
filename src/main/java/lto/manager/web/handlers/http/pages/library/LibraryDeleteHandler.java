@@ -1,4 +1,4 @@
-package lto.manager.web.handlers.http.pages.tapes;
+package lto.manager.web.handlers.http.pages.library;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -17,8 +17,8 @@ import lto.manager.web.handlers.http.templates.TemplatePage.TemplatePageModel;
 import lto.manager.web.handlers.http.templates.models.BodyModel;
 import lto.manager.web.handlers.http.templates.models.HeadModel;
 
-public class TapesDeleteHandler extends BaseHTTPHandler {
-	public static final String PATH = "/tapes/delete";
+public class LibraryDeleteHandler extends BaseHTTPHandler {
+	public static final String PATH = "/library/delete";
 	public static final String ID = "id";
 
 	static Void body(Div<?> view, BodyModel model) {
@@ -65,7 +65,7 @@ public class TapesDeleteHandler extends BaseHTTPHandler {
 	@Override
 	public void requestHandle(HttpExchange he) throws IOException, SQLException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of("Tape Delete");
-		TemplatePageModel tpm = TemplatePageModel.of(TapesDeleteHandler::body, thm, SelectedPage.Tapes, BodyModel.of(he, null));
+		TemplatePageModel tpm = TemplatePageModel.of(LibraryDeleteHandler::body, thm, SelectedPage.Library, BodyModel.of(he, null));
 		requestHandleCompletePage(he, tpm);
 	}
 }

@@ -42,6 +42,7 @@ public class Database {
 			op = (op && TableOptions.createTable(connection));
 			op = (op && TableJobs.createTable(connection));
 			op = (op && TableJobsMetadata.createTable(connection));
+			Options.refreshCache(); // Cache is created but is empty
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
@@ -121,6 +122,10 @@ public class Database {
 
 	public static String getOption(OptionsSetting setting) throws SQLException {
 		return TableOptions.getOption(connection, setting);
+	}
+
+	public static boolean resetOptions() throws SQLException {
+		return TableOptions.reset(connection);
 	}
 
 	public static List<RecordOptions> getAllOptions() throws SQLException {

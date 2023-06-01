@@ -15,7 +15,7 @@ public class PieCPUUsage {
 		int cores = Runtime.getRuntime().availableProcessors();
 		double loadPercent = load / cores * 100;
 		int loadInt = (int)(loadPercent);
-		final var po = new PieOptions(loadInt, "CPU Usage", "green", "8rem", "-44px", "-64px",
+		final var po = new PieOptions(loadInt, "CPU Usage", "green", "8rem", "-44px", "-60px",
 				"""
 				Total system load average
 				""");

@@ -15,7 +15,23 @@ public class RecordOptions {
 	public static enum OptionsSetting {
 		LOG_REQUESTS("Log Requests"),
 		LOG_REQUESTS_ASSETS("Log Asset Requests"),
-		LOG_EXTERNAL_PROCESS("Log External Process std out/err");
+		PLACEHOLDER_1("placeholder 1"),
+		PLACEHOLDER_2("placeholder 2"),
+		PLACEHOLDER_3("placeholder 3"),
+		PLACEHOLDER_4("placeholder 4"),
+		PLACEHOLDER_5("placeholder 5"),
+		PLACEHOLDER_6("placeholder 6"),
+		PLACEHOLDER_7("placeholder 7"),
+		PLACEHOLDER_8("placeholder 8"),
+		LOG_EXTERNAL_PROCESS("Log External Process std out/err"),
+		PLACEHOLDER_A("placeholder a"),
+		PLACEHOLDER_B("placeholder b"),
+		PLACEHOLDER_C("placeholder c"),
+		PLACEHOLDER_D("placeholder d"),
+		PLACEHOLDER_E("placeholder e"),
+		PLACEHOLDER_F("placeholder f"),
+		PLACEHOLDER_H("placeholder h"),
+		PLACEHOLDER_I("placeholder i");
 
 		private final String text;
 		OptionsSetting(final String text) { this.text = text; }

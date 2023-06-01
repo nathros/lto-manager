@@ -8,8 +8,8 @@ import org.xmlet.htmlapifaster.Div;
 import com.sun.net.httpserver.HttpExchange;
 
 import lto.manager.web.handlers.http.BaseHTTPHandler;
-import lto.manager.web.handlers.http.partial.pie.PieMemoryUsage;
 import lto.manager.web.handlers.http.partial.pie.PieCPUUsage;
+import lto.manager.web.handlers.http.partial.pie.PieJVMMemoryUsage;
 import lto.manager.web.handlers.http.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.http.templates.TemplatePage.TemplatePageModel;
 import lto.manager.web.handlers.http.templates.models.BodyModel;
@@ -29,7 +29,7 @@ public class AdminHandler extends BaseHTTPHandler {
 				.div().attrClass("card").addAttr("header-text", "System information")
 					.div().attrClass(CSS.PIE_CONTAINER)
 						.of(pie -> PieCPUUsage.content(pie))
-						.of(pie -> PieMemoryUsage.content(pie))
+						.of(pie -> PieJVMMemoryUsage.content(pie))
 					.__()
 				.__()
 			.__(); // div

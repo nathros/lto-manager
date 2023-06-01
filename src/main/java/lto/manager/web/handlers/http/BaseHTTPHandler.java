@@ -42,9 +42,9 @@ public abstract class BaseHTTPHandler implements HttpHandler {
 
 	@Override
 	public void handle(HttpExchange he) throws IOException {
-		if (Options.getBool(OptionsSetting.LOG_REQUESTS)) {
+		if (Options.getData(OptionsSetting.LOG_REQUESTS) == Boolean.TRUE) {
 			String message = "Request (" + String.format("%04d", count) + "): " + he.getRequestHeaders().getFirst("Host")+ he.getRequestURI();
-			if (Options.getBool(OptionsSetting.LOG_REQUESTS_ASSETS)) {
+			if (Options.getData(OptionsSetting.LOG_REQUESTS_ASSETS) == Boolean.TRUE) {
 				Log.l.info(message);
 			} else if (!he.getRequestURI().toString().contains(AssetHandler.PATH)) {
 				Log.l.info(message);

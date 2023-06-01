@@ -1,4 +1,4 @@
-package lto.manager.web.handlers.http.pages.tapes;
+package lto.manager.web.handlers.http.pages.library;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -20,8 +20,8 @@ import lto.manager.web.handlers.http.templates.models.BodyModel;
 import lto.manager.web.handlers.http.templates.models.HeadModel;
 import lto.manager.web.resource.CSS;
 
-public class TapesHandler extends BaseHTTPHandler {
-	public static final String PATH = "/tapes";
+public class LibraryHandler extends BaseHTTPHandler {
+	public static final String PATH = "/library";
 
 	static Void body(Div<?> view, BodyModel model) {
 		List<RecordTape> tmp = null;
@@ -35,7 +35,7 @@ public class TapesHandler extends BaseHTTPHandler {
 
 		view
 			.div()
-				.a().attrClass(CSS.BUTTON).attrHref(TapesCreateHandler.PATH).text("Add New Tape").__()
+				.a().attrClass(CSS.BUTTON).attrHref(LibraryCreateHandler.PATH).text("Add New Tape").__()
 				.table().attrClass(CSS.TABLE).of(table -> {
 					table.attrBorder(EnumBorderType._1).tr()
 						.th().text("Tape ID").__()
@@ -57,7 +57,7 @@ public class TapesHandler extends BaseHTTPHandler {
 							.td().text((int)item.getTotalSpaceGB()).__()
 							.td().text((int)item.getUsedSpaceGB()).__()
 							.td()
-								.a().attrClass(CSS.BUTTON + CSS.BACKGROUND_CAUTION).attrHref(TapesDeleteHandler.PATH + "?" + TapesDeleteHandler.ID + "=" + item.getID()).text("Delete").__()
+								.a().attrClass(CSS.BUTTON + CSS.BACKGROUND_CAUTION).attrHref(LibraryDeleteHandler.PATH + "?" + LibraryDeleteHandler.ID + "=" + item.getID()).text("Delete").__()
 								.a().attrClass(CSS.BUTTON).attrHref(FilesHandler.PATH + "?" + FilesHandler.TAPE_ID + "=" + item.getID()).text("Show Files")
 							.__()
 						.__();
@@ -70,7 +70,7 @@ public class TapesHandler extends BaseHTTPHandler {
 	@Override
 	public void requestHandle(HttpExchange he) throws IOException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of("Tapes");
-		TemplatePageModel tpm = TemplatePageModel.of(TapesHandler::body, thm, SelectedPage.Tapes, BodyModel.of(he, null));
+		TemplatePageModel tpm = TemplatePageModel.of(LibraryHandler::body, thm, SelectedPage.Library, BodyModel.of(he, null));
 		requestHandleCompletePage(he, tpm);
 	}
 }

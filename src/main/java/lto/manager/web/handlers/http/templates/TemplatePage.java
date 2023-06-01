@@ -15,8 +15,8 @@ import lto.manager.web.handlers.http.pages.admin.AdminHandler;
 import lto.manager.web.handlers.http.pages.drives.DrivesHandler;
 import lto.manager.web.handlers.http.pages.files.FilesHandler;
 import lto.manager.web.handlers.http.pages.jobs.JobsHandler;
+import lto.manager.web.handlers.http.pages.library.LibraryHandler;
 import lto.manager.web.handlers.http.pages.sandpit.SandpitHandler;
-import lto.manager.web.handlers.http.pages.tapes.TapesHandler;
 import lto.manager.web.handlers.http.partial.PartialHead;
 import lto.manager.web.handlers.http.templates.models.BodyModel;
 import lto.manager.web.handlers.http.templates.models.HeadModel;
@@ -26,7 +26,7 @@ import lto.manager.web.resource.JS;
 public class TemplatePage {
 	public static enum SelectedPage {
 		Admin,
-		Tapes,
+		Library,
 		Drives,
 		Files,
 		Sandpit,
@@ -103,9 +103,9 @@ public class TemplatePage {
 										.__()
 									.__()
 									.li()
-										.a().of(a -> a.attrHref(TapesHandler.PATH)
-											.attrClass(CSS.ICON_TAPE + (model.page == SelectedPage.Tapes ? selected : ""))
-											.text("Tapes"))
+										.a().of(a -> a.attrHref(LibraryHandler.PATH)
+											.attrClass(CSS.ICON_TAPE + (model.page == SelectedPage.Library ? selected : ""))
+											.text("Library"))
 										.__()
 									.__()
 									.li()

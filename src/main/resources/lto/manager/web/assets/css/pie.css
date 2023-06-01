@@ -3,6 +3,9 @@
 	inherits: true;
 	initial-value: 0;
 }
+:root {
+	--pie-info-size: 1.5rem;
+}
 .pie-container {
 	display: flex;
 	gap: 1rem;
@@ -69,8 +72,8 @@
 	position: absolute;
 	right: 0;
 	bottom: 0;
-	width: 1rem;
-	height: 1rem;
+	width: var(--pie-info-size);
+	height: var(--pie-info-size);
 	z-index: 1;
 }
 .pie-info:before {
@@ -78,14 +81,16 @@
 	position: absolute;
 	right: 0;
 	bottom: 0;
-	background-color: black;
+	background-color: #eee;
 	-webkit-mask-image: url(/assets/img/info-circle-fill.svg);
 	mask-image: url(/assets/img/info-circle-fill.svg);
-	width: 1rem;
-	height: 1rem;
+	-webkit-mask-size: var(--pie-info-size);
+	mask-size: var(--pie-info-size);
+	width: var(--pie-info-size);
+	height: var(--pie-info-size);
 }
 .pie-info:hover:before {
-	opacity: 0.75;
+	filter: brightness(0.7);
 }
 .pie-tooltip {
 	position: relative;

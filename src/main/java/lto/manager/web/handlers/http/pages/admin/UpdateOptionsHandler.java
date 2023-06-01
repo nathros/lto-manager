@@ -27,6 +27,7 @@ public class UpdateOptionsHandler extends BaseHTTPHandler {
 	public static final String PATH = "/admin/options";
 
 	public static final String OPTIONS_INDEX = "options-index";
+	public static final String OPTIONS_RESET = "reset";
 
 	private static List<RecordOptions> getOptions() {
 		try {
@@ -37,55 +38,61 @@ public class UpdateOptionsHandler extends BaseHTTPHandler {
 	}
 
 	static Void content(Div<?> view, BodyModel model) {
+		final boolean reset = model.getQuery(OPTIONS_RESET) != null;
+		if (reset) {
+			Options.resetToDefault();
+		}
 		final List<String> queryList = model.getQueryArrayNotNull(OPTIONS_INDEX);
 		if (queryList.size() > 0) {
 			List<RecordOptions> updated = RecordOptions.ofBatch(queryList);
-			for (int i = 0; i < updated.size(); i++) {
-				OptionsSetting setting = OptionsSetting.valueOf(i);
-				Options.setStr(setting, updated.get(i).getValueAsString());
-			}
+			Options.setBatch(updated);
 		}
 
 		final List<RecordOptions> options = getOptions();
 
 		view.form()
-		.of(f -> {
-			if (queryList.size() > 0) f.i().attrStyle("color:green").text("Updated settings").__().br().__();
-			for (RecordOptions opt: options) {
-				switch (opt.getDataType()) {
-				case Boolean:
-					final boolean value = opt.getValueAsBool();
-					final String trueStr = Boolean.toString(true);
-					final String falseStr = Boolean.toString(false);
-					f
-						.b().attrStyle("width:350px;display:inline-block;").text(OptionsSetting.valueOf(opt.getIndex()).toString()).__()
-						.select().attrName(OPTIONS_INDEX)
-							.option().attrValue(trueStr).of(o -> HTML.option(o, value)).text(trueStr) .__()
-							.option().attrValue(falseStr).of(o -> HTML.option(o, !value)).text(falseStr).__()
-						.__().br().__();
-					break;
-				case Integer:
-					f
-						.b().attrStyle("width:350px;display:inline-block;").text(OptionsSetting.valueOf(opt.getIndex()).toString()).__()
-						.input().attrType(EnumTypeInputType.NUMBER).attrName(OPTIONS_INDEX).attrValue(opt.getValueAsString()).__()
-						.br().__();
-					break;
-				case String:
-					f
-						.b().attrStyle("width:350px;display:inline-block;").text(OptionsSetting.valueOf(opt.getIndex()).toString()).__()
-						.input().attrType(EnumTypeInputType.TEXT).attrName(OPTIONS_INDEX).attrValue(opt.getValueAsString()).__()
-						.br().__();
-					break;
-				default:
-					f
-						.b().attrStyle("width:350px;display:inline-block;").text("Unknown option: " + opt.getIndex()).__()
-						.i().text("[" + opt.getDataType().name() + "] value: " + opt.getValueAsString()).__()
-						.br().__();
-					break;
+			.of(f -> {
+				if (queryList.size() > 0) f.i().attrStyle("color:green").text("Updated successful").__().br().__();
+				if (reset == Boolean.TRUE) f.i().attrStyle("color:green").text("Settings have been reset").__().br().__();
+				for (RecordOptions opt: options) {
+					switch (opt.getDataType()) {
+					case Boolean:
+						final boolean value = opt.getValueAsBool();
+						final String trueStr = Boolean.toString(true);
+						final String falseStr = Boolean.toString(false);
+						f
+							.b().attrStyle("width:350px;display:inline-block;").text(OptionsSetting.valueOf(opt.getIndex()).toString()).__()
+							.select().attrName(OPTIONS_INDEX)
+								.option().attrValue(trueStr).of(o -> HTML.option(o, value)).text(trueStr) .__()
+								.option().attrValue(falseStr).of(o -> HTML.option(o, !value)).text(falseStr).__()
+							.__().br().__();
+						break;
+					case Integer:
+						f
+							.b().attrStyle("width:350px;display:inline-block;").text(OptionsSetting.valueOf(opt.getIndex()).toString()).__()
+							.input().attrType(EnumTypeInputType.NUMBER).attrName(OPTIONS_INDEX).attrValue(opt.getValueAsString()).__()
+							.br().__();
+						break;
+					case String:
+						f
+							.b().attrStyle("width:350px;display:inline-block;").text(OptionsSetting.valueOf(opt.getIndex()).toString()).__()
+							.input().attrType(EnumTypeInputType.TEXT).attrName(OPTIONS_INDEX).attrValue(opt.getValueAsString()).__()
+							.br().__();
+						break;
+					default:
+						f
+							.b().attrStyle("width:350px;display:inline-block;").text("Unknown option: " + opt.getIndex()).__()
+							.i().text("[" + opt.getDataType().name() + "] value: " + opt.getValueAsString()).__()
+							.br().__();
+						break;
+					}
 				}
-			}
-		})
-		.button().attrClass(CSS.BUTTON).attrType(EnumTypeButtonType.SUBMIT).text("Update").__()
+			})
+			.button().attrClass(CSS.BUTTON).attrType(EnumTypeButtonType.SUBMIT).text("Update").__()
+		.__()
+		.form()
+			.input().attrType(EnumTypeInputType.HIDDEN).attrName(OPTIONS_RESET).attrValue(OPTIONS_RESET).__()
+			.button().attrClass(CSS.BUTTON + CSS.BACKGROUND_CAUTION).attrType(EnumTypeButtonType.SUBMIT).text("Reset to Default").__()
 		.__();
 		return null;
 	}

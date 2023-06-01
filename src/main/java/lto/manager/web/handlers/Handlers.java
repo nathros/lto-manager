@@ -20,15 +20,15 @@ import lto.manager.web.handlers.http.pages.jobs.JobsDetailsHandler;
 import lto.manager.web.handlers.http.pages.jobs.JobsHandler;
 import lto.manager.web.handlers.http.pages.jobs.JobsNewBackupHandler;
 import lto.manager.web.handlers.http.pages.jobs.JobsTypeHandler;
+import lto.manager.web.handlers.http.pages.library.LibraryCreateHandler;
+import lto.manager.web.handlers.http.pages.library.LibraryDeleteHandler;
+import lto.manager.web.handlers.http.pages.library.LibraryHandler;
 import lto.manager.web.handlers.http.pages.sandpit.DatabaseTestHandler;
 import lto.manager.web.handlers.http.pages.sandpit.EchoGetHandler;
 import lto.manager.web.handlers.http.pages.sandpit.EchoHeaderHandler;
 import lto.manager.web.handlers.http.pages.sandpit.EchoPostHandler;
 import lto.manager.web.handlers.http.pages.sandpit.SandpitHandler;
 import lto.manager.web.handlers.http.pages.sandpit.WebsocketTestHandler;
-import lto.manager.web.handlers.http.pages.tapes.TapesCreateHandler;
-import lto.manager.web.handlers.http.pages.tapes.TapesDeleteHandler;
-import lto.manager.web.handlers.http.pages.tapes.TapesHandler;
 import lto.manager.web.handlers.websockets.BaseWebsocketHandler;
 import lto.manager.web.handlers.websockets.ServerTimeHandler;
 
@@ -44,9 +44,9 @@ public class Handlers {
 		ret.put(AdminHandler.PATH, new AdminHandler());
 		ret.put(UpdateOptionsHandler.PATH, new UpdateOptionsHandler());
 
-		ret.put(TapesHandler.PATH, new TapesHandler());
-		ret.put(TapesCreateHandler.PATH, new TapesCreateHandler());
-		ret.put(TapesDeleteHandler.PATH, new TapesDeleteHandler());
+		ret.put(LibraryHandler.PATH, new LibraryHandler());
+		ret.put(LibraryCreateHandler.PATH, new LibraryCreateHandler());
+		ret.put(LibraryDeleteHandler.PATH, new LibraryDeleteHandler());
 
 		ret.put(DrivesHandler.PATH, new DrivesHandler());
 		ret.put(AJAXGetAttachedDrivesFetcher.PATH, new AJAXGetAttachedDrivesFetcher());
