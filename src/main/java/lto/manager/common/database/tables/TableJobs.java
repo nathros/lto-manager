@@ -155,7 +155,7 @@ public class TableJobs {
 		return false;
 	}
 
-	public BackupJob getBackupJob(Connection connection, int id) throws SQLException {
+	public BackupJob getBackupJob(Connection connection, int id) throws Exception {
 		RecordJob job = getAtID(connection, id);
 		var sets = TableJobsMetadata.getAllMetadataByJob(connection, id);
 		BackupJob ret = new BackupJob(job, sets);

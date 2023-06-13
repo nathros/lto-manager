@@ -40,8 +40,8 @@ public class FilesHandler extends BaseHTTPHandler {
 
 		view
 			.div()
-				.a().attrClass(CSS.BUTTON).attrHref(FilesAddHandler.PATH).text("Add files").__()
 				.a().attrClass(CSS.BUTTON).attrHref(FilesBrowserHandler.PATH).text("Browse").__()
+				.a().attrClass(CSS.BUTTON).attrHref(FilesBrowserHandler2.PATH).text("Browse 2").__()
 				.form().of(form -> {
 						form.label().text("Show files for tape ID:").__();
 						form.input().attrType(EnumTypeInputType.TEXT).attrName(TAPE_ID).of(input -> input.attrValue(tapeId)).__();

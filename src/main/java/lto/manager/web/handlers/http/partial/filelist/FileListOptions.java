@@ -11,8 +11,11 @@ public record FileListOptions(
 	@NotNull List<String> selected,
 	int maxDepth,
 	boolean isVirtual,
-	boolean dirTasks
+	boolean dirTasks,
+	int onlyTapeID
 ) {
+
+	public static final int showAll = -1;
 
 	public static FileListOptions of(
 		boolean showRoot,
@@ -20,9 +23,10 @@ public record FileListOptions(
 		List<String> selected,
 		int maxDepth,
 		boolean isVirtual,
-		boolean dirTasks)
+		boolean dirTasks,
+		int onlyTapeID)
 	{
 		if (selected == null) selected = new ArrayList<String>();
-		return new FileListOptions(showRoot, breadcrumbs, selected, maxDepth, isVirtual, dirTasks);
+		return new FileListOptions(showRoot, breadcrumbs, selected, maxDepth, isVirtual, dirTasks, onlyTapeID);
 	}
 }

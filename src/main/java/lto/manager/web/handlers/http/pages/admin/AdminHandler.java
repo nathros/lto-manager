@@ -8,6 +8,7 @@ import org.xmlet.htmlapifaster.Div;
 import com.sun.net.httpserver.HttpExchange;
 
 import lto.manager.web.handlers.http.BaseHTTPHandler;
+import lto.manager.web.handlers.http.pages.admin.externalprocess.ExternalProcessHandler;
 import lto.manager.web.handlers.http.partial.pie.PieCPUUsage;
 import lto.manager.web.handlers.http.partial.pie.PieJVMMemoryUsage;
 import lto.manager.web.handlers.http.templates.TemplatePage.SelectedPage;
@@ -26,6 +27,7 @@ public class AdminHandler extends BaseHTTPHandler {
 		.div().of(div -> {
 			div
 				.a().attrClass(CSS.BUTTON).attrHref(UpdateOptionsHandler.PATH).text("Change Settings").__()
+				.a().attrClass(CSS.BUTTON).attrHref(ExternalProcessHandler.PATH).text("View External Processes").__()
 				.div().attrClass("card").addAttr("header-text", "System information")
 					.div().attrClass(CSS.PIE_CONTAINER)
 						.of(pie -> PieCPUUsage.content(pie))

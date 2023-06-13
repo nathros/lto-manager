@@ -39,6 +39,7 @@ public class JobsNewBackupHandler extends BaseHTTPHandler {
 	public static final String COMMENT = "comment";
 	public static final String START = "start";
 	public static final String IMMEDIATE = "immediate";
+	public static final String TAPE_ID = "tape-id";
 
 	private static final String TAB1 = "tab1";
 	private static final String TAB2 = "tab2";
@@ -46,12 +47,14 @@ public class JobsNewBackupHandler extends BaseHTTPHandler {
 
 	static Void content(Div<?> view, BodyModel model) {
 		final int depth = 1;
+		final int db = FileListOptions.showAll;
 		final String name = model.getQueryNoNull(NAME);
 		final String comment = model.getQueryNoNull(COMMENT).replaceAll("\t", "");
 		final String start = model.getQueryNoNull(START);
 		final String immediate = model.getQueryNoNull(IMMEDIATE);
 		final String fileTree = Util.getWorkingDir().getAbsolutePath() + "/testdir";
 		final String fileTreeVirtual = "/";
+		final String tapeID = model.getQueryNoNull(TAPE_ID);
 
 		if (model.isPOSTMethod()) {
 			final List<String> sourceFiles = model.getQueryArrayNotNull(FileListModel.FILE_SELECTED);
@@ -59,22 +62,15 @@ public class JobsNewBackupHandler extends BaseHTTPHandler {
 			final String sourceDir = model.getQueryNoNull(FileListModel.BREADCRUMBS_LAST + FileListModel.getIDPostFix(false));
 			LocalDateTime startDateTime = immediate.equals(Query.CHECKED) || start.equals("") ? null : LocalDateTime.parse(start);
 			RecordJob job = RecordJob.of(name, RecordJobType.BACKUP, startDateTime, comment);
-			BackupJob bJob = new BackupJob(job, sourceFiles, destDir, sourceDir);
 			try {
+				BackupJob bJob = new BackupJob(job, sourceFiles, destDir, sourceDir, Integer.valueOf(tapeID));
 				TableJobs.addNewJob(Database.connection, bJob);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-			view.div().of(div -> {
-				Div<?> d = div;
-				for (String file: sourceFiles) {
-					d = d.p().text(file).__();
-				}
-				d.hr().__();
-				d.p().text("sour: " + sourceDir).__();
-				d.p().text("dest: " + destDir).__();
-			}).__();
 		}
+
+
 
 		view
 			.div().form().attrMethod(EnumMethodType.POST)
@@ -126,6 +122,10 @@ public class JobsNewBackupHandler extends BaseHTTPHandler {
 						.label().attrFor(IMMEDIATE).text("Immediate").__()
 						.br().__()
 
+						.b().attrStyle("width:150px;display:inline-block").text("Tape ID: ").__()
+						.input().attrType(EnumTypeInputType.NUMBER).attrName(TAPE_ID).of(input -> input.attrValue(tapeID)).__()
+						.br().__()
+
 						.b().attrStyle("width:150px;display:inline-block").text("Comment: ").__()
 						.textarea().attrName(COMMENT).text(comment).__()
 						.br().__()
@@ -138,14 +138,14 @@ public class JobsNewBackupHandler extends BaseHTTPHandler {
 					// TAB 2
 					.div().attrClass(CSS.TABS_CONTENT)
 						.div().of(div ->
-							FileList.content(div, new FileListModel(fileTree, FileListOptions.of(true, "", null, depth, false, false)))
+							FileList.content(div, new FileListModel(fileTree, FileListOptions.of(true, "", null, depth, false, false, db)))
 						).__()
 					.__()
 
 					// TAB 3
 					.div().attrClass(CSS.TABS_CONTENT)
 						.div().of(div ->
-							FileList.content(div, new FileListModel(fileTreeVirtual, FileListOptions.of(true, "", null, depth, true, true)))
+							FileList.content(div, new FileListModel(fileTreeVirtual, FileListOptions.of(true, "", null, depth, true, true, db)))
 						).__()
 						.button().attrClass(CSS.BUTTON).attrType(EnumTypeButtonType.SUBMIT).text("Submit").__()
 					.__()

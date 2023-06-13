@@ -14,32 +14,33 @@ public class InlineErrorMessage {
 			.div().attrClass(CSS.INLINE_MESSAGE_DETAILS_CONTENT + CSS.FONT_MONOSPACE).attrTabIndex(2)
 				.of(div -> {
 					if (uuid != null) {
-						final var process = ExternalProcess.processes.get(uuid);
+						final var process = ExternalProcess.getFinishedProcess(uuid);
 						if (process != null) {
+							final var processShow = process;
 							div.b().text("cmd:").__()
-							.p().text(process.getArgsAsString()).__()
+							.p().text(processShow.getArgsAsString()).__()
 							.of(d -> {
-								if (process.completed()) {
+								if (processShow.completed()) {
 									d.b().text("exit code:").__()
-									.p().text(process.getExitCode()).__();
+									.p().text(processShow.getExitCode()).__();
 								} else {
 									d.b().text("process has not exited").__().br().__();
 								}
 							})
 							.b().text("stdout:").__()
 							.of(d -> {
-								for (var out: process.getStdout()) {
+								for (var out: processShow.getStdout()) {
 									d.p().text(out).__();
 								}
 							});
 							div.b().text("stderr:").__()
 							.of(d -> {
-								for (var out: process.getStderr()) {
+								for (var out: processShow.getStderr()) {
 									d.p().text(out).__();
 								}
 							});
 						} else {
-							div.p().text("Unable to get details no processes with UUID: " + uuid).__();
+							div.p().text("Unable to get details of processes with UUID: " + uuid).__();
 						}
 					} else {
 						div.p().text("Unable to get details UUID is missing").__();

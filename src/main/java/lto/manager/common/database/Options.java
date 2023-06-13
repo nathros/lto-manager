@@ -68,10 +68,10 @@ public class Options {
 		cache = getCache();
 	}
 
-	@SuppressWarnings("unchecked")
 	public static <T> T getData(OptionsSetting setting) {
-		var opt = cache.get(setting);
-		return (T) opt;
+		@SuppressWarnings("unchecked")
+		T opt = (T) cache.get(setting);
+		return opt;
 	}
 
 	public static <T> void setData(OptionsSetting setting, T value) {

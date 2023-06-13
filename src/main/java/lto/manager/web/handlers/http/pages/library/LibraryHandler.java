@@ -26,7 +26,7 @@ public class LibraryHandler extends BaseHTTPHandler {
 	static Void body(Div<?> view, BodyModel model) {
 		List<RecordTape> tmp = null;
 		try {
-			tmp = Database.getTapeAtIDRange(0, 100);
+			tmp = Database.getAllTapes();
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 		}
@@ -43,6 +43,7 @@ public class LibraryHandler extends BaseHTTPHandler {
 						.th().text("Type").__()
 						.th().text("Serial").__()
 						.th().text("Manufacturer").__()
+						.th().text("Format").__()
 						.th().text("Size (GB)").__()
 						.th().text("Space Used (GB)").__()
 						.th().text("Action").__()
@@ -54,6 +55,7 @@ public class LibraryHandler extends BaseHTTPHandler {
 							.td().text(item.getTapeType().getType()).__()
 							.td().text(item.getSerial()).__()
 							.td().text(item.getManufacturer().getManufacturer()).__()
+							.td().text(item.getFormat().name()).__()
 							.td().text((int)item.getTotalSpaceGB()).__()
 							.td().text((int)item.getUsedSpaceGB()).__()
 							.td()

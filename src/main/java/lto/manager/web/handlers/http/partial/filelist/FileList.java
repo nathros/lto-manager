@@ -143,11 +143,6 @@ public class FileList {
 					wrapper.p().text("Directory does not exist").__();
 					return null;
 				}
-				if (model.getOptions().isVirtual()) {
-					wrapper.div()
-						.p().text("ffsdfd").__()
-					.__();
-				}
 			}
 			finalView.of(div -> FileListItem.content(div, model));
 		}

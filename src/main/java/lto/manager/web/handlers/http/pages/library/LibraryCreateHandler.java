@@ -14,6 +14,7 @@ import com.sun.net.httpserver.HttpExchange;
 import lto.manager.common.database.Database;
 import lto.manager.common.database.tables.records.RecordManufacturer;
 import lto.manager.common.database.tables.records.RecordTape;
+import lto.manager.common.database.tables.records.RecordTape.RecordTapeFormatType;
 import lto.manager.common.database.tables.records.RecordTapeType;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.templates.TemplatePage.SelectedPage;
@@ -22,6 +23,7 @@ import lto.manager.web.handlers.http.templates.models.BodyModel;
 import lto.manager.web.handlers.http.templates.models.HeadModel;
 import lto.manager.web.resource.Asset;
 import lto.manager.web.resource.CSS;
+import lto.manager.web.resource.HTML;
 
 public class LibraryCreateHandler extends BaseHTTPHandler {
 	public static final String PATH = "/library/new";
@@ -30,6 +32,7 @@ public class LibraryCreateHandler extends BaseHTTPHandler {
 	private static final String MANU = "manu";
 	private static final String BARCODE = "barcode";
 	private static final String WORM = "worm";
+	private static final String FORMAT = "format";
 
 	static Void body(Div<?> view, BodyModel model) {
 		List<RecordManufacturer> m = null;
@@ -42,9 +45,11 @@ public class LibraryCreateHandler extends BaseHTTPHandler {
 		final String manu = model.getQueryNoNull(MANU);
 		final String type = model.getQueryNoNull(TAPETYPE);
 		final String worm = model.getQueryNoNull(WORM);
+		final String format = model.getQueryNoNull(FORMAT);
 
 		final int manuIndex = manu.equals("") ? -1 : Integer.valueOf(manu);
 		final int typeIndex = type.equals("") ? -1 : Integer.valueOf(type);
+		final int formatIndex = format.equals("") ? -1 : Integer.valueOf(format);
 
 		try {
 			m = Database.getAllTapeManufacturers();
@@ -58,7 +63,8 @@ public class LibraryCreateHandler extends BaseHTTPHandler {
 
 		if (model.hasQuery()) {
 			try {
-				var tape = RecordTape.of(null, m.get(manuIndex), t.get(typeIndex), barcode, serial, 0, null);
+				RecordTapeFormatType formatType = RecordTapeFormatType.fromInteger(formatIndex);
+				var tape = RecordTape.of(null, m.get(manuIndex), t.get(typeIndex), barcode, serial, 0, formatType, null);
 				Database.addTape(tape);
 				s = true;
 			} catch (Exception e) {
@@ -76,14 +82,14 @@ public class LibraryCreateHandler extends BaseHTTPHandler {
 					.b().attrStyle("width:150px;display:inline-block").text("LTO Tape Type: ").__()
 					.select().attrId("select-type").attrName(TAPETYPE).of(select -> {
 						select.attrOnchange("onSelectType()")
-							.option().attrValue("").attrSelected(typeIndex == -1).attrDisabled(true).text("Select").__();
+							.option().of(o -> HTML.option(o, typeIndex == -1, true)).text("Select").__();
 						int index = 0;
 						for (RecordTapeType item: typesList) {
 							final int indexCopy = index;
 							select.option()
 								.of(sel -> {
 									if (indexCopy == typeIndex) {
-										sel.attrSelected(true);
+										sel.of(o -> HTML.option(o, true));
 									}
 								})
 								.addAttr("data-des", item.getDesignation())
@@ -97,14 +103,14 @@ public class LibraryCreateHandler extends BaseHTTPHandler {
 
 					.b().attrStyle("width:150px;display:inline-block").text("LTO Manufacturer: ").__()
 					.select().attrName(MANU).of(select -> {
-						select.option().attrValue("").attrSelected(manuIndex == -1).attrDisabled(true).text("Select").__();
+						select.option().of(o -> HTML.option(o, manuIndex == -1, true)).text("Select").__();
 						int index = 0;
 						for (RecordManufacturer item: manuList) {
 							final int indexCopy = index;
 							select.option()
 								.of(sel -> {
 									if (indexCopy == manuIndex) {
-										sel.attrSelected(true);
+										sel.of(o -> HTML.option(o, true));
 									}
 								})
 								.attrValue(String.valueOf(index))
@@ -123,6 +129,25 @@ public class LibraryCreateHandler extends BaseHTTPHandler {
 
 					.b().attrStyle("width:150px;display:inline-block").text("WORM: ").__()
 					.input().attrId(WORM).attrOnclick("onSelectType(this)").attrType(EnumTypeInputType.CHECKBOX).attrName(WORM).of(input -> input.attrValue(worm)).__().br().__()
+
+					.b().attrStyle("width:150px;display:inline-block").text("Format: ").__()
+					.select().attrName(FORMAT).of(select -> {
+						select.option().of(o -> HTML.option(o, formatIndex == -1, true)).text("Select").__();
+						int index = 0;
+						for (RecordTapeFormatType item: RecordTapeFormatType.values()) {
+							final int indexCopy = index;
+							select.option()
+								.of(sel -> {
+									if (indexCopy == formatIndex) {
+										sel.of(o -> HTML.option(o, true));
+									}
+								})
+								.attrValue(String.valueOf(index))
+								.text(item.toString())
+							.__();
+							index++;
+						}
+					}).__().br().__()
 
 					.button().attrClass(CSS.BUTTON).attrType(EnumTypeButtonType.SUBMIT).text("Submit").__()
 

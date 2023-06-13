@@ -29,7 +29,7 @@ public class AJAXFilesListFetcher extends BaseHTTPHandler {
 		final boolean showRoot = rootStr.equals(Boolean.TRUE.toString());
 		int depth = 1;
 		try { depth = Integer.parseInt(depthStr); } catch (Exception e) {}
-		var options = FileListOptions.of(showRoot, breadcrumbs, selected, depth, isVirtual, isVirtual);
+		var options = FileListOptions.of(showRoot, breadcrumbs, selected, depth, isVirtual, isVirtual, FileListOptions.showAll);
 		final FileListModel hflModel = new FileListModel(path, options);
 		view.of(v -> FileList.content(v, hflModel));
 		return null;

@@ -2,6 +2,7 @@ package lto.manager.web.handlers.http.pages.admin;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -42,7 +43,7 @@ public class UpdateOptionsHandler extends BaseHTTPHandler {
 		if (reset) {
 			Options.resetToDefault();
 		}
-		final List<String> queryList = model.getQueryArrayNotNull(OPTIONS_INDEX);
+		final List<String> queryList = reset ? new ArrayList<String>() : model.getQueryArrayNotNull(OPTIONS_INDEX);
 		if (queryList.size() > 0) {
 			List<RecordOptions> updated = RecordOptions.ofBatch(queryList);
 			Options.setBatch(updated);
@@ -88,11 +89,15 @@ public class UpdateOptionsHandler extends BaseHTTPHandler {
 					}
 				}
 			})
+			.a().attrClass(CSS.BUTTON).attrOnclick("history.back()").text("Back").__()
 			.button().attrClass(CSS.BUTTON).attrType(EnumTypeButtonType.SUBMIT).text("Update").__()
-		.__()
-		.form()
-			.input().attrType(EnumTypeInputType.HIDDEN).attrName(OPTIONS_RESET).attrValue(OPTIONS_RESET).__()
-			.button().attrClass(CSS.BUTTON + CSS.BACKGROUND_CAUTION).attrType(EnumTypeButtonType.SUBMIT).text("Reset to Default").__()
+			.button()
+				.attrClass(CSS.BUTTON + CSS.BACKGROUND_CAUTION)
+				.attrType(EnumTypeButtonType.SUBMIT)
+				.attrName(OPTIONS_RESET)
+				.attrValue(OPTIONS_RESET)
+				.text("Reset to Default")
+			.__()
 		.__();
 		return null;
 	}

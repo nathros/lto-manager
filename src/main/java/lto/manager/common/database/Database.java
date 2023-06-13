@@ -10,6 +10,8 @@ import java.util.List;
 import com.healthmarketscience.sqlbuilder.dbspec.basic.DbSchema;
 import com.healthmarketscience.sqlbuilder.dbspec.basic.DbSpec;
 
+import lto.manager.common.database.jobs.BackupJob;
+import lto.manager.common.database.jobs.JobBase;
 import lto.manager.common.database.tables.TableFile;
 import lto.manager.common.database.tables.TableJobs;
 import lto.manager.common.database.tables.TableJobsMetadata;
@@ -88,6 +90,10 @@ public class Database {
 		return TableTape.getTapeAtID(connection, id);
 	}
 
+	public static List<RecordTape> getAllTapes() throws SQLException {
+		return TableTape.getAllTapes(connection);
+	}
+
 	public static List<RecordTape> getTapeAtIDRange(int StartID, int endID) throws SQLException {
 		return TableTape.getTapeAtIDRange(connection, StartID, endID);
 	}
@@ -108,10 +114,6 @@ public class Database {
 		return TableTapeType.getAll(connection);
 	}
 
-	public static boolean addFilesToTape(int tapeID, List<String> files, String workingDir) throws SQLException, IOException {
-		return TableFile.addFiles(connection, tapeID, files, workingDir);
-	}
-
 	public static List<File> getFilesOnTape(int tapeID) throws SQLException, IOException {
 		return TableFile.getFilesOnTape(connection, tapeID);
 	}
@@ -130,5 +132,17 @@ public class Database {
 
 	public static List<RecordOptions> getAllOptions() throws SQLException {
 		return TableOptions.getAllOptions(connection);
+	}
+
+	public static JobBase getJobAtID(int id) throws Exception {
+		var job = TableJobs.getAtID(Database.connection, id);
+		var meta = TableJobsMetadata.getAllMetadataByJob(Database.connection, id);
+		switch (job.getType()) {
+		case BACKUP: {
+			BackupJob backupJob = new BackupJob(job, meta);
+			return backupJob;
+		}
+		default: return null;
+		}
 	}
 }

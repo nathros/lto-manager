@@ -8,6 +8,7 @@ import java.util.concurrent.ExecutionException;
 
 import org.xmlet.htmlapifaster.Div;
 
+import com.google.common.base.CaseFormat;
 import com.sun.net.httpserver.HttpExchange;
 
 import lto.manager.common.database.Database;
@@ -24,9 +25,11 @@ import lto.manager.web.resource.JS;
 public class JobsHandler extends BaseHTTPHandler {
 	public static final String PATH = "/jobs";
 	private final static String DELETE_ID = "del";
+	private final static String START_ID = "start";
 
 	static Void content(Div<?> view, BodyModel model) {
 		final String del = model.getQueryNoNull(DELETE_ID);
+		final String start = model.getQueryNoNull(START_ID);
 		boolean delResult = false;
 		if (!del.equals("")) {
 			final int deleteID = Integer.parseInt(del);
@@ -35,6 +38,8 @@ public class JobsHandler extends BaseHTTPHandler {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
+		} else if (!start.equals("")) {
+
 		}
 		final boolean delRes = delResult;
 
@@ -49,6 +54,7 @@ public class JobsHandler extends BaseHTTPHandler {
 		final List<RecordJob> jobs = results;
 		final String detailsLink = JobsDetailsHandler.PATH + "?" + JobsDetailsHandler.ID + "=";
 		final String deleteLink = JobsHandler.PATH + "?" + JobsHandler.DELETE_ID + "=";
+		final String startLink = JobsHandler.PATH + "?" + JobsHandler.START_ID + "=";
 		view
 			.div().of(div -> {
 				div
@@ -65,6 +71,7 @@ public class JobsHandler extends BaseHTTPHandler {
 							.th().text("Type").__()
 							.th().text("Scheduled Start").__()
 							.th().text("Completed Date").__()
+							.th().text("State").__()
 							.th().text("Comment").__()
 							.th().text("Action").__()
 						.__()
@@ -77,8 +84,14 @@ public class JobsHandler extends BaseHTTPHandler {
 										.td().text(job.getType()).__()
 										.td().text(job.getStartDateTimeStr()).__()
 										.td().text(job.getEndDateTimeStr()).__()
+										.td().text(CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, job.getStatus().name())).__()
 										.td().text(job.getComment()).__()
 										.td()
+											.a()
+												.attrClass(CSS.BUTTON + CSS.BACKGROUND_ACTIVE)
+												.attrOnclick(JS.confirmToast(startLink + job.getID()))
+												.text("Start")
+											.__()
 											.a()
 												.attrClass(CSS.BUTTON)
 												.attrHref(detailsLink + job.getID())

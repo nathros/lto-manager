@@ -2,8 +2,6 @@ package lto.manager.web.handlers.http.pages.jobs;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import org.xmlet.htmlapifaster.Div;
@@ -11,9 +9,8 @@ import org.xmlet.htmlapifaster.Div;
 import com.sun.net.httpserver.HttpExchange;
 
 import lto.manager.common.database.Database;
-import lto.manager.common.database.tables.TableJobs;
-import lto.manager.common.database.tables.TableJobsMetadata;
-import lto.manager.common.database.tables.records.RecordJob;
+import lto.manager.common.database.jobs.BackupJob;
+import lto.manager.common.database.jobs.JobBase;
 import lto.manager.common.database.tables.records.RecordJobMetadata;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.templates.TemplatePage.SelectedPage;
@@ -28,37 +25,48 @@ public class JobsDetailsHandler extends BaseHTTPHandler {
 
 	static Void content(Div<?> view, BodyModel model) {
 		final String id = model.getQuery(ID);
-		RecordJob result = null;
-		final List<RecordJobMetadata> metaResult = new ArrayList<RecordJobMetadata>();
+		JobBase result = null;
 		try {
 			int number = Integer.parseInt(id);
-			result = TableJobs.getAtID(Database.connection, number);
-			metaResult.addAll(TableJobsMetadata.getAllMetadataByJob(Database.connection, result.getID()));
+			result = Database.getJobAtID(number);
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} catch (NumberFormatException e) {}
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
+		final JobBase jobBase = result;
 
-		final RecordJob job = result;
+		switch (jobBase.getRecordJob().getType()) {
+		case BACKUP: {
+			final BackupJob job = (BackupJob)jobBase;
+			view
+				.div()
+					.button().attrClass(CSS.BUTTON).attrOnclick("history.back()").text("Back").__()
+					.p().text("Name: " + job.getRecordJob().getName()).__()
+					.p().text("Type: " + job.getRecordJob().getType().toString()).__()
+					.p().text("Start: " + job.getRecordJob().getStartDateTimeStr()).__()
+					.p().text("Completed: " + job.getRecordJob().getEndDateTimeStr()).__()
+					.p().text("Comment: " + job.getRecordJob().getComment()).__()
+					.br().__()
+					.div().of(div -> {
+						for (RecordJobMetadata meta: job.getRecordJobMetadata()) {
+							div.b().text(meta.getKey()).__()
+							.br().__()
+							.p().text(meta.getValue()).__()
+							.hr().__();
+						}
+					}).__()
+				.__(); //  div
+			break;
+		}
+		default:
+			view
+				.div().text("Not supported yet").__();
+		}
 
-		view
-			.div()
-				.button().attrClass(CSS.BUTTON).attrOnclick("history.back()").text("Back").__()
-				.p().text("Name: " + job.getName()).__()
-				.p().text("Type: " + job.getType().toString()).__()
-				.p().text("Start: " + job.getStartDateTimeStr()).__()
-				.p().text("Completed: " + job.getEndDateTimeStr()).__()
-				.p().text("Comment: " + job.getComment()).__()
-				.br().__()
-				.div().of(div -> {
-					for (RecordJobMetadata meta: metaResult) {
-						div.b().text(meta.getKey()).__()
-						.br().__()
-						.p().text(meta.getValue()).__()
-						.hr().__();
-					}
-				}).__()
-			.__(); //  div
 		return null;
 	}
 

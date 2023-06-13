@@ -16,6 +16,7 @@ import htmlflow.HtmlView;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.partial.PartialHead;
 import lto.manager.web.handlers.http.templates.models.HeadModel;
+import lto.manager.web.resource.CSS;
 
 public class TemplateInternalError {
 	public static HtmlView view = HtmlFlow.view(TemplateInternalError::template);
@@ -40,7 +41,8 @@ public class TemplateInternalError {
 		.dynamic((root, m) -> PartialHead.template(root, HeadModel.of("HTTP Status 500")))
 		.body()
 			.div()
-				.attrStyle("font-family:monospace")
+				.attrClass(CSS.FONT_MONOSPACE)
+				.attrStyle("padding:1rem")
 				.<TemplateInternalErrorModel>dynamic((div, model) -> {
 					StringWriter sw = new StringWriter();
 					PrintWriter pw = new PrintWriter(sw);
@@ -70,7 +72,7 @@ public class TemplateInternalError {
 
 					String query = model.he.getRequestURI().getQuery();
 					String requestQuery = query == null ? "null" : query;
-					final String style = "background-color:darkblue; color:white;";
+					final String style = "background-color:darkblue; color:white;font-family:system-ui";
 
 					div.p().attrStyle("padding:1rem; font-weight:bold; font-size:1rem;" + style).text("HTTP Status 500 - Internal Error").__()
 					.hr().__()

@@ -2,7 +2,6 @@ package lto.manager.common.database.tables;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -116,78 +115,35 @@ public class TableFile {
 		return true;
 	}
 
-	public static boolean addFiles(Connection con, int tapeID, List<String> files, String workingDir) throws SQLException, IOException {
+	private static boolean addFile(Connection con, int tapeID, RecordFile file) throws SQLException {
 		var statment = con.createStatement();
-		try {
-			int index = workingDir.lastIndexOf("/");
-			workingDir = workingDir.substring(0, index);
-		} catch (Exception e) {
-			workingDir = "/";
+		InsertQuery iq = new InsertQuery(table);
+		if (file.getID() != Database.NEW_RECORD_ID) iq.addColumn(table.getColumns().get(COLUMN_INDEX_ID), file.getID());
+		iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_NAME_VIRTUAl), file.getVirtualFileName());
+		iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_PATH_VIRTUAL), file.getVirtualFilePath());
+		iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_NAME_PHYSICAL), file.getPhysicalFileName());
+		iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_PATH_PHYSICAL), file.getPhysicalFilePath());
+		iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_SIZE), file.getFileSize());
+		iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_DATE_CREATE), file.getCreatedDateTime());
+		iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_DATE_MODFIY), file.getModifiedDateTime());
+		iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_TAPE_LOC), tapeID);
+		iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_CRC32), file.getCRC32());
+		iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_CUSTOM_ICON), file.getCustomIcon());
+		String sql = iq.validate().toString();
+		if (statment.execute(sql)) {
+			return false;
 		}
-
-		for (String fileStr: files) {
-			InsertQuery iq = new InsertQuery(table);
-			File file = new File(fileStr);
-
-			String abs;
-			String name;
-			if (file.isDirectory()) {
-				name  = "/" + file.getName() + "/";
-				abs = file.getParentFile().getAbsolutePath();
-			} else {
-				name = file.getName();
-				abs = file.getParentFile().getAbsolutePath();
-			}
-			String virtualPath;
-			try {
-				virtualPath = abs.substring(workingDir.length());
-			} catch (Exception e) {
-				virtualPath = "";
-			}
-			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_NAME_VIRTUAl), name);
-			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_PATH_VIRTUAL), virtualPath + "/");
-			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_SIZE), Files.size(file.toPath()));
-			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_DATE_CREATE), "");
-			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_DATE_MODFIY), "");
-			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_TAPE_LOC), tapeID);
-			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_CRC32), 0);
-			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_CUSTOM_ICON), "");
-			String sql = iq.validate().toString();
-			if (statment.execute(sql)) {
-				return false;
-			}
-		}
-
 		return true;
 	}
 
 	public static boolean addFiles(Connection con, int tapeID, List<RecordFile> files) throws SQLException, IOException {
-		var statment = con.createStatement();
-
 		for (RecordFile file: files) {
-			InsertQuery iq = new InsertQuery(table);
-			if (file.getID() != Database.NEW_RECORD_ID) iq.addColumn(table.getColumns().get(COLUMN_INDEX_ID), file.getID());
-			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_NAME_VIRTUAl), file.getVirtualFileName());
-			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_PATH_VIRTUAL), file.getVirtualFilePath());
-			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_NAME_PHYSICAL), file.getPhysicalFileName());
-			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_PATH_PHYSICAL), file.getPhysicalFilePath());
-			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_SIZE), file.getFileSize());
-			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_DATE_CREATE), file.getCreatedDateTime());
-			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_DATE_MODFIY), file.getModifiedDateTime());
-			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_TAPE_LOC), tapeID);
-			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_CRC32), file.getCRC32());
-			iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_CUSTOM_ICON), file.getCustomIcon());
-			String sql = iq.validate().toString();
-			if (statment.execute(sql)) {
-				return false;
-			}
+			addFile(con, tapeID, file);
 		}
-
 		return true;
 	}
 
-
-	public static List<File> getFilesOnTape(Connection con, int tapeID) throws SQLException, IOException {
+	public static List<File> getFilesOnTape(Connection con, int tapeID) throws SQLException, IOException { // TODO legacy remove
 		var statment = con.createStatement();
 
 		List<File> files = new ArrayList<File>();
@@ -244,23 +200,51 @@ public class TableFile {
 		ResultSet resultChildren = statment.executeQuery(sql);
 
 		while (resultChildren.next()) {
-			int id = resultChildren.getInt(COLUMN_NAME_ID);
-			String nameV = resultChildren.getString(COLUMN_NAME_FILE_NAME_VIRTUAL);
-			String pathV = resultChildren.getString(COLUMN_NAME_FILE_PATH_VIRTUAL);
-			String nameP = resultChildren.getString(COLUMN_NAME_FILE_NAME_PHYSICAL);
-			String pathP = resultChildren.getString(COLUMN_NAME_FILE_PATH_PHYSICAL);
-			int size = resultChildren.getInt(COLUMN_NAME_FILE_SIZE);
-			String createdStr = resultChildren.getString(COLUMN_NAME_FILE_DATE_CREATE);
-			LocalDateTime created = LocalDateTime.parse(createdStr);
-			String modifiedStr = resultChildren.getString(COLUMN_NAME_FILE_DATE_MODIFY);
-			LocalDateTime modified = LocalDateTime.parse(modifiedStr);
-			int tapeID = resultChildren.getInt(COLUMN_NAME_FILE_TAPE_LOC);
-			int crc32 = resultChildren.getInt(COLUMN_NAME_FILE_CRC32);
-			String icon = resultChildren.getString(COLUMN_NAME_FILE_CUSTOM_ICON);
-			files.add(RecordFile.of(id, nameV, pathV, nameP, pathP, size, created, modified, tapeID, crc32, icon));
+			files.add(parseRecordFile(resultChildren));
 		}
 
 		return files;
+	}
+
+	public static List<RecordFile> getAllFiles(Connection con, int tapeID) throws SQLException, IOException { // FIXME start
+		var statment = con.createStatement();
+
+		List<RecordFile> files = new ArrayList<RecordFile>();
+
+		SelectQuery uq = new SelectQuery();
+		var andID = BinaryCondition.equalTo(table.getColumns().get(COLUMN_INDEX_FILE_TAPE_LOC), tapeID);
+
+		uq.addAllTableColumns(table);
+		uq
+			.addCondition(andID)
+			.addOrderings(table.getColumns().get(COLUMN_INDEX_FILE_PATH_VIRTUAL))
+			.addOrderings(table.getColumns().get(COLUMN_INDEX_FILE_NAME_VIRTUAl));
+		String sql = uq.validate().toString();
+
+		ResultSet resultChildren = statment.executeQuery(sql);
+
+		while (resultChildren.next()) {
+			files.add(parseRecordFile(resultChildren));
+		}
+
+		return files;
+	}
+
+	private static RecordFile parseRecordFile(ResultSet result) throws SQLException {
+		int id = result.getInt(COLUMN_NAME_ID);
+		String nameV = result.getString(COLUMN_NAME_FILE_NAME_VIRTUAL);
+		String pathV = result.getString(COLUMN_NAME_FILE_PATH_VIRTUAL);
+		String nameP = result.getString(COLUMN_NAME_FILE_NAME_PHYSICAL);
+		String pathP = result.getString(COLUMN_NAME_FILE_PATH_PHYSICAL);
+		int size = result.getInt(COLUMN_NAME_FILE_SIZE);
+		String createdStr = result.getString(COLUMN_NAME_FILE_DATE_CREATE);
+		LocalDateTime created = LocalDateTime.parse(createdStr);
+		String modifiedStr = result.getString(COLUMN_NAME_FILE_DATE_MODIFY);
+		LocalDateTime modified = LocalDateTime.parse(modifiedStr);
+		int tapeID = result.getInt(COLUMN_NAME_FILE_TAPE_LOC);
+		int crc32 = result.getInt(COLUMN_NAME_FILE_CRC32);
+		String icon = result.getString(COLUMN_NAME_FILE_CUSTOM_ICON);
+		return RecordFile.of(id, nameV, pathV, nameP, pathP, size, created, modified, tapeID, crc32, icon);
 	}
 
 }

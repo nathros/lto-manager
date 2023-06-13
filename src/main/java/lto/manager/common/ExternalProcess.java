@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
@@ -25,15 +26,21 @@ public abstract class ExternalProcess {
 	protected AtomicBoolean inProgress = new AtomicBoolean();
 	protected Integer exitCode;
 	protected Semaphore isCompletedSemaphore = null;
+	protected String uuid;
 	protected String[] cmd;
 
-	public static HashMap<String, ExternalProcess> processes = new HashMap<String, ExternalProcess>();
+	private static HashMap<String, ExternalProcess> currentProcesses = new HashMap<String, ExternalProcess>();
+	private static HashMap<String, ExternalProcess> retiredProcesses = new HashMap<String, ExternalProcess>();
 
-	public boolean start(Semaphore completedSemaphore, String uuid, String... commands) throws IOException, InterruptedException {
+	public boolean start(Semaphore completedSemaphore, String uuid, String... commands) throws IOException, InterruptedException, IllegalArgumentException {
 		if (inProgress.get()) return false;
+		this.uuid = uuid;
 		this.isCompletedSemaphore = completedSemaphore;
 		cmd = commands;
-		processes.put(uuid, this);
+		if (currentProcesses.get(uuid) != null) {
+			throw new IllegalArgumentException("uuid already exists: " + uuid);
+		}
+		currentProcesses.put(uuid, this);
 		if (isCompletedSemaphore != null) isCompletedSemaphore.acquire(1);
 		inProgress.set(true);
 
@@ -117,10 +124,34 @@ public abstract class ExternalProcess {
 		return true;
 	}
 
+	public static ExternalProcess getFinishedProcess(String uuid) {
+		var tmp = retiredProcesses.get(uuid);
+		return tmp;
+	}
+
+	public static Set<String> getFinishedProcessKeyList() {
+		return retiredProcesses.keySet();
+	}
+
+	public static ExternalProcess getCurrentProcess(String uuid) {
+		var tmp = currentProcesses.get(uuid);
+		return tmp;
+	}
+
+	public static Set<String> getCurrentProcessKeyList() {
+		return currentProcesses.keySet();
+	}
+
+	private void moveToRetired() {
+		currentProcesses.remove(uuid);
+		retiredProcesses.put(uuid, this);
+	}
+
 	public boolean stop() {
 		inProgress.set(false);
 		if (service != null) service.shutdownNow();
 		if (service != null) process.destroyForcibly();
+		moveToRetired();
 		return true;
 	}
 

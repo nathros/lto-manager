@@ -24,6 +24,7 @@ import lto.manager.common.database.DBStatus;
 import lto.manager.common.database.Database;
 import lto.manager.common.database.tables.records.RecordManufacturer;
 import lto.manager.common.database.tables.records.RecordTape;
+import lto.manager.common.database.tables.records.RecordTape.RecordTapeFormatType;
 import lto.manager.common.database.tables.records.RecordTapeType;
 import lto.manager.common.log.Log;
 
@@ -39,6 +40,7 @@ public class TableTape {
 	public static final String COLUMN_NAME_BARCODE = "barcode";
 	public static final String COLUMN_NAME_SERIAL = "serial";
 	public static final String COLUMN_NAME_MANUFACTURER = TableManufacturer.COLUMN_NAME_ID;
+	public static final String COLUMN_NAME_FORMAT_TYPE = "format_type";
 	public static final String COLUMN_NAME_SPACE_USED = "bytes_used";
 	public static final String COLUMN_NAME_DATE_ADDED = "date_added"; // TODO add last read and last write date time
 
@@ -47,8 +49,9 @@ public class TableTape {
 	public static final int COLUMN_INDEX_BARCODE = 2;
 	public static final int COLUMN_INDEX_SERIAL = 3;
 	public static final int COLUMN_INDEX_MANUFACTURER = 4;
-	public static final int COLUMN_INDEX_SPACE_REMAINING = 5;
-	public static final int COLUMN_INDEX_DATE_ADDED = 6;
+	public static final int COLUMN_INDEX_FORMAT_TYPE = 5;
+	public static final int COLUMN_INDEX_SPACE_REMAINING = 6;
+	public static final int COLUMN_INDEX_DATE_ADDED = 7;
 
 	public static final int NO_ID = -1;
 
@@ -77,6 +80,7 @@ public class TableTape {
 		columnsRef = new DbColumn[] { tableTapeType.getColumns().get(TableManufacturer.COLUMN_INDEX_ID)};
 		table.foreignKey(TableManufacturer.COLUMN_NAME_ID, columns, tableTapeType, columnsRef);
 
+		table.addColumn(COLUMN_NAME_FORMAT_TYPE, Types.TINYINT, null);
 		table.addColumn(COLUMN_NAME_SPACE_USED, Types.BIGINT, null);
 		table.addColumn(COLUMN_NAME_DATE_ADDED, Types.TIME, null);
 
@@ -162,26 +166,29 @@ public class TableTape {
 		RecordTape tape = null;
 
 		if (result.next()) {
-			int i = result.getInt(TableManufacturer.COLUMN_NAME_ID);
-			String name = result.getString(TableManufacturer.COLUMN_NAME_NAME);
-			RecordManufacturer rm = RecordManufacturer.of(i, name);
-
-			i = result.getInt(TableTapeType.COLUMN_NAME_ID);
-			name = result.getString(TableTapeType.COLUMN_NAME_TYPE);
-			String des = result.getString(TableTapeType.COLUMN_NAME_DESIGNATION);
-			String worm = result.getString(TableTapeType.COLUMN_NAME_DESIGNATION_WORM);
-			long capacity = result.getLong(TableTapeType.COLUMN_NAME_CAPACITY);
-			RecordTapeType tt = RecordTapeType.of(i, name, des, worm, capacity);
-
-			i = result.getInt(COLUMN_NAME_ID);
-			String barcode = result.getString(COLUMN_NAME_BARCODE);
-			String serial = result.getString(COLUMN_NAME_SERIAL);
-			long left = result.getLong(COLUMN_NAME_SPACE_USED);
-			//Time time = result.getTime(COLUMN_NAME_DATE_ADDED);
-			tape = RecordTape.of(i, rm, tt, barcode, serial, left, null);
+			tape = fromResultSet(result);
 		}
 
 		return tape;
+	}
+
+	public static List<RecordTape> getAllTapes(Connection con) throws SQLException {
+		var statment = con.createStatement();
+		SelectQuery uq = new SelectQuery();
+		uq.addAllTableColumns(table);
+		uq.addAllTableColumns(TableManufacturer.table);
+		uq.addAllTableColumns(TableTapeType.table);
+		uq.addJoins(JoinType.INNER, manufacturerJoin);
+		uq.addJoins(JoinType.INNER, tapeTypeJoin);
+		String sql = uq.validate().toString();
+		ResultSet result = statment.executeQuery(sql);
+
+		List<RecordTape> tapes = new ArrayList<RecordTape>();
+		while (result.next()) {
+			tapes.add(fromResultSet(result));
+		}
+
+		return tapes;
 	}
 
 	public static List<RecordTape> getTapeAtIDRange(Connection con, int start, int end) throws SQLException {
@@ -201,31 +208,36 @@ public class TableTape {
 		List<RecordTape> tape = new ArrayList<RecordTape>();
 
 		while (result.next()) {
-			int i = result.getInt(TableManufacturer.COLUMN_NAME_ID);
-			String name = result.getString(TableManufacturer.COLUMN_NAME_NAME);
-			RecordManufacturer rm = RecordManufacturer.of(i, name);
-
-			i = result.getInt(TableTapeType.COLUMN_NAME_ID);
-			name = result.getString(TableTapeType.COLUMN_NAME_TYPE);
-			String des = result.getString(TableTapeType.COLUMN_NAME_DESIGNATION);
-			String worm = result.getString(TableTapeType.COLUMN_NAME_DESIGNATION_WORM);
-			long capacity = result.getLong(TableTapeType.COLUMN_NAME_CAPACITY);
-			RecordTapeType tt = RecordTapeType.of(i, name, des, worm, capacity);
-
-			i = result.getInt(COLUMN_NAME_ID);
-			String barcode = result.getString(COLUMN_NAME_BARCODE);
-			String serial = result.getString(COLUMN_NAME_SERIAL);
-			long left = result.getLong(COLUMN_NAME_SPACE_USED);
-			LocalDateTime time = null;
-			try {
-				time = result.getTimestamp(COLUMN_NAME_DATE_ADDED).toLocalDateTime();
-			} catch (NullPointerException e) { // Do nothing
-			} catch (Exception e) {
-				Log.l.severe("Table tape get record " + i + "start timestamp error: " + e.getMessage());
-			}
-			tape.add(RecordTape.of(i, rm, tt, barcode, serial, left, time));
+			tape.add(fromResultSet(result));
 		}
 
+		return tape;
+	}
+
+	private static RecordTape fromResultSet(ResultSet result) throws SQLException {
+		int i = result.getInt(TableManufacturer.COLUMN_NAME_ID);
+		String name = result.getString(TableManufacturer.COLUMN_NAME_NAME);
+		RecordManufacturer rm = RecordManufacturer.of(i, name);
+		RecordTapeFormatType format = RecordTapeFormatType.fromInteger(result.getInt(TableTape.COLUMN_NAME_FORMAT_TYPE));
+		i = result.getInt(TableTapeType.COLUMN_NAME_ID);
+		name = result.getString(TableTapeType.COLUMN_NAME_TYPE);
+		String des = result.getString(TableTapeType.COLUMN_NAME_DESIGNATION);
+		String worm = result.getString(TableTapeType.COLUMN_NAME_DESIGNATION_WORM);
+		long capacity = result.getLong(TableTapeType.COLUMN_NAME_CAPACITY);
+		RecordTapeType tt = RecordTapeType.of(i, name, des, worm, capacity);
+
+		i = result.getInt(COLUMN_NAME_ID);
+		String barcode = result.getString(COLUMN_NAME_BARCODE);
+		String serial = result.getString(COLUMN_NAME_SERIAL);
+		long left = result.getLong(COLUMN_NAME_SPACE_USED);
+		LocalDateTime time = null;
+		try {
+			time = result.getTimestamp(COLUMN_NAME_DATE_ADDED).toLocalDateTime();
+		} catch (NullPointerException e) { // Do nothing
+		} catch (Exception e) {
+			Log.l.severe("Table tape get record " + i + "start timestamp error: " + e.getMessage());
+		}
+		var tape = RecordTape.of(i, rm, tt, barcode, serial, left, format, time);
 		return tape;
 	}
 
