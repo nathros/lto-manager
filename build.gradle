@@ -24,6 +24,8 @@ dependencies {
 }*/
 
 mainClassName = 'lto.manager.web.MainWeb'
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
 
 /*tasks.withType(JavaExec) { // Needed to debug JavaFX
 	// https://www.javafixing.com/2022/06/fixed-how-to-generate-javafx-jar-from.html
