@@ -1,3 +1,8 @@
+const APIStatus = {
+	Ok: "ok",
+	Error: "error"
+}
+
 const Toast = {
 	Good: "good",
 	Error: "error",
@@ -9,7 +14,7 @@ const ToastResponse = {
 	Cancel: "cancel"
 }
 
-async function showToast(level, message, time, url) {
+async function showToast(level, message, time, url, showCancel) {
 	var toast = document.getElementById("toast");
 	var toastMessage = document.getElementById("toast-message");
 	if ((toast != null) && (toastMessage != null)) {
@@ -18,6 +23,7 @@ async function showToast(level, message, time, url) {
 		toast.offsetWidth; // Reflow
 		toast.className = "show " + level;
 		showToast.toastLevel = level;
+		document.getElementById("toast-cancel").style.display = showCancel ? "inline-flex" : "none";
 		clearTimeout(showToast.toastTimeout);
 		if (time == null) time = 5000;
 		if (time > 0) {

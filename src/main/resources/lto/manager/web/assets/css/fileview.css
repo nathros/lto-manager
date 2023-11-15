@@ -13,7 +13,7 @@ ul {
 	left: -20px;
 	border-left: 1px solid #ddd;
 	border-bottom: 1px solid #ddd;
-	width: 20px;
+	width: 19px;
 	height: 15px;
 }
 .wtree li:after {
@@ -23,7 +23,7 @@ ul {
 	left: -20px;
 	border-left: 1px solid #ddd;
 	border-top: 1px solid #ddd;
-	width: 20px;
+	width: 19px;
 	height: 100%;
 }
 .wtree li:last-child:after {
@@ -208,8 +208,8 @@ ul {
 	width: 100%;
 }
 .edit-path-container input {
-	width: calc(100% - 5rem);
-	height: calc(100% - 8px);
+	width: calc(100% - 6rem);
+	height: calc(100% - (var(--padding) * 2) - 3px);
 	margin-top: 1px;
 }
 .edit-path-btn:focus + .edit-path-container {

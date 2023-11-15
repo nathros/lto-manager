@@ -1,5 +1,11 @@
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Space+Mono&display=swap');
+@font-face {
+	font-family: 'Open Sans';
+	src: url(/assets/fonts/open-sans.woff2) format('woff2');
+}
+@font-face {
+	font-family: 'Space Mono';
+	src: url(/assets/fonts/space-mono.woff2) format('woff2');
+}
 
 :root {
   --common-background-colour: #101820;
@@ -11,6 +17,8 @@
   --background-warning: #fff8c4;
   --background-ok: #e9ffd9;
   --background-info: #e3f7fc;
+  --padding: 0.5rem;
+  --border: 1px solid #ccc;
 }
 * {
 	font-family: 'Open Sans', sans-serif;
@@ -22,6 +30,13 @@ body {
 a {
 	color: inherit;
 	*text-decoration: inherit;
+}
+input, textarea {
+	padding: var(--padding);
+	border: var(--border);
+}
+input:focus, textarea:focus {
+	outline: var(--border);
 }
 .monospace * {
 	font-family: 'Space Mono', monospace;
@@ -210,6 +225,7 @@ a {
 .btn-s:hover,
 .btn-s:focus {
 	box-shadow: var(--common-highlight), var(--common-shadow);
+	text-decoration: none !important;
 }
 .btn:hover,
 .btn-s:hover {

@@ -8,6 +8,7 @@ import lto.manager.common.Main;
 import lto.manager.web.handlers.http.ajax.AJAXFilesListFetcher;
 import lto.manager.web.handlers.http.ajax.AJAXGetAttachedDrivesFetcher;
 import lto.manager.web.handlers.http.ajax.AJAXGetOnloadError;
+import lto.manager.web.handlers.http.api.APIVirtualDir;
 import lto.manager.web.handlers.http.pages.AssetHandler;
 import lto.manager.web.handlers.http.pages.RootHandler;
 import lto.manager.web.handlers.http.pages.admin.AdminHandler;
@@ -66,6 +67,8 @@ public class Handlers {
 
 		ret.put(AJAXFilesListFetcher.PATH, new AJAXFilesListFetcher());
 		ret.put(AJAXGetOnloadError.PATH, new AJAXGetOnloadError());
+
+		ret.put(APIVirtualDir.PATH, new APIVirtualDir());
 
 		if (Main.DEBUG_MODE) {
 			ret.put(EchoHeaderHandler.PATH, new EchoHeaderHandler());

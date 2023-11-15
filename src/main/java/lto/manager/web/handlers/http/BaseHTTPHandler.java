@@ -82,6 +82,14 @@ public abstract class BaseHTTPHandler implements HttpHandler {
 		os.close();
 	}
 
+	protected void requestHandleCompleteAPIJSON(HttpExchange he, String json) throws IOException, InterruptedException, ExecutionException {
+		he.getResponseHeaders().set("Content-Type", "application/json");
+		he.sendResponseHeaders(HttpURLConnection.HTTP_OK, json.length());
+		OutputStream os = he.getResponseBody();
+		os.write(json.getBytes());
+		os.close();
+	}
+
 	protected void errorHandle(HttpExchange he, Exception exception) {
 		try {
 			String response = TemplateInternalError.view.render(TemplateInternalErrorModel.of(exception, he));

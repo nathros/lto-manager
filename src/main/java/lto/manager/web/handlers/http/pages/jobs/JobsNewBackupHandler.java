@@ -101,35 +101,33 @@ public class JobsNewBackupHandler extends BaseHTTPHandler {
 
 					// TAB 1
 					.div().attrClass(CSS.TABS_CONTENT)
-						.b().attrStyle("width:150px;display:inline-block").text("Job Name: ").__()
-						.input().attrType(EnumTypeInputType.TEXT).attrName(NAME).of(input -> input.attrValue(name)).__()
-						.br().__()
+						.div().attrClass(CSS.FORMS_CONTAINER)
+							.b().text("Job Name: ").__()
+							.input().attrType(EnumTypeInputType.TEXT).attrName(NAME).of(input -> input.attrValue(name)).__()
 
-						.b().attrStyle("width:150px;display:inline-block").text("Start: ").__()
-						.input()
-							.attrType(EnumTypeInputType.DATETIME_LOCAL)
-							.attrId(START)
-							.attrName(START)
-							.of(input -> input.attrValue(start))
-						.__()
-						.input()
-							.attrType(EnumTypeInputType.CHECKBOX)
-							.attrId(IMMEDIATE)
-							.attrName(IMMEDIATE)
-							.attrOnclick("onSelectImmediate(this)")
-							.of(input -> input.attrValue(immediate))
-						.__()
-						.label().attrFor(IMMEDIATE).text("Immediate").__()
-						.br().__()
+							.b().text("Start: ").__()
+							.input()
+								.attrType(EnumTypeInputType.DATETIME_LOCAL)
+								.attrId(START)
+								.attrName(START)
+								.of(input -> input.attrValue(start))
+							.__()
+							.label().attrFor(IMMEDIATE).text("Immediate").__()
+							.input()
+								.attrType(EnumTypeInputType.CHECKBOX)
+								.attrId(IMMEDIATE)
+								.attrName(IMMEDIATE)
+								.attrOnclick("onSelectImmediate(this)")
+								.of(input -> input.attrValue(immediate))
+							.__()
 
-						.b().attrStyle("width:150px;display:inline-block").text("Tape ID: ").__()
-						.input().attrType(EnumTypeInputType.NUMBER).attrName(TAPE_ID).of(input -> input.attrValue(tapeID)).__()
-						.br().__()
+							.b().text("Tape ID: ").__()
+							.input().attrType(EnumTypeInputType.NUMBER).attrName(TAPE_ID).of(input -> input.attrValue(tapeID)).__()
 
-						.b().attrStyle("width:150px;display:inline-block").text("Comment: ").__()
-						.textarea().attrName(COMMENT).text(comment).__()
-						.br().__()
+							.b().text("Comment: ").__()
+							.textarea().attrName(COMMENT).text(comment).__()
 
+						.__() // div CSS.FORMS_FLEX
 						.label().attrFor(TAB2).attrClass(CSS.BUTTON)
 							.text("Next")
 						.__()
@@ -160,6 +158,7 @@ public class JobsNewBackupHandler extends BaseHTTPHandler {
 		HeadModel thm = HeadModel.of("Jobs");
 		thm.AddCSS(Asset.CSS_TABS);
 		thm.AddCSS(Asset.CSS_FILE_VIEW);
+		thm.AddCSS(Asset.CSS_FORMS);
 		thm.AddScript(Asset.JS_ADD_JOB);
 		thm.AddScript(Asset.JS_FILE_VIEW);
 		TemplatePageModel tpm = TemplatePageModel.of(JobsNewBackupHandler::content, thm, SelectedPage.Jobs, BodyModel.of(he, null));

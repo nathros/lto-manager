@@ -12,7 +12,7 @@ fi
 # Remove console log
 echo "See: config/logfile.log for messages and errors"
 echo "Server: http://localhost:$HTTP_PORT"
-java -Xmx1024M -jar $JAR httpport $HTTP_PORT > /dev/null 2>&1
+java -Xmx512M -jar $JAR httpport $HTTP_PORT > /dev/null 2>&1
 
 # Keep console log
 #java -Xmx1024M -jar $JAR httpport $HTTP_PORT

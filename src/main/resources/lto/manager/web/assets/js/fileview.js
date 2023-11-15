@@ -109,7 +109,7 @@ async function hostChangeDir(path, virtual) {
 	if (virtual === false) {
 		let size = calculateSelectedFileSizeTotal();
 		if (size > 0) {
-			let response = await showToast(Toast.Warning, 'Some files are selected, these will be reset' , -1);
+			let response = await showToast(Toast.Warning, 'Some files are selected, these will be reset' , -1, undefined, true);
 			if (response == ToastResponse.Cancel) return;
 		}
 	}
@@ -184,7 +184,7 @@ function expandDir(sender, path, virtual) {
 		sender.parentElement.parentElement.innerHTML = div;
 	}).catch((error) => {
 		console.log(error);
-	})
+	});
 }
 
 function bytesToHumanReadable(bytes) {
@@ -242,6 +242,29 @@ function contextMenuHide(virtual) {
 	}
 }
 
-function newVirtualDir(sender) {
-	console.log(sender);
+function newVirtualDir(path, newDir) {
+	console.log(path);
+	console.log(newDir);
+	if (newDir === "") {
+		return showToast(Toast.Error, "Directory name cannot be empty", -1, undefined, false);
+	}
+	fetch(`/api/virtualdir?new=true&path=${path}&name=${newDir}`,
+	{
+		method: "GET",
+		signal: AbortSignal.timeout(3000)
+	}).then((response) => {
+		return response.json();
+	}).then((json) => {
+		switch (json.status) {
+		case APIStatus.Ok:
+			hostChangeDir(path, true); // Refresh page
+			break;
+		case APIStatus.Error:
+		default:
+			showToast(Toast.Error, `Failed to create new directory: ${json.status}`, -1, undefined, false);
+			break;
+		}
+	}).catch((error) => {
+		showToast(Toast.Error, `Failed to create new directory: ${error}`, -1, undefined, false);
+	});
 }

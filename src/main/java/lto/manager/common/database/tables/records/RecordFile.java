@@ -1,6 +1,8 @@
 package lto.manager.common.database.tables.records;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 import lto.manager.common.database.Database;
 
@@ -39,6 +41,26 @@ public class RecordFile {
 
 	public static RecordFile of(String fileNameVirt, String filePathVirt, String fileNamePhy, String filePathPhy, long size, LocalDateTime created, LocalDateTime modified, int tapeID, int crc32, String customIcon) {
 		return new RecordFile(Database.NEW_RECORD_ID, fileNameVirt, filePathVirt, fileNamePhy, filePathPhy, size, created, modified, tapeID, crc32, customIcon);
+	}
+
+	public static RecordFile of(String IndexRecord) {
+		String[] elements = IndexRecord.split("\0");
+		if (elements.length != 7) {
+			throw new IllegalArgumentException(
+					"Index record string has incorrect length != 7, is " + IndexRecord.length());
+		}
+		String filePath = elements[1];
+		String fileName = elements[2];
+		long fileSize = Long.parseLong(elements[3]);
+		long time = Long.parseLong(elements[4]);
+		Instant instant = Instant.ofEpochMilli(time);
+		ZoneId zoneId = ZoneId.systemDefault();
+		LocalDateTime created = instant.atZone(zoneId).toLocalDateTime();
+		time = Long.parseLong(elements[5]);
+		instant = Instant.ofEpochMilli(time);
+		LocalDateTime modified = instant.atZone(zoneId).toLocalDateTime();
+		int crc32 = Integer.parseInt(elements[6]);
+		return new RecordFile(Database.NEW_RECORD_ID, "", "", fileName, filePath, fileSize, created, modified, Database.NEW_RECORD_ID, crc32, "");
 	}
 
 	private void setIsDirectory() {
@@ -91,5 +113,25 @@ public class RecordFile {
 	@Override
 	public String toString() {
 		return filePathVirtual + fileNameVirtual;
+	}
+
+	public String toIndexRecordString(int fileMarkerIndex) {
+		String result = "";
+		final String SEPERATOR = "\0";
+		result.concat(filePathPhysical).concat(SEPERATOR);
+		result.concat(fileNamePhysical).concat(SEPERATOR);
+
+		ZoneId zoneId = ZoneId.systemDefault();
+		long epoch = created.atZone(zoneId).toEpochSecond();
+		String tmp = String.valueOf(epoch);
+		result.concat(tmp).concat(SEPERATOR);
+
+		epoch = modified.atZone(zoneId).toEpochSecond();
+		tmp = String.valueOf(epoch);
+		result.concat(tmp).concat(SEPERATOR);
+
+		tmp = String.valueOf(crc32);
+		result.concat(tmp).concat(SEPERATOR);
+		return result;
 	}
 }

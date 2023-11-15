@@ -1,0 +1,6 @@
+.form-grid {
+	display: grid;
+	grid-template-columns: fit-content(20%) minmax(auto, 20rem);
+	align-items: center;
+	gap: 1rem;
+}
