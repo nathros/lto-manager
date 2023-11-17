@@ -33,6 +33,8 @@ public class CSS {
 	public final static String FV_ID = "id-wtree";
 	public final static String FV_ID_CONTEXT_CONTAINER = "wtree-context-container";
 	public final static String FV_ID_SELECT_TOTAL = "id-wtree-total";
+	public final static String FV_ID_DEL_BTN = "id-del-btn";
+	public final static String FV_ID_RENAME_BTN = "id-rename-btn";
 	public final static String FV_ROOT = "wtree ";
 	public final static String FV_ICON_SIZE = "size ";
 	public final static String FV_ICON_MODIFIED = "modified ";

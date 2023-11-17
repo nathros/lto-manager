@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 import lto.manager.common.database.Database;
+import lto.manager.common.database.tables.TableTape;
 
 public class RecordFile {
 	private int id;
@@ -43,11 +44,16 @@ public class RecordFile {
 		return new RecordFile(Database.NEW_RECORD_ID, fileNameVirt, filePathVirt, fileNamePhy, filePathPhy, size, created, modified, tapeID, crc32, customIcon);
 	}
 
-	public static RecordFile of(String IndexRecord) {
-		String[] elements = IndexRecord.split("\0");
+	public static RecordFile newDirectory(String fileNameVirt, String filePathVirt, String fileNamePhy, String filePathPhy) {
+		final LocalDateTime now = LocalDateTime.now();
+		return new RecordFile(Database.NEW_RECORD_ID, fileNameVirt, filePathVirt, fileNamePhy, filePathPhy, 0, now, now, TableTape.DIR_TAPE_ID, 0, null);
+	}
+
+	public static RecordFile of(String tarIndexRecord) {
+		String[] elements = tarIndexRecord.split("\0");
 		if (elements.length != 7) {
 			throw new IllegalArgumentException(
-					"Index record string has incorrect length != 7, is " + IndexRecord.length());
+					"Index record string has incorrect length != 7, is " + tarIndexRecord.length());
 		}
 		String filePath = elements[1];
 		String fileName = elements[2];

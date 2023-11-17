@@ -1,5 +1,7 @@
 const HOST_FILEVIEW_ROOT_ID = "id-wtree";
 const HOST_FILEVIEW_CONEXT_CONTAINER_ID = "wtree-context-container";
+const HOST_FILEVIEW_FV_ID_DEL_BTN = "id-del-btn";
+const HOST_FILEVIEW_FV_ID_RENAME_BTN = "id-rename-btn";
 const HOST_FILEVIEW_SELECT_TOTAL = "id-wtree-total";
 const HOST_FILEVIEW_QUERY_SELECTED = "f@"
 const HOST_FILEVIEW_QUERY_PATH = "f@path";
@@ -7,6 +9,8 @@ const HOST_FILEVIEW_QUERY_BREADCRUMBS = "f@bread";
 const HOST_FILEVIEW_QUERY_MAX_DEPTH = "f@depth";
 const HOST_FILEVIEW_QUERY_IS_ROOT = "f@root";
 const HOST_FILEVIEW_QUERY_IS_VIRTUAL = "f@isvirtual";
+
+const ATTR_PATH = "data-name";
 
 function getIDPostFix(virtual) {
 	return (virtual === true ? "-v" : "-p")
@@ -56,9 +60,11 @@ function sort(sender, type) {
 }
 
 function selectDir(sender) {
-	let dirCheckboxes = sender.parentElement.parentElement.getElementsByTagName("input");
-	for (let item of dirCheckboxes) {
-		item.checked = sender.checked
+	const parent = sender.parentElement.parentElement;
+	let start = parent.classList.contains("wtree") ? 4 : 0; // If root start at 4
+	let dirCheckboxes = parent.getElementsByTagName("input");
+	for (let i = start; i < dirCheckboxes.length; i++) {
+		dirCheckboxes[i].checked = sender.checked
 	}
 	selectFile(sender);
 }
@@ -222,10 +228,16 @@ function recalculateSelectedFileSize() {
 	let size = calculateSelectedFileSizeTotal();
 	message.getElementsByTagName("b")[0].innerText = bytesToHumanReadable(size);
 }
-
+var aa;
 function contextMenu(sender, virtual, event) {
-	console.log(sender);
 	if (!virtual) return true;
+	const delBtn = document.getElementById(HOST_FILEVIEW_FV_ID_DEL_BTN + getIDPostFix(virtual));
+	const path = sender.getAttribute(ATTR_PATH);
+	delBtn.onclick = function() { delVirtualDir(path); };
+
+	const renameBtn = document.getElementById(HOST_FILEVIEW_FV_ID_RENAME_BTN + getIDPostFix(virtual));
+	renameBtn.onclick = function() { renameVirtualDir(path, renameBtn.previousElementSibling.value); };
+aa = renameBtn;
 	let container = document.getElementById(HOST_FILEVIEW_CONEXT_CONTAINER_ID + getIDPostFix(virtual));
 	let menu = container.childNodes[1];
 	container.style.display = "block";
@@ -243,12 +255,10 @@ function contextMenuHide(virtual) {
 }
 
 function newVirtualDir(path, newDir) {
-	console.log(path);
-	console.log(newDir);
-	if (newDir === "") {
-		return showToast(Toast.Error, "Directory name cannot be empty", -1, undefined, false);
-	}
-	fetch(`/api/virtualdir?new=true&path=${path}&name=${newDir}`,
+	if (newDir === "") { return showToast(Toast.Error, "Directory name cannot be empty", -1, undefined, false); }
+	if (path === "") { return showToast(Toast.Error, "Path name cannot be empty", -1, undefined, false); }
+
+	fetch(`/api/virtualdir?op=new&path=${path}&name=${newDir}`,
 	{
 		method: "GET",
 		signal: AbortSignal.timeout(3000)
@@ -257,14 +267,73 @@ function newVirtualDir(path, newDir) {
 	}).then((json) => {
 		switch (json.status) {
 		case APIStatus.Ok:
-			hostChangeDir(path, true); // Refresh page
+			hostChangeDir(path, true); // Dir has been added, refresh page
 			break;
 		case APIStatus.Error:
 		default:
-			showToast(Toast.Error, `Failed to create new directory: ${json.status}`, -1, undefined, false);
+			showToast(Toast.Error, `Failed to create new directory: ${json.message}`, -1, undefined, false);
 			break;
 		}
 	}).catch((error) => {
 		showToast(Toast.Error, `Failed to create new directory: ${error}`, -1, undefined, false);
+	});
+}
+
+function delVirtualDir(dir) {
+	if (dir === "") { return showToast(Toast.Error, "Directory name cannot be empty", -1, undefined, false); }
+
+	showToastCallback(Toast.Info, "Are you Sure?",
+		() => {
+			fetch(`/api/virtualdir?op=del&path=${dir}&name=${dir}`,
+			{
+				method: "GET",
+				signal: AbortSignal.timeout(3000)
+			}).then((response) => {
+				return response.json();
+			}).then((json) => {
+				switch (json.status) {
+				case APIStatus.Ok:
+					const index = dir.lastIndexOf("/", dir.length - 2);
+					dir = dir.substr(0, index + 1); // Refresh to parent directory
+					hostChangeDir(dir, true); // Dir has been added, refresh page
+					break;
+				case APIStatus.Error:
+				default:
+					showToast(Toast.Error, `Failed to delete directory: ${json.message}`, -1, undefined, false);
+					break;
+				}
+			}).catch((error) => {
+				showToast(Toast.Error, `Failed to delete directory: ${error}`, -1, undefined, false);
+			});
+		},
+		true);
+}
+
+function renameVirtualDir(dir, newName) {
+	if (dir === "") { return showToast(Toast.Error, "Directory path cannot be empty", -1, undefined, false); }
+	if (newName === "") { return showToast(Toast.Error, "Directory name cannot be empty", -1, undefined, false); }
+
+	const index = dir.lastIndexOf("/", dir.length - 2);
+	const path = dir.substr(0, index + 1);
+	const originalName = dir.substr(index);
+
+	fetch(`/api/virtualdir?op=rename&path=${originalName}&name=${newName}`,
+	{
+		method: "GET",
+		signal: AbortSignal.timeout(3000)
+	}).then((response) => {
+		return response.json();
+	}).then((json) => {
+		switch (json.status) {
+		case APIStatus.Ok:
+			hostChangeDir(path, true); // Dir has been changed, refresh page
+			break;
+		case APIStatus.Error:
+		default:
+			showToast(Toast.Error, `Failed to delete directory: ${json.message}`, -1, undefined, false);
+			break;
+		}
+	}).catch((error) => {
+		showToast(Toast.Error, `Failed to delete directory: ${error}`, -1, undefined, false);
 	});
 }

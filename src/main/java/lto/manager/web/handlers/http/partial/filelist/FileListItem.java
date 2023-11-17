@@ -20,7 +20,7 @@ public class FileListItem {
 
 	 static void content(Div<?> view, FileListModel fileTree) {
 		//final String LINK = FilesAddHandler.PATH + "?" + FilesAddHandler.DIR + "=";
-		final String ABS_PATH = fileTree.getTree().getAbsolutePath() + (fileTree.getOptions().isVirtual() ? "/" : "");
+		final String ABS_PATH = fileTree.getTree().getAbsolutePath() + (fileTree.getTree().getAbsolutePath().length() > 1 ? (fileTree.getOptions().isVirtual() ? "/" : ""): "");
 		if (fileTree.getTree().isDirectory()) {
 			view
 				.span()

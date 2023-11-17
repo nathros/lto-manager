@@ -41,6 +41,12 @@ public class RecordTape {
 		return new RecordTape(id, manufacturer, type, barcode, serial, usedSpace, format, dateAdded);
 	}
 
+	public static RecordTape getBlank() {
+		RecordManufacturer blankManufacturer = RecordManufacturer.of(null, "");
+		RecordTapeType blankType = RecordTapeType.of(null, "", "", "", 0);
+		return new RecordTape(TableTape.DIR_TAPE_ID, blankManufacturer, blankType, "BLANK", "BLANK", 0, RecordTapeFormatType.values()[0], null);
+	}
+
 	public enum RecordTapeFormatType {
 		LTFS, TAR;
 

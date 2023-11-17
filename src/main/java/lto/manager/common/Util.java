@@ -44,4 +44,12 @@ public class Util {
 	public static long getJVMAllocatedMemory() {
 		return Runtime.getRuntime().totalMemory();
 	}
+
+	public static String virtualDirSeperatorsAdd(String input) {
+		if (input.charAt(0) != '/')
+			input = "/" + input;
+		if (input.charAt(input.length() - 1) != '/')
+			input = input.concat("/");
+		return input; // Must start and end with /
+	}
 }

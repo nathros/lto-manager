@@ -6,7 +6,8 @@ const APIStatus = {
 const Toast = {
 	Good: "good",
 	Error: "error",
-	Warning: "warning"
+	Warning: "warning",
+	Info: "info"
 }
 
 const ToastResponse = {
@@ -34,6 +35,25 @@ async function showToast(level, message, time, url, showCancel) {
 			let response = await toastButtonPromise(url);
 			return response;
 		}
+	} else {
+		throw "Toast is not present";
+	}
+}
+
+async function showToastCallback(level, message, callBack, showCancel) {
+	var toast = document.getElementById("toast");
+	var toastMessage = document.getElementById("toast-message");
+	if ((toast != null) && (toastMessage != null)) {
+		toastMessage.innerHTML = message;
+		toast.classList = "";
+		toast.offsetWidth; // Reflow
+		toast.className = "show " + level;
+		showToast.toastLevel = level;
+		document.getElementById("toast-cancel").style.display = showCancel ? "inline-flex" : "none";
+		clearTimeout(showToast.toastTimeout);
+		document.getElementById("toast-cross").style.display = "none";
+		let response = await toastButtonPromiseCallBack(callBack);
+		return response;
 	} else {
 		throw "Toast is not present";
 	}
@@ -74,6 +94,24 @@ function toastButtonPromise(url) {
 		};
 		ok.addEventListener('click', okFn, {once: true});
 		cancel.addEventListener('click', canelFn, {once: true});
+	});
+}
+
+function toastButtonPromiseCallBack(callBack) {
+	return new Promise((resolve/*, reject*/) => {
+		let ok = document.getElementById("toast-ok");
+		let cancel = document.getElementById("toast-cancel");
+		let okFn = () => {
+			resolve(ToastResponse.Ok);
+			hideToast();
+			callBack();
+		};
+		let cancelFn = () => {
+			resolve(ToastResponse.Cancel);
+			hideToast();
+		};
+		ok.addEventListener('click', okFn, {once: true});
+		cancel.addEventListener('click', cancelFn, {once: true});
 	});
 }
 

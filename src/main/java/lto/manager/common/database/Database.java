@@ -1,4 +1,4 @@
-package lto.	manager.common.database;
+package lto.manager.common.database;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,6 +10,7 @@ import java.util.List;
 import com.healthmarketscience.sqlbuilder.dbspec.basic.DbSchema;
 import com.healthmarketscience.sqlbuilder.dbspec.basic.DbSpec;
 
+import lto.manager.common.Util;
 import lto.manager.common.database.jobs.BackupJob;
 import lto.manager.common.database.jobs.JobBase;
 import lto.manager.common.database.tables.TableFile;
@@ -20,6 +21,7 @@ import lto.manager.common.database.tables.TableOptions;
 import lto.manager.common.database.tables.TableTape;
 import lto.manager.common.database.tables.TableTapeType;
 import lto.manager.common.database.tables.TableVersion;
+import lto.manager.common.database.tables.records.RecordFile;
 import lto.manager.common.database.tables.records.RecordManufacturer;
 import lto.manager.common.database.tables.records.RecordOptions;
 import lto.manager.common.database.tables.records.RecordOptions.OptionsSetting;
@@ -57,7 +59,7 @@ public class Database {
 			File dbFile = new File(fileName);
 			boolean newDatabase = !dbFile.exists();
 
-			//Class.forName("org.sqlite.JDBC");
+			// Class.forName("org.sqlite.JDBC");
 			String url = "jdbc:sqlite:" + fileName;
 			Connection con = DriverManager.getConnection(url);
 			connection = con;
@@ -70,7 +72,7 @@ public class Database {
 			// Enforce foreign keys check on insert
 			con.createStatement().executeUpdate("PRAGMA foreign_keys = ON;");
 			Log.l.info("Successfully opened database: " + fileName);
-            return con;
+			return con;
 		} catch (Exception e1) {
 			Log.l.severe("Failed to open database: " + fileName);
 			e1.printStackTrace();
@@ -142,7 +144,41 @@ public class Database {
 			BackupJob backupJob = new BackupJob(job, meta);
 			return backupJob;
 		}
-		default: return null;
+		default:
+			return null;
 		}
+	}
+
+	public static boolean addVirtualDir(String basePath, String fileName) throws SQLException {
+		basePath = Util.virtualDirSeperatorsAdd(basePath);
+		fileName = Util.virtualDirSeperatorsAdd(fileName);
+		RecordFile newDirRecord = RecordFile.newDirectory(fileName, basePath, fileName, basePath);
+		return TableFile.addFile(connection, TableTape.DIR_TAPE_ID, newDirRecord);
+	}
+
+	public static boolean delVirtualDir(String basePath) throws SQLException, IOException {
+		basePath = Util.virtualDirSeperatorsAdd(basePath);
+		final var files = TableFile.getFilesInDir(connection, basePath);
+		if (files.size() > 1) {
+			throw new IOException("Directory is not empty");
+		}
+		return TableFile.deleteFile(connection, files.get(0).getID());
+	}
+
+	public static boolean renameVirtualDir(String basePath, String newFileName) throws SQLException, IOException {
+		basePath = Util.virtualDirSeperatorsAdd(basePath);
+		newFileName = Util.virtualDirSeperatorsAdd(newFileName);
+		List<RecordFile> files = TableFile.getFilesInDirRecursive(connection, basePath);
+		if (files.size() == 0) {
+			throw new IOException("Directory " +  basePath + " does not exist");
+		}
+		files.get(0).setVirtualFileName(newFileName);
+		for (int i = 1; i < files.size(); i++) {
+			var file = files.get(i);
+			String originalPath = file.getVirtualFilePath();
+			String newPath = originalPath.replaceFirst(basePath, newFileName);
+			file.setVirtualFilePath(newPath);
+		}
+		return TableFile.updateVirtualFiles(connection, files);
 	}
 }

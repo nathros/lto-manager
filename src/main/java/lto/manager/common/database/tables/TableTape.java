@@ -54,6 +54,7 @@ public class TableTape {
 	public static final int COLUMN_INDEX_DATE_ADDED = 7;
 
 	public static final int NO_ID = -1;
+	public static final int DIR_TAPE_ID = 0;
 
 	static DbTable getSelf() {
 		DbSchema schema = Database.schema;
@@ -97,7 +98,9 @@ public class TableTape {
 		var statment = con.createStatement();
 
 		if (!statment.execute(q)) {
-			return true;
+			RecordTape blank = RecordTape.getBlank(); // Used for directories
+			DBStatus status = addTape(con, blank);
+			return status.success();
 		}
 
 		return false;

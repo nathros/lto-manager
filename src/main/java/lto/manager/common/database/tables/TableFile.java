@@ -9,21 +9,23 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import com.healthmarketscience.sqlbuilder.BinaryCondition;
 import com.healthmarketscience.sqlbuilder.ComboCondition;
 import com.healthmarketscience.sqlbuilder.CreateIndexQuery;
 import com.healthmarketscience.sqlbuilder.CreateTableQuery;
+import com.healthmarketscience.sqlbuilder.DeleteQuery;
 import com.healthmarketscience.sqlbuilder.InsertQuery;
 import com.healthmarketscience.sqlbuilder.SelectQuery;
+import com.healthmarketscience.sqlbuilder.UpdateQuery;
 import com.healthmarketscience.sqlbuilder.dbspec.Constraint.Type;
 import com.healthmarketscience.sqlbuilder.dbspec.basic.DbColumn;
 import com.healthmarketscience.sqlbuilder.dbspec.basic.DbConstraint;
 import com.healthmarketscience.sqlbuilder.dbspec.basic.DbSchema;
 import com.healthmarketscience.sqlbuilder.dbspec.basic.DbTable;
 
+import lto.manager.common.Util;
 import lto.manager.common.database.Database;
 import lto.manager.common.database.tables.records.RecordFile;
 
@@ -59,11 +61,11 @@ public class TableFile {
 		DbTable table = schema.addTable(TABLE_NAME);
 
 		DbColumn id = table.addColumn(COLUMN_NAME_ID, Types.INTEGER, null);
-		//id.primaryKey();
+		// id.primaryKey();
 		id.unique();
 		id.notNull();
 
-		String key[] = new String[] { COLUMN_NAME_ID};
+		String key[] = new String[] { COLUMN_NAME_ID };
 		table.primaryKey(COLUMN_NAME_ID, key);
 		var nameColumn = table.addColumn(COLUMN_NAME_FILE_NAME_VIRTUAL, Types.VARCHAR, 256);
 		nameColumn.notNull();
@@ -76,9 +78,9 @@ public class TableFile {
 		table.addColumn(COLUMN_NAME_FILE_DATE_MODIFY, Types.TIMESTAMP_WITH_TIMEZONE, null);
 
 		DbColumn tapeTypeForegnColumn = table.addColumn(COLUMN_NAME_FILE_TAPE_LOC, Types.INTEGER, null);
-		DbColumn columns[] = new DbColumn[] { tapeTypeForegnColumn};
-		DbTable tableTape =  TableTape.table;
-		DbColumn columnsRef[] = new DbColumn[] { tableTape.getColumns().get(TableTape.COLUMN_INDEX_ID)};
+		DbColumn columns[] = new DbColumn[] { tapeTypeForegnColumn };
+		DbTable tableTape = TableTape.table;
+		DbColumn columnsRef[] = new DbColumn[] { tableTape.getColumns().get(TableTape.COLUMN_INDEX_ID) };
 		table.foreignKey(TableTape.COLUMN_NAME_ID, columns, tableTape, columnsRef);
 
 		table.addColumn(COLUMN_NAME_FILE_CRC32, Types.INTEGER, null);
@@ -97,17 +99,18 @@ public class TableFile {
 		var statment = con.createStatement();
 
 		boolean result = statment.execute(q);
-		if (result) return false;
+		if (result)
+			return false;
 		q = new CreateIndexQuery(TableFile.table, "index_" + COLUMN_NAME_FILE_PATH_VIRTUAL)
-			.addColumns(TableFile.table.getColumns().get(COLUMN_INDEX_FILE_PATH_VIRTUAL))
-			.validate().toString();
+				.addColumns(TableFile.table.getColumns().get(COLUMN_INDEX_FILE_PATH_VIRTUAL)).validate().toString();
 		result = statment.execute(q);
-		if (result) return false;
+		if (result)
+			return false;
 
 		LocalDateTime now = LocalDateTime.now();
-		RecordFile rootDir = RecordFile.of("/", "/", "", "", 0, now, now, 0, 0, "folder-root");
+		RecordFile rootDir = RecordFile.of(TableTape.DIR_TAPE_ID, "/", "/", "", "", 0, now, now, 0, 0, "folder-root");
 		try {
-			addFiles(con, 0, Arrays.asList(rootDir));
+			addFile(con, 0, rootDir);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
@@ -115,10 +118,11 @@ public class TableFile {
 		return true;
 	}
 
-	private static boolean addFile(Connection con, int tapeID, RecordFile file) throws SQLException {
+	public static boolean addFile(Connection con, int tapeID, RecordFile file) throws SQLException {
 		var statment = con.createStatement();
 		InsertQuery iq = new InsertQuery(table);
-		if (file.getID() != Database.NEW_RECORD_ID) iq.addColumn(table.getColumns().get(COLUMN_INDEX_ID), file.getID());
+		if (file.getID() != Database.NEW_RECORD_ID)
+			iq.addColumn(table.getColumns().get(COLUMN_INDEX_ID), file.getID());
 		iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_NAME_VIRTUAl), file.getVirtualFileName());
 		iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_PATH_VIRTUAL), file.getVirtualFilePath());
 		iq.addColumn(table.getColumns().get(COLUMN_INDEX_FILE_NAME_PHYSICAL), file.getPhysicalFileName());
@@ -136,14 +140,17 @@ public class TableFile {
 		return true;
 	}
 
-	public static boolean addFiles(Connection con, int tapeID, List<RecordFile> files) throws SQLException, IOException {
-		for (RecordFile file: files) {
+	public static boolean addFiles(Connection con, int tapeID, List<RecordFile> files)
+			throws SQLException, IOException {
+		for (RecordFile file : files) {
 			addFile(con, tapeID, file);
 		}
 		return true;
 	}
 
-	public static List<File> getFilesOnTape(Connection con, int tapeID) throws SQLException, IOException { // TODO legacy remove
+	public static List<File> getFilesOnTape(Connection con, int tapeID) throws SQLException, IOException { // TODO
+																											// legacy
+																											// remove
 		var statment = con.createStatement();
 
 		List<File> files = new ArrayList<File>();
@@ -160,7 +167,8 @@ public class TableFile {
 			String name = result.getString(COLUMN_NAME_FILE_NAME_VIRTUAL);
 			String path = result.getString(COLUMN_NAME_FILE_PATH_VIRTUAL);
 
-			if (name == null) name = "";
+			if (name == null)
+				name = "";
 
 			files.add(new File(path + File.separator + name));
 		}
@@ -169,6 +177,7 @@ public class TableFile {
 	}
 
 	public static List<RecordFile> getFilesInDir(Connection con, String dir) throws SQLException, IOException {
+		dir = Util.virtualDirSeperatorsAdd(dir);
 		var statment = con.createStatement();
 
 		List<RecordFile> files = new ArrayList<RecordFile>();
@@ -181,7 +190,8 @@ public class TableFile {
 		if (!dir.equals("/")) {
 			parentName = "/" + Paths.get(dir).getFileName().toString() + "/";
 			parentPath = Paths.get(dir).getParent().toString() + "/";
-			if (parentPath.equals("//")) parentPath = "/";
+			if (parentPath.equals("//"))
+				parentPath = "/";
 		}
 
 		var andConditions = ComboCondition.and(
@@ -191,10 +201,8 @@ public class TableFile {
 				BinaryCondition.like(table.getColumns().get(COLUMN_INDEX_FILE_PATH_VIRTUAL), like));
 
 		uq.addAllTableColumns(table);
-		uq
-			.addCondition(orConditions)
-			.addOrderings(table.getColumns().get(COLUMN_INDEX_FILE_PATH_VIRTUAL))
-			.addOrderings(table.getColumns().get(COLUMN_INDEX_FILE_NAME_VIRTUAl));
+		uq.addCondition(orConditions).addOrderings(table.getColumns().get(COLUMN_INDEX_FILE_PATH_VIRTUAL))
+				.addOrderings(table.getColumns().get(COLUMN_INDEX_FILE_NAME_VIRTUAl));
 		String sql = uq.validate().toString();
 
 		ResultSet resultChildren = statment.executeQuery(sql);
@@ -206,19 +214,33 @@ public class TableFile {
 		return files;
 	}
 
-	public static List<RecordFile> getAllFiles(Connection con, int tapeID) throws SQLException, IOException { // FIXME start
+	public static List<RecordFile> getFilesInDirRecursive(Connection con, String dir) throws SQLException, IOException {
+		dir = Util.virtualDirSeperatorsAdd(dir);
 		var statment = con.createStatement();
 
 		List<RecordFile> files = new ArrayList<RecordFile>();
 
 		SelectQuery uq = new SelectQuery();
-		var andID = BinaryCondition.equalTo(table.getColumns().get(COLUMN_INDEX_FILE_TAPE_LOC), tapeID);
+		String like = String.format("%s", dir) + "%";
+
+		String parentName = dir;
+		String parentPath = dir;
+		if (!dir.equals("/")) {
+			parentName = "/" + Paths.get(dir).getFileName().toString() + "/";
+			parentPath = Paths.get(dir).getParent().toString() + "/";
+			if (parentPath.equals("//"))
+				parentPath = "/";
+		}
+
+		var andConditions = ComboCondition.and(
+				BinaryCondition.equalTo(table.getColumns().get(COLUMN_INDEX_FILE_PATH_VIRTUAL), parentPath),
+				BinaryCondition.equalTo(table.getColumns().get(COLUMN_INDEX_FILE_NAME_VIRTUAl), parentName));
+		var orConditions = ComboCondition.or(andConditions,
+				BinaryCondition.like(table.getColumns().get(COLUMN_INDEX_FILE_PATH_VIRTUAL), like));
 
 		uq.addAllTableColumns(table);
-		uq
-			.addCondition(andID)
-			.addOrderings(table.getColumns().get(COLUMN_INDEX_FILE_PATH_VIRTUAL))
-			.addOrderings(table.getColumns().get(COLUMN_INDEX_FILE_NAME_VIRTUAl));
+		uq.addCondition(orConditions).addOrderings(table.getColumns().get(COLUMN_INDEX_FILE_PATH_VIRTUAL))
+				.addOrderings(table.getColumns().get(COLUMN_INDEX_FILE_NAME_VIRTUAl));
 		String sql = uq.validate().toString();
 
 		ResultSet resultChildren = statment.executeQuery(sql);
@@ -228,6 +250,79 @@ public class TableFile {
 		}
 
 		return files;
+	}
+
+	public static boolean updateVirtualFiles(Connection con, List<RecordFile> files) throws SQLException {
+		for (var currentFile: files) {
+			var statment = con.createStatement();
+			UpdateQuery uq = new UpdateQuery(table);
+			uq.addSetClause(table.getColumns().get(COLUMN_INDEX_FILE_NAME_VIRTUAl), currentFile.getVirtualFileName());
+			uq.addSetClause(table.getColumns().get(COLUMN_INDEX_FILE_PATH_VIRTUAL), currentFile.getVirtualFilePath());
+			uq.addCondition(BinaryCondition.equalTo(table.getColumns().get(COLUMN_INDEX_ID), currentFile.getID()));
+			String sql = uq.validate().toString();
+			statment.execute(sql);
+			if (statment.getUpdateCount() == 0) {
+				throw new SQLException("Failed to update virtual file with ID " + currentFile.getID() + ", WARNING table in bad state");
+			}
+		}
+		return true;
+	}
+
+	public static List<RecordFile> getAllFiles(Connection con, int tapeID) throws SQLException, IOException { // FIXME
+																												// start
+		var statment = con.createStatement();
+
+		List<RecordFile> files = new ArrayList<RecordFile>();
+
+		SelectQuery uq = new SelectQuery();
+		var andID = BinaryCondition.equalTo(table.getColumns().get(COLUMN_INDEX_FILE_TAPE_LOC), tapeID);
+
+		uq.addAllTableColumns(table);
+		uq.addCondition(andID).addOrderings(table.getColumns().get(COLUMN_INDEX_FILE_PATH_VIRTUAL))
+				.addOrderings(table.getColumns().get(COLUMN_INDEX_FILE_NAME_VIRTUAl));
+		String sql = uq.validate().toString();
+
+		ResultSet resultChildren = statment.executeQuery(sql);
+
+		while (resultChildren.next()) {
+			files.add(parseRecordFile(resultChildren));
+		}
+
+		return files;
+	}
+
+	public static boolean deleteFile(Connection con, int fileID) throws SQLException {
+		if (fileID == TableTape.DIR_TAPE_ID)
+			throw new SQLException("Cannot delete root directory");
+		var statment = con.createStatement();
+		DeleteQuery dq = new DeleteQuery(table);
+		dq.addCondition(BinaryCondition.equalTo(table.getColumns().get(COLUMN_INDEX_ID), fileID));
+		String sql = dq.validate().toString();
+		statment.execute(sql);
+		return statment.getUpdateCount() == 1;
+	}
+
+	public static boolean renameVirtualFileName(Connection con, int fileID, String virtualName) throws SQLException {
+		/*if (fileID == TableTape.DIR_TAPE_ID)
+			throw new SQLException("Cannot rename root directory");
+
+		final var files = TableFile.getFilesInDir(connection, basePath);
+		if (files.size() == 0) {
+			throw new IOException("Directory does not exist");
+		}
+
+		UpdateQuery uq = new UpdateQuery(table);
+
+		uq.addCustomSetClause(table.getColumns().get(COLUMN_INDEX_FILE_NAME_VIRTUAl), virtualName);
+		uq.addCondition(BinaryCondition.equalTo(table.getColumns().get(COLUMN_INDEX_ID), fileID));
+
+		String q = uq.validate().toString();
+		var statment = con.createStatement();
+		if (!statment.execute(q)) {
+			return true;
+		}*/
+
+		return true;
 	}
 
 	private static RecordFile parseRecordFile(ResultSet result) throws SQLException {

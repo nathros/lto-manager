@@ -302,11 +302,11 @@ input:focus, textarea:focus {
 #toast.warning {
 	background-color: #ff9800;
 }
-#toast.ok {
+#toast.good {
 	background-color: #4caf50;
 }
 #toast.info {
-	background-color: #e3f7fc;
+	background-color: #3465A4;
 }
 #toast.show {
 	animation: showtoast 0.5s;

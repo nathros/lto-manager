@@ -1,13 +1,13 @@
 package lto.manager.common.database.tables.records;
 
 public class RecordTapeType {
-	private int id;
+	private Integer id;
 	private String type;
 	private String designation;
 	private String designationWORM;
 	private long capacity;
 
-	public RecordTapeType(int id, String type, String designation, String designationWORM, long size) {
+	public RecordTapeType(Integer id, String type, String designation, String designationWORM, long size) {
 		this.id = id;
 		this.type = type;
 		this.designation = designation;
@@ -15,11 +15,11 @@ public class RecordTapeType {
 		this.capacity = size;
 	}
 
-	public static RecordTapeType of(int id, String type, String designation, String designationWORM, long size) {
+	public static RecordTapeType of(Integer id, String type, String designation, String designationWORM, long size) {
 		return new RecordTapeType(id, type, designation, designationWORM, size);
 	}
 
-	public int getID() { return id; }
+	public Integer getID() { return id; }
 	public void setID(int id) { this.id = id; }
 	public String getType() { return type; }
 	public void setType(String type) { this.type = type; }
