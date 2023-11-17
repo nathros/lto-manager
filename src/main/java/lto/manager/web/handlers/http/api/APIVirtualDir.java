@@ -55,6 +55,14 @@ public class APIVirtualDir extends BaseHTTPHandler {
 					}
 					throw new Exception("Failed to rename virtual directory: " + basePath + newDirName);
 
+				case "changeico":
+					if (Database.chageVirtualDirIcon(basePath, newDirName)) {
+						requestHandleCompleteAPIJSON(he,
+								JSON.populateAPIResponse(APIStatus.ok, APIStatus.ok.toString()));
+						return;
+					}
+					throw new Exception("Failed to rename virtual directory: " + basePath + newDirName);
+
 				default:
 					throw new Exception("Invalid op code: " + operation);
 				}

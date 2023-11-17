@@ -72,6 +72,7 @@ public class AssetHandler extends BaseHTTPHandler {
 		return is != null;
 	}
 
+	// Returns a list of files in directory
 	public static HashSet<String> getCachedFileListInDir(String dir) {
 		try {
 			final String res = path + dir;

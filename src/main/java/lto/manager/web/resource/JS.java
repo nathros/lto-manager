@@ -11,6 +11,8 @@ public class JS {
 	public static String fnFileContextMenuHide(boolean isVirtual) { return "contextMenuHide(" + isVirtual + ");"; }
 	public static String fnFileNewVirtualDir(String path) { return "newVirtualDir('" + path + "',this.previousElementSibling.value);"; }
 	public static String fnFileCheckBoxChange() { return "recalculateSelectedFileSize();"; }
+	public static String fnGetDirIcons() { return "getDirIcons(this);"; }
+	public static String fnSetDirIcon() { return "setDirIcon(this);"; }
 
 	public static String commonHideToast() { return "hideToast();"; }
 	public static String confirmToast(String url) { return "toastConfirm('" + url + "')"; }

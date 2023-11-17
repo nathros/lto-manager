@@ -240,6 +240,7 @@ ul {
 	position: fixed;
 	border-radius: var(--menu-border-radius);
 	box-shadow: var(--common-shadow);
+	max-width: 19rem;
 }
 .wtree-context-menu div {
 	padding: 1rem;
@@ -250,9 +251,17 @@ ul {
 	cursor: pointer;
 	box-shadow: var(--common-highlight), var(--common-shadow);
 }
+.wtree-hover:hover {
+	cursor: pointer !important;
+	box-shadow: var(--common-highlight), var(--common-shadow) !important;
+}
 .wtree-context-input {
 	display: none;
 	gap: 6px;
+}
+.wtree-no-hover:hover {
+	cursor: default !important;
+	box-shadow: none !important;
 }
 .wtree-context-item:focus + .wtree-context-input {
 	display: flex;

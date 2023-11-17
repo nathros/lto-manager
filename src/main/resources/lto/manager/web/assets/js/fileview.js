@@ -12,6 +12,11 @@ const HOST_FILEVIEW_QUERY_IS_VIRTUAL = "f@isvirtual";
 
 const ATTR_PATH = "data-name";
 
+function getParentPath(path) {
+	const index = path.lastIndexOf("/", path.length - 2);
+	return path.substring(0, index + 1);
+}
+
 function getIDPostFix(virtual) {
 	return (virtual === true ? "-v" : "-p")
 }
@@ -228,18 +233,20 @@ function recalculateSelectedFileSize() {
 	let size = calculateSelectedFileSizeTotal();
 	message.getElementsByTagName("b")[0].innerText = bytesToHumanReadable(size);
 }
-var aa;
+
 function contextMenu(sender, virtual, event) {
 	if (!virtual) return true;
+
 	const delBtn = document.getElementById(HOST_FILEVIEW_FV_ID_DEL_BTN + getIDPostFix(virtual));
 	const path = sender.getAttribute(ATTR_PATH);
 	delBtn.onclick = function() { delVirtualDir(path); };
 
 	const renameBtn = document.getElementById(HOST_FILEVIEW_FV_ID_RENAME_BTN + getIDPostFix(virtual));
 	renameBtn.onclick = function() { renameVirtualDir(path, renameBtn.previousElementSibling.value); };
-aa = renameBtn;
-	let container = document.getElementById(HOST_FILEVIEW_CONEXT_CONTAINER_ID + getIDPostFix(virtual));
-	let menu = container.childNodes[1];
+
+	const container = document.getElementById(HOST_FILEVIEW_CONEXT_CONTAINER_ID + getIDPostFix(virtual));
+	container.setAttribute(ATTR_PATH, path); // Used for set icons
+	const menu = container.childNodes[1];
 	container.style.display = "block";
 	menu.style.top = event.pageY + 1 + "px";
 	menu.style.left = event.pageX + 1 + "px";
@@ -293,9 +300,7 @@ function delVirtualDir(dir) {
 			}).then((json) => {
 				switch (json.status) {
 				case APIStatus.Ok:
-					const index = dir.lastIndexOf("/", dir.length - 2);
-					dir = dir.substr(0, index + 1); // Refresh to parent directory
-					hostChangeDir(dir, true); // Dir has been added, refresh page
+					hostChangeDir(getParentPath(dir), true); // Dir has been added, refresh page
 					break;
 				case APIStatus.Error:
 				default:
@@ -314,7 +319,6 @@ function renameVirtualDir(dir, newName) {
 	if (newName === "") { return showToast(Toast.Error, "Directory name cannot be empty", -1, undefined, false); }
 
 	const index = dir.lastIndexOf("/", dir.length - 2);
-	const path = dir.substr(0, index + 1);
 	const originalName = dir.substr(index);
 
 	fetch(`/api/virtualdir?op=rename&path=${originalName}&name=${newName}`,
@@ -326,7 +330,7 @@ function renameVirtualDir(dir, newName) {
 	}).then((json) => {
 		switch (json.status) {
 		case APIStatus.Ok:
-			hostChangeDir(path, true); // Dir has been changed, refresh page
+			hostChangeDir(getParentPath(dir), true); // Dir has been changed, refresh page
 			break;
 		case APIStatus.Error:
 		default:
@@ -335,5 +339,47 @@ function renameVirtualDir(dir, newName) {
 		}
 	}).catch((error) => {
 		showToast(Toast.Error, `Failed to delete directory: ${error}`, -1, undefined, false);
+	});
+}
+
+function getDirIcons(sender) {
+	const replace = sender.nextElementSibling;
+	fetch("/ajax/iconlist",
+	{
+		method: "GET",
+		signal: AbortSignal.timeout(3000)
+	}).then((response) => {
+		return response.text();
+	}).then((text) => {
+		replace.innerHTML = text;
+	}).catch((error) => {
+		replace.innerHTML = "Failed to load icons: " + error;
+	});
+}
+
+function setDirIcon(sender) {
+	const container = document.getElementById(HOST_FILEVIEW_CONEXT_CONTAINER_ID + getIDPostFix(true));
+	const path = container.getAttribute(ATTR_PATH);
+	const src = sender.src;
+	const iconName = src.substr(src.lastIndexOf("/") + 1).slice(0, -4);
+
+	fetch(`/api/virtualdir?op=changeico&path=${path}&name=${iconName}`,
+	{
+		method: "GET",
+		//signal: AbortSignal.timeout(3000)
+	}).then((response) => {
+		return response.json();
+	}).then((json) => {
+		switch (json.status) {
+		case APIStatus.Ok:
+			hostChangeDir(getParentPath(path), true); // Dir has been changed, refresh page
+			break;
+		case APIStatus.Error:
+		default:
+			showToast(Toast.Error, `Failed to change icon: ${json.message}`, -1, undefined, false);
+			break;
+		}
+	}).catch((error) => {
+		showToast(Toast.Error, `Failed to change icon: ${error}`, -1, undefined, false);
 	});
 }

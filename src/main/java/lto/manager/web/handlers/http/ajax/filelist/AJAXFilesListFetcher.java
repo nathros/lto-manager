@@ -1,4 +1,4 @@
-package lto.manager.web.handlers.http.ajax;
+package lto.manager.web.handlers.http.ajax.filelist;
 
 import java.io.IOException;
 import java.util.List;

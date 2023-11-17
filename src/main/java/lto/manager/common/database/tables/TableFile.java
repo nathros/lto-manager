@@ -108,7 +108,8 @@ public class TableFile {
 			return false;
 
 		LocalDateTime now = LocalDateTime.now();
-		RecordFile rootDir = RecordFile.of(TableTape.DIR_TAPE_ID, "/", "/", "", "", 0, now, now, 0, 0, "folder-root");
+		RecordFile rootDir = RecordFile.of(TableTape.DIR_TAPE_ID, "/", "/", "", "", 0, now, now, 0, 0,
+				"folder-z-a-root");
 		try {
 			addFile(con, 0, rootDir);
 		} catch (Exception e) {
@@ -148,9 +149,8 @@ public class TableFile {
 		return true;
 	}
 
-	public static List<File> getFilesOnTape(Connection con, int tapeID) throws SQLException, IOException { // TODO
-																											// legacy
-																											// remove
+	// TODO legacy remove
+	public static List<File> getFilesOnTape(Connection con, int tapeID) throws SQLException, IOException {
 		var statment = con.createStatement();
 
 		List<File> files = new ArrayList<File>();
@@ -203,7 +203,7 @@ public class TableFile {
 		uq.addAllTableColumns(table);
 		uq.addCondition(orConditions).addOrderings(table.getColumns().get(COLUMN_INDEX_FILE_PATH_VIRTUAL))
 				.addOrderings(table.getColumns().get(COLUMN_INDEX_FILE_NAME_VIRTUAl));
-		String sql = uq.validate().toString();
+		final String sql = uq.validate().toString();
 
 		ResultSet resultChildren = statment.executeQuery(sql);
 
@@ -241,7 +241,7 @@ public class TableFile {
 		uq.addAllTableColumns(table);
 		uq.addCondition(orConditions).addOrderings(table.getColumns().get(COLUMN_INDEX_FILE_PATH_VIRTUAL))
 				.addOrderings(table.getColumns().get(COLUMN_INDEX_FILE_NAME_VIRTUAl));
-		String sql = uq.validate().toString();
+		final String sql = uq.validate().toString();
 
 		ResultSet resultChildren = statment.executeQuery(sql);
 
@@ -253,17 +253,32 @@ public class TableFile {
 	}
 
 	public static boolean updateVirtualFiles(Connection con, List<RecordFile> files) throws SQLException {
-		for (var currentFile: files) {
+		for (var currentFile : files) {
 			var statment = con.createStatement();
 			UpdateQuery uq = new UpdateQuery(table);
 			uq.addSetClause(table.getColumns().get(COLUMN_INDEX_FILE_NAME_VIRTUAl), currentFile.getVirtualFileName());
 			uq.addSetClause(table.getColumns().get(COLUMN_INDEX_FILE_PATH_VIRTUAL), currentFile.getVirtualFilePath());
 			uq.addCondition(BinaryCondition.equalTo(table.getColumns().get(COLUMN_INDEX_ID), currentFile.getID()));
-			String sql = uq.validate().toString();
+			final String sql = uq.validate().toString();
 			statment.execute(sql);
 			if (statment.getUpdateCount() == 0) {
-				throw new SQLException("Failed to update virtual file with ID " + currentFile.getID() + ", WARNING table in bad state");
+				throw new SQLException("Failed to update virtual file with ID " + currentFile.getID()
+						+ ", WARNING table in bad state");
 			}
+		}
+		return true;
+	}
+
+	public static boolean updateVirtualFileIcon(Connection con, int id, String icon) throws SQLException {
+		var statment = con.createStatement();
+		UpdateQuery uq = new UpdateQuery(table);
+		uq.addSetClause(table.getColumns().get(COLUMN_INDEX_FILE_CUSTOM_ICON), icon);
+		uq.addCondition(BinaryCondition.equalTo(table.getColumns().get(COLUMN_INDEX_ID), id));
+		final String sql = uq.validate().toString();
+		statment.execute(sql);
+		if (statment.getUpdateCount() == 0) {
+			throw new SQLException("Failed to update virtual file with ID " + id
+					+ ", WARNING table in bad state");
 		}
 		return true;
 	}
@@ -303,24 +318,22 @@ public class TableFile {
 	}
 
 	public static boolean renameVirtualFileName(Connection con, int fileID, String virtualName) throws SQLException {
-		/*if (fileID == TableTape.DIR_TAPE_ID)
-			throw new SQLException("Cannot rename root directory");
-
-		final var files = TableFile.getFilesInDir(connection, basePath);
-		if (files.size() == 0) {
-			throw new IOException("Directory does not exist");
-		}
-
-		UpdateQuery uq = new UpdateQuery(table);
-
-		uq.addCustomSetClause(table.getColumns().get(COLUMN_INDEX_FILE_NAME_VIRTUAl), virtualName);
-		uq.addCondition(BinaryCondition.equalTo(table.getColumns().get(COLUMN_INDEX_ID), fileID));
-
-		String q = uq.validate().toString();
-		var statment = con.createStatement();
-		if (!statment.execute(q)) {
-			return true;
-		}*/
+		/*
+		 * if (fileID == TableTape.DIR_TAPE_ID) throw new
+		 * SQLException("Cannot rename root directory");
+		 *
+		 * final var files = TableFile.getFilesInDir(connection, basePath); if
+		 * (files.size() == 0) { throw new IOException("Directory does not exist"); }
+		 *
+		 * UpdateQuery uq = new UpdateQuery(table);
+		 *
+		 * uq.addCustomSetClause(table.getColumns().get(COLUMN_INDEX_FILE_NAME_VIRTUAl),
+		 * virtualName); uq.addCondition(BinaryCondition.equalTo(table.getColumns().get(
+		 * COLUMN_INDEX_ID), fileID));
+		 *
+		 * String q = uq.validate().toString(); var statment = con.createStatement(); if
+		 * (!statment.execute(q)) { return true; }
+		 */
 
 		return true;
 	}

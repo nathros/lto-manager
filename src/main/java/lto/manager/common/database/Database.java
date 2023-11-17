@@ -170,7 +170,7 @@ public class Database {
 		newFileName = Util.virtualDirSeperatorsAdd(newFileName);
 		List<RecordFile> files = TableFile.getFilesInDirRecursive(connection, basePath);
 		if (files.size() == 0) {
-			throw new IOException("Directory " +  basePath + " does not exist");
+			throw new IOException("Directory " + basePath + " does not exist");
 		}
 		files.get(0).setVirtualFileName(newFileName);
 		for (int i = 1; i < files.size(); i++) {
@@ -180,5 +180,15 @@ public class Database {
 			file.setVirtualFilePath(newPath);
 		}
 		return TableFile.updateVirtualFiles(connection, files);
+	}
+
+	public static boolean chageVirtualDirIcon(String basePath, String icon) throws SQLException, IOException {
+		final List<RecordFile> files = TableFile.getFilesInDir(connection, basePath);
+		if (files.size() == 0) {
+			throw new IOException("Directory " + basePath + " does not exist");
+		}
+		RecordFile changeFile = files.get(0);
+		changeFile.setCustomIcon(icon);
+		return TableFile.updateVirtualFileIcon(connection, changeFile.getID(), icon);
 	}
 }

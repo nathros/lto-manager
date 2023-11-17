@@ -49,6 +49,8 @@ public class CSS {
 	public final static String FV_CONTEXT_MENU = "wtree-context-menu ";
 	public final static String FV_CONTEXT_MENU_ITEM = "wtree-context-item ";
 	public final static String FV_CONTEXT_MENU_INPUT = "wtree-context-input ";
+	public final static String FV_CONTEXT_NO_HOVER = "wtree-no-hover ";
+	public final static String FV_CONTEXT_WITH_HOVER = "wtree-hover ";
 
 	public final static String TABS_CONTAINER = "tabbed ";
 	public final static String TABS_HEADERS = "tabs ";

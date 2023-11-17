@@ -16,7 +16,7 @@ public class FileListItem {
 	private static final String DATA_SIZE = "data-size";
 	private static final String DATA_TIME = "data-time";
 	private static final String DATA_NAME = "data-name";
-	private static final HashSet<String> fileTypeCache = AssetHandler.getCachedFileListInDir(Asset.IMG_TYPES);
+	public static final HashSet<String> fileTypeCache = AssetHandler.getCachedFileListInDir(Asset.IMG_TYPES);
 
 	 static void content(Div<?> view, FileListModel fileTree) {
 		//final String LINK = FilesAddHandler.PATH + "?" + FilesAddHandler.DIR + "=";
@@ -110,7 +110,7 @@ public class FileListItem {
 			 return Asset.IMG_TYPES + customIcon + ".svg";
 		 }
 		 if (file.isDirectory()) {
-			 return Asset.IMG_TYPES + "folder.svg";
+			 return Asset.IMG_TYPES + "folder-.svg";
 		 } else {
 			 final String filename = file.getName();
 			 int index = filename.lastIndexOf(".");

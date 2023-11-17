@@ -108,6 +108,7 @@ public class RecordFile {
 	public void setCRC32(int crc32) { this.crc32 = crc32; }
 	public String getCRC32StrHex() { return Integer.toHexString(crc32); }
 	public String getCustomIcon() { return customIcon; }
+	public void setCustomIcon(String newIcon) { customIcon = newIcon; }
 	public boolean isDirectory() { return isDirectory; }
 	public String getAbsolutePath() {
 		if (isDirectory) {

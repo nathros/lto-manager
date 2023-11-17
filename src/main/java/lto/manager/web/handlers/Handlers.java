@@ -5,9 +5,10 @@ import java.util.HashMap;
 import com.sun.net.httpserver.HttpHandler;
 
 import lto.manager.common.Main;
-import lto.manager.web.handlers.http.ajax.AJAXFilesListFetcher;
 import lto.manager.web.handlers.http.ajax.AJAXGetAttachedDrivesFetcher;
 import lto.manager.web.handlers.http.ajax.AJAXGetOnloadError;
+import lto.manager.web.handlers.http.ajax.filelist.AJAXFilesListFetcher;
+import lto.manager.web.handlers.http.ajax.filelist.AJAXIconListFetcher;
 import lto.manager.web.handlers.http.api.APIVirtualDir;
 import lto.manager.web.handlers.http.pages.AssetHandler;
 import lto.manager.web.handlers.http.pages.RootHandler;
@@ -36,8 +37,8 @@ import lto.manager.web.handlers.websockets.BaseWebsocketHandler;
 import lto.manager.web.handlers.websockets.ServerTimeHandler;
 
 public class Handlers {
-	public static HashMap<String, HttpHandler> httpHandlers = getHTTPHandlers();
-	public static HashMap<String, BaseWebsocketHandler> websocketHandlers = getWebsocketHandlers();
+	public final static HashMap<String, HttpHandler> httpHandlers = getHTTPHandlers();
+	public final static HashMap<String, BaseWebsocketHandler> websocketHandlers = getWebsocketHandlers();
 
 	private static HashMap<String, HttpHandler> getHTTPHandlers() {
 		HashMap<String, HttpHandler> ret = new HashMap<String, HttpHandler>();
@@ -66,6 +67,7 @@ public class Handlers {
 		ret.put(JobsDetailsHandler.PATH, new JobsDetailsHandler());
 
 		ret.put(AJAXFilesListFetcher.PATH, new AJAXFilesListFetcher());
+		ret.put(AJAXIconListFetcher.PATH, new AJAXIconListFetcher());
 		ret.put(AJAXGetOnloadError.PATH, new AJAXGetOnloadError());
 
 		ret.put(APIVirtualDir.PATH, new APIVirtualDir());
