@@ -13,8 +13,8 @@ public class RecordOptions {
 	}
 
 	public static enum OptionsSetting {
-		LOG_REQUESTS("Log Requests"),
-		LOG_REQUESTS_ASSETS("Log Asset Requests"),
+		LOG_REQUESTS("Log requests"),
+		LOG_REQUESTS_ASSETS("Log asset requests"),
 		PLACEHOLDER_1("placeholder 1"),
 		PLACEHOLDER_2("placeholder 2"),
 		PLACEHOLDER_3("placeholder 3"),
@@ -23,9 +23,9 @@ public class RecordOptions {
 		PLACEHOLDER_6("placeholder 6"),
 		PLACEHOLDER_7("placeholder 7"),
 		PLACEHOLDER_8("placeholder 8"),
-		LOG_EXTERNAL_PROCESS("Log External Process std out/err"),
-		PLACEHOLDER_A("placeholder a"),
-		PLACEHOLDER_B("placeholder b"),
+		LOG_EXTERNAL_PROCESS("Log external process std out/err"),
+		TIMER_EXTERNAL_PROCESS("Frequency to clear completed external processes (minutes)"),
+		STALE_EXTERNAL_PROCESS_TIME("Time passed to deem completed external process stale and mark for removal (minutes)"),
 		PLACEHOLDER_C("placeholder c"),
 		PLACEHOLDER_D("placeholder d"),
 		PLACEHOLDER_E("placeholder e"),

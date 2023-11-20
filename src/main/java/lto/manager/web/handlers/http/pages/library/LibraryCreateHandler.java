@@ -12,6 +12,7 @@ import org.xmlet.htmlapifaster.EnumTypeInputType;
 import com.sun.net.httpserver.HttpExchange;
 
 import lto.manager.common.database.Database;
+import lto.manager.common.database.tables.TableTape;
 import lto.manager.common.database.tables.records.RecordManufacturer;
 import lto.manager.common.database.tables.records.RecordTape;
 import lto.manager.common.database.tables.records.RecordTape.RecordTapeFormatType;
@@ -121,11 +122,11 @@ public class LibraryCreateHandler extends BaseHTTPHandler {
 					}).__().br().__()
 
 					.b().attrStyle("width:150px;display:inline-block").text("Serial Number: ").__()
-					.input().attrType(EnumTypeInputType.TEXT).attrName(SERIAL).of(input -> input.attrValue(serial)).__().br().__()
+					.input().attrType(EnumTypeInputType.TEXT).attrName(SERIAL).attrMaxlength((long) TableTape.MAX_LEN_SERIAL).of(input -> input.attrValue(serial)).__().br().__()
 
 					.b().attrStyle("width:150px;display:inline-block").text("Barcode: ").__()
-					.input().attrType(EnumTypeInputType.TEXT).attrName(BARCODE).of(input -> input.attrValue(barcode)).__()
-					.input().attrType(EnumTypeInputType.TEXT).attrId("des").__().br().__()
+					.input().attrType(EnumTypeInputType.TEXT).attrName(BARCODE).attrMaxlength((long) TableTape.MAX_LEN_BARCODE).of(input -> input.attrValue(barcode)).__()
+					.input().attrType(EnumTypeInputType.TEXT).attrId("des").attrDisabled(true).__().br().__()
 
 					.b().attrStyle("width:150px;display:inline-block").text("WORM: ").__()
 					.input().attrId(WORM).attrOnclick("onSelectType(this)").attrType(EnumTypeInputType.CHECKBOX).attrName(WORM).of(input -> input.attrValue(worm)).__().br().__()

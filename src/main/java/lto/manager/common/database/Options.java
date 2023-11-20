@@ -14,33 +14,33 @@ public class Options {
 
 	private static HashMap<OptionsSetting, Object> getDefaultValues() {
 		var def = new HashMap<OptionsSetting, Object>();
-		def.put(OptionsSetting.LOG_REQUESTS, 			Boolean.TRUE);
-		def.put(OptionsSetting.LOG_REQUESTS_ASSETS, 	Boolean.FALSE);
-		def.put(OptionsSetting.PLACEHOLDER_1, 			Integer.MIN_VALUE);
-		def.put(OptionsSetting.PLACEHOLDER_2, 			Integer.MIN_VALUE);
-		def.put(OptionsSetting.PLACEHOLDER_3, 			Integer.MIN_VALUE);
-		def.put(OptionsSetting.PLACEHOLDER_4, 			Integer.MIN_VALUE);
-		def.put(OptionsSetting.PLACEHOLDER_5, 			Integer.MIN_VALUE);
-		def.put(OptionsSetting.PLACEHOLDER_6, 			Integer.MIN_VALUE);
-		def.put(OptionsSetting.PLACEHOLDER_7, 			Integer.MIN_VALUE);
-		def.put(OptionsSetting.PLACEHOLDER_8, 			Integer.MIN_VALUE);
-		def.put(OptionsSetting.LOG_EXTERNAL_PROCESS, 	Boolean.FALSE);
-		def.put(OptionsSetting.PLACEHOLDER_A, 			Integer.MIN_VALUE);
-		def.put(OptionsSetting.PLACEHOLDER_B, 			Integer.MIN_VALUE);
-		def.put(OptionsSetting.PLACEHOLDER_C, 			Integer.MIN_VALUE);
-		def.put(OptionsSetting.PLACEHOLDER_D, 			Integer.MIN_VALUE);
-		def.put(OptionsSetting.PLACEHOLDER_E, 			Integer.MIN_VALUE);
-		def.put(OptionsSetting.PLACEHOLDER_F, 			Integer.MIN_VALUE);
-		def.put(OptionsSetting.PLACEHOLDER_H, 			Integer.MIN_VALUE);
-		def.put(OptionsSetting.PLACEHOLDER_I, 			Integer.MIN_VALUE);
+		def.put(OptionsSetting.LOG_REQUESTS, Boolean.TRUE);
+		def.put(OptionsSetting.LOG_REQUESTS_ASSETS, Boolean.FALSE);
+		def.put(OptionsSetting.PLACEHOLDER_1, Integer.MIN_VALUE);
+		def.put(OptionsSetting.PLACEHOLDER_2, Integer.MIN_VALUE);
+		def.put(OptionsSetting.PLACEHOLDER_3, Integer.MIN_VALUE);
+		def.put(OptionsSetting.PLACEHOLDER_4, Integer.MIN_VALUE);
+		def.put(OptionsSetting.PLACEHOLDER_5, Integer.MIN_VALUE);
+		def.put(OptionsSetting.PLACEHOLDER_6, Integer.MIN_VALUE);
+		def.put(OptionsSetting.PLACEHOLDER_7, Integer.MIN_VALUE);
+		def.put(OptionsSetting.PLACEHOLDER_8, Integer.MIN_VALUE);
+		def.put(OptionsSetting.LOG_EXTERNAL_PROCESS, Boolean.FALSE);
+		def.put(OptionsSetting.TIMER_EXTERNAL_PROCESS, Integer.valueOf(1));
+		def.put(OptionsSetting.STALE_EXTERNAL_PROCESS_TIME, Integer.valueOf(15));
+		def.put(OptionsSetting.PLACEHOLDER_C, Integer.MIN_VALUE);
+		def.put(OptionsSetting.PLACEHOLDER_D, Integer.MIN_VALUE);
+		def.put(OptionsSetting.PLACEHOLDER_E, Integer.MIN_VALUE);
+		def.put(OptionsSetting.PLACEHOLDER_F, Integer.MIN_VALUE);
+		def.put(OptionsSetting.PLACEHOLDER_H, Integer.MIN_VALUE);
+		def.put(OptionsSetting.PLACEHOLDER_I, Integer.MIN_VALUE);
 		return def;
 	}
 
 	private static HashMap<OptionsSetting, Object> getCache() {
-		var ret = new HashMap<OptionsSetting, Object> ();
+		var ret = new HashMap<OptionsSetting, Object>();
 		try {
 			List<RecordOptions> all = Database.getAllOptions();
-			for (RecordOptions item: all) {
+			for (RecordOptions item : all) {
 				OptionsSetting os = OptionsSetting.valueOf(item.getIndex());
 				switch (item.getDataType()) {
 				case Boolean: {
@@ -89,7 +89,7 @@ public class Options {
 	}
 
 	public static void setBatch(List<RecordOptions> batch) {
-		for (RecordOptions item: batch) {
+		for (RecordOptions item : batch) {
 			OptionsSetting setting = OptionsSetting.valueOf(item.getIndex());
 			Class<? extends Object> clazz = defaultValues.get(setting).getClass();
 			if (clazz.equals(Boolean.class)) {

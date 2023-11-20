@@ -3,10 +3,13 @@ package lto.manager.common;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
@@ -14,6 +17,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import lto.manager.common.database.Options;
 import lto.manager.common.database.tables.records.RecordOptions.OptionsSetting;
+import lto.manager.common.log.Log;
 
 public abstract class ExternalProcess {
 	public static int EXIT_CODE_OK = 0;
@@ -31,9 +35,13 @@ public abstract class ExternalProcess {
 
 	private static HashMap<String, ExternalProcess> currentProcesses = new HashMap<String, ExternalProcess>();
 	private static HashMap<String, ExternalProcess> retiredProcesses = new HashMap<String, ExternalProcess>();
+	private static Timer clearRetired = null;
+	private LocalDateTime exitDateTime = null;
 
-	public boolean start(Semaphore completedSemaphore, String uuid, String... commands) throws IOException, InterruptedException, IllegalArgumentException {
-		if (inProgress.get()) return false;
+	public boolean start(Semaphore completedSemaphore, String uuid, String... commands)
+			throws IOException, InterruptedException, IllegalArgumentException {
+		if (inProgress.get())
+			return false;
 		this.uuid = uuid;
 		this.isCompletedSemaphore = completedSemaphore;
 		cmd = commands;
@@ -41,7 +49,8 @@ public abstract class ExternalProcess {
 			throw new IllegalArgumentException("uuid already exists: " + uuid);
 		}
 		currentProcesses.put(uuid, this);
-		if (isCompletedSemaphore != null) isCompletedSemaphore.acquire(1);
+		if (isCompletedSemaphore != null)
+			isCompletedSemaphore.acquire(1);
 		inProgress.set(true);
 
 		stdout.clear();
@@ -63,7 +72,8 @@ public abstract class ExternalProcess {
 				semaphore.acquire(2);
 				stop();
 				onProcessExit();
-				if (isCompletedSemaphore != null) isCompletedSemaphore.release();
+				if (isCompletedSemaphore != null)
+					isCompletedSemaphore.release();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -75,7 +85,8 @@ public abstract class ExternalProcess {
 				try {
 					if (stdOutBuffer.ready()) {
 						char tmp = (char) stdOutBuffer.read();
-						if (tmp != '\n') str.append(tmp);
+						if (tmp != '\n')
+							str.append(tmp);
 						else {
 							String line = str.toString();
 							if (Options.getData(OptionsSetting.LOG_EXTERNAL_PROCESS) == Boolean.TRUE)
@@ -92,8 +103,9 @@ public abstract class ExternalProcess {
 				}
 			}
 			semaphore.release();
-			if (Options.getData(OptionsSetting.LOG_EXTERNAL_PROCESS) == Boolean.TRUE) System.out.println("stdout: EXIT");
-	    });
+			if (Options.getData(OptionsSetting.LOG_EXTERNAL_PROCESS) == Boolean.TRUE)
+				System.out.println("stdout: EXIT");
+		});
 
 		service.submit(() -> { // stderr
 			StringBuilder str = new StringBuilder();
@@ -101,7 +113,8 @@ public abstract class ExternalProcess {
 				try {
 					if (stdErrBuffer.ready()) {
 						char tmp = (char) stdErrBuffer.read();
-						if (tmp != '\n') str.append(tmp);
+						if (tmp != '\n')
+							str.append(tmp);
 						else {
 							String line = str.toString();
 							if (Options.getData(OptionsSetting.LOG_EXTERNAL_PROCESS) == Boolean.TRUE)
@@ -118,8 +131,9 @@ public abstract class ExternalProcess {
 				}
 			}
 			semaphore.release();
-			if (Options.getData(OptionsSetting.LOG_EXTERNAL_PROCESS) == Boolean.TRUE) System.out.println("stderr: EXIT");
-	    });
+			if (Options.getData(OptionsSetting.LOG_EXTERNAL_PROCESS) == Boolean.TRUE)
+				System.out.println("stderr: EXIT");
+		});
 
 		return true;
 	}
@@ -143,20 +157,24 @@ public abstract class ExternalProcess {
 	}
 
 	private void moveToRetired() {
+		exitDateTime = LocalDateTime.now();
 		currentProcesses.remove(uuid);
 		retiredProcesses.put(uuid, this);
 	}
 
 	public boolean stop() {
 		inProgress.set(false);
-		if (service != null) service.shutdownNow();
-		if (service != null) process.destroyForcibly();
+		if (service != null)
+			service.shutdownNow();
+		if (service != null)
+			process.destroyForcibly();
 		moveToRetired();
 		return true;
 	}
 
 	public boolean operationInProgress() {
-		if (process == null) return false;
+		if (process == null)
+			return false;
 		return process.isAlive();
 	}
 
@@ -176,8 +194,55 @@ public abstract class ExternalProcess {
 		return String.join(" ", cmd);
 	}
 
-	public Integer getExitCode() { return exitCode; }
+	public Integer getExitCode() {
+		return exitCode;
+	}
+
+	public final LocalDateTime getExitDateTime() {
+		return exitDateTime;
+	}
 
 	public abstract void onProcessExit();
 
+	public static void startRemoveRetired(final int repeatEveryMinutes, final int ageOfProcessMinutes) {
+		if (repeatEveryMinutes <= 0)
+			throw new IllegalArgumentException("repeatEveryMinutes is less than or equal to 0");
+		if (ageOfProcessMinutes <= 0)
+			throw new IllegalArgumentException("ageOfProcessMinutes is less than or equal to 0");
+		if (clearRetired == null) {
+			clearRetired = new Timer();
+			final var schedule = repeatEveryMinutes * 1000 * 60;
+			clearRetired.scheduleAtFixedRate(new TimerTask() {
+				@Override
+				public void run() {
+					LocalDateTime now = LocalDateTime.now();
+					LocalDateTime from = now.minusMinutes(ageOfProcessMinutes);
+
+					var iterator = retiredProcesses.entrySet().iterator();
+					while (iterator.hasNext()) {
+						var retired = iterator.next();
+						final ExternalProcess p = retired.getValue();
+						final LocalDateTime finished = p.getExitDateTime();
+						if (finished == null) {
+							Log.l.severe("Retired processes " + retired.getClass().getSimpleName() + ":"
+									+ retired.getKey() + " has null exit date time # removed");
+							iterator.remove();
+						} else {
+							if (from.isAfter(finished)) {
+								Log.l.finer("Removed old retired processes " + retired.getClass().getSimpleName() + ":"
+										+ retired.getKey() + " has expired");
+								iterator.remove();
+							}
+						}
+					}
+				}
+			}, schedule, schedule);
+		}
+	}
+
+	public static void stopRemoveRetired() {
+		clearRetired.cancel();
+		clearRetired.purge();
+		clearRetired = null;
+	}
 }

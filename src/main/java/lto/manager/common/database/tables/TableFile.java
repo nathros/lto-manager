@@ -109,7 +109,7 @@ public class TableFile {
 
 		LocalDateTime now = LocalDateTime.now();
 		RecordFile rootDir = RecordFile.of(TableTape.DIR_TAPE_ID, "/", "/", "", "", 0, now, now, 0, 0,
-				"folder-z-a-root");
+				"folder~a-root");
 		try {
 			addFile(con, 0, rootDir);
 		} catch (Exception e) {

@@ -17,7 +17,6 @@ import lto.manager.web.handlers.http.pages.admin.UpdateOptionsHandler;
 import lto.manager.web.handlers.http.pages.admin.externalprocess.ExternalProcessHandler;
 import lto.manager.web.handlers.http.pages.admin.externalprocess.ExternalProcessViewerHandler;
 import lto.manager.web.handlers.http.pages.drives.DrivesHandler;
-import lto.manager.web.handlers.http.pages.files.FilesBrowserHandler;
 import lto.manager.web.handlers.http.pages.files.FilesBrowserHandler2;
 import lto.manager.web.handlers.http.pages.files.FilesHandler;
 import lto.manager.web.handlers.http.pages.jobs.JobsDetailsHandler;
@@ -58,7 +57,6 @@ public class Handlers {
 		ret.put(AJAXGetAttachedDrivesFetcher.PATH, new AJAXGetAttachedDrivesFetcher());
 
 		ret.put(FilesHandler.PATH, new FilesHandler());
-		ret.put(FilesBrowserHandler.PATH, new FilesBrowserHandler());
 		ret.put(FilesBrowserHandler2.PATH, new FilesBrowserHandler2());
 
 		ret.put(JobsHandler.PATH, new JobsHandler());

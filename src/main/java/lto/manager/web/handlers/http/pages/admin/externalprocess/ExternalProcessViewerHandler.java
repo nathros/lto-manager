@@ -32,32 +32,32 @@ public class ExternalProcessViewerHandler extends BaseHTTPHandler {
 			.div()
 				.a().attrClass(CSS.BUTTON).attrOnclick("history.back()").text("Back").__()
 				.of(div -> {
-				ExternalProcess ep = null;
-				if (type.equals(TYPE_COMPLETE)) {
-					ep = ExternalProcess.getFinishedProcess(id);
-				} else if (type.equals(TYPE_CURRENT)) {
-					ep = ExternalProcess.getCurrentProcess(id);
-				}
-				final ExternalProcess pro = ep;
-				if (pro != null) {
-					div
-						.br().__()
-						.b().text("stdout").__().br().__()
-						.of(o -> {
-							for (String i: pro.getStdout()) {
-								o.i().text(i).__().br().__();
-							}
-						})
-						.hr().__()
-						.b().text("stderr").__().br().__()
-						.of(o -> {
-							for (String i: pro.getStderr()) {
-								o.i().text(i).__().br().__();
-							}
-						});
-				} else {
-					div.text("ID: " + id + " NOT FOUND");
-				}
+					ExternalProcess ep = null;
+					if (type.equals(TYPE_COMPLETE)) {
+						ep = ExternalProcess.getFinishedProcess(id);
+					} else if (type.equals(TYPE_CURRENT)) {
+						ep = ExternalProcess.getCurrentProcess(id);
+					}
+					final ExternalProcess pro = ep;
+					if (pro != null) {
+						div
+							.br().__()
+							.b().text("stdout").__().br().__()
+							.of(o -> {
+								for (String i: pro.getStdout()) {
+									o.i().text(i).__().br().__();
+								}
+							})
+							.hr().__()
+							.b().text("stderr").__().br().__()
+							.of(o -> {
+								for (String i: pro.getStderr()) {
+									o.i().text(i).__().br().__();
+								}
+							});
+					} else {
+						div.text("ID: " + id + " NOT FOUND");
+					}
 			}).__(); //  div
 		return null;
 	}

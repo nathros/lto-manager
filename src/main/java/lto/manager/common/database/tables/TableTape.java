@@ -55,6 +55,8 @@ public class TableTape {
 
 	public static final int NO_ID = -1;
 	public static final int DIR_TAPE_ID = 0;
+	public static final int MAX_LEN_BARCODE = 6;
+	public static final int MAX_LEN_SERIAL = 128;
 
 	static DbTable getSelf() {
 		DbSchema schema = Database.schema;
@@ -72,8 +74,8 @@ public class TableTape {
 		DbColumn columnsRef[] = new DbColumn[] { tableTapeType.getColumns().get(TableTapeType.COLUMN_INDEX_ID)};
 		table.foreignKey(TableTapeType.COLUMN_NAME_ID, columns, tableTapeType, columnsRef);
 
-		table.addColumn(COLUMN_NAME_BARCODE, Types.VARCHAR, 6);
-		table.addColumn(COLUMN_NAME_SERIAL, Types.VARCHAR, 128);
+		table.addColumn(COLUMN_NAME_BARCODE, Types.VARCHAR, MAX_LEN_BARCODE);
+		table.addColumn(COLUMN_NAME_SERIAL, Types.VARCHAR, MAX_LEN_SERIAL);
 
 		tapeTypeForegnColumn = table.addColumn(COLUMN_NAME_MANUFACTURER, Types.INTEGER, null);
 		columns = new DbColumn[] { tapeTypeForegnColumn};

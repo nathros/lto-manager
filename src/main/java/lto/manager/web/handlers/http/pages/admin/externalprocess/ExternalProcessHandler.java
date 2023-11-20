@@ -30,7 +30,7 @@ public class ExternalProcessHandler extends BaseHTTPHandler {
 						+ "=" + ExternalProcessViewerHandler.TYPE_CURRENT + "&" + ExternalProcessViewerHandler.ID
 						+ "=" + key;
 					final var ep = ExternalProcess.getCurrentProcess(key);
-					d.a().attrClass(CSS.BUTTON).attrHref(link).text(ep.getClass().getSimpleName()+ " (" + key + ")").__();
+					d.a().attrClass(CSS.BUTTON).attrHref(link).text(ep.getClass().getSimpleName() + " (" + key + ")").__();
 				}
 			}).__()
 			.div().attrClass("card").addAttr("header-text", "Completed Processes").of(d -> {
@@ -40,7 +40,7 @@ public class ExternalProcessHandler extends BaseHTTPHandler {
 						+ "=" + ExternalProcessViewerHandler.TYPE_COMPLETE + "&" + ExternalProcessViewerHandler.ID
 						+ "=" + key;
 					final var ep = ExternalProcess.getFinishedProcess(key);
-					d.a().attrClass(CSS.BUTTON).attrHref(link).text(ep.getClass().getSimpleName()+ " (" + key + ")").__();
+					d.a().attrClass(CSS.BUTTON).attrHref(link).text(ep.getClass().getSimpleName() + " (" + key + ")").__();
 				}
 			}).__()
 		.__(); //  div
