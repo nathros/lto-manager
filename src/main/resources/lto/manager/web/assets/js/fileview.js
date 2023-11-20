@@ -239,10 +239,12 @@ function contextMenu(sender, virtual, event) {
 
 	const delBtn = document.getElementById(HOST_FILEVIEW_FV_ID_DEL_BTN + getIDPostFix(virtual));
 	const path = sender.getAttribute(ATTR_PATH);
+	const name = getNameFromPath(path);
 	delBtn.onclick = function() { delVirtualDir(path); };
 
 	const renameBtn = document.getElementById(HOST_FILEVIEW_FV_ID_RENAME_BTN + getIDPostFix(virtual));
 	renameBtn.onclick = function() { renameVirtualDir(path, renameBtn.previousElementSibling.value); };
+	renameBtn.previousElementSibling.value = name;
 
 	const container = document.getElementById(HOST_FILEVIEW_CONEXT_CONTAINER_ID + getIDPostFix(virtual));
 	container.setAttribute(ATTR_PATH, path); // Used for set icons
@@ -318,10 +320,7 @@ function renameVirtualDir(dir, newName) {
 	if (dir === "") { return showToast(Toast.Error, "Directory path cannot be empty", -1, undefined, false); }
 	if (newName === "") { return showToast(Toast.Error, "Directory name cannot be empty", -1, undefined, false); }
 
-	const index = dir.lastIndexOf("/", dir.length - 2);
-	const originalName = dir.substr(index);
-
-	fetch(`/api/virtualdir?op=rename&path=${originalName}&name=${newName}`,
+	fetch(`/api/virtualdir?op=rename&path=${dir}&name=${newName}`,
 	{
 		method: "GET",
 		signal: AbortSignal.timeout(3000)
@@ -360,13 +359,12 @@ function getDirIcons(sender) {
 function setDirIcon(sender) {
 	const container = document.getElementById(HOST_FILEVIEW_CONEXT_CONTAINER_ID + getIDPostFix(true));
 	const path = container.getAttribute(ATTR_PATH);
-	const src = sender.src;
-	const iconName = src.substr(src.lastIndexOf("/") + 1).slice(0, -4);
+	const iconName = sender.src.substr(sender.src.lastIndexOf("/") + 1).slice(0, -4);
 
 	fetch(`/api/virtualdir?op=changeico&path=${path}&name=${iconName}`,
 	{
 		method: "GET",
-		//signal: AbortSignal.timeout(3000)
+		signal: AbortSignal.timeout(3000)
 	}).then((response) => {
 		return response.json();
 	}).then((json) => {

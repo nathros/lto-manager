@@ -86,7 +86,7 @@ public class TableOptions {
 	public static boolean updateOption(Connection con, OptionsSetting setting, String newValue) throws SQLException {
 		UpdateQuery uq = new UpdateQuery(table);
 
-		var index = setting.ordinal();
+		int index = setting.ordinal();
 		uq.addCustomSetClause(table.getColumns().get(COLUMN_INDEX_ID), index);
 		uq.addCustomSetClause(table.getColumns().get(COLUMN_INDEX_VALUE), newValue);
 		uq.addCondition(BinaryCondition.equalTo(table.getColumns().get(COLUMN_INDEX_ID), index));

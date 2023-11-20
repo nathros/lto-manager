@@ -166,17 +166,23 @@ public class Database {
 	}
 
 	public static boolean renameVirtualDir(String basePath, String newFileName) throws SQLException, IOException {
-		basePath = Util.virtualDirSeperatorsAdd(basePath);
 		newFileName = Util.virtualDirSeperatorsAdd(newFileName);
 		List<RecordFile> files = TableFile.getFilesInDirRecursive(connection, basePath);
 		if (files.size() == 0) {
-			throw new IOException("Directory " + basePath + " does not exist");
+			throw new IOException("Directory " + basePath + " does not exist ");
 		}
-		files.get(0).setVirtualFileName(newFileName);
+		final RecordFile dir = files.get(0);
+		final String originalName = dir.getVirtualFileName();
+		final String checkPath = Util.replaceLast(basePath, originalName, newFileName);
+		if (TableFile.getFilesInDirRecursive(connection, checkPath).size() > 0) {
+			throw new IOException("Directory " + checkPath + " already exists");
+		}
+
+		dir.setVirtualFileName(newFileName);
 		for (int i = 1; i < files.size(); i++) {
 			var file = files.get(i);
 			String originalPath = file.getVirtualFilePath();
-			String newPath = originalPath.replaceFirst(basePath, newFileName);
+			String newPath = Util.replaceLast(originalPath, originalName, newFileName);
 			file.setVirtualFilePath(newPath);
 		}
 		return TableFile.updateVirtualFiles(connection, files);
