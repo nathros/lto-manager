@@ -20,6 +20,7 @@ import lto.manager.common.database.tables.TableManufacturer;
 import lto.manager.common.database.tables.TableOptions;
 import lto.manager.common.database.tables.TableTape;
 import lto.manager.common.database.tables.TableTapeType;
+import lto.manager.common.database.tables.TableUser;
 import lto.manager.common.database.tables.TableVersion;
 import lto.manager.common.database.tables.records.RecordFile;
 import lto.manager.common.database.tables.records.RecordManufacturer;
@@ -46,6 +47,7 @@ public class Database {
 			op = (op && TableOptions.createTable(connection));
 			op = (op && TableJobs.createTable(connection));
 			op = (op && TableJobsMetadata.createTable(connection));
+			op = (op && TableUser.createTable(connection));
 			Options.refreshCache(); // Cache is created but is empty
 		} catch (SQLException e) {
 			e.printStackTrace();
