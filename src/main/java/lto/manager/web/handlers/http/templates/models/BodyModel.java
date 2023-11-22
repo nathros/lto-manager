@@ -19,6 +19,8 @@ public class BodyModel {
 	private final HttpExchange he;
 	private final Object model;
 	private final Map<String, Object> queriesURL;
+	private final Map<String, String> cookiesRequest;
+	private final List<String> cookiesResponse;
 	private final String method;
 	private final RequestBody body;
 
@@ -131,6 +133,8 @@ public class BodyModel {
 		this.he = he;
 		this.model = model;
 		queriesURL = new HashMap<String, Object>();
+		cookiesRequest = new HashMap<String, String>();
+		cookiesResponse = new ArrayList<String>();
 		String query = he.getRequestURI().getRawQuery();
 		parseQuery(query, queriesURL);
 		method = he.getRequestMethod();
@@ -142,6 +146,9 @@ public class BodyModel {
 			if (entry.getKey().equals("Content-type")) {
 				contentType = entry.getValue().get(0);
 				break;
+			}
+			if (entry.getKey().equals("Cookie")) {
+				parseCookies(entry.getValue(), cookiesRequest);
 			}
 		}
 
@@ -185,6 +192,31 @@ public class BodyModel {
 			return new ArrayList<String>();
 		}
 		return queries;
+	}
+
+	public String getCookie(String key) {
+		String result = cookiesRequest.get(key);
+		return result;
+	}
+
+	public String getCookieNotNull(String key) {
+		String result = getCookie(key);
+		if (result == null) {
+			return "";
+		}
+		return result;
+	}
+
+	public void addResponseCookie(String key, String value ) {
+		cookiesResponse.add(key + "=" + value + ";");
+	}
+
+	public boolean responseHasCookies() {
+		return cookiesResponse.size() > 0;
+	}
+
+	public List<String> getResponseCookies() {
+		return cookiesResponse;
 	}
 
 	public boolean hasQuery() {
@@ -254,6 +286,17 @@ public class BodyModel {
 						list.add(value);
 					}
 				}
+			}
+		}
+	}
+
+	private void parseCookies(List<String> cookies, Map<String, String> parameters) {
+		for (String keyValue : cookies) {
+			String[] split = keyValue.split("=");
+			if (split.length == 2) {
+				parameters.put(split[0], split[1]);
+			} else {
+				parameters.put(split[0], "");
 			}
 		}
 	}

@@ -1,0 +1,49 @@
+body > div {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: fixed;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	background-image: url("/assets/img/favico.svg");
+	background-position: center;
+	background-repeat: no-repeat;
+}
+
+body > div > div:nth-of-type(1) {
+	background-color: white;
+	border-radius: 8px;
+	filter: drop-shadow(0px 0px 4px #333);
+	padding: calc(var(--padding) * 4);
+	z-index: 10;
+}
+
+body > div > div:nth-of-type(2), body > div > div:nth-of-type(3) {
+	position: fixed;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+}
+
+body > div > div:nth-of-type(2) {
+	*background: repeating-linear-gradient(-45deg, black, black 5px, transparent 5px, transparent 10px);
+	opacity: 5%;
+	z-index: 5;
+}
+
+body > div > div:nth-of-type(3) {
+	background-color: rgba(255, 255, 255, 0.90);
+}
+
+form {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	align-items: center;
+	justify-content: center;
+	margin: auto;
+	padding: var(--padding);
+}

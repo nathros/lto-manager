@@ -1,11 +1,15 @@
 package lto.manager.common.database.tables;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.time.LocalDateTime;
 
+import com.healthmarketscience.sqlbuilder.BinaryCondition;
 import com.healthmarketscience.sqlbuilder.CreateTableQuery;
 import com.healthmarketscience.sqlbuilder.InsertQuery;
+import com.healthmarketscience.sqlbuilder.SelectQuery;
 import com.healthmarketscience.sqlbuilder.dbspec.basic.DbColumn;
 import com.healthmarketscience.sqlbuilder.dbspec.basic.DbSchema;
 import com.healthmarketscience.sqlbuilder.dbspec.basic.DbTable;
@@ -31,8 +35,6 @@ public class TableUser {
 	public static final int COLUMN_INDEX_PERMISSION_MASK = 4;
 	public static final int COLUMN_INDEX_ENABLED = 5;
 	public static final int COLUMN_INDEX_CREATED = 6;
-
-	public static final int SALT_LEN = 10;
 
 	static private DbTable getSelf() {
 		DbSchema schema = Database.schema;
@@ -88,6 +90,34 @@ public class TableUser {
 			return true;
 		}
 		return false;
+	}
+
+	public static RecordUser getUserByName(Connection con, String username) throws SQLException {
+		var statment = con.createStatement();
+
+		SelectQuery sq = new SelectQuery();
+		sq.addAllTableColumns(table);
+		sq.addCondition(BinaryCondition.equalTo(COLUMN_NAME_USERNAME, username));
+
+		String sql = sq.validate().toString();
+		statment.execute(sql);
+		if (statment.getUpdateCount() == 1) {
+			return fromResultSet(statment.getResultSet());
+		} else {
+			throw new SQLException("Multiple users have same name: " + username);
+		}
+	}
+
+	public static RecordUser fromResultSet(ResultSet result) throws SQLException {
+		final int id = result.getInt(COLUMN_INDEX_ID);
+		final String username = result.getString(COLUMN_INDEX_USERNAME);
+		final String hash = result.getString(COLUMN_INDEX_HASH);
+		final String salt = result.getString(COLUMN_INDEX_SALT);
+		final long permission = result.getLong(COLUMN_INDEX_PERMISSION_MASK);
+		final boolean enabled = result.getBoolean(COLUMN_INDEX_ENABLED);
+		final String createdStr = result.getString(COLUMN_INDEX_CREATED);
+		final LocalDateTime created = LocalDateTime.parse(createdStr);
+		return RecordUser.of(id, username, hash, salt, permission, enabled, created);
 	}
 
 }

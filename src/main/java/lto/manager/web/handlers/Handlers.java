@@ -11,6 +11,7 @@ import lto.manager.web.handlers.http.ajax.filelist.AJAXFilesListFetcher;
 import lto.manager.web.handlers.http.ajax.filelist.AJAXIconListFetcher;
 import lto.manager.web.handlers.http.api.APIVirtualDir;
 import lto.manager.web.handlers.http.pages.AssetHandler;
+import lto.manager.web.handlers.http.pages.LoginHandler;
 import lto.manager.web.handlers.http.pages.RootHandler;
 import lto.manager.web.handlers.http.pages.admin.AdminHandler;
 import lto.manager.web.handlers.http.pages.admin.UpdateOptionsHandler;
@@ -43,6 +44,7 @@ public class Handlers {
 		HashMap<String, HttpHandler> ret = new HashMap<String, HttpHandler>();
 		ret.put(RootHandler.PATH, new RootHandler());
 		ret.put(AssetHandler.PATH, new AssetHandler());
+		ret.put(LoginHandler.PATH, new LoginHandler());
 
 		ret.put(AdminHandler.PATH, new AdminHandler());
 		ret.put(UpdateOptionsHandler.PATH, new UpdateOptionsHandler());

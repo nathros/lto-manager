@@ -3,6 +3,7 @@ package lto.manager.web.handlers.http;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
@@ -64,9 +65,29 @@ public abstract class BaseHTTPHandler implements HttpHandler {
 
 	public abstract void requestHandle(HttpExchange he) throws Exception;
 
+	protected void addResponseCookies(HttpExchange he, List<String> cookies) {
+		he.getResponseHeaders().putIfAbsent("Set-Cookie", cookies);
+	}
+
+	protected void addResponseCookies(HttpExchange he, TemplatePageModel tpm) {
+		if (tpm.getBodyModel().responseHasCookies()) {
+			he.getResponseHeaders().putIfAbsent("Set-Cookie", tpm.getBodyModel().getResponseCookies());
+		}
+	}
+
 	protected void requestHandleCompletePage(HttpExchange he, TemplatePageModel tpm) throws IOException, InterruptedException, ExecutionException {
 		CompletableFuture<String> future = TemplatePage.view.renderAsync(tpm);
 		String response = future.get();
+		addResponseCookies(he, tpm);
+		he.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length());
+		OutputStream os = he.getResponseBody();
+		os.write(response.getBytes());
+		os.close();
+	}
+
+	protected void requestHandleCompleteFuture(HttpExchange he, CompletableFuture<String> future, TemplatePageModel tpm) throws IOException, InterruptedException, ExecutionException {
+		String response = future.get();
+		addResponseCookies(he, tpm);
 		he.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length());
 		OutputStream os = he.getResponseBody();
 		os.write(response.getBytes());

@@ -208,7 +208,7 @@ public class TableFile {
 		ResultSet resultChildren = statment.executeQuery(sql);
 
 		while (resultChildren.next()) {
-			files.add(parseRecordFile(resultChildren));
+			files.add(fromResultSet(resultChildren));
 		}
 
 		return files;
@@ -246,7 +246,7 @@ public class TableFile {
 		ResultSet resultChildren = statment.executeQuery(sql);
 
 		while (resultChildren.next()) {
-			files.add(parseRecordFile(resultChildren));
+			files.add(fromResultSet(resultChildren));
 		}
 
 		return files;
@@ -300,7 +300,7 @@ public class TableFile {
 		ResultSet resultChildren = statment.executeQuery(sql);
 
 		while (resultChildren.next()) {
-			files.add(parseRecordFile(resultChildren));
+			files.add(fromResultSet(resultChildren));
 		}
 
 		return files;
@@ -338,7 +338,7 @@ public class TableFile {
 		return true;
 	}
 
-	private static RecordFile parseRecordFile(ResultSet result) throws SQLException {
+	private static RecordFile fromResultSet(ResultSet result) throws SQLException {
 		int id = result.getInt(COLUMN_NAME_ID);
 		String nameV = result.getString(COLUMN_NAME_FILE_NAME_VIRTUAL);
 		String pathV = result.getString(COLUMN_NAME_FILE_PATH_VIRTUAL);

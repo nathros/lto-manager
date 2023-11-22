@@ -16,13 +16,27 @@ public class RecordUser {
 	private LocalDateTime dateAdded;
 
 	public RecordUser(int id, String username, String password, long permissionMask, boolean enabled, LocalDateTime dateAdded) {
-		this.setID(id);
+		this.id = id;
 		this.username = username;
 		this.salt = generateSalt();
 		this.hash = hashFunction(password, salt);
 		this.permissionMask = permissionMask;
 		this.enabled = enabled;
 		this.dateAdded = dateAdded;
+	}
+
+	public RecordUser(int id, String username, String salt, String hash, long permissionMask, boolean enabled, LocalDateTime dateAdded) {
+		this.id = id;
+		this.username = username;
+		this.salt = salt;
+		this.hash = hash;
+		this.permissionMask = permissionMask;
+		this.enabled = enabled;
+		this.dateAdded = dateAdded;
+	}
+
+	public static RecordUser of(int id, String username, String hash, String salt, long permissionMask, boolean enabled, LocalDateTime dateAdded) {
+		return new RecordUser(id, username, hash, salt, permissionMask, enabled, dateAdded);
 	}
 
 	public static RecordUser getDefaultUser() {
