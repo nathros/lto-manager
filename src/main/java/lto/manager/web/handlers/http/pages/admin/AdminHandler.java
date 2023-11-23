@@ -8,6 +8,7 @@ import org.xmlet.htmlapifaster.Div;
 import com.sun.net.httpserver.HttpExchange;
 
 import lto.manager.web.handlers.http.BaseHTTPHandler;
+import lto.manager.web.handlers.http.pages.LogOutHandler;
 import lto.manager.web.handlers.http.pages.admin.externalprocess.ExternalProcessHandler;
 import lto.manager.web.handlers.http.partial.pie.PieCPUUsage;
 import lto.manager.web.handlers.http.partial.pie.PieJVMMemoryUsage;
@@ -28,6 +29,8 @@ public class AdminHandler extends BaseHTTPHandler {
 			div
 				.a().attrClass(CSS.BUTTON).attrHref(UpdateOptionsHandler.PATH).text("Change Settings").__()
 				.a().attrClass(CSS.BUTTON).attrHref(ExternalProcessHandler.PATH).text("View External Processes").__()
+				.a().attrClass(CSS.BUTTON).attrHref(SessionViewerHandler.PATH).text("View Login Sessions").__()
+				.a().attrClass(CSS.BUTTON).attrHref(LogOutHandler.PATH).text("Log Out").__()
 				.div().attrClass("card").addAttr("header-text", "System information")
 					.div().attrClass(CSS.PIE_CONTAINER)
 						.of(pie -> PieCPUUsage.content(pie))

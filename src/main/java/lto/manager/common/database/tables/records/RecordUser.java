@@ -25,11 +25,11 @@ public class RecordUser {
 		this.dateAdded = dateAdded;
 	}
 
-	public RecordUser(int id, String username, String salt, String hash, long permissionMask, boolean enabled, LocalDateTime dateAdded) {
+	public RecordUser(int id, String username, String hash, String salt, long permissionMask, boolean enabled, LocalDateTime dateAdded) {
 		this.id = id;
 		this.username = username;
-		this.salt = salt;
 		this.hash = hash;
+		this.salt = salt;
 		this.permissionMask = permissionMask;
 		this.enabled = enabled;
 		this.dateAdded = dateAdded;
@@ -51,6 +51,10 @@ public class RecordUser {
 	public static String hashFunction(String password, String salt) {
 		final String hash = BCrypt.hashpw(password, salt);
 		return hash;
+	}
+
+	public String getHashedPassword(String password) {
+		return hashFunction(password, salt);
 	}
 
 	public int getID() { return id;}

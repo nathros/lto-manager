@@ -28,6 +28,7 @@ import lto.manager.common.database.tables.records.RecordOptions;
 import lto.manager.common.database.tables.records.RecordOptions.OptionsSetting;
 import lto.manager.common.database.tables.records.RecordTape;
 import lto.manager.common.database.tables.records.RecordTapeType;
+import lto.manager.common.database.tables.records.RecordUser;
 import lto.manager.common.log.Log;
 
 public class Database {
@@ -198,5 +199,9 @@ public class Database {
 		RecordFile changeFile = files.get(0);
 		changeFile.setCustomIcon(icon);
 		return TableFile.updateVirtualFileIcon(connection, changeFile.getID(), icon);
+	}
+
+	public static RecordUser getUserByName(String username) throws SQLException {
+		return TableUser.getUserByName(connection, username);
 	}
 }

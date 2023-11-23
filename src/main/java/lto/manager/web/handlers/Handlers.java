@@ -11,9 +11,11 @@ import lto.manager.web.handlers.http.ajax.filelist.AJAXFilesListFetcher;
 import lto.manager.web.handlers.http.ajax.filelist.AJAXIconListFetcher;
 import lto.manager.web.handlers.http.api.APIVirtualDir;
 import lto.manager.web.handlers.http.pages.AssetHandler;
-import lto.manager.web.handlers.http.pages.LoginHandler;
+import lto.manager.web.handlers.http.pages.LogInHandler;
+import lto.manager.web.handlers.http.pages.LogOutHandler;
 import lto.manager.web.handlers.http.pages.RootHandler;
 import lto.manager.web.handlers.http.pages.admin.AdminHandler;
+import lto.manager.web.handlers.http.pages.admin.SessionViewerHandler;
 import lto.manager.web.handlers.http.pages.admin.UpdateOptionsHandler;
 import lto.manager.web.handlers.http.pages.admin.externalprocess.ExternalProcessHandler;
 import lto.manager.web.handlers.http.pages.admin.externalprocess.ExternalProcessViewerHandler;
@@ -44,12 +46,14 @@ public class Handlers {
 		HashMap<String, HttpHandler> ret = new HashMap<String, HttpHandler>();
 		ret.put(RootHandler.PATH, new RootHandler());
 		ret.put(AssetHandler.PATH, new AssetHandler());
-		ret.put(LoginHandler.PATH, new LoginHandler());
+		ret.put(LogInHandler.PATH, new LogInHandler());
+		ret.put(LogOutHandler.PATH, new LogOutHandler());
 
 		ret.put(AdminHandler.PATH, new AdminHandler());
 		ret.put(UpdateOptionsHandler.PATH, new UpdateOptionsHandler());
 		ret.put(ExternalProcessHandler.PATH, new ExternalProcessHandler());
 		ret.put(ExternalProcessViewerHandler.PATH, new ExternalProcessViewerHandler());
+		ret.put(SessionViewerHandler.PATH, new SessionViewerHandler());
 
 		ret.put(LibraryHandler.PATH, new LibraryHandler());
 		ret.put(LibraryCreateHandler.PATH, new LibraryCreateHandler());

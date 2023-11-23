@@ -23,7 +23,7 @@ public class Options {
 		def.put(OptionsSetting.PLACEHOLDER_5, Integer.MIN_VALUE);
 		def.put(OptionsSetting.PLACEHOLDER_6, Integer.MIN_VALUE);
 		def.put(OptionsSetting.PLACEHOLDER_7, Integer.MIN_VALUE);
-		def.put(OptionsSetting.PLACEHOLDER_8, Integer.MIN_VALUE);
+		def.put(OptionsSetting.ENABLE_LOGIN, Boolean.TRUE);
 		def.put(OptionsSetting.LOG_EXTERNAL_PROCESS, Boolean.FALSE);
 		def.put(OptionsSetting.TIMER_EXTERNAL_PROCESS, Integer.valueOf(1));
 		def.put(OptionsSetting.STALE_EXTERNAL_PROCESS_TIME, Integer.valueOf(15));

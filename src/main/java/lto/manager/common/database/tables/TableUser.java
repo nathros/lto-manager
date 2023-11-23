@@ -24,9 +24,9 @@ public class TableUser {
 	public static final String COLUMN_NAME_USERNAME = "username";
 	public static final String COLUMN_NAME_HASH = "hash";
 	public static final String COLUMN_NAME_SALT = "salt";
-	public static final String COLUMN_PERMISSION_MASK = "permission";
-	public static final String COLUMN_ENABLED = "enabled";
-	public static final String COLUMN_CREATED = "created";
+	public static final String COLUMN_NAME_PERMISSION_MASK = "permission";
+	public static final String COLUMN_NAME_ENABLED = "enabled";
+	public static final String COLUMN_NAME_CREATED = "created";
 
 	public static final int COLUMN_INDEX_ID = 0;
 	public static final int COLUMN_INDEX_USERNAME = 1;
@@ -48,12 +48,12 @@ public class TableUser {
 		String key[] = new String[] { COLUMN_NAME_ID};
 		table.primaryKey(COLUMN_NAME_ID, key);
 
-		table.addColumn(COLUMN_NAME_USERNAME, Types.VARCHAR, 128);
+		table.addColumn(COLUMN_NAME_USERNAME, Types.VARCHAR, 128).unique();
 		table.addColumn(COLUMN_NAME_HASH, Types.VARCHAR, 128);
 		table.addColumn(COLUMN_NAME_SALT, Types.VARCHAR, 32);
-		table.addColumn(COLUMN_PERMISSION_MASK, Types.BIGINT, null);
-		table.addColumn(COLUMN_ENABLED, Types.BOOLEAN, null);
-		table.addColumn(COLUMN_CREATED, Types.TIMESTAMP_WITH_TIMEZONE, null);
+		table.addColumn(COLUMN_NAME_PERMISSION_MASK, Types.BIGINT, null);
+		table.addColumn(COLUMN_NAME_ENABLED, Types.BOOLEAN, null);
+		table.addColumn(COLUMN_NAME_CREATED, Types.TIMESTAMP_WITH_TIMEZONE, null);
 
 		return table;
 	}
@@ -97,25 +97,29 @@ public class TableUser {
 
 		SelectQuery sq = new SelectQuery();
 		sq.addAllTableColumns(table);
-		sq.addCondition(BinaryCondition.equalTo(COLUMN_NAME_USERNAME, username));
+		sq.addCondition(BinaryCondition.like(table.getColumns().get(COLUMN_INDEX_USERNAME), username));
 
 		String sql = sq.validate().toString();
 		statment.execute(sql);
-		if (statment.getUpdateCount() == 1) {
-			return fromResultSet(statment.getResultSet());
-		} else {
-			throw new SQLException("Multiple users have same name: " + username);
+		var results = statment.getResultSet();
+		if (!results.next()) {
+			throw new SQLException("User not found: [" + username + "]");
 		}
+		RecordUser user = fromResultSet(results);
+		if (results.next()) {
+			throw new SQLException("Multiple users have same name: [" + username + "]");
+		}
+		return user;
 	}
 
 	public static RecordUser fromResultSet(ResultSet result) throws SQLException {
-		final int id = result.getInt(COLUMN_INDEX_ID);
-		final String username = result.getString(COLUMN_INDEX_USERNAME);
-		final String hash = result.getString(COLUMN_INDEX_HASH);
-		final String salt = result.getString(COLUMN_INDEX_SALT);
-		final long permission = result.getLong(COLUMN_INDEX_PERMISSION_MASK);
-		final boolean enabled = result.getBoolean(COLUMN_INDEX_ENABLED);
-		final String createdStr = result.getString(COLUMN_INDEX_CREATED);
+		final int id = result.getInt(COLUMN_NAME_ID);
+		final String username = result.getString(COLUMN_NAME_USERNAME);
+		final String hash = result.getString(COLUMN_NAME_HASH);
+		final String salt = result.getString(COLUMN_NAME_SALT);
+		final long permission = result.getLong(COLUMN_NAME_PERMISSION_MASK);
+		final boolean enabled = result.getBoolean(COLUMN_NAME_ENABLED);
+		final String createdStr = result.getString(COLUMN_NAME_CREATED);
 		final LocalDateTime created = LocalDateTime.parse(createdStr);
 		return RecordUser.of(id, username, hash, salt, permission, enabled, created);
 	}

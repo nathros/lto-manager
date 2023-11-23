@@ -10,10 +10,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import com.sun.net.httpserver.HttpExchange;
 
 import lto.manager.common.Util;
+import lto.manager.web.handlers.http.BaseHTTPHandler;
 
 public class BodyModel {
 	private final HttpExchange he;
@@ -207,8 +209,8 @@ public class BodyModel {
 		return result;
 	}
 
-	public void addResponseCookie(String key, String value ) {
-		cookiesResponse.add(key + "=" + value + ";");
+	public void addResponseCookie(String key, String value, int lifeTimeDays) { // max-age=seconds
+		cookiesResponse.add(key + "=" + value + "; max-age=" + (lifeTimeDays * (60 * 60 * 24)));
 	}
 
 	public boolean responseHasCookies() {
@@ -217,6 +219,22 @@ public class BodyModel {
 
 	public List<String> getResponseCookies() {
 		return cookiesResponse;
+	}
+
+	public UUID getSession() {
+		final String session = getCookie(BaseHTTPHandler.COOKIE_SESSION);
+		if (session != null) {
+			return UUID.fromString(session);
+		}
+		return null;
+	}
+
+	public void setNewSession(UUID uuid) {
+		addResponseCookie(BaseHTTPHandler.COOKIE_SESSION, uuid.toString(), 31);
+	}
+
+	public void removeSession(UUID uuid) {
+		addResponseCookie(BaseHTTPHandler.COOKIE_SESSION, uuid.toString(), -1);
 	}
 
 	public boolean hasQuery() {
@@ -291,12 +309,15 @@ public class BodyModel {
 	}
 
 	private void parseCookies(List<String> cookies, Map<String, String> parameters) {
-		for (String keyValue : cookies) {
-			String[] split = keyValue.split("=");
-			if (split.length == 2) {
-				parameters.put(split[0], split[1]);
-			} else {
-				parameters.put(split[0], "");
+		for (String header : cookies) {
+			String[] cookieKeyValue = header.split(";");
+			for (String keyValue : cookieKeyValue) {
+				String[] split = keyValue.split("=");
+				if (split.length == 2) {
+					parameters.put(split[0].trim(), split[1]);
+				} else {
+					parameters.put(split[0].trim(), "");
+				}
 			}
 		}
 	}

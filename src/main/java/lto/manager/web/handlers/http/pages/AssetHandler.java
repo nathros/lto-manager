@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.URI;
 import java.net.URL;
 import java.util.HashSet;
 
@@ -22,15 +21,14 @@ public class AssetHandler extends BaseHTTPHandler {
 
 	@Override
 	public void requestHandle(HttpExchange he) throws IOException {
-		URI requestedFile = he.getRequestURI();
-		String resource = path + requestedFile;
+		final String resource = he.getRequestURI().toString();
 		InputStream is = null;
 		if (!resource.contains("..")) { // Traversal attack check
 			try {
-				is = loader.getResourceAsStream(resource);
+				is = getResourceLoader(resource);
 			} catch (Exception e) {}
 
-			String extension = requestedFile.toString();
+			String extension = resource.toString();
 			int index = extension.lastIndexOf('.');
 			if (index > 0) {
 				extension = extension.substring(index + 1);
@@ -64,6 +62,11 @@ public class AssetHandler extends BaseHTTPHandler {
 			Log.l.severe("Asset Handler cannot find: " + resource);
 		}
 		if (is != null) is.close();
+	}
+
+	public static InputStream getResourceLoader(String requestedFile) {
+		String resource = path + requestedFile;
+		return loader.getResourceAsStream(resource);
 	}
 
 	public static boolean assetExists(String resourcePath) {

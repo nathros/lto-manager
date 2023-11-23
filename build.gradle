@@ -16,6 +16,7 @@ dependencies {
 	implementation group: 'com.github.xmlet', name: 'htmlflow', version: '4.0'
 	implementation group: 'com.healthmarketscience.sqlbuilder', name: 'sqlbuilder', version: '3.0.2'
 	implementation group: 'org.java-websocket', name: 'Java-WebSocket', version: '1.5.4'
+	implementation group: 'org.springframework.security', name: 'spring-security-crypto', version: '6.1.5'
 }
 
 /*javafx {

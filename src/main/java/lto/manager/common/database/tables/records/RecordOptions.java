@@ -22,7 +22,7 @@ public class RecordOptions {
 		PLACEHOLDER_5("placeholder 5"),
 		PLACEHOLDER_6("placeholder 6"),
 		PLACEHOLDER_7("placeholder 7"),
-		PLACEHOLDER_8("placeholder 8"),
+		ENABLE_LOGIN("Enable login"),
 		LOG_EXTERNAL_PROCESS("Log external process std out/err"),
 		TIMER_EXTERNAL_PROCESS("Frequency to clear completed external processes (minutes)"),
 		STALE_EXTERNAL_PROCESS_TIME("Time passed to deem completed external process stale and mark for removal (minutes)"),

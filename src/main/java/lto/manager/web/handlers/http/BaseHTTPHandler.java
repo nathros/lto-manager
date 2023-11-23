@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
@@ -13,7 +14,9 @@ import com.sun.net.httpserver.HttpHandler;
 import lto.manager.common.database.Options;
 import lto.manager.common.database.tables.records.RecordOptions.OptionsSetting;
 import lto.manager.common.log.Log;
+import lto.manager.common.state.State;
 import lto.manager.web.handlers.http.pages.AssetHandler;
+import lto.manager.web.handlers.http.pages.LogInHandler;
 import lto.manager.web.handlers.http.templates.TemplateAJAX;
 import lto.manager.web.handlers.http.templates.TemplateAJAX.TemplateFetcherModel;
 import lto.manager.web.handlers.http.templates.TemplateInternalError;
@@ -39,6 +42,8 @@ public abstract class BaseHTTPHandler implements HttpHandler {
 	public static final String MEDIA_KEY = "media";
 	public static final String CSS_MOBILE_MEDIA = "screen and (max-width: 400px)";
 
+	public static final String COOKIE_SESSION = "session";
+
 	private static int count = 0;
 
 	@Override
@@ -51,9 +56,19 @@ public abstract class BaseHTTPHandler implements HttpHandler {
 				Log.l.info(message);
 			}
 		}
+		BaseHTTPHandler handler = this; // If authentication failed then replace this with login handler
+
+		if ((boolean) Options.getData(OptionsSetting.ENABLE_LOGIN)) {
+			final String session = getSessionCookie(he);
+			if (!State.isLoginSessionValid(session)) {
+				handler = new LogInHandler();
+				Log.l.info("User not logged in show login page: " + he.getRequestHeaders().getFirst("Host")+ he.getRequestURI());
+			}
+		}
+
 		count++;
 		try {
-			this.requestHandle(he);
+			handler.requestHandle(he);
 		} catch (Exception e) {
 			e.printStackTrace();
 			errorHandle(he, e);
@@ -121,5 +136,24 @@ public abstract class BaseHTTPHandler implements HttpHandler {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	private String getSessionCookie(HttpExchange he) { // Similar to BodyModel.parseCookies - done twice
+		for (Map.Entry<String, List<String>> entry : he.getRequestHeaders().entrySet()) {
+			if (entry.getKey().equals("Cookie")) {
+				for (String cookieStr : entry.getValue()) {
+					String[] pairs = cookieStr.split(";");
+					for (String keyPair : pairs) {
+						String[] split = keyPair.split("=");
+						if (split.length == 2) {
+							if (split[0].trim().equals(BaseHTTPHandler.COOKIE_SESSION)) {
+								return split[1];
+							}
+						}
+					}
+				}
+			}
+		}
+		return "";
 	}
 }
