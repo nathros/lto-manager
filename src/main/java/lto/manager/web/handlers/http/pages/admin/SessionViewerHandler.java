@@ -21,21 +21,46 @@ public class SessionViewerHandler extends BaseHTTPHandler {
 	public static SessionViewerHandler self = new SessionViewerHandler();
 	public static final String PATH = "/admin/session";
 
+	private static final String DEL = "del";
+
 	static Void content(Div<?> view, BodyModel model) {
+		final String deleteSession = model.getQuery(DEL);
+		String tmp = null;
+		if (deleteSession != null) {
+			if (State.removeLoginSession(UUID.fromString(deleteSession))) {
+				tmp = "Successfully removed session";
+			} else {
+				tmp = "Failed to remove session";
+			}
+		}
+		final String message = tmp;
+
 		view
 		.div().of(div -> {
 			div
-			.a().attrClass(CSS.BUTTON).attrOnclick("history.back()").text("Back").__()
+				.a().attrClass(CSS.BUTTON).attrOnclick("history.back()").text("Back").__()
+				.of(p -> { if (message != null) p.p().text(message).__(); })
 				.table().attrClass(CSS.TABLE).of(table -> {
 					table.attrBorder(EnumBorderType._1).tr()
+						.th().text("Created").__()
+						.th().text("Expiry").__()
 						.th().text("Session ID").__()
 						.th().text("Username").__()
+						.th().text("Action").__()
 					.__();
 					final var sessions = State.getAllSessions();
 					for (UUID item : sessions.keySet()) {
 						table.tr()
+							.td().text(sessions.get(item).created().toString()).__()
+							.td().text(sessions.get(item).expiry().toString()).__()
 							.td().text(item.toString()).__()
-							.td().text(sessions.get(item).getUsername()).__()
+							.td().text(sessions.get(item).user().getUsername()).__()
+							.td()
+								.a()
+									.attrClass(CSS.BUTTON + CSS.BACKGROUND_CAUTION)
+									.attrHref(PATH + "?" + DEL + "=" + item.toString())
+									.text("Delete")
+							.__()
 						.__();
 					}
 				}).__()

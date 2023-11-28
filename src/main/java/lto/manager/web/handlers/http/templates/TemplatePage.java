@@ -11,6 +11,7 @@ import htmlflow.HtmlPage;
 import htmlflow.HtmlViewAsync;
 import lto.manager.common.Main;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
+import lto.manager.web.handlers.http.pages.LogOutHandler;
 import lto.manager.web.handlers.http.pages.admin.AdminHandler;
 import lto.manager.web.handlers.http.pages.drives.DrivesHandler;
 import lto.manager.web.handlers.http.pages.files.FilesHandler;
@@ -60,7 +61,7 @@ public class TemplatePage {
 	public static HtmlViewAsync view = HtmlFlow.viewAsync(TemplatePage::template);
 
 	static void template(HtmlPage view) {
-		final String selected = " selected";
+		final String selected = "selected";
 
 		view
 			.html().attrLang(BaseHTTPHandler.LANG_VALUE)
@@ -86,6 +87,13 @@ public class TemplatePage {
 					.__() // Toast
 					.header().attrClass("header-root")
 					.div().attrClass("header-root-container")
+						.div().attrClass("header-user")
+							.ul().attrClass("menu-list")
+								.li()
+									.a().attrClass(CSS.ICON_BOX_ARROW_RIGHT).attrHref(LogOutHandler.PATH).text("Log Out").__()
+								.__()
+							.__()
+						.__()
 						.div().attrId("nav-toggle")
 							.input().attrType(EnumTypeInputType.CHECKBOX).__()
 							.div() // Menu Icon
@@ -94,6 +102,7 @@ public class TemplatePage {
 								.span().__()
 							.__() // div
 							.ul()
+								.attrClass("menu-list")
 								.attrId("nav-menu")
 								.<TemplatePageModel>dynamic((ul, model) -> {
 									ul.li()

@@ -29,6 +29,7 @@ public class CSS {
 	public final static String ICON_EDIT = "icon-edit ";
 	public final static String ICON_CHECK = "icon-check ";
 	public final static String ICON_CROSS = "icon-cross ";
+	public final static String ICON_BOX_ARROW_RIGHT = "icon-box-arrow-right ";
 
 	public final static String FV_ID = "id-wtree";
 	public final static String FV_ID_CONTEXT_CONTAINER = "wtree-context-container";

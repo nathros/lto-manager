@@ -56,6 +56,34 @@ input:focus, textarea:focus {
 	display: flex;
 	flex-direction: row-reverse;
 }
+.header-user {
+	width: 3rem;
+	transition: 0.3s ease;
+}
+.header-user:hover {
+	background-color: rgba(255, 255, 255, 0.1);
+}
+.header-user::before {
+	content: '';
+	background-image: url(/assets/img/person-fill.svg);
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: 2rem;
+	display: block;
+	width: 100%;
+	height: 100%;
+	filter: invert(1);
+}
+.header-user > ul {
+	background-color: #101820;
+	position: fixed;
+	top: 3rem;
+	right: 0;
+	display: none;
+}
+.header-user:hover > ul {
+	display: block;
+}
 .nav-area {
 	background-color: var(--common-background-colour);
 	min-width: 12rem;
@@ -83,7 +111,7 @@ input:focus, textarea:focus {
 	align-items: center;
 	justify-content: center;
 }
-#nav-toggle a {
+.menu-list a {
 	text-decoration: none;
 	color: rgba(255, 255, 255, 0.5);
 	transition: 0.3s ease;
@@ -94,7 +122,7 @@ input:focus, textarea:focus {
     height: 100%;
     padding: 0.5rem;
 }
-#nav-toggle a:before {
+.menu-list a:before {
 	content: '';
 	height: 2rem;
 	width: 2rem;
@@ -134,22 +162,33 @@ input:focus, textarea:focus {
 .icon-cross:before {
 	background-image: url('/assets/img/x.svg');
 }
-#nav-toggle a:hover:before,
-#nav-toggle a.selected:before  {
+.icon-box-arrow-right:before {
+	background-image: url('/assets/img/box-arrow-right.svg');
+}
+.menu-list {
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+}
+.menu-list a:hover:before,
+.menu-list a.selected:before  {
 	opacity: 1;
 }
-#nav-menu li a.selected {
+.menu-list li a.selected {
 	background-color: var(--common-selected-colour);
 }
-#nav-toggle a:hover,
-#nav-toggle a.selected {
+.menu-list a:hover,
+.menu-list a.selected {
 	color: rgba(255, 255, 255, 1);
 }
-#nav-toggle a:hover {
+.menu-list a:hover {
 	background-color: rgba(255, 255, 255, 0.1);
 }
-#nav-toggle a.selected:hover {
+.menu-list a.selected:hover {
 	opacity: 0.75;
+}
+.menu-list li:hover {
+	cursor: pointer;
 }
 #nav-toggle input {
 	display: block;
@@ -168,7 +207,6 @@ input:focus, textarea:focus {
 	margin: 0;
 	left: 0;
 	background: #101820;
-	list-style-type: none;
 	padding: 0;
 	transform-origin: 0% 0%;
 	transition: transform 0.5s cubic-bezier(0.77,0.2,0.05,1.0);

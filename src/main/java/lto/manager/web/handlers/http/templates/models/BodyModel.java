@@ -210,7 +210,7 @@ public class BodyModel {
 	}
 
 	public void addResponseCookie(String key, String value, int lifeTimeDays) { // max-age=seconds
-		cookiesResponse.add(key + "=" + value + "; max-age=" + (lifeTimeDays * (60 * 60 * 24)));
+		cookiesResponse.add(key + "=" + value + "; path=/; max-age=" + (lifeTimeDays * (60 * 60 * 24)));
 	}
 
 	public boolean responseHasCookies() {
