@@ -5,11 +5,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import lto.manager.common.ExternalProcess;
 import lto.manager.common.Main;
 import lto.manager.common.database.Database;
-import lto.manager.common.database.tables.records.RecordOptions.OptionsSetting;
-import lto.manager.common.log.Log;
+import lto.manager.common.state.State;
 
 public class MainWeb {
 	public static int portHTTP = 9000;
@@ -38,13 +36,7 @@ public class MainWeb {
 				httpsServer.Start(portHTTPS, keyStoreFile, storePass.toCharArray(), keyPass.toCharArray());
 			}
 			Database.openDatabase(dbPath);
-			try {
-				ExternalProcess.startRemoveRetired(
-						Integer.parseInt(Database.getOption(OptionsSetting.TIMER_EXTERNAL_PROCESS)),
-						Integer.parseInt(Database.getOption(OptionsSetting.STALE_EXTERNAL_PROCESS_TIME)));
-			} catch (Exception e) {
-				Log.l.severe("Failed to start startRemoveRetired " + e.getMessage());
-			}
+			State.startBackgroundCleanup();
 			SimpleWebSocketServer.main(null);
 		}
 	}

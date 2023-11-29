@@ -23,16 +23,32 @@ public class Options {
 		def.put(OptionsSetting.PLACEHOLDER_5, Integer.MIN_VALUE);
 		def.put(OptionsSetting.PLACEHOLDER_6, Integer.MIN_VALUE);
 		def.put(OptionsSetting.PLACEHOLDER_7, Integer.MIN_VALUE);
-		def.put(OptionsSetting.ENABLE_LOGIN, Boolean.TRUE);
 		def.put(OptionsSetting.LOG_EXTERNAL_PROCESS, Boolean.FALSE);
-		def.put(OptionsSetting.TIMER_EXTERNAL_PROCESS, Integer.valueOf(1));
+		def.put(OptionsSetting.BACKGROUND_CLEANUP_TIMER, Integer.valueOf(15));
 		def.put(OptionsSetting.STALE_EXTERNAL_PROCESS_TIME, Integer.valueOf(15));
 		def.put(OptionsSetting.PLACEHOLDER_C, Integer.MIN_VALUE);
 		def.put(OptionsSetting.PLACEHOLDER_D, Integer.MIN_VALUE);
 		def.put(OptionsSetting.PLACEHOLDER_E, Integer.MIN_VALUE);
 		def.put(OptionsSetting.PLACEHOLDER_F, Integer.MIN_VALUE);
 		def.put(OptionsSetting.PLACEHOLDER_H, Integer.MIN_VALUE);
-		def.put(OptionsSetting.PLACEHOLDER_I, Integer.MIN_VALUE);
+		def.put(OptionsSetting.PLACEHOLDER_J, Integer.MIN_VALUE);
+		def.put(OptionsSetting.PLACEHOLDER_K, Integer.MIN_VALUE);
+		def.put(OptionsSetting.PLACEHOLDER_L, Integer.MIN_VALUE);
+		def.put(OptionsSetting.PLACEHOLDER_M, Integer.MIN_VALUE);
+		def.put(OptionsSetting.ENABLE_LOGIN, Boolean.TRUE);
+		def.put(OptionsSetting.PLACEHOLDER_N, Integer.MIN_VALUE);
+		def.put(OptionsSetting.PLACEHOLDER_O, Integer.MIN_VALUE);
+		def.put(OptionsSetting.PLACEHOLDER_P, Integer.MIN_VALUE);
+		def.put(OptionsSetting.PLACEHOLDER_Q, Integer.MIN_VALUE);
+		def.put(OptionsSetting.PLACEHOLDER_R, Integer.MIN_VALUE);
+		def.put(OptionsSetting.PLACEHOLDER_S, Integer.MIN_VALUE);
+		def.put(OptionsSetting.PLACEHOLDER_T, Integer.MIN_VALUE);
+		def.put(OptionsSetting.PLACEHOLDER_U, Integer.MIN_VALUE);
+		def.put(OptionsSetting.PLACEHOLDER_V, Integer.MIN_VALUE);
+		def.put(OptionsSetting.PLACEHOLDER_W, Integer.MIN_VALUE);
+		def.put(OptionsSetting.PLACEHOLDER_X, Integer.MIN_VALUE);
+		def.put(OptionsSetting.PLACEHOLDER_Y, Integer.MIN_VALUE);
+		def.put(OptionsSetting.PLACEHOLDER_Z, Integer.MIN_VALUE);
 		return def;
 	}
 
@@ -81,7 +97,8 @@ public class Options {
 				Database.updateOption(setting, String.valueOf(value));
 				cache.put(setting, value);
 			} else {
-				Log.l.severe("Attempt to set user option " + setting.toString() + " as boolean");
+				Log.l.severe("Attempt to set user option " + setting.toString() + " which is "
+						+ defaultOption.getClass().getTypeName() + " as " + value.getClass().getTypeName());
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

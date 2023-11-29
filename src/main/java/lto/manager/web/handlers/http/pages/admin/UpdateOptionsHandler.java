@@ -56,29 +56,31 @@ public class UpdateOptionsHandler extends BaseHTTPHandler {
 				if (queryList.size() > 0) f.i().attrStyle("color:green").text("Updated successful").__().br().__();
 				if (reset == Boolean.TRUE) f.i().attrStyle("color:green").text("Settings have been reset").__().br().__();
 				for (RecordOptions opt: options) {
+					final String optionDescription = OptionsSetting.valueOf(opt.getIndex()).toString();
+					final String optionStyle = optionDescription.contains("placeholder") ? "display:none" : "";
 					switch (opt.getDataType()) {
 					case Boolean:
 						final boolean value = opt.getValueAsBool();
 						final String trueStr = Boolean.toString(true);
 						final String falseStr = Boolean.toString(false);
 						f
-							.b().attrStyle("width:350px;display:inline-block;").text(OptionsSetting.valueOf(opt.getIndex()).toString()).__()
-							.select().attrName(OPTIONS_INDEX)
+							.b().attrStyle("width:350px;display:inline-block;" + optionStyle).text(optionDescription).__()
+							.select().attrName(OPTIONS_INDEX).attrStyle(optionStyle)
 								.option().attrValue(trueStr).of(o -> HTML.option(o, value)).text(trueStr) .__()
 								.option().attrValue(falseStr).of(o -> HTML.option(o, !value)).text(falseStr).__()
-							.__().br().__();
+							.__().br().attrStyle(optionStyle).__();
 						break;
 					case Integer:
 						f
-							.b().attrStyle("width:350px;display:inline-block;").text(OptionsSetting.valueOf(opt.getIndex()).toString()).__()
-							.input().attrType(EnumTypeInputType.NUMBER).attrName(OPTIONS_INDEX).attrValue(opt.getValueAsString()).__()
-							.br().__();
+							.b().attrStyle("width:350px;display:inline-block;" + optionStyle).text(optionDescription).__()
+							.input().attrStyle(optionStyle).attrType(EnumTypeInputType.NUMBER).attrName(OPTIONS_INDEX).attrValue(opt.getValueAsString()).__()
+							.br().attrStyle(optionStyle).__();
 						break;
 					case String:
 						f
-							.b().attrStyle("width:350px;display:inline-block;").text(OptionsSetting.valueOf(opt.getIndex()).toString()).__()
-							.input().attrType(EnumTypeInputType.TEXT).attrName(OPTIONS_INDEX).attrValue(opt.getValueAsString()).__()
-							.br().__();
+							.b().attrStyle("width:350px;display:inline-block;" + optionStyle).text(optionDescription).__()
+							.input().attrStyle(optionStyle).attrType(EnumTypeInputType.TEXT).attrName(OPTIONS_INDEX).attrValue(opt.getValueAsString()).__()
+							.br().attrStyle(optionStyle).__();
 						break;
 					default:
 						f

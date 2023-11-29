@@ -8,8 +8,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
@@ -35,7 +33,6 @@ public abstract class ExternalProcess {
 
 	private static HashMap<String, ExternalProcess> currentProcesses = new HashMap<String, ExternalProcess>();
 	private static HashMap<String, ExternalProcess> retiredProcesses = new HashMap<String, ExternalProcess>();
-	private static Timer clearRetired = null;
 	private LocalDateTime exitDateTime = null;
 
 	public boolean start(Semaphore completedSemaphore, String uuid, String... commands)
@@ -204,45 +201,30 @@ public abstract class ExternalProcess {
 
 	public abstract void onProcessExit();
 
-	public static void startRemoveRetired(final int repeatEveryMinutes, final int ageOfProcessMinutes) {
-		if (repeatEveryMinutes <= 0)
-			throw new IllegalArgumentException("repeatEveryMinutes is less than or equal to 0");
+	public static void removeRetired(final int ageOfProcessMinutes) {
 		if (ageOfProcessMinutes <= 0)
 			throw new IllegalArgumentException("ageOfProcessMinutes is less than or equal to 0");
-		if (clearRetired == null) {
-			clearRetired = new Timer();
-			final var schedule = repeatEveryMinutes * 1000 * 60;
-			clearRetired.scheduleAtFixedRate(new TimerTask() {
-				@Override
-				public void run() {
-					LocalDateTime now = LocalDateTime.now();
-					LocalDateTime from = now.minusMinutes(ageOfProcessMinutes);
 
-					var iterator = retiredProcesses.entrySet().iterator();
-					while (iterator.hasNext()) {
-						var retired = iterator.next();
-						final ExternalProcess p = retired.getValue();
-						final LocalDateTime finished = p.getExitDateTime();
-						if (finished == null) {
-							Log.l.severe("Retired processes " + retired.getClass().getSimpleName() + ":"
-									+ retired.getKey() + " has null exit date time # removed");
-							iterator.remove();
-						} else {
-							if (from.isAfter(finished)) {
-								Log.l.finer("Removed old retired processes " + retired.getClass().getSimpleName() + ":"
-										+ retired.getKey() + " has expired");
-								iterator.remove();
-							}
-						}
-					}
+		LocalDateTime now = LocalDateTime.now();
+		LocalDateTime from = now.minusMinutes(ageOfProcessMinutes);
+
+		var iterator = retiredProcesses.entrySet().iterator();
+		while (iterator.hasNext()) {
+			var retired = iterator.next();
+			final ExternalProcess p = retired.getValue();
+			final LocalDateTime finished = p.getExitDateTime();
+			if (finished == null) {
+				Log.l.severe("Retired processes " + retired.getClass().getSimpleName() + ":" + retired.getKey()
+						+ " has null exit date time # removed");
+				iterator.remove();
+			} else {
+				if (from.isAfter(finished)) {
+					Log.l.finer("Removed old retired processes " + retired.getClass().getSimpleName() + ":"
+							+ retired.getKey() + " has expired");
+					iterator.remove();
 				}
-			}, schedule, schedule);
+			}
 		}
 	}
 
-	public static void stopRemoveRetired() {
-		clearRetired.cancel();
-		clearRetired.purge();
-		clearRetired = null;
-	}
 }
