@@ -9,6 +9,8 @@ import com.sun.net.httpserver.HttpExchange;
 
 import lto.manager.common.ExternalProcess;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
+import lto.manager.web.handlers.http.pages.admin.AdminHandler;
+import lto.manager.web.handlers.http.templates.TemplatePage.BreadCrumbs;
 import lto.manager.web.handlers.http.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.http.templates.TemplatePage.TemplatePageModel;
 import lto.manager.web.handlers.http.templates.models.BodyModel;
@@ -18,6 +20,7 @@ import lto.manager.web.resource.CSS;
 public class ExternalProcessViewerHandler extends BaseHTTPHandler {
 	public static ExternalProcessViewerHandler self = new ExternalProcessViewerHandler();
 	public static final String PATH = "/admin/ext/view";
+	public static final String NAME = "External Processes Viewer";
 
 	public static final String TYPE = "type";
 	public static final String ID = "id";
@@ -65,7 +68,8 @@ public class ExternalProcessViewerHandler extends BaseHTTPHandler {
 	@Override
 	public void requestHandle(HttpExchange he) throws IOException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of("External Processes Viewer");
-		TemplatePageModel tpm = TemplatePageModel.of(ExternalProcessViewerHandler::content, thm, SelectedPage.Admin, BodyModel.of(he, null));
+		BreadCrumbs crumbs = new BreadCrumbs().add(AdminHandler.NAME, AdminHandler.PATH).add(ExternalProcessHandler.NAME, ExternalProcessHandler.PATH).add(NAME, "");
+		TemplatePageModel tpm = TemplatePageModel.of(ExternalProcessViewerHandler::content, thm, SelectedPage.Admin, BodyModel.of(he, null), crumbs);
 		requestHandleCompletePage(he, tpm);
 	}
 

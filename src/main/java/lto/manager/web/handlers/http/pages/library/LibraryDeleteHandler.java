@@ -65,7 +65,7 @@ public class LibraryDeleteHandler extends BaseHTTPHandler {
 	@Override
 	public void requestHandle(HttpExchange he) throws IOException, SQLException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of("Tape Delete");
-		TemplatePageModel tpm = TemplatePageModel.of(LibraryDeleteHandler::body, thm, SelectedPage.Library, BodyModel.of(he, null));
+		TemplatePageModel tpm = TemplatePageModel.of(LibraryDeleteHandler::body, thm, SelectedPage.Library, BodyModel.of(he, null), null);
 		requestHandleCompletePage(he, tpm);
 	}
 }

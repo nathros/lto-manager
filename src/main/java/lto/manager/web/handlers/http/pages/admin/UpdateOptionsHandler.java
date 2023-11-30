@@ -17,6 +17,7 @@ import lto.manager.common.database.Options;
 import lto.manager.common.database.tables.records.RecordOptions;
 import lto.manager.common.database.tables.records.RecordOptions.OptionsSetting;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
+import lto.manager.web.handlers.http.templates.TemplatePage.BreadCrumbs;
 import lto.manager.web.handlers.http.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.http.templates.TemplatePage.TemplatePageModel;
 import lto.manager.web.handlers.http.templates.models.BodyModel;
@@ -25,7 +26,8 @@ import lto.manager.web.resource.CSS;
 import lto.manager.web.resource.HTML;
 
 public class UpdateOptionsHandler extends BaseHTTPHandler {
-	public static final String PATH = "/admin/options";
+	public static final String PATH = "/admin/settings";
+	public static final String NAME = "Settings";
 
 	public static final String OPTIONS_INDEX = "options-index";
 	public static final String OPTIONS_RESET = "reset";
@@ -91,7 +93,6 @@ public class UpdateOptionsHandler extends BaseHTTPHandler {
 					}
 				}
 			})
-			.a().attrClass(CSS.BUTTON).attrOnclick("history.back()").text("Back").__()
 			.button().attrClass(CSS.BUTTON).attrType(EnumTypeButtonType.SUBMIT).text("Update").__()
 			.button()
 				.attrClass(CSS.BUTTON + CSS.BACKGROUND_CAUTION)
@@ -106,8 +107,9 @@ public class UpdateOptionsHandler extends BaseHTTPHandler {
 
 	@Override
 	public void requestHandle(HttpExchange he) throws IOException, InterruptedException, ExecutionException {
-		HeadModel thm = HeadModel.of("Admin Options");
-		TemplatePageModel tpm = TemplatePageModel.of(UpdateOptionsHandler::content, thm, SelectedPage.Admin, BodyModel.of(he, null));
+		HeadModel thm = HeadModel.of(NAME);
+		BreadCrumbs crumbs = new BreadCrumbs().add(AdminHandler.NAME, AdminHandler.PATH).add(NAME, PATH);
+		TemplatePageModel tpm = TemplatePageModel.of(UpdateOptionsHandler::content, thm, SelectedPage.Admin, BodyModel.of(he, null), crumbs);
 		requestHandleCompletePage(he, tpm);
 	}
 

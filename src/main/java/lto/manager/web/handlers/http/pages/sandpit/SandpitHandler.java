@@ -32,7 +32,7 @@ public class SandpitHandler extends BaseHTTPHandler {
 	@Override
 	public void requestHandle(HttpExchange he) throws IOException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of("Sandpit");
-		TemplatePageModel tpm = TemplatePageModel.of(SandpitHandler::content, thm, SelectedPage.Sandpit, BodyModel.of(he, null));
+		TemplatePageModel tpm = TemplatePageModel.of(SandpitHandler::content, thm, SelectedPage.Sandpit, BodyModel.of(he, null), null);
 		requestHandleCompletePage(he, tpm);
 	}
 }

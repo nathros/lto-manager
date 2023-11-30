@@ -11,6 +11,7 @@ import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.ajax.AJAXGetAttachedDrivesFetcher;
 import lto.manager.web.handlers.http.partial.loading.OnLoad;
 import lto.manager.web.handlers.http.partial.loading.OnLoadOptions;
+import lto.manager.web.handlers.http.templates.TemplatePage.BreadCrumbs;
 import lto.manager.web.handlers.http.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.http.templates.TemplatePage.TemplatePageModel;
 import lto.manager.web.handlers.http.templates.models.BodyModel;
@@ -19,6 +20,7 @@ import lto.manager.web.resource.Asset;
 
 public class DrivesHandler extends BaseHTTPHandler {
 	public static final String PATH = "/drives";
+	public static final String NAME = "Drives";
 	public static final String DATA_AJAX = "data-ajax";
 
 	static Void body(Div<?> view, BodyModel model) {
@@ -31,10 +33,11 @@ public class DrivesHandler extends BaseHTTPHandler {
 
 	@Override
 	public void requestHandle(HttpExchange he) throws IOException, InterruptedException, ExecutionException {
-		HeadModel thm = HeadModel.of("Drives");
+		HeadModel thm = HeadModel.of(NAME);
 		thm.AddCSS(Asset.CSS_DRIVES);
 		thm.AddScript(Asset.JS_ON_LOAD_AJAX);
-		TemplatePageModel tpm = TemplatePageModel.of(DrivesHandler::body, thm, SelectedPage.Drives, BodyModel.of(he, null));
+		BreadCrumbs crumbs = new BreadCrumbs().add(NAME, PATH);
+		TemplatePageModel tpm = TemplatePageModel.of(DrivesHandler::body, thm, SelectedPage.Drives, BodyModel.of(he, null), crumbs);
 		requestHandleCompletePage(he, tpm);
 	}
 }

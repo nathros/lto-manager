@@ -170,7 +170,7 @@ public class LibraryCreateHandler extends BaseHTTPHandler {
 	public void requestHandle(HttpExchange he) throws IOException, SQLException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of("Tapes");
 		thm.AddScript(Asset.JS_ADD_TAPE);
-		TemplatePageModel tpm = TemplatePageModel.of(LibraryCreateHandler::body, thm, SelectedPage.Library, BodyModel.of(he, null));
+		TemplatePageModel tpm = TemplatePageModel.of(LibraryCreateHandler::body, thm, SelectedPage.Library, BodyModel.of(he, null), null);
 		requestHandleCompletePage(he, tpm);
 	}
 }

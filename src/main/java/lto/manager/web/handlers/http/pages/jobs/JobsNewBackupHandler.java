@@ -23,6 +23,7 @@ import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.partial.filelist.FileList;
 import lto.manager.web.handlers.http.partial.filelist.FileListModel;
 import lto.manager.web.handlers.http.partial.filelist.FileListOptions;
+import lto.manager.web.handlers.http.templates.TemplatePage.BreadCrumbs;
 import lto.manager.web.handlers.http.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.http.templates.TemplatePage.TemplatePageModel;
 import lto.manager.web.handlers.http.templates.models.BodyModel;
@@ -34,8 +35,9 @@ import lto.manager.web.resource.Query;
 
 public class JobsNewBackupHandler extends BaseHTTPHandler {
 	public static final String PATH = "/jobs/add";
+	public static final String NAME = "Add Job";
 
-	public static final String NAME = "name";
+	public static final String QNAME = "name";
 	public static final String COMMENT = "comment";
 	public static final String START = "start";
 	public static final String IMMEDIATE = "immediate";
@@ -48,7 +50,7 @@ public class JobsNewBackupHandler extends BaseHTTPHandler {
 	static Void content(Div<?> view, BodyModel model) {
 		final int depth = 1;
 		final int db = FileListOptions.showAll;
-		final String name = model.getQueryNoNull(NAME);
+		final String name = model.getQueryNoNull(QNAME);
 		final String comment = model.getQueryNoNull(COMMENT).replaceAll("\t", "");
 		final String start = model.getQueryNoNull(START);
 		final String immediate = model.getQueryNoNull(IMMEDIATE);
@@ -103,7 +105,7 @@ public class JobsNewBackupHandler extends BaseHTTPHandler {
 					.div().attrClass(CSS.TABS_CONTENT)
 						.div().attrClass(CSS.FORMS_CONTAINER)
 							.b().text("Job Name: ").__()
-							.input().attrType(EnumTypeInputType.TEXT).attrName(NAME).of(input -> input.attrValue(name)).__()
+							.input().attrType(EnumTypeInputType.TEXT).attrName(QNAME).of(input -> input.attrValue(name)).__()
 
 							.b().text("Start: ").__()
 							.input()
@@ -155,13 +157,14 @@ public class JobsNewBackupHandler extends BaseHTTPHandler {
 
 	@Override
 	public void requestHandle(HttpExchange he) throws IOException, InterruptedException, ExecutionException {
-		HeadModel thm = HeadModel.of("Jobs");
+		HeadModel thm = HeadModel.of(NAME);
 		thm.AddCSS(Asset.CSS_TABS);
 		thm.AddCSS(Asset.CSS_FILE_VIEW);
 		thm.AddCSS(Asset.CSS_FORMS);
 		thm.AddScript(Asset.JS_ADD_JOB);
 		thm.AddScript(Asset.JS_FILE_VIEW);
-		TemplatePageModel tpm = TemplatePageModel.of(JobsNewBackupHandler::content, thm, SelectedPage.Jobs, BodyModel.of(he, null));
+		BreadCrumbs crumbs = new BreadCrumbs().add(JobsHandler.NAME, JobsHandler.PATH).add("Backup", JobsTypeHandler.PATH).add(NAME, PATH);
+		TemplatePageModel tpm = TemplatePageModel.of(JobsNewBackupHandler::content, thm, SelectedPage.Jobs, BodyModel.of(he, null), crumbs);
 		requestHandleCompletePage(he, tpm);
 	}
 

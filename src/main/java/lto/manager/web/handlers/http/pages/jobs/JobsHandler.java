@@ -15,6 +15,7 @@ import lto.manager.common.database.Database;
 import lto.manager.common.database.tables.TableJobs;
 import lto.manager.common.database.tables.records.RecordJob;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
+import lto.manager.web.handlers.http.templates.TemplatePage.BreadCrumbs;
 import lto.manager.web.handlers.http.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.http.templates.TemplatePage.TemplatePageModel;
 import lto.manager.web.handlers.http.templates.models.BodyModel;
@@ -24,6 +25,7 @@ import lto.manager.web.resource.JS;
 
 public class JobsHandler extends BaseHTTPHandler {
 	public static final String PATH = "/jobs";
+	public static final String NAME = "Jobs";
 	private final static String DELETE_ID = "del";
 	private final static String START_ID = "start";
 
@@ -112,8 +114,9 @@ public class JobsHandler extends BaseHTTPHandler {
 
 	@Override
 	public void requestHandle(HttpExchange he) throws IOException, InterruptedException, ExecutionException {
-		HeadModel thm = HeadModel.of("Jobs");
-		TemplatePageModel tpm = TemplatePageModel.of(JobsHandler::content, thm, SelectedPage.Jobs, BodyModel.of(he, null));
+		HeadModel thm = HeadModel.of(NAME);
+		BreadCrumbs crumbs = new BreadCrumbs().add(NAME, PATH);
+		TemplatePageModel tpm = TemplatePageModel.of(JobsHandler::content, thm, SelectedPage.Jobs, BodyModel.of(he, null), crumbs);
 		requestHandleCompletePage(he, tpm);
 	}
 

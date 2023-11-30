@@ -1,7 +1,10 @@
 package lto.manager.web.handlers.http.templates;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.BiFunction;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.xmlet.htmlapifaster.Div;
 import org.xmlet.htmlapifaster.EnumTypeButtonType;
 import org.xmlet.htmlapifaster.EnumTypeInputType;
@@ -12,6 +15,7 @@ import htmlflow.HtmlViewAsync;
 import lto.manager.common.Main;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.pages.LogOutHandler;
+import lto.manager.web.handlers.http.pages.RootHandler;
 import lto.manager.web.handlers.http.pages.admin.AdminHandler;
 import lto.manager.web.handlers.http.pages.drives.DrivesHandler;
 import lto.manager.web.handlers.http.pages.files.FilesHandler;
@@ -21,6 +25,7 @@ import lto.manager.web.handlers.http.pages.sandpit.SandpitHandler;
 import lto.manager.web.handlers.http.partial.PartialHead;
 import lto.manager.web.handlers.http.templates.models.BodyModel;
 import lto.manager.web.handlers.http.templates.models.HeadModel;
+import lto.manager.web.resource.Asset;
 import lto.manager.web.resource.CSS;
 import lto.manager.web.resource.JS;
 
@@ -40,22 +45,35 @@ public class TemplatePage {
 		final SelectedPage page;
 		final BodyModel body;
 		final BiFunction<Div<?>, BodyModel, Void> contentFunction;
+		final BreadCrumbs breadcrumbs;
 
-		private TemplatePageModel(HeadModel head, SelectedPage page, BodyModel body, BiFunction<Div<?>, BodyModel, Void> contentFunction) {
+		private TemplatePageModel(HeadModel head, SelectedPage page, BodyModel body, BiFunction<Div<?>, BodyModel, Void> contentFunction, BreadCrumbs breadcrumbs) {
 			this.head = head;
 			this.page = page;
 			this.body = body;
 			this.contentFunction = contentFunction;
+			this.breadcrumbs = breadcrumbs;
 		}
 
-		public static TemplatePageModel of(BiFunction<Div<?>, BodyModel, Void> func, HeadModel head, SelectedPage page, BodyModel body) {
-			return new TemplatePageModel(head, page, body, func);
+		public static TemplatePageModel of(BiFunction<Div<?>, BodyModel, Void> func, HeadModel head, SelectedPage page, BodyModel body, BreadCrumbs breadcrumbs) {
+			return new TemplatePageModel(head, page, body, func, breadcrumbs);
 		}
 
 		public BodyModel getBodyModel() { return body; }
 		public HeadModel getHeadModel() { return head; }
 		public BiFunction<Div<?>, BodyModel, Void> getContent() { return contentFunction; }
 		public static BiFunction<Div<?>, BodyModel, Void> parametrisedMethod(BiFunction<Div<?>, BodyModel, Void> function) { return function; }
+		public BreadCrumbs getBreadCrumbs() { return breadcrumbs; }
+	}
+
+	public static class BreadCrumbs {
+		private List<Pair<String, String>> crumbs = new ArrayList<Pair<String, String>>();
+		public BreadCrumbs() { add("", RootHandler.PATH); }
+		public BreadCrumbs add(final String text, final String href) {
+			this.crumbs.add(Pair.of(text, href));
+			return this;
+		}
+		public final List<Pair<String, String>> getItems() { return crumbs; }
 	}
 
 	public static HtmlViewAsync view = HtmlFlow.viewAsync(TemplatePage::template);
@@ -94,6 +112,22 @@ public class TemplatePage {
 								.__()
 							.__()
 						.__()
+						.<TemplatePageModel>dynamic((div, model) -> {
+							final var crumb = model.getBreadCrumbs();
+							if (crumb != null) {
+								final List<Pair<String, String>> items = crumb.getItems();
+								for (int i = items.size() - 1; i >= 0; i--) {
+									final Pair<String, String> item = items.get(i);
+									div.a().attrHref(item.getRight()).text(item.getLeft()).__();
+									if (i != 0) div.span().text("/").__();
+								}
+							}
+							div
+								.div().attrClass("head-logo").of(d -> { if (crumb != null) d.attrStyle("margin-right:0"); })
+									.img().attrSrc(Asset.IMG_LOGO).__()
+									.text("LTO Manager")
+								.__();
+						})
 						.div().attrId("nav-toggle")
 							.input().attrType(EnumTypeInputType.CHECKBOX).__()
 							.div() // Menu Icon

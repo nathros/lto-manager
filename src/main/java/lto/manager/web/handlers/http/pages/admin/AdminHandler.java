@@ -11,6 +11,7 @@ import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.pages.admin.externalprocess.ExternalProcessHandler;
 import lto.manager.web.handlers.http.partial.pie.PieCPUUsage;
 import lto.manager.web.handlers.http.partial.pie.PieJVMMemoryUsage;
+import lto.manager.web.handlers.http.templates.TemplatePage.BreadCrumbs;
 import lto.manager.web.handlers.http.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.http.templates.TemplatePage.TemplatePageModel;
 import lto.manager.web.handlers.http.templates.models.BodyModel;
@@ -21,6 +22,7 @@ import lto.manager.web.resource.CSS;
 public class AdminHandler extends BaseHTTPHandler {
 	public static AdminHandler self = new AdminHandler();
 	public static final String PATH = "/admin";
+	public static final String NAME = "Admin";
 
 	static Void content(Div<?> view, BodyModel model) {
 		view
@@ -42,9 +44,10 @@ public class AdminHandler extends BaseHTTPHandler {
 
 	@Override
 	public void requestHandle(HttpExchange he) throws IOException, InterruptedException, ExecutionException {
-		HeadModel thm = HeadModel.of("Admin");
+		HeadModel thm = HeadModel.of(NAME);
 		thm.AddCSS(Asset.CSS_PIE);
-		TemplatePageModel tpm = TemplatePageModel.of(AdminHandler::content, thm, SelectedPage.Admin, BodyModel.of(he, null));
+		BreadCrumbs crumbs = new BreadCrumbs().add(NAME, PATH);
+		TemplatePageModel tpm = TemplatePageModel.of(AdminHandler::content, thm, SelectedPage.Admin, BodyModel.of(he, null), crumbs);
 		requestHandleCompletePage(he, tpm);
 	}
 

@@ -14,6 +14,7 @@ import lto.manager.common.database.Database;
 import lto.manager.common.database.tables.records.RecordTape;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.pages.files.FilesHandler;
+import lto.manager.web.handlers.http.templates.TemplatePage.BreadCrumbs;
 import lto.manager.web.handlers.http.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.http.templates.TemplatePage.TemplatePageModel;
 import lto.manager.web.handlers.http.templates.models.BodyModel;
@@ -22,6 +23,7 @@ import lto.manager.web.resource.CSS;
 
 public class LibraryHandler extends BaseHTTPHandler {
 	public static final String PATH = "/library";
+	public static final String NAME = "Library";
 
 	static Void body(Div<?> view, BodyModel model) {
 		List<RecordTape> tmp = null;
@@ -71,8 +73,9 @@ public class LibraryHandler extends BaseHTTPHandler {
 
 	@Override
 	public void requestHandle(HttpExchange he) throws IOException, InterruptedException, ExecutionException {
-		HeadModel thm = HeadModel.of("Tapes");
-		TemplatePageModel tpm = TemplatePageModel.of(LibraryHandler::body, thm, SelectedPage.Library, BodyModel.of(he, null));
+		HeadModel thm = HeadModel.of(NAME);
+		BreadCrumbs crumbs = new BreadCrumbs().add(NAME, PATH);
+		TemplatePageModel tpm = TemplatePageModel.of(LibraryHandler::body, thm, SelectedPage.Library, BodyModel.of(he, null), crumbs);
 		requestHandleCompletePage(he, tpm);
 	}
 }

@@ -48,7 +48,7 @@ public class WebsocketTestHandler extends BaseHTTPHandler {
 	public void requestHandle(HttpExchange he) throws Exception {
 		HeadModel thm = HeadModel.of("Websocket Test");
 		thm.AddScript(Asset.JS_WEBSOCKET);
-		TemplatePageModel tepm = TemplatePageModel.of(null, thm, SelectedPage.Sandpit, BodyModel.of(he, null));
+		TemplatePageModel tepm = TemplatePageModel.of(null, thm, SelectedPage.Sandpit, BodyModel.of(he, null), null);
 		CompletableFuture<String> future = TemplatePage.view.renderAsync(tepm);
 		String response = future.get();
 		he.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length());

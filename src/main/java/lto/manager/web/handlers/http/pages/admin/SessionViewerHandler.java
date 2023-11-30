@@ -11,6 +11,7 @@ import com.sun.net.httpserver.HttpExchange;
 
 import lto.manager.common.state.State;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
+import lto.manager.web.handlers.http.templates.TemplatePage.BreadCrumbs;
 import lto.manager.web.handlers.http.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.http.templates.TemplatePage.TemplatePageModel;
 import lto.manager.web.handlers.http.templates.models.BodyModel;
@@ -20,6 +21,7 @@ import lto.manager.web.resource.CSS;
 public class SessionViewerHandler extends BaseHTTPHandler {
 	public static SessionViewerHandler self = new SessionViewerHandler();
 	public static final String PATH = "/admin/session";
+	public static final String NAME = "Login Sessions";
 
 	private static final String DEL = "del";
 
@@ -38,7 +40,6 @@ public class SessionViewerHandler extends BaseHTTPHandler {
 		view
 		.div().of(div -> {
 			div
-				.a().attrClass(CSS.BUTTON).attrOnclick("history.back()").text("Back").__()
 				.of(p -> { if (message != null) p.p().text(message).__(); })
 				.table().attrClass(CSS.TABLE).of(table -> {
 					table.attrBorder(EnumBorderType._1).tr()
@@ -71,8 +72,9 @@ public class SessionViewerHandler extends BaseHTTPHandler {
 
 	@Override
 	public void requestHandle(HttpExchange he) throws IOException, InterruptedException, ExecutionException {
-		HeadModel thm = HeadModel.of("Login Sessions");
-		TemplatePageModel tpm = TemplatePageModel.of(SessionViewerHandler::content, thm, SelectedPage.Admin, BodyModel.of(he, null));
+		HeadModel thm = HeadModel.of(NAME);
+		BreadCrumbs crumbs = new BreadCrumbs().add(AdminHandler.NAME, AdminHandler.PATH).add(NAME, PATH);
+		TemplatePageModel tpm = TemplatePageModel.of(SessionViewerHandler::content, thm, SelectedPage.Admin, BodyModel.of(he, null), crumbs);
 		requestHandleCompletePage(he, tpm);
 	}
 

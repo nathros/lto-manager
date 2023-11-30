@@ -55,9 +55,53 @@ input:focus, textarea:focus {
 	height: 100%;
 	display: flex;
 	flex-direction: row-reverse;
+	align-items: center;
+}
+.header-root-container > a {
+	padding: 0.5rem;
+	border-radius: 0.25rem;
+	color: rgba(255, 255, 255, 0.5);
+	text-decoration: none;
+	font-size: smaller;
+}
+.header-root-container > span {
+	color: rgba(255, 255, 255, 0.5);
+	font-size: smaller;
+	padding: 0.25rem;
+}
+.header-root-container > a:hover {
+	background-color: rgba(255, 255, 255, 0.1);
+	opacity: 100% !important;
+}
+.header-root-container > a:first-of-type {
+	margin-right: auto;
+}
+.header-root-container > a:last-of-type {
+	background-image: url('/assets/img/house-door-fill.svg');
+	background-repeat: no-repeat;
+	background-position: center;
+	padding: 1rem;
+	filter: invert(1);
+	opacity: 50%;
+}
+.head-logo {
+	display: flex;
+	align-items: center;
+	width: 12rem;
+	height: 100%;
+	color: white;
+	margin-right: auto;
+	gap: 0.5rem;
+}
+.head-logo > img {
+	height: 64%;
+	margin: 0.5rem;
+	filter: invert(1);
+	opacity: 50%;
 }
 .header-user {
 	width: 3rem;
+	height: 100%;
 	transition: 0.3s ease;
 }
 .header-user:hover {

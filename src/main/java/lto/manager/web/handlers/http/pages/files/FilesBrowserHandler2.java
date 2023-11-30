@@ -37,7 +37,7 @@ public class FilesBrowserHandler2 extends BaseHTTPHandler {
 		HeadModel thm = HeadModel.of("Files Browser");
 		thm.AddCSS(Asset.CSS_FILE_VIEW);
 		thm.AddScript(Asset.JS_FILE_VIEW);
-		TemplatePageModel tpm = TemplatePageModel.of(FilesBrowserHandler2::content, thm, SelectedPage.Files, BodyModel.of(he, null));
+		TemplatePageModel tpm = TemplatePageModel.of(FilesBrowserHandler2::content, thm, SelectedPage.Files, BodyModel.of(he, null), null);
 		requestHandleCompletePage(he, tpm);
 	}
 }
