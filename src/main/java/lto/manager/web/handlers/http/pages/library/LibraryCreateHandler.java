@@ -18,6 +18,7 @@ import lto.manager.common.database.tables.records.RecordTape;
 import lto.manager.common.database.tables.records.RecordTape.RecordTapeFormatType;
 import lto.manager.common.database.tables.records.RecordTapeType;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
+import lto.manager.web.handlers.http.templates.TemplatePage.BreadCrumbs;
 import lto.manager.web.handlers.http.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.http.templates.TemplatePage.TemplatePageModel;
 import lto.manager.web.handlers.http.templates.models.BodyModel;
@@ -25,15 +26,19 @@ import lto.manager.web.handlers.http.templates.models.HeadModel;
 import lto.manager.web.resource.Asset;
 import lto.manager.web.resource.CSS;
 import lto.manager.web.resource.HTML;
+import lto.manager.web.resource.Query;
 
 public class LibraryCreateHandler extends BaseHTTPHandler {
 	public static final String PATH = "/library/new";
+	public static final String NAME = "New Tape";
 	private static final String SERIAL = "serial";
 	private static final String TAPETYPE = "type";
 	private static final String MANU = "manu";
 	private static final String BARCODE = "barcode";
 	private static final String WORM = "worm";
 	private static final String FORMAT = "format";
+	private static final String ENCRYPTED = "enc";
+	private static final String COMPRESSION = "comp";
 
 	static Void body(Div<?> view, BodyModel model) {
 		List<RecordManufacturer> m = null;
@@ -47,6 +52,12 @@ public class LibraryCreateHandler extends BaseHTTPHandler {
 		final String type = model.getQueryNoNull(TAPETYPE);
 		final String worm = model.getQueryNoNull(WORM);
 		final String format = model.getQueryNoNull(FORMAT);
+		final String encrypted = model.getQueryNoNull(ENCRYPTED);
+		final String compression = model.getQueryNoNull(COMPRESSION);
+
+		final boolean isWORM = worm.equals(Query.CHECKED);
+		final boolean isEncrypted = encrypted.equals(Query.CHECKED);
+		final boolean isCompressed = compression.equals(Query.CHECKED);
 
 		final int manuIndex = manu.equals("") ? -1 : Integer.valueOf(manu);
 		final int typeIndex = type.equals("") ? -1 : Integer.valueOf(type);
@@ -65,7 +76,7 @@ public class LibraryCreateHandler extends BaseHTTPHandler {
 		if (model.hasQuery()) {
 			try {
 				RecordTapeFormatType formatType = RecordTapeFormatType.fromInteger(formatIndex);
-				var tape = RecordTape.of(null, m.get(manuIndex), t.get(typeIndex), barcode, serial, 0, formatType, null);
+				var tape = RecordTape.of(null, m.get(manuIndex), t.get(typeIndex), barcode, serial, 0, formatType, null, isWORM, isEncrypted, isCompressed);
 				Database.addTape(tape);
 				s = true;
 			} catch (Exception e) {
@@ -80,7 +91,7 @@ public class LibraryCreateHandler extends BaseHTTPHandler {
 		view
 			.div()
 				.form()
-					.b().attrStyle("width:150px;display:inline-block").text("LTO Tape Type: ").__()
+					.b().attrStyle("width:300px;display:inline-block").text("LTO Tape Type: ").__()
 					.select().attrId("select-type").attrName(TAPETYPE).of(select -> {
 						select.attrOnchange("onSelectType()")
 							.option().of(o -> HTML.option(o, typeIndex == -1, true)).text("Select").__();
@@ -102,7 +113,7 @@ public class LibraryCreateHandler extends BaseHTTPHandler {
 						}
 					}).__().br().__()
 
-					.b().attrStyle("width:150px;display:inline-block").text("LTO Manufacturer: ").__()
+					.b().attrStyle("width:300px;display:inline-block").text("LTO Manufacturer: ").__()
 					.select().attrName(MANU).of(select -> {
 						select.option().of(o -> HTML.option(o, manuIndex == -1, true)).text("Select").__();
 						int index = 0;
@@ -121,17 +132,23 @@ public class LibraryCreateHandler extends BaseHTTPHandler {
 						}
 					}).__().br().__()
 
-					.b().attrStyle("width:150px;display:inline-block").text("Serial Number: ").__()
+					.b().attrStyle("width:300px;display:inline-block").text("Serial Number: ").__()
 					.input().attrType(EnumTypeInputType.TEXT).attrName(SERIAL).attrMaxlength((long) TableTape.MAX_LEN_SERIAL).of(input -> input.attrValue(serial)).__().br().__()
 
-					.b().attrStyle("width:150px;display:inline-block").text("Barcode: ").__()
+					.b().attrStyle("width:300px;display:inline-block").text("Barcode: ").__()
 					.input().attrType(EnumTypeInputType.TEXT).attrName(BARCODE).attrMaxlength((long) TableTape.MAX_LEN_BARCODE).of(input -> input.attrValue(barcode)).__()
 					.input().attrType(EnumTypeInputType.TEXT).attrId("des").attrDisabled(true).__().br().__()
 
-					.b().attrStyle("width:150px;display:inline-block").text("WORM: ").__()
+					.b().attrStyle("width:300px;display:inline-block").text("WORM: ").__()
 					.input().attrId(WORM).attrOnclick("onSelectType(this)").attrType(EnumTypeInputType.CHECKBOX).attrName(WORM).of(input -> input.attrValue(worm)).__().br().__()
 
-					.b().attrStyle("width:150px;display:inline-block").text("Format: ").__()
+					.b().attrStyle("width:300px;display:inline-block").text("Encrypted: ").__()
+					.input().attrId(ENCRYPTED).attrType(EnumTypeInputType.CHECKBOX).attrName(ENCRYPTED).of(input -> input.attrValue(encrypted)).__().br().__()
+
+					.b().attrStyle("width:300px;display:inline-block").text("Compression Enabled: ").__()
+					.input().attrId(COMPRESSION).attrType(EnumTypeInputType.CHECKBOX).attrName(COMPRESSION).of(input -> input.attrValue(compression)).__().br().__()
+
+					.b().attrStyle("width:300px;display:inline-block").text("Format: ").__()
 					.select().attrName(FORMAT).of(select -> {
 						select.option().of(o -> HTML.option(o, formatIndex == -1, true)).text("Select").__();
 						int index = 0;
@@ -168,9 +185,10 @@ public class LibraryCreateHandler extends BaseHTTPHandler {
 
 	@Override
 	public void requestHandle(HttpExchange he) throws IOException, SQLException, InterruptedException, ExecutionException {
-		HeadModel thm = HeadModel.of("Tapes");
+		HeadModel thm = HeadModel.of(NAME);
 		thm.AddScript(Asset.JS_ADD_TAPE);
-		TemplatePageModel tpm = TemplatePageModel.of(LibraryCreateHandler::body, thm, SelectedPage.Library, BodyModel.of(he, null), null);
+		BreadCrumbs crumbs = new BreadCrumbs().add(LibraryHandler.NAME, LibraryHandler.PATH).add(NAME, PATH);
+		TemplatePageModel tpm = TemplatePageModel.of(LibraryCreateHandler::body, thm, SelectedPage.Library, BodyModel.of(he, null), crumbs);
 		requestHandleCompletePage(he, tpm);
 	}
 }

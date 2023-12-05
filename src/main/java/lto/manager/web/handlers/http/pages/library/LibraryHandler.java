@@ -48,6 +48,9 @@ public class LibraryHandler extends BaseHTTPHandler {
 						.th().text("Format").__()
 						.th().text("Size (GB)").__()
 						.th().text("Space Used (GB)").__()
+						.th().text("WORM").__()
+						.th().text("Encrypted").__()
+						.th().text("Compressed").__()
 						.th().text("Action").__()
 					.__();
 					for (RecordTape item : tapes) {
@@ -60,6 +63,9 @@ public class LibraryHandler extends BaseHTTPHandler {
 							.td().text(item.getFormat().name()).__()
 							.td().text((int)item.getTotalSpaceGB()).__()
 							.td().text((int)item.getUsedSpaceGB()).__()
+							.td().text(item.getIsWORM()).__()
+							.td().text(item.getIsEncrypted()).__()
+							.td().text(item.getIsCompressed()).__()
 							.td()
 								.a().attrClass(CSS.BUTTON + CSS.BACKGROUND_CAUTION).attrHref(LibraryDeleteHandler.PATH + "?" + LibraryDeleteHandler.ID + "=" + item.getID()).text("Delete").__()
 								.a().attrClass(CSS.BUTTON).attrHref(FilesHandler.PATH + "?" + FilesHandler.TAPE_ID + "=" + item.getID()).text("Show Files")

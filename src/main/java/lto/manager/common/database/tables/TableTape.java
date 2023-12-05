@@ -43,6 +43,9 @@ public class TableTape {
 	public static final String COLUMN_NAME_FORMAT_TYPE = "format_type";
 	public static final String COLUMN_NAME_SPACE_USED = "bytes_used";
 	public static final String COLUMN_NAME_DATE_ADDED = "date_added"; // TODO add last read and last write date time
+	public static final String COLUMN_NAME_IS_WORM = "is_worm";
+	public static final String COLUMN_NAME_IS_ENCRYPTED = "is_encrypted";
+	public static final String COLUMN_NAME_IS_COMPRESSED = "is_compressed";
 
 	public static final int COLUMN_INDEX_ID = 0;
 	public static final int COLUMN_INDEX_TYPE = 1;
@@ -52,6 +55,9 @@ public class TableTape {
 	public static final int COLUMN_INDEX_FORMAT_TYPE = 5;
 	public static final int COLUMN_INDEX_SPACE_REMAINING = 6;
 	public static final int COLUMN_INDEX_DATE_ADDED = 7;
+	public static final int COLUMN_INDEX_IS_WORM = 8;
+	public static final int COLUMN_INDEX_IS_ENCRYPTED = 9;
+	public static final int COLUMN_INDEX_IS_COMPRESSION = 10;
 
 	public static final int NO_ID = -1;
 	public static final int DIR_TAPE_ID = 0;
@@ -65,31 +71,36 @@ public class TableTape {
 		DbColumn id = table.addColumn(COLUMN_NAME_ID, Types.INTEGER, null);
 		id.unique();
 		id.notNull();
-		String key[] = new String[] { COLUMN_NAME_ID};
+		String key[] = new String[] { COLUMN_NAME_ID };
 		table.primaryKey(COLUMN_NAME_ID, key);
 
 		DbColumn tapeTypeForegnColumn = table.addColumn(COLUMN_NAME_TYPE, Types.INTEGER, null);
-		DbTable tableTapeType =  TableTapeType.table;
+		DbTable tableTapeType = TableTapeType.table;
 		DbColumn columns[] = new DbColumn[] { tapeTypeForegnColumn };
-		DbColumn columnsRef[] = new DbColumn[] { tableTapeType.getColumns().get(TableTapeType.COLUMN_INDEX_ID)};
+		DbColumn columnsRef[] = new DbColumn[] { tableTapeType.getColumns().get(TableTapeType.COLUMN_INDEX_ID) };
 		table.foreignKey(TableTapeType.COLUMN_NAME_ID, columns, tableTapeType, columnsRef);
 
 		table.addColumn(COLUMN_NAME_BARCODE, Types.VARCHAR, MAX_LEN_BARCODE);
 		table.addColumn(COLUMN_NAME_SERIAL, Types.VARCHAR, MAX_LEN_SERIAL);
 
 		tapeTypeForegnColumn = table.addColumn(COLUMN_NAME_MANUFACTURER, Types.INTEGER, null);
-		columns = new DbColumn[] { tapeTypeForegnColumn};
+		columns = new DbColumn[] { tapeTypeForegnColumn };
 		tableTapeType = TableManufacturer.table;
-		columnsRef = new DbColumn[] { tableTapeType.getColumns().get(TableManufacturer.COLUMN_INDEX_ID)};
+		columnsRef = new DbColumn[] { tableTapeType.getColumns().get(TableManufacturer.COLUMN_INDEX_ID) };
 		table.foreignKey(TableManufacturer.COLUMN_NAME_ID, columns, tableTapeType, columnsRef);
 
 		table.addColumn(COLUMN_NAME_FORMAT_TYPE, Types.TINYINT, null);
 		table.addColumn(COLUMN_NAME_SPACE_USED, Types.BIGINT, null);
 		table.addColumn(COLUMN_NAME_DATE_ADDED, Types.TIME, null);
 
-		manufacturerJoin = Database.spec.addJoin(null, TABLE_NAME, null, TableManufacturer.TABLE_NAME, TableManufacturer.COLUMN_NAME_ID);
-		tapeTypeJoin = Database.spec.addJoin(null, TABLE_NAME, null, TableTapeType.TABLE_NAME, TableTapeType.COLUMN_NAME_ID);
+		manufacturerJoin = Database.spec.addJoin(null, TABLE_NAME, null, TableManufacturer.TABLE_NAME,
+				TableManufacturer.COLUMN_NAME_ID);
+		tapeTypeJoin = Database.spec.addJoin(null, TABLE_NAME, null, TableTapeType.TABLE_NAME,
+				TableTapeType.COLUMN_NAME_ID);
 
+		table.addColumn(COLUMN_NAME_IS_WORM, Types.BOOLEAN, null);
+		table.addColumn(COLUMN_NAME_IS_ENCRYPTED, Types.BOOLEAN, null);
+		table.addColumn(COLUMN_NAME_IS_COMPRESSED, Types.BOOLEAN, null);
 		return table;
 	}
 
@@ -130,8 +141,7 @@ public class TableTape {
 			} else {
 				return DBStatus.Error(null, "Failed to insert: " + sql);
 			}
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			Log.l.severe(e.getMessage() + " SQL: " + sql);
 			if (e.getMessage().contains("foreign")) {
 				return DBStatus.Error(e, "Missing tape type or manufacturer");
@@ -223,7 +233,8 @@ public class TableTape {
 		int i = result.getInt(TableManufacturer.COLUMN_NAME_ID);
 		String name = result.getString(TableManufacturer.COLUMN_NAME_NAME);
 		RecordManufacturer rm = RecordManufacturer.of(i, name);
-		RecordTapeFormatType format = RecordTapeFormatType.fromInteger(result.getInt(TableTape.COLUMN_NAME_FORMAT_TYPE));
+		RecordTapeFormatType format = RecordTapeFormatType
+				.fromInteger(result.getInt(TableTape.COLUMN_NAME_FORMAT_TYPE));
 		i = result.getInt(TableTapeType.COLUMN_NAME_ID);
 		name = result.getString(TableTapeType.COLUMN_NAME_TYPE);
 		String des = result.getString(TableTapeType.COLUMN_NAME_DESIGNATION);
@@ -242,7 +253,10 @@ public class TableTape {
 		} catch (Exception e) {
 			Log.l.severe("Table tape get record " + i + "start timestamp error: " + e.getMessage());
 		}
-		var tape = RecordTape.of(i, rm, tt, barcode, serial, left, format, time);
+		boolean isWorm = result.getBoolean(COLUMN_NAME_IS_WORM);
+		boolean isEncrypted = result.getBoolean(COLUMN_NAME_IS_ENCRYPTED);
+		boolean isCompressed = result.getBoolean(COLUMN_NAME_IS_COMPRESSED);
+		var tape = RecordTape.of(i, rm, tt, barcode, serial, left, format, time, isWorm, isEncrypted, isCompressed);
 		return tape;
 	}
 

@@ -27,9 +27,9 @@ public class AddVirtualFiles {
 		var types = Database.getAllTapeTypes();
 		var testTape = Database.getTapeAtID(tapeID);
 		if (testTape == null) {
-			testTape = new RecordTape(1, manu.get(0), types.get(0), "barcode", "serial", 0, RecordTapeFormatType.LTFS, null);
+			testTape = new RecordTape(1, manu.get(0), types.get(0), "barcode", "serial", 0, RecordTapeFormatType.LTFS, null, false, false, false);
 			Database.addTape(testTape);
-			testTape = new RecordTape(2, manu.get(1), types.get(2), "other", "serial2", 0, RecordTapeFormatType.LTFS, null);
+			testTape = new RecordTape(2, manu.get(1), types.get(2), "other", "serial2", 0, RecordTapeFormatType.LTFS, null, false, false, false);
 			Database.addTape(testTape);
 		}
 

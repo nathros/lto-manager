@@ -21,12 +21,14 @@ public class HeadModel {
 		return title;
 	}
 
-	public void AddCSS(final String css) {
+	public HeadModel AddCSS(final String css) {
 		extraStylesList.add(css);
+		return this;
 	}
 
-	public void AddScript(final String js) {
+	public HeadModel AddScript(final String js) {
 		extraScriptsList.add(js);
+		return this;
 	}
 
 	public List<String> getExtraStylesList() {

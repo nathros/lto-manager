@@ -158,12 +158,9 @@ public class JobsNewBackupHandler extends BaseHTTPHandler {
 	@Override
 	public void requestHandle(HttpExchange he) throws IOException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of(NAME);
-		thm.AddCSS(Asset.CSS_TABS);
-		thm.AddCSS(Asset.CSS_FILE_VIEW);
-		thm.AddCSS(Asset.CSS_FORMS);
-		thm.AddScript(Asset.JS_ADD_JOB);
-		thm.AddScript(Asset.JS_FILE_VIEW);
-		BreadCrumbs crumbs = new BreadCrumbs().add(JobsHandler.NAME, JobsHandler.PATH).add("Backup", JobsTypeHandler.PATH).add(NAME, PATH);
+		thm.AddCSS(Asset.CSS_TABS).AddCSS(Asset.CSS_FILE_VIEW).AddCSS(Asset.CSS_FORMS);
+		thm.AddScript(Asset.JS_ADD_JOB).AddScript(Asset.JS_FILE_VIEW);
+		BreadCrumbs crumbs = new BreadCrumbs().add(JobsHandler.NAME, JobsHandler.PATH).add(JobsTypeHandler.NAME + " [Backup]", JobsTypeHandler.PATH).add(NAME, PATH);
 		TemplatePageModel tpm = TemplatePageModel.of(JobsNewBackupHandler::content, thm, SelectedPage.Jobs, BodyModel.of(he, null), crumbs);
 		requestHandleCompletePage(he, tpm);
 	}
