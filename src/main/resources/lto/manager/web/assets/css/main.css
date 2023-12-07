@@ -209,6 +209,9 @@ input:focus, textarea:focus {
 .icon-box-arrow-right:before {
 	background-image: url('/assets/img/box-arrow-right.svg');
 }
+.icon-printer:before {
+	background-image: url('/assets/img/printer-fill.svg');
+}
 .menu-list {
 	list-style-type: none;
 	padding: 0;
@@ -327,6 +330,9 @@ input:focus, textarea:focus {
     filter: invert(100%);
     background-repeat: no-repeat;
     background-position: center;
+}
+.btn-image-w-text:before {
+	margin-right: 0.5rem;
 }
 .background-error {
 	background-color: red;
@@ -562,4 +568,18 @@ https://codepen.io/sudeepgumaste/pen/abdrorB
 	position: absolute;
 	top: -12px;
 	padding: 0 10px;
+}
+.common-container {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+}
+.common-container-centre {
+	justify-content: center;
+}
+.gap-none {
+	gap: 0;
+}
+.gap-half {
+	gap: 0.5rem;
 }

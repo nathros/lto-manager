@@ -1,8 +1,14 @@
 package lto.manager.web.resource;
 
 public class CSS {
+	public final static String COMMON_CONTAINER = "common-container ";
+	public final static String COMMON_CONTAINER_CENTRE = "common-container-centre ";
+	public final static String GAP_NONE = "gap-none ";
+	public final static String GAP_HALF = "gap-half ";
+
 	public final static String BUTTON = "btn ";
 	public final static String BUTTON_IMAGE = "btn-image ";
+	public final static String BUTTON_IMAGE_W_TEXT = "btn-image-w-text ";
 	public final static String BUTTON_SMALL = "btn-s ";
 	public final static String BACKGROUND_CAUTION = "background-caution ";
 	public final static String BACKGROUND_ACTIVE = "background-active ";
@@ -30,6 +36,7 @@ public class CSS {
 	public final static String ICON_CHECK = "icon-check ";
 	public final static String ICON_CROSS = "icon-cross ";
 	public final static String ICON_BOX_ARROW_RIGHT = "icon-box-arrow-right ";
+	public final static String ICON_PRINTER = "icon-printer ";
 
 	public final static String FV_ID = "id-wtree";
 	public final static String FV_ID_CONTEXT_CONTAINER = "wtree-context-container";

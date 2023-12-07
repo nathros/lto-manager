@@ -65,7 +65,7 @@ public class TableTapeType {
 				char letter = 'T';
 				for (int i = 1; i < 10; i++) {
 					String worm = "";
-					if (i > 3) {
+					if (i >= 3) {
 						worm = "L" + letter;
 						letter++;
 					}

@@ -57,7 +57,7 @@ public class TableTape {
 	public static final int COLUMN_INDEX_DATE_ADDED = 7;
 	public static final int COLUMN_INDEX_IS_WORM = 8;
 	public static final int COLUMN_INDEX_IS_ENCRYPTED = 9;
-	public static final int COLUMN_INDEX_IS_COMPRESSION = 10;
+	public static final int COLUMN_INDEX_IS_COMPRESSED = 10;
 
 	public static final int NO_ID = -1;
 	public static final int DIR_TAPE_ID = 0;
@@ -132,6 +132,9 @@ public class TableTape {
 		iq.addColumn(table.getColumns().get(COLUMN_INDEX_MANUFACTURER), newTape.getManufacturer().getID());
 		iq.addColumn(table.getColumns().get(COLUMN_INDEX_SPACE_REMAINING), newTape.getUsedSpace());
 		iq.addColumn(table.getColumns().get(COLUMN_INDEX_DATE_ADDED), Timestamp.valueOf(newTape.getDateAdded()));
+		iq.addColumn(table.getColumns().get(COLUMN_INDEX_IS_WORM), newTape.getIsWORM());
+		iq.addColumn(table.getColumns().get(COLUMN_INDEX_IS_ENCRYPTED), newTape.getIsEncrypted());
+		iq.addColumn(table.getColumns().get(COLUMN_INDEX_IS_COMPRESSED), newTape.getIsCompressed());
 
 		String sql = iq.validate().toString();
 

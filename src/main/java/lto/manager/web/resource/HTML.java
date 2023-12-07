@@ -4,10 +4,13 @@ import org.xmlet.htmlapifaster.Input;
 import org.xmlet.htmlapifaster.Option;
 
 public class HTML {
+	public static final String TARGET_BLANK = "_blank";
+
 	public static Input<?> check(Input<?> input, boolean checked) {
 		// input.attrChecked(true) sets checked="true"
 		// input.attrChecked(false) sets checked="false"
-		// when checked attribute exists browser sets to checked even when value is false
+		// when checked attribute exists browser sets to checked even when value is
+		// false
 		if (checked) {
 			return input.addAttr("checked", "");
 		}
@@ -30,4 +33,5 @@ public class HTML {
 		}
 		return option;
 	}
+
 }

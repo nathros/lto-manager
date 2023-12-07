@@ -56,6 +56,9 @@ public class TableManufacturer {
 		manufacturer.add("Fujifilm");
 		manufacturer.add("Spectra");
 		manufacturer.add("Dell");
+		manufacturer.add("TDK");
+		manufacturer.add("SONY");
+		manufacturer.add("Maxell");
 		if (!statment.execute(q)) {
 			for (int i = 0; i < manufacturer.size(); i++) {
 				if (addNewManufacturer(con, manufacturer.get(i)) == false) return false;

@@ -25,6 +25,10 @@ import lto.manager.web.handlers.http.templates.models.BodyModel;
 import lto.manager.web.handlers.http.templates.models.HeadModel;
 import lto.manager.web.resource.Asset;
 import lto.manager.web.resource.CSS;
+import lto.manager.web.resource.FormValidator;
+import lto.manager.web.resource.FormValidator.ValidatorOptions;
+import lto.manager.web.resource.FormValidator.ValidatorStatus;
+import lto.manager.web.resource.FormValidator.ValidatorType;
 import lto.manager.web.resource.HTML;
 import lto.manager.web.resource.Query;
 
@@ -39,6 +43,8 @@ public class LibraryCreateHandler extends BaseHTTPHandler {
 	private static final String FORMAT = "format";
 	private static final String ENCRYPTED = "enc";
 	private static final String COMPRESSION = "comp";
+	private static final FormValidator barcodeValidator = FormValidator.of(ValidatorType.INPUT_TEXT,
+			ValidatorOptions.of().valueExpectedLength(TableTape.MAX_LEN_BARCODE).valueNotEmpty(), "Bardcode");
 
 	static Void body(Div<?> view, BodyModel model) {
 		List<RecordManufacturer> m = null;
@@ -47,6 +53,7 @@ public class LibraryCreateHandler extends BaseHTTPHandler {
 		boolean s = false;
 
 		final String barcode = model.getQueryNoNull(BARCODE);
+		final ValidatorStatus barcodeStatus = barcodeValidator.validate(model.getQueryNoNull(BARCODE), model.hasQuery());
 		final String serial = model.getQueryNoNull(SERIAL);
 		final String manu = model.getQueryNoNull(MANU);
 		final String type = model.getQueryNoNull(TAPETYPE);
@@ -140,13 +147,35 @@ public class LibraryCreateHandler extends BaseHTTPHandler {
 					.input().attrType(EnumTypeInputType.TEXT).attrId("des").attrDisabled(true).__().br().__()
 
 					.b().attrStyle("width:300px;display:inline-block").text("WORM: ").__()
-					.input().attrId(WORM).attrOnclick("onSelectType(this)").attrType(EnumTypeInputType.CHECKBOX).attrName(WORM).of(input -> input.attrValue(worm)).__().br().__()
+					.input()
+						.attrId(WORM)
+						.attrOnclick("onSelectType(this)")
+						.attrType(EnumTypeInputType.CHECKBOX)
+						.attrName(WORM)
+						.attrValue(Query.CHECKED)
+						.of(input -> HTML.check(input, !worm.equals(Query.EMPTY)))
+					.__()
+					.br().__()
 
 					.b().attrStyle("width:300px;display:inline-block").text("Encrypted: ").__()
-					.input().attrId(ENCRYPTED).attrType(EnumTypeInputType.CHECKBOX).attrName(ENCRYPTED).of(input -> input.attrValue(encrypted)).__().br().__()
+					.input()
+						.attrId(ENCRYPTED)
+						.attrType(EnumTypeInputType.CHECKBOX)
+						.attrName(ENCRYPTED)
+						.attrValue(Query.CHECKED)
+						.of(input -> HTML.check(input, !encrypted.equals(Query.EMPTY)))
+					.__()
+					.br().__()
 
 					.b().attrStyle("width:300px;display:inline-block").text("Compression Enabled: ").__()
-					.input().attrId(COMPRESSION).attrType(EnumTypeInputType.CHECKBOX).attrName(COMPRESSION).of(input -> input.attrValue(compression)).__().br().__()
+					.input()
+						.attrId(COMPRESSION)
+						.attrType(EnumTypeInputType.CHECKBOX)
+						.attrName(COMPRESSION)
+						.attrValue(Query.CHECKED)
+						.of(input -> HTML.check(input, !compression.equals(Query.EMPTY)))
+					.__()
+					.br().__()
 
 					.b().attrStyle("width:300px;display:inline-block").text("Format: ").__()
 					.select().attrName(FORMAT).of(select -> {
@@ -169,12 +198,16 @@ public class LibraryCreateHandler extends BaseHTTPHandler {
 
 					.button().attrClass(CSS.BUTTON).attrType(EnumTypeButtonType.SUBMIT).text("Submit").__()
 
-					.p().of(p -> {
+					.div().of(d -> {
 						if (model.hasQuery()) {
+							if (!barcodeStatus.statusOK()) {
+								d.p().text(barcodeStatus.userMessage()).__();
+							}
+
 							if (errorMessage == null) {
-								if (addedTapeSuccess) p.text("Tape added successfully");
+								if (addedTapeSuccess) d.p().text("Tape added successfully");
 							} else {
-								p.text("Failed to add tape: " + errorMessage);
+								d.p().text("Failed to add tape: " + errorMessage).__();
 							}
 						}
 					}).__()

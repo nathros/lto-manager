@@ -28,6 +28,8 @@ import lto.manager.web.handlers.http.pages.jobs.JobsNewBackupHandler;
 import lto.manager.web.handlers.http.pages.jobs.JobsTypeHandler;
 import lto.manager.web.handlers.http.pages.library.LibraryCreateHandler;
 import lto.manager.web.handlers.http.pages.library.LibraryDeleteHandler;
+import lto.manager.web.handlers.http.pages.library.LibraryGenerateBarcodeAPIHandler;
+import lto.manager.web.handlers.http.pages.library.LibraryGenerateBarcodeHandler;
 import lto.manager.web.handlers.http.pages.library.LibraryHandler;
 import lto.manager.web.handlers.http.pages.sandpit.DatabaseTestHandler;
 import lto.manager.web.handlers.http.pages.sandpit.EchoGetHandler;
@@ -58,6 +60,8 @@ public class Handlers {
 		ret.put(LibraryHandler.PATH, new LibraryHandler());
 		ret.put(LibraryCreateHandler.PATH, new LibraryCreateHandler());
 		ret.put(LibraryDeleteHandler.PATH, new LibraryDeleteHandler());
+		ret.put(LibraryGenerateBarcodeHandler.PATH, new LibraryGenerateBarcodeHandler());
+		ret.put(LibraryGenerateBarcodeAPIHandler.PATH, new LibraryGenerateBarcodeAPIHandler());
 
 		ret.put(DrivesHandler.PATH, new DrivesHandler());
 		ret.put(AJAXGetAttachedDrivesFetcher.PATH, new AJAXGetAttachedDrivesFetcher());
