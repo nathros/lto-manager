@@ -61,8 +61,11 @@ public class TableTape {
 
 	public static final int NO_ID = -1;
 	public static final int DIR_TAPE_ID = 0;
-	public static final int MAX_LEN_BARCODE = 6;
+	public static final int MAX_LEN_BARCODE = 8;
+	public static final int MAX_LEN_BARCODE_FORM = MAX_LEN_BARCODE - 2;
 	public static final int MAX_LEN_SERIAL = 128;
+	public final static String BARCODE_VALID_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 -$%./+";
+	public final static String BARCODE_ALL_CHARS = BARCODE_VALID_CHARS + "*";
 
 	static DbTable getSelf() {
 		DbSchema schema = Database.schema;

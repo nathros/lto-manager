@@ -1,0 +1,4 @@
+TODO
+  generic HTML error message for ajax
+  generic error response
+  

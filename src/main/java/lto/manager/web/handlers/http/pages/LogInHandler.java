@@ -64,16 +64,14 @@ public class LogInHandler extends BaseHTTPHandler {
 
 			Supplier<String> mainCSSSupplier = () -> {
 				try {
-					var bytes = AssetHandler.getResourceLoader(Asset.CSS_MAIN).readAllBytes();
-					return new String(bytes, StandardCharsets.UTF_8);
+					return AssetHandler.getResourceAsString(Asset.CSS_MAIN);
 				} catch (IOException e) {
 					return "";
 				}
 			};
 			Supplier<String> mobileCSSSupplier = () -> {
 				try {
-					var bytes = AssetHandler.getResourceLoader(Asset.CSS_MOBILE).readAllBytes();
-					return new String(bytes, StandardCharsets.UTF_8);
+					return AssetHandler.getResourceAsString(Asset.CSS_MOBILE);
 				} catch (IOException e) {
 					return "";
 				}
@@ -88,8 +86,7 @@ public class LogInHandler extends BaseHTTPHandler {
 			};
 			Supplier<String> mainJSSupplier = () -> {
 				try {
-					var bytes = AssetHandler.getResourceLoader(Asset.JS_MAIN).readAllBytes();
-					return new String(bytes, StandardCharsets.UTF_8);
+					return AssetHandler.getResourceAsString(Asset.JS_MAIN);
 				} catch (IOException e) {
 					return "";
 				}

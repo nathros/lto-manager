@@ -31,7 +31,7 @@ public class AdminHandler extends BaseHTTPHandler {
 				.a().attrClass(CSS.BUTTON).attrHref(UpdateOptionsHandler.PATH).text("Change Settings").__()
 				.a().attrClass(CSS.BUTTON).attrHref(ExternalProcessHandler.PATH).text("View External Processes").__()
 				.a().attrClass(CSS.BUTTON).attrHref(SessionViewerHandler.PATH).text("View Login Sessions").__()
-				.div().attrClass("card").addAttr("header-text", "System information")
+				.div().attrClass(CSS.CARD).addAttr(CSS.CARD_ATTRIBUTE, "System information")
 					.div().attrClass(CSS.PIE_CONTAINER)
 						.of(pie -> PieCPUUsage.content(pie))
 						.of(pie -> PieJVMMemoryUsage.content(pie))
@@ -45,7 +45,7 @@ public class AdminHandler extends BaseHTTPHandler {
 	@Override
 	public void requestHandle(HttpExchange he) throws IOException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of(NAME);
-		thm.AddCSS(Asset.CSS_PIE);
+		thm.addCSS(Asset.CSS_PIE);
 		BreadCrumbs crumbs = new BreadCrumbs().add(NAME, PATH);
 		TemplatePageModel tpm = TemplatePageModel.of(AdminHandler::content, thm, SelectedPage.Admin, BodyModel.of(he, null), crumbs);
 		requestHandleCompletePage(he, tpm);

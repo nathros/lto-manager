@@ -31,6 +31,9 @@ a {
 	color: inherit;
 	*text-decoration: inherit;
 }
+hr {
+	border: var(--border);
+}
 input, textarea {
 	padding: var(--padding);
 	border: var(--border);

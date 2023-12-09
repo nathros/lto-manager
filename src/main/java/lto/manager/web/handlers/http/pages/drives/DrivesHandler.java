@@ -34,8 +34,8 @@ public class DrivesHandler extends BaseHTTPHandler {
 	@Override
 	public void requestHandle(HttpExchange he) throws IOException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of(NAME);
-		thm.AddCSS(Asset.CSS_DRIVES);
-		thm.AddScript(Asset.JS_ON_LOAD_AJAX);
+		thm.addCSS(Asset.CSS_DRIVES);
+		thm.addScript(Asset.JS_ON_LOAD_AJAX);
 		BreadCrumbs crumbs = new BreadCrumbs().add(NAME, PATH);
 		TemplatePageModel tpm = TemplatePageModel.of(DrivesHandler::body, thm, SelectedPage.Drives, BodyModel.of(he, null), crumbs);
 		requestHandleCompletePage(he, tpm);

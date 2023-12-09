@@ -44,7 +44,7 @@ public class LibraryCreateHandler extends BaseHTTPHandler {
 	private static final String ENCRYPTED = "enc";
 	private static final String COMPRESSION = "comp";
 	private static final FormValidator barcodeValidator = FormValidator.of(ValidatorType.INPUT_TEXT,
-			ValidatorOptions.of().valueExpectedLength(TableTape.MAX_LEN_BARCODE).valueNotEmpty(), "Bardcode");
+			ValidatorOptions.of().valueExpectedLength(TableTape.MAX_LEN_BARCODE_FORM).valueNotEmpty(), "Bardcode");
 
 	static Void body(Div<?> view, BodyModel model) {
 		List<RecordManufacturer> m = null;
@@ -143,7 +143,7 @@ public class LibraryCreateHandler extends BaseHTTPHandler {
 					.input().attrType(EnumTypeInputType.TEXT).attrName(SERIAL).attrMaxlength((long) TableTape.MAX_LEN_SERIAL).of(input -> input.attrValue(serial)).__().br().__()
 
 					.b().attrStyle("width:300px;display:inline-block").text("Barcode: ").__()
-					.input().attrType(EnumTypeInputType.TEXT).attrName(BARCODE).attrMaxlength((long) TableTape.MAX_LEN_BARCODE).of(input -> input.attrValue(barcode)).__()
+					.input().attrType(EnumTypeInputType.TEXT).attrName(BARCODE).attrMaxlength((long) TableTape.MAX_LEN_BARCODE_FORM).of(input -> input.attrValue(barcode)).__()
 					.input().attrType(EnumTypeInputType.TEXT).attrId("des").attrDisabled(true).__().br().__()
 
 					.b().attrStyle("width:300px;display:inline-block").text("WORM: ").__()
@@ -219,7 +219,7 @@ public class LibraryCreateHandler extends BaseHTTPHandler {
 	@Override
 	public void requestHandle(HttpExchange he) throws IOException, SQLException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of(NAME);
-		thm.AddScript(Asset.JS_ADD_TAPE);
+		thm.addScript(Asset.JS_ADD_TAPE);
 		BreadCrumbs crumbs = new BreadCrumbs().add(LibraryHandler.NAME, LibraryHandler.PATH).add(NAME, PATH);
 		TemplatePageModel tpm = TemplatePageModel.of(LibraryCreateHandler::body, thm, SelectedPage.Library, BodyModel.of(he, null), crumbs);
 		requestHandleCompletePage(he, tpm);

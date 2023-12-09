@@ -9,6 +9,8 @@ import lto.manager.web.handlers.http.ajax.AJAXGetAttachedDrivesFetcher;
 import lto.manager.web.handlers.http.ajax.AJAXGetOnloadError;
 import lto.manager.web.handlers.http.ajax.filelist.AJAXFilesListFetcher;
 import lto.manager.web.handlers.http.ajax.filelist.AJAXIconListFetcher;
+import lto.manager.web.handlers.http.ajax.labelgenerator.AJAXGenerateLTOLabelHTML;
+import lto.manager.web.handlers.http.ajax.labelgenerator.AJAXGenerateLTOLabelPDF;
 import lto.manager.web.handlers.http.api.APIVirtualDir;
 import lto.manager.web.handlers.http.pages.AssetHandler;
 import lto.manager.web.handlers.http.pages.LogInHandler;
@@ -77,6 +79,8 @@ public class Handlers {
 		ret.put(AJAXFilesListFetcher.PATH, new AJAXFilesListFetcher());
 		ret.put(AJAXIconListFetcher.PATH, new AJAXIconListFetcher());
 		ret.put(AJAXGetOnloadError.PATH, new AJAXGetOnloadError());
+		ret.put(AJAXGenerateLTOLabelHTML.PATH, new AJAXGenerateLTOLabelHTML());
+		ret.put(AJAXGenerateLTOLabelPDF.PATH, new AJAXGenerateLTOLabelPDF());
 
 		ret.put(APIVirtualDir.PATH, new APIVirtualDir());
 

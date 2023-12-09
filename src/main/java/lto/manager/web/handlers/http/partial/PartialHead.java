@@ -23,10 +23,11 @@ public class PartialHead {
 						extra.link().attrRel(EnumRelType.STYLESHEET).attrHref(css).__();
 					}
 					extra.script().attrSrc(Asset.JS_MAIN).__();
-					if (model.getExtraScriptsList().size() > 0) {
-						for (String js: model.getExtraScriptsList()) {
-							extra.script().attrSrc(js).__();
-						}
+					for (String js: model.getExtraScriptsList()) {
+						extra.script().attrSrc(js).__();
+					}
+					for (String js: model.getExtraScriptsDeferList()) {
+						extra.script().attrSrc(js).attrDefer(true).__();
 					}
 				})
 			.__(); // head

@@ -10,6 +10,8 @@ public class CSS {
 	public final static String BUTTON_IMAGE = "btn-image ";
 	public final static String BUTTON_IMAGE_W_TEXT = "btn-image-w-text ";
 	public final static String BUTTON_SMALL = "btn-s ";
+	public final static String CARD = "card ";
+	public final static String CARD_ATTRIBUTE = "header-text";
 	public final static String BACKGROUND_CAUTION = "background-caution ";
 	public final static String BACKGROUND_ACTIVE = "background-active ";
 	public final static String BACKGROUND_GRAY = "background-gray ";

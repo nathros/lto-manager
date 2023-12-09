@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
 
 import com.sun.net.httpserver.HttpExchange;
@@ -67,6 +68,11 @@ public class AssetHandler extends BaseHTTPHandler {
 	public static InputStream getResourceLoader(String requestedFile) {
 		String resource = path + requestedFile;
 		return loader.getResourceAsStream(resource);
+	}
+
+	public static String getResourceAsString(String requestedFile) throws IOException {
+		var bytes = getResourceLoader(requestedFile).readAllBytes();
+		return new String(bytes, StandardCharsets.UTF_8);
 	}
 
 	public static boolean assetExists(String resourcePath) {

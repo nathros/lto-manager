@@ -8,6 +8,7 @@ public class HeadModel {
 	final String title;
 	final List<String> extraStylesList = new ArrayList<String>();
 	final List<String> extraScriptsList = new ArrayList<String>();
+	final List<String> extraScriptsDeferList = new ArrayList<String>();
 
 	private HeadModel(final String title) {
 		this.title = title;
@@ -21,13 +22,19 @@ public class HeadModel {
 		return title;
 	}
 
-	public HeadModel AddCSS(final String css) {
+	public HeadModel addCSS(final String css) {
 		extraStylesList.add(css);
 		return this;
 	}
 
-	public HeadModel AddScript(final String js) {
+	public HeadModel addScript(final String js) {
 		extraScriptsList.add(js);
+		return this;
+	}
+
+	// Defer script will only be run when DOM content is loaded
+	public HeadModel addScriptDefer(final String js) {
+		extraScriptsDeferList.add(js);
 		return this;
 	}
 
@@ -37,5 +44,9 @@ public class HeadModel {
 
 	public List<String> getExtraScriptsList() {
 		return extraScriptsList;
+	}
+
+	public List<String> getExtraScriptsDeferList() {
+		return extraScriptsDeferList;
 	}
 }

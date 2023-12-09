@@ -35,8 +35,8 @@ public class FilesBrowserHandler2 extends BaseHTTPHandler {
 	@Override
 	public void requestHandle(HttpExchange he) throws IOException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of("Files Browser");
-		thm.AddCSS(Asset.CSS_FILE_VIEW);
-		thm.AddScript(Asset.JS_FILE_VIEW);
+		thm.addCSS(Asset.CSS_FILE_VIEW);
+		thm.addScript(Asset.JS_FILE_VIEW);
 		TemplatePageModel tpm = TemplatePageModel.of(FilesBrowserHandler2::content, thm, SelectedPage.Files, BodyModel.of(he, null), null);
 		requestHandleCompletePage(he, tpm);
 	}
