@@ -27,4 +27,6 @@ public class Asset {
 	public static final String IMG_COMPANY_LOGOS = AssetHandler.PATH + "/img/company-logo/";
 	public static final String IMG_LTO_LABEL = AssetHandler.PATH + "/img/lto-label/";
 	public static final String IMG_ICON_INFO = AssetHandler.PATH + "/img/info-circle-fill.svg";
+
+	public static final String AJAX_PATH_BASE = "/ajax/";
 }

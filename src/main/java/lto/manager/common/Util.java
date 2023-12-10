@@ -56,4 +56,15 @@ public class Util {
 	public static String replaceLast(String text, String regex, String replacement) {
 		return text.replaceFirst("(?s)" + regex + "(?!.*?" + regex + ")", replacement);
 	}
+
+	@SuppressWarnings("unchecked")
+	private static <T extends Throwable> void throwException(Throwable exception, Object dummy) throws T {
+		throw (T) exception;
+	}
+
+	// Allows an exception to be thrown without adding adding throws function
+	// declaration
+	public static void throwException(Throwable exception) {
+		Util.<RuntimeException>throwException(exception, null);
+	}
 }

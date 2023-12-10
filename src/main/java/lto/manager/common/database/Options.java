@@ -16,7 +16,7 @@ public class Options {
 		var def = new HashMap<OptionsSetting, Object>();
 		def.put(OptionsSetting.LOG_REQUESTS, Boolean.TRUE);
 		def.put(OptionsSetting.LOG_REQUESTS_ASSETS, Boolean.FALSE);
-		def.put(OptionsSetting.PLACEHOLDER_1, Integer.MIN_VALUE);
+		def.put(OptionsSetting.LOG_EXCEPTION_STACKTRACE, Boolean.FALSE);
 		def.put(OptionsSetting.PLACEHOLDER_2, Integer.MIN_VALUE);
 		def.put(OptionsSetting.PLACEHOLDER_3, Integer.MIN_VALUE);
 		def.put(OptionsSetting.PLACEHOLDER_4, Integer.MIN_VALUE);

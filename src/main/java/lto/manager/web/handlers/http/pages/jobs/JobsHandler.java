@@ -8,7 +8,6 @@ import java.util.concurrent.ExecutionException;
 
 import org.xmlet.htmlapifaster.Div;
 
-import com.google.common.base.CaseFormat;
 import com.sun.net.httpserver.HttpExchange;
 
 import lto.manager.common.database.Database;
@@ -86,7 +85,7 @@ public class JobsHandler extends BaseHTTPHandler {
 										.td().text(job.getType()).__()
 										.td().text(job.getStartDateTimeStr()).__()
 										.td().text(job.getEndDateTimeStr()).__()
-										.td().text(CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, job.getStatus().name())).__()
+										.td().text(job.getStatus().name()).__()
 										.td().text(job.getComment()).__()
 										.td()
 											.a()

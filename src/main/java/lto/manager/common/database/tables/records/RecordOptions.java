@@ -15,7 +15,7 @@ public class RecordOptions {
 	public static enum OptionsSetting {
 		LOG_REQUESTS("Log requests"),
 		LOG_REQUESTS_ASSETS("Log asset requests"),
-		PLACEHOLDER_1("placeholder 1"),
+		LOG_EXCEPTION_STACKTRACE("Log exception stacktrace"),
 		PLACEHOLDER_2("placeholder 2"),
 		PLACEHOLDER_3("placeholder 3"),
 		PLACEHOLDER_4("placeholder 4"),

@@ -19,10 +19,13 @@ import lto.manager.web.handlers.http.pages.AssetHandler;
 import lto.manager.web.handlers.http.pages.LogInHandler;
 import lto.manager.web.handlers.http.templates.TemplateAJAX;
 import lto.manager.web.handlers.http.templates.TemplateAJAX.TemplateFetcherModel;
-import lto.manager.web.handlers.http.templates.TemplateInternalError;
-import lto.manager.web.handlers.http.templates.TemplateInternalError.TemplateInternalErrorModel;
+import lto.manager.web.handlers.http.templates.TemplateInternalErrorAJAX;
+import lto.manager.web.handlers.http.templates.TemplateInternalErrorAJAX.TemplateInternalErrorModelAJAX;
+import lto.manager.web.handlers.http.templates.TemplateInternalErrorPage;
+import lto.manager.web.handlers.http.templates.TemplateInternalErrorPage.TemplateInternalErrorModelPage;
 import lto.manager.web.handlers.http.templates.TemplatePage;
 import lto.manager.web.handlers.http.templates.TemplatePage.TemplatePageModel;
+import lto.manager.web.resource.Asset;
 
 public abstract class BaseHTTPHandler implements HttpHandler {
 	public static final String LANG_VALUE = "en";
@@ -49,7 +52,7 @@ public abstract class BaseHTTPHandler implements HttpHandler {
 	@Override
 	public void handle(HttpExchange he) throws IOException {
 		if (Options.getData(OptionsSetting.LOG_REQUESTS) == Boolean.TRUE) {
-			String message = "Request (" + String.format("%04d", count) + "): " + he.getRequestHeaders().getFirst("Host")+ he.getRequestURI();
+			String message = "Request (" + String.format("%04d", count) + "): " + he.getRequestHeaders().getFirst("Host") + he.getRequestURI();
 			if (Options.getData(OptionsSetting.LOG_REQUESTS_ASSETS) == Boolean.TRUE) {
 				Log.l.info(message);
 			} else if (!he.getRequestURI().toString().contains(AssetHandler.PATH)) {
@@ -62,7 +65,7 @@ public abstract class BaseHTTPHandler implements HttpHandler {
 			final String session = getSessionCookie(he);
 			if (!State.isLoginSessionValid(session)) {
 				handler = new LogInHandler();
-				Log.l.info("User not logged in show login page: " + he.getRequestHeaders().getFirst("Host")+ he.getRequestURI());
+				Log.l.info("User not logged in show login page: " + he.getRequestHeaders().getFirst("Host") + he.getRequestURI());
 			}
 		}
 
@@ -70,11 +73,23 @@ public abstract class BaseHTTPHandler implements HttpHandler {
 		try {
 			handler.requestHandle(he);
 		} catch (Exception e) {
-			e.printStackTrace();
-			errorHandle(he, e);
+			if (Options.getData(OptionsSetting.LOG_EXCEPTION_STACKTRACE) == Boolean.TRUE) {
+				e.printStackTrace();
+			}
+			if (he.getRequestURI().getPath().indexOf(Asset.AJAX_PATH_BASE) == 0) {
+				errorHandleAJAX(he, e);
+			} else {
+				errorHandlePage(he, e);
+			}
 		} catch (Throwable e) {
-			e.printStackTrace();
-			errorHandle(he, new Exception(e));
+			if (Options.getData(OptionsSetting.LOG_EXCEPTION_STACKTRACE) == Boolean.TRUE) {
+				e.printStackTrace();
+			}
+			if (he.getRequestURI().getPath().indexOf(Asset.AJAX_PATH_BASE) == 0) {
+				errorHandleAJAX(he, new Exception(e));
+			} else {
+				errorHandlePage(he, new Exception(e));
+			}
 		}
 	}
 
@@ -126,9 +141,21 @@ public abstract class BaseHTTPHandler implements HttpHandler {
 		os.close();
 	}
 
-	protected void errorHandle(HttpExchange he, Exception exception) {
+	protected void errorHandlePage(HttpExchange he, Exception exception) {
 		try {
-			String response = TemplateInternalError.view.render(TemplateInternalErrorModel.of(exception, he));
+			String response = TemplateInternalErrorPage.view.render(TemplateInternalErrorModelPage.of(exception, he));
+			he.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, response.length());
+			OutputStream os = he.getResponseBody();
+			os.write(response.getBytes());
+			os.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	protected void errorHandleAJAX(HttpExchange he, Exception exception) {
+		try {
+			String response = TemplateInternalErrorAJAX.view.render(TemplateInternalErrorModelAJAX.of(exception, he));
 			he.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, response.length());
 			OutputStream os = he.getResponseBody();
 			os.write(response.getBytes());

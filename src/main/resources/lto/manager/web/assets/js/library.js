@@ -18,7 +18,6 @@ function onBarcodeInputChange() {
 	});
 }
 
-
 if ((barcodePreview != null) && (barcodeForm != null)) {
 	const inputs = barcodeForm.getElementsByTagName("input");
 	console.log(inputs)
@@ -31,5 +30,4 @@ if ((barcodePreview != null) && (barcodeForm != null)) {
 		};
 	}
 	onBarcodeInputChange();
-	
 }

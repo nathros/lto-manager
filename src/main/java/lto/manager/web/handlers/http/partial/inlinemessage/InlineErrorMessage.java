@@ -6,7 +6,21 @@ import lto.manager.common.ExternalProcess;
 import lto.manager.web.resource.CSS;
 
 public class InlineErrorMessage {
-	public static Void content(Div<?> view, final String uuid) {
+	public static Void contentGeneric(Div<?> view, final Exception ex) {
+		view.div().attrClass(CSS.INLINE_MESSAGE + CSS.ERROR)
+			.span().__()
+			.b().text("Error: " + ex.getMessage()).__()
+			.a().attrClass(CSS.INLINE_MESSAGE_DETAILS_LINK).attrTabIndex(1).text("Show Details").__()
+			.div().attrClass(CSS.INLINE_MESSAGE_DETAILS_CONTENT + CSS.FONT_MONOSPACE).attrTabIndex(2)
+				.of(div -> {
+					div.text("details");
+				})
+			.__()
+		.__();
+		return null;
+	}
+
+	public static Void contentExternalProcess(Div<?> view, final String uuid) {
 		view.div().attrClass(CSS.INLINE_MESSAGE + CSS.ERROR)
 			.span().__()
 			.b().text("Error getting data").__()

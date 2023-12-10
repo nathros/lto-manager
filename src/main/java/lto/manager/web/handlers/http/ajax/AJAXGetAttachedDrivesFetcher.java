@@ -20,7 +20,7 @@ import lto.manager.web.resource.CSS;
 import lto.manager.web.resource.Query;
 
 public class AJAXGetAttachedDrivesFetcher extends BaseHTTPHandler {
-	public static final String PATH = "/ajax/driveslist";
+	public static final String PATH = Asset.AJAX_PATH_BASE + "driveslist";
 
 	static Void content(Div<?> view, BodyModel model) {
 		final String uuid = model.getQuery(Query.UUID);
@@ -29,7 +29,7 @@ public class AJAXGetAttachedDrivesFetcher extends BaseHTTPHandler {
 			Semaphore completedSemaphore = devices.startBlocking(uuid);
 			boolean success = completedSemaphore.tryAcquire(5, TimeUnit.SECONDS);
 			if (success == false || devices.getExitCode() != ExternalProcess.EXIT_CODE_OK) {
-				view.of(v -> InlineErrorMessage.content(v, uuid));
+				view.of(v -> InlineErrorMessage.contentExternalProcess(v, uuid));
 			} else {
 				view.of(v -> {
 					for (var dev: devices.getDevices()) {

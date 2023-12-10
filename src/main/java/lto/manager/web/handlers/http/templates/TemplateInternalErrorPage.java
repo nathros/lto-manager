@@ -18,20 +18,20 @@ import lto.manager.web.handlers.http.partial.PartialHead;
 import lto.manager.web.handlers.http.templates.models.HeadModel;
 import lto.manager.web.resource.CSS;
 
-public class TemplateInternalError {
-	public static HtmlView view = HtmlFlow.view(TemplateInternalError::template);
+public class TemplateInternalErrorPage {
+	public static HtmlView view = HtmlFlow.view(TemplateInternalErrorPage::template);
 
-	public static class TemplateInternalErrorModel {
+	public static class TemplateInternalErrorModelPage {
 		final Exception ex;
 		final HttpExchange he;
 
-		private TemplateInternalErrorModel(Exception ex, HttpExchange he) {
+		private TemplateInternalErrorModelPage(Exception ex, HttpExchange he) {
 			this.ex = ex;
 			this.he = he;
 		}
 
-		public static TemplateInternalErrorModel of(Exception ex, HttpExchange he) {
-			return new TemplateInternalErrorModel(ex, he);
+		public static TemplateInternalErrorModelPage of(Exception ex, HttpExchange he) {
+			return new TemplateInternalErrorModelPage(ex, he);
 		}
 	}
 
@@ -43,7 +43,7 @@ public class TemplateInternalError {
 			.div()
 				.attrClass(CSS.FONT_MONOSPACE)
 				.attrStyle("padding:1rem")
-				.<TemplateInternalErrorModel>dynamic((div, model) -> {
+				.<TemplateInternalErrorModelPage>dynamic((div, model) -> {
 					StringWriter sw = new StringWriter();
 					PrintWriter pw = new PrintWriter(sw);
 					model.ex.printStackTrace(pw);

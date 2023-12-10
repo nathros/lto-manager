@@ -11,14 +11,15 @@ import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.partial.inlinemessage.InlineErrorMessage;
 import lto.manager.web.handlers.http.templates.TemplateAJAX.TemplateFetcherModel;
 import lto.manager.web.handlers.http.templates.models.BodyModel;
+import lto.manager.web.resource.Asset;
 import lto.manager.web.resource.Query;
 
 public class AJAXGetOnloadError extends BaseHTTPHandler {
-	public static final String PATH = "/ajax/onloaderror";
+	public static final String PATH = Asset.AJAX_PATH_BASE + "onloaderror";
 
 	static Void content(Div<?> view, BodyModel model) {
 		final String uuid = model.getQuery(Query.UUID);
-		view.of(div -> InlineErrorMessage.content(div, uuid));
+		view.of(div -> InlineErrorMessage.contentExternalProcess(div, uuid));
 		return null;
 	}
 

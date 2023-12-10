@@ -86,6 +86,12 @@ public class GenerateLTOLabelSVG {
 
 	}
 
+	private String replaceAttributeValue(String input, final String attributeKey, final String newAttributeValue) {
+		final String search = " " + attributeKey  + "=\".\"";
+		final String replace = " " + attributeKey  + "=\"" + newAttributeValue + "\"";
+		return input.replaceFirst(search, replace);
+	}
+
 	// id inside label.svg in this format key-value eg: br-3
 	// This record will find id if exists and extract key value pair
 	private static record SVGID(String name, Integer index) {
