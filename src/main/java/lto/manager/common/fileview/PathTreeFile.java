@@ -45,7 +45,7 @@ public class PathTreeFile {
 	        Instant instantMod = Instant.ofEpochMilli(dateMod);
 	        modifiedDateTime = LocalDateTime.ofInstant(instantMod, ZoneId.systemDefault());
 		} catch (Exception e) {
-			Log.l.severe("Failed to get file attributes for: " + f.getAbsolutePath());
+			Log.severe("Failed to get file attributes for: " + f.getAbsolutePath());
 			e.printStackTrace();
 		}
 	}

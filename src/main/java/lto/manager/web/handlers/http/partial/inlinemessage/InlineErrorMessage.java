@@ -1,5 +1,8 @@
 package lto.manager.web.handlers.http.partial.inlinemessage;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 import org.xmlet.htmlapifaster.Div;
 
 import lto.manager.common.ExternalProcess;
@@ -11,9 +14,13 @@ public class InlineErrorMessage {
 			.span().__()
 			.b().text("Error: " + ex.getMessage()).__()
 			.a().attrClass(CSS.INLINE_MESSAGE_DETAILS_LINK).attrTabIndex(1).text("Show Details").__()
-			.div().attrClass(CSS.INLINE_MESSAGE_DETAILS_CONTENT + CSS.FONT_MONOSPACE).attrTabIndex(2)
+			.div().attrClass(CSS.INLINE_MESSAGE_DETAILS_CONTENT + CSS.FONT_MONOSPACE + CSS.FONT_SMALL).attrTabIndex(2)
 				.of(div -> {
-					div.text("details");
+					StringWriter sw = new StringWriter();
+					PrintWriter pw = new PrintWriter(sw);
+					ex.printStackTrace(pw);
+					final String stackTrace = "<div>" + sw.toString().replace(System.lineSeparator(), "</div><div>");
+					div.text(stackTrace);
 				})
 			.__()
 		.__();

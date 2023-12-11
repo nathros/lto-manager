@@ -23,10 +23,10 @@ public class FileIndexParser {
 				filesOnTape.add(RecordFile.of(line));
 			}
 		} catch (FileNotFoundException e) {
-			Log.l.severe("Failed to read tar index file: " + filePath + " error: " + e.getMessage());
+			Log.severe("Failed to read tar index file: " + filePath + " error: " + e.getMessage());
 			return null;
 		} catch (IOException e) {
-			Log.l.severe("Failed with error in tar index file: " + filePath + " error: " + e.getMessage());
+			Log.severe("Failed with error in tar index file: " + filePath + " error: " + e.getMessage());
 			return null;
 		}
 		return filesOnTape;
@@ -42,7 +42,7 @@ public class FileIndexParser {
 			file.setLength(INDEX_FILE_SIZE_BYTES);
 			file.close();
 		} catch (IOException e) {
-			Log.l.severe("Failed to create new tar index file: " + filePath + " error: " + e.getMessage());
+			Log.severe("Failed to create new tar index file: " + filePath + " error: " + e.getMessage());
 			return false;
 		}
 		return true;

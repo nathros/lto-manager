@@ -20,7 +20,7 @@ import lto.manager.web.resource.CSS;
 import lto.manager.web.resource.Query;
 
 public class AJAXGetAttachedDrivesFetcher extends BaseHTTPHandler {
-	public static final String PATH = Asset.AJAX_PATH_BASE + "driveslist";
+	public static final String PATH = Asset.PATH_AJAX_BASE + "driveslist";
 
 	static Void content(Div<?> view, BodyModel model) {
 		final String uuid = model.getQuery(Query.UUID);

@@ -148,7 +148,7 @@ public class TableTape {
 				return DBStatus.Error(null, "Failed to insert: " + sql);
 			}
 		} catch (Exception e) {
-			Log.l.severe(e.getMessage() + " SQL: " + sql);
+			Log.severe(e.getMessage() + " SQL: " + sql);
 			if (e.getMessage().contains("foreign")) {
 				return DBStatus.Error(e, "Missing tape type or manufacturer");
 			}
@@ -257,7 +257,7 @@ public class TableTape {
 			time = result.getTimestamp(COLUMN_NAME_DATE_ADDED).toLocalDateTime();
 		} catch (NullPointerException e) { // Do nothing
 		} catch (Exception e) {
-			Log.l.severe("Table tape get record " + i + "start timestamp error: " + e.getMessage());
+			Log.severe("Table tape get record " + i + "start timestamp error: " + e.getMessage());
 		}
 		boolean isWorm = result.getBoolean(COLUMN_NAME_IS_WORM);
 		boolean isEncrypted = result.getBoolean(COLUMN_NAME_IS_ENCRYPTED);

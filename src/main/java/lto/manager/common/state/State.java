@@ -23,17 +23,17 @@ public class State {
 	}
 
 	public static void addNewLoginSession(UUID id, RecordUser user) {
-		Log.l.info("Added new login session: " + id.toString() + ", username: " + user.getUsername());
+		Log.info("Added new login session: " + id.toString() + ", username: " + user.getUsername());
 		loginSessions.put(id, new LoginSession(id, user, LocalDateTime.now().plusDays(31)));
 	}
 
 	public static boolean removeLoginSession(UUID id) {
 		var result = loginSessions.remove(id);
 		if (result == null) {
-			Log.l.warning("Failed to remove missing login session: " + id.toString());
+			Log.warning("Failed to remove missing login session: " + id.toString());
 			return false;
 		} else {
-			Log.l.info("Removed login session: " + id.toString() + ", username: " + result.user().getUsername());
+			Log.info("Removed login session: " + id.toString() + ", username: " + result.user().getUsername());
 			return true;
 		}
 	}
@@ -51,7 +51,7 @@ public class State {
 	public static void startBackgroundCleanup() {
 		if (backgroundCleanUp == null) {
 			final Integer repeatEveryMinutes = Options.getData(OptionsSetting.BACKGROUND_CLEANUP_TIMER);
-			Log.l.info("Background cleanup scheduled to run every " + repeatEveryMinutes + " minutes");
+			Log.info("Background cleanup scheduled to run every " + repeatEveryMinutes + " minutes");
 
 			backgroundCleanUp = new Timer();
 			final long schedule = repeatEveryMinutes * 1000 * 60;
@@ -63,13 +63,13 @@ public class State {
 						stopBackgroundCleanup();
 						startBackgroundCleanup();
 					} else {
-						Log.l.fine("Started system cleanup");
+						Log.fine("Started system cleanup");
 						try {
 							ExternalProcess.removeRetired(Integer.parseInt(Database.getOption(OptionsSetting.STALE_EXTERNAL_PROCESS_TIME)));
 						} catch (Exception e) {
-							Log.l.severe("Failed to start startRemoveRetired " + e.getMessage());
+							Log.severe("Failed to start startRemoveRetired " + e.getMessage());
 						}
-						Log.l.fine("completed system cleanup");
+						Log.fine("completed system cleanup");
 					}
 				}
 			}, schedule, schedule);

@@ -54,9 +54,9 @@ public abstract class BaseHTTPHandler implements HttpHandler {
 		if (Options.getData(OptionsSetting.LOG_REQUESTS) == Boolean.TRUE) {
 			String message = "Request (" + String.format("%04d", count) + "): " + he.getRequestHeaders().getFirst("Host") + he.getRequestURI();
 			if (Options.getData(OptionsSetting.LOG_REQUESTS_ASSETS) == Boolean.TRUE) {
-				Log.l.info(message);
+				Log.info(message);
 			} else if (!he.getRequestURI().toString().contains(AssetHandler.PATH)) {
-				Log.l.info(message);
+				Log.info(message);
 			}
 		}
 		BaseHTTPHandler handler = this; // If authentication failed then replace this with login handler
@@ -65,7 +65,7 @@ public abstract class BaseHTTPHandler implements HttpHandler {
 			final String session = getSessionCookie(he);
 			if (!State.isLoginSessionValid(session)) {
 				handler = new LogInHandler();
-				Log.l.info("User not logged in show login page: " + he.getRequestHeaders().getFirst("Host") + he.getRequestURI());
+				Log.info("User not logged in show login page: " + he.getRequestHeaders().getFirst("Host") + he.getRequestURI());
 			}
 		}
 
@@ -76,7 +76,7 @@ public abstract class BaseHTTPHandler implements HttpHandler {
 			if (Options.getData(OptionsSetting.LOG_EXCEPTION_STACKTRACE) == Boolean.TRUE) {
 				e.printStackTrace();
 			}
-			if (he.getRequestURI().getPath().indexOf(Asset.AJAX_PATH_BASE) == 0) {
+			if (he.getRequestURI().getPath().indexOf(Asset.PATH_AJAX_BASE) == 0) {
 				errorHandleAJAX(he, e);
 			} else {
 				errorHandlePage(he, e);
@@ -85,7 +85,7 @@ public abstract class BaseHTTPHandler implements HttpHandler {
 			if (Options.getData(OptionsSetting.LOG_EXCEPTION_STACKTRACE) == Boolean.TRUE) {
 				e.printStackTrace();
 			}
-			if (he.getRequestURI().getPath().indexOf(Asset.AJAX_PATH_BASE) == 0) {
+			if (he.getRequestURI().getPath().indexOf(Asset.PATH_AJAX_BASE) == 0) {
 				errorHandleAJAX(he, new Exception(e));
 			} else {
 				errorHandlePage(he, new Exception(e));

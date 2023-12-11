@@ -20,7 +20,7 @@ public class Security {
 				return newID;
 			}
 		} catch (SQLException e) {
-			Log.l.severe("Failed to login user [" + username + "] " + e.getMessage());
+			Log.severe("Failed to login user [" + username + "] " + e.getMessage());
 		}
 		return null;
 	}

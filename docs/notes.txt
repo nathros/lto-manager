@@ -1,1 +1,2 @@
 TODO
+	/library/generate button and a have different text size

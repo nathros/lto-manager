@@ -12,20 +12,25 @@ import lto.manager.web.handlers.http.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.http.templates.TemplatePage.TemplatePageModel;
 import lto.manager.web.handlers.http.templates.models.BodyModel;
 import lto.manager.web.handlers.http.templates.models.HeadModel;
+import lto.manager.web.resource.Asset;
 import lto.manager.web.resource.CSS;
 
 public class SandpitHandler extends BaseHTTPHandler {
-	public static final String PATH = "/sandpit";
+	public static final String PATH = Asset.PATH_SANDPIT_BASE;
 
 	static Void content(Div<?> view, BodyModel model) {
 		view
-			.div().attrStyle("text-align:center")
-				.p().a().attrClass(CSS.BUTTON).attrHref(EchoHeaderHandler.PATH).text("Echo Header").__().__()
-				.p().a().attrClass(CSS.BUTTON).attrHref(EchoGetHandler.PATH).text("Echo GET").__().__()
-				.p().a().attrClass(CSS.BUTTON).attrHref(EchoPostHandler.PATH).text("Echo POST").__().__()
-				.p().a().attrClass(CSS.BUTTON).attrHref(DatabaseTestHandler.PATH).text("Database test").__().__()
-				.p().a().attrClass(CSS.BUTTON).attrHref(WebsocketTestHandler.PATH).text("Websocket").__().__()
-			.__(); //  div
+			.div().attrClass(CSS.CARD).addAttr(CSS.CARD_ATTRIBUTE, "General Debug")
+				.a().attrClass(CSS.BUTTON).attrHref(EchoHeaderHandler.PATH).text("Echo Request Header").__()
+				.a().attrClass(CSS.BUTTON).attrHref(EchoGetHandler.PATH).text("Echo GET").__()
+				.a().attrClass(CSS.BUTTON).attrHref(EchoPostHandler.PATH).text("Echo POST").__()
+				.a().attrClass(CSS.BUTTON).attrHref(DatabaseTestHandler.PATH).text("Database test").__()
+				.a().attrClass(CSS.BUTTON).attrHref(WebsocketTestHandler.PATH).text("Websocket").__()
+			.__()
+			.div().attrClass(CSS.CARD).addAttr(CSS.CARD_ATTRIBUTE, "Error Handling")
+				.a().attrClass(CSS.BUTTON).attrHref(InternalErrorTesterHandler.PATH).text(InternalErrorTesterHandler.NAME).__()
+				.a().attrClass(CSS.BUTTON).attrHref(InternalErrorInlineTesterHandler.PATH).text(InternalErrorInlineTesterHandler.NAME).__()
+			.__();
 		return null;
 	}
 

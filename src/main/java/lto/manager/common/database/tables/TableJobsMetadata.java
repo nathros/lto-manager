@@ -113,7 +113,7 @@ public class TableJobsMetadata {
 	public static boolean addAllMetadata(Connection con, int jobID, List<RecordJobMetadata> meta) throws SQLException {
 		for (RecordJobMetadata item: meta) {
 			if (addMetadata(con, jobID, item)) {
-				Log.l.severe("Failed to insert metadata: " + item.toString());
+				Log.severe("Failed to insert metadata: " + item.toString());
 				break;
 			}
 		}

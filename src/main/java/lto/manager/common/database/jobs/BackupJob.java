@@ -41,7 +41,7 @@ public class BackupJob extends JobBase {
 					foundDest = true;
 					desinationVirtualDir = value;
 				} else {
-					Log.l.warning("Backup job found multiple destinations (" + KEY_DEST + "), ignoring new: " + value);
+					Log.warning("Backup job found multiple destinations (" + KEY_DEST + "), ignoring new: " + value);
 				}
 				break;
 			}
@@ -51,7 +51,7 @@ public class BackupJob extends JobBase {
 					this.destTapeID = Integer.parseInt(value);
 					foundDestID = true;
 				} else {
-					Log.l.warning("Backup job found multiple destinations (" + KEY_DEST_ID + "), ignoring new: " + value);
+					Log.warning("Backup job found multiple destinations (" + KEY_DEST_ID + "), ignoring new: " + value);
 				}
 				break;
 			}
@@ -61,12 +61,12 @@ public class BackupJob extends JobBase {
 					this.sourceRootDir = value;
 					foundSourceRootDir = true;
 				} else {
-					Log.l.warning("Backup job found multiple destinations (" + KEY_SOURCE_ROOT + "), ignoring new: " + value);
+					Log.warning("Backup job found multiple destinations (" + KEY_SOURCE_ROOT + "), ignoring new: " + value);
 				}
 				break;
 			}
 
-			default: Log.l.warning("Backup job found unknown metadata key: " + key + " value: " + value);
+			default: Log.warning("Backup job found unknown metadata key: " + key + " value: " + value);
 			}
 		}
 

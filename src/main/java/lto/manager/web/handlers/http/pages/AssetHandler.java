@@ -60,7 +60,7 @@ public class AssetHandler extends BaseHTTPHandler {
 			OutputStream os = he.getResponseBody();
 			os.write(response.getBytes());
 			os.close();
-			Log.l.severe("Asset Handler cannot find: " + resource);
+			Log.severe("Asset Handler cannot find: " + resource);
 		}
 		if (is != null) is.close();
 	}

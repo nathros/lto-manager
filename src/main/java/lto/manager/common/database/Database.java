@@ -67,17 +67,17 @@ public class Database {
 			Connection con = DriverManager.getConnection(url);
 			connection = con;
 			if (newDatabase) {
-				Log.l.info("Database does not exist, creating new");
+				Log.info("Database does not exist, creating new");
 				if (!createTables()) {
-					Log.l.severe("Failed to create database");
+					Log.severe("Failed to create database");
 				}
 			}
 			// Enforce foreign keys check on insert
 			con.createStatement().executeUpdate("PRAGMA foreign_keys = ON;");
-			Log.l.info("Successfully opened database: " + fileName);
+			Log.info("Successfully opened database: " + fileName);
 			return con;
 		} catch (Exception e1) {
-			Log.l.severe("Failed to open database: " + fileName);
+			Log.severe("Failed to open database: " + fileName);
 			e1.printStackTrace();
 		}
 		return null;

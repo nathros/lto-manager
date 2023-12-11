@@ -6,6 +6,8 @@ import java.net.URLEncoder;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import lto.manager.common.log.Log;
+
 public class Util {
 	public static File getWorkingDir() {
 		Path currentRelativePath = Paths.get("");
@@ -66,5 +68,11 @@ public class Util {
 	// declaration
 	public static void throwException(Throwable exception) {
 		Util.<RuntimeException>throwException(exception, null);
+	}
+
+	public static void logAndException(final Throwable exception) {
+		// Calling Log.severe() will show incorrect caller, need parent of caller
+		Log.customStackIndexSevere(exception.getMessage(), Log.STACK_INDEX_PARENT);
+		throwException(exception);
 	}
 }

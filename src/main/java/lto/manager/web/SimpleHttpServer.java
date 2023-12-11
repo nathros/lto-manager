@@ -19,7 +19,7 @@ public class SimpleHttpServer {
 	public void Start(int port, boolean redirectOnly) {
 		try {
 			server = HttpServer.create(new InetSocketAddress(port), 10);
-			Log.l.info("HTTP " + (redirectOnly ? "redirect " : "") + "server started at port: http://localhost:" + port);
+			Log.info("HTTP " + (redirectOnly ? "redirect " : "") + "server started at port: http://localhost:" + port);
 
 			if (redirectOnly) {
 				server.createContext("/", new HTTPSRedirectHandler());
@@ -33,13 +33,13 @@ public class SimpleHttpServer {
 			server.setExecutor(Executors.newCachedThreadPool());
 			server.start();
 		} catch (IOException e) {
-			Log.l.log(Level.SEVERE, e.getMessage(), e);
+			Log.log(Level.SEVERE, e.getMessage(), e);
 			System.exit(-1);
 		}
 	}
 
 	public void Stop() {
 		server.stop(0);
-		Log.l.info("HTTP server stopped");
+		Log.info("HTTP server stopped");
 	}
 }

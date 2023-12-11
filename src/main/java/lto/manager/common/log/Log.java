@@ -6,7 +6,9 @@ import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
 public class Log {
-	public static Logger l = getLogger();
+	private static Logger l = getLogger();
+	private static Integer STACK_INDEX = 2;
+	public static Integer STACK_INDEX_PARENT = STACK_INDEX + 1;
 
 	// Logs to console and file
 	private static Logger getLogger() {
@@ -28,4 +30,38 @@ public class Log {
 		return logger;
 	}
 
+	public static void info(final String message) {
+		final StackTraceElement stackTrace = Thread.currentThread().getStackTrace()[STACK_INDEX];
+		l.logp(Level.INFO, stackTrace.getClassName(), stackTrace.getMethodName(), message);
+	}
+
+	public static void fine(final String message) {
+		final StackTraceElement stackTrace = Thread.currentThread().getStackTrace()[STACK_INDEX];
+		l.logp(Level.FINE, stackTrace.getClassName(), stackTrace.getMethodName(), message);
+	}
+
+	public static void finer(final String message) {
+		final StackTraceElement stackTrace = Thread.currentThread().getStackTrace()[STACK_INDEX];
+		l.logp(Level.FINER, stackTrace.getClassName(), stackTrace.getMethodName(), message);
+	}
+
+	public static void warning(final String message) {
+		final StackTraceElement stackTrace = Thread.currentThread().getStackTrace()[STACK_INDEX];
+		l.logp(Level.WARNING, stackTrace.getClassName(), stackTrace.getMethodName(), message);
+	}
+
+	public static void severe(final String message) {
+		final StackTraceElement stackTrace = Thread.currentThread().getStackTrace()[STACK_INDEX];
+		l.logp(Level.SEVERE, stackTrace.getClassName(), stackTrace.getMethodName(), message);
+	}
+
+	public static void customStackIndexSevere(final String message, final int customStackIndex) {
+		final StackTraceElement stackTrace = Thread.currentThread().getStackTrace()[customStackIndex];
+		l.logp(Level.SEVERE, stackTrace.getClassName(), stackTrace.getMethodName(), message);
+	}
+
+	public static void log(final Level level, final String message, final Throwable throwable) {
+		final StackTraceElement stackTrace = Thread.currentThread().getStackTrace()[STACK_INDEX];
+		l.logp(level, stackTrace.getClassName(), stackTrace.getMethodName(), message, throwable);
+	}
 }

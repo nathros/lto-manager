@@ -74,7 +74,7 @@ public class Options {
 				}
 			}
 		} catch (SQLException e) {
-			Log.l.severe("Failed to get options cache");
+			Log.severe("Failed to get options cache");
 		}
 
 		return ret;
@@ -97,7 +97,7 @@ public class Options {
 				Database.updateOption(setting, String.valueOf(value));
 				cache.put(setting, value);
 			} else {
-				Log.l.severe("Attempt to set user option " + setting.toString() + " which is "
+				Log.severe("Attempt to set user option " + setting.toString() + " which is "
 						+ defaultOption.getClass().getTypeName() + " as " + value.getClass().getTypeName());
 			}
 		} catch (SQLException e) {

@@ -15,7 +15,7 @@ import lto.manager.web.resource.Asset;
 import lto.manager.web.resource.Query;
 
 public class AJAXGetOnloadError extends BaseHTTPHandler {
-	public static final String PATH = Asset.AJAX_PATH_BASE + "onloaderror";
+	public static final String PATH = Asset.PATH_AJAX_BASE + "onloaderror";
 
 	static Void content(Div<?> view, BodyModel model) {
 		final String uuid = model.getQuery(Query.UUID);

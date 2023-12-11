@@ -8,17 +8,18 @@
 }
 
 :root {
-  --common-background-colour: #101820;
-  --common-selected-colour: rgb(0, 119, 161);
-  --common-highlight: inset 100px 100px 0px 0px rgba(255, 255, 255, 0.3);
-  --common-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;
-  --menu-border-radius: 6px;
-  --background-error: #ffecec;
-  --background-warning: #fff8c4;
-  --background-ok: #e9ffd9;
-  --background-info: #e3f7fc;
-  --padding: 0.5rem;
-  --border: 1px solid #ccc;
+	--common-background-colour: #101820;
+	--common-selected-colour: rgb(0, 119, 161);
+	--common-highlight: inset 100px 100px 0px 0px rgba(255, 255, 255, 0.3);
+	--common-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;
+	--menu-border-radius: 6px;
+	--background-error: #ffecec;
+	--background-warning: #fff8c4;
+	--background-ok: #e9ffd9;
+	--background-info: #e3f7fc;
+	--padding: 0.5rem;
+	--border: 1px solid #ccc;
+	--border-error: 1px solid red;
 }
 * {
 	font-family: 'Open Sans', sans-serif;
@@ -41,8 +42,17 @@ input, textarea {
 input:focus, textarea:focus {
 	outline: var(--border);
 }
-.monospace * {
+input.error {
+	border: var(--border-error);
+}
+input.error:focus {
+	outline: var(--border-error);
+}
+.monospace, .monospace * {
 	font-family: 'Space Mono', monospace;
+}
+.font-small {
+	font-size: small;
 }
 .header-root {
 	position: fixed;
@@ -214,6 +224,12 @@ input:focus, textarea:focus {
 }
 .icon-printer:before {
 	background-image: url('/assets/img/printer-fill.svg');
+}
+.icon-arrow-repeat:before {
+	background-image: url('/assets/img/arrow-repeat.svg');
+}
+.icon-pdf:before {
+	background-image: url('/assets/img/file-earmark-pdf-fill.svg');
 }
 .menu-list {
 	list-style-type: none;
@@ -477,9 +493,18 @@ input:focus, textarea:focus {
 	text-decoration: underline;
 	cursor: pointer;
 }
-.inline-message div {
-	flex: 1 1 100%;
+.inline-message > div {
+	width: 100%;
 	padding-top: 1rem;
+}
+.inline-message > div > div {
+	line-break: anywhere;
+}
+.inline-message > div > div:nth-child(even) {
+	background-color: white;
+}
+.inline-message.error > div > div:hover {
+	background-color: rgba(255, 0, 0, 0.5);
 }
 .inline-message.error span {
 	background-color: red;

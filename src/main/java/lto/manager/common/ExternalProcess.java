@@ -214,12 +214,12 @@ public abstract class ExternalProcess {
 			final ExternalProcess p = retired.getValue();
 			final LocalDateTime finished = p.getExitDateTime();
 			if (finished == null) {
-				Log.l.severe("Retired processes " + retired.getClass().getSimpleName() + ":" + retired.getKey()
+				Log.severe("Retired processes " + retired.getClass().getSimpleName() + ":" + retired.getKey()
 						+ " has null exit date time # removed");
 				iterator.remove();
 			} else {
 				if (from.isAfter(finished)) {
-					Log.l.finer("Removed old retired processes " + retired.getClass().getSimpleName() + ":"
+					Log.finer("Removed old retired processes " + retired.getClass().getSimpleName() + ":"
 							+ retired.getKey() + " has expired");
 					iterator.remove();
 				}

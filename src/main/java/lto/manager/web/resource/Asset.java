@@ -19,7 +19,7 @@ public class Asset {
 	public static final String JS_ADD_JOB = AssetHandler.PATH + "/js/add_job.js";
 	public static final String JS_WEBSOCKET = AssetHandler.PATH + "/js/websocket.js";
 	public static final String JS_ON_LOAD_AJAX = AssetHandler.PATH + "/js/on_load_ajax.js";
-	public static final String JS_LIBRARY = AssetHandler.PATH + "/js/library.js";
+	public static final String JS_LTO_LABEL_GENERATOR = AssetHandler.PATH + "/js/lto-label-generator.js";
 
 	public static final String IMG_FAVICO_SVG = AssetHandler.PATH + "/img/favico.svg";
 	public static final String IMG_LOGO = AssetHandler.PATH + "/img/logo.svg";
@@ -28,5 +28,6 @@ public class Asset {
 	public static final String IMG_LTO_LABEL = AssetHandler.PATH + "/img/lto-label/";
 	public static final String IMG_ICON_INFO = AssetHandler.PATH + "/img/info-circle-fill.svg";
 
-	public static final String AJAX_PATH_BASE = "/ajax/";
+	public static final String PATH_AJAX_BASE = "/ajax/";
+	public static final String PATH_SANDPIT_BASE = "/sandpit/";
 }

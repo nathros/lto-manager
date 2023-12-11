@@ -37,6 +37,9 @@ import lto.manager.web.handlers.http.pages.sandpit.DatabaseTestHandler;
 import lto.manager.web.handlers.http.pages.sandpit.EchoGetHandler;
 import lto.manager.web.handlers.http.pages.sandpit.EchoHeaderHandler;
 import lto.manager.web.handlers.http.pages.sandpit.EchoPostHandler;
+import lto.manager.web.handlers.http.pages.sandpit.InternalErrorInlineAJAXTesterHandler;
+import lto.manager.web.handlers.http.pages.sandpit.InternalErrorInlineTesterHandler;
+import lto.manager.web.handlers.http.pages.sandpit.InternalErrorTesterHandler;
 import lto.manager.web.handlers.http.pages.sandpit.SandpitHandler;
 import lto.manager.web.handlers.http.pages.sandpit.WebsocketTestHandler;
 import lto.manager.web.handlers.websockets.BaseWebsocketHandler;
@@ -85,6 +88,9 @@ public class Handlers {
 		ret.put(APIVirtualDir.PATH, new APIVirtualDir());
 
 		if (Main.DEBUG_MODE) {
+			ret.put(InternalErrorTesterHandler.PATH, new InternalErrorTesterHandler());
+			ret.put(InternalErrorInlineTesterHandler.PATH, new InternalErrorInlineTesterHandler());
+			ret.put(InternalErrorInlineAJAXTesterHandler.PATH, new InternalErrorInlineAJAXTesterHandler());
 			ret.put(EchoHeaderHandler.PATH, new EchoHeaderHandler());
 			ret.put(EchoGetHandler.PATH, new EchoGetHandler());
 			ret.put(EchoGetHandler.PATH, new EchoPostHandler());

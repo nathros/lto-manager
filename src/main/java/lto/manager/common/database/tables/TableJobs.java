@@ -120,13 +120,13 @@ public class TableJobs {
 			start = result.getTimestamp(COLUMN_NAME_START_DATE_TIME).toLocalDateTime();
 		} catch (NullPointerException e) { // Do nothing
 		} catch (Exception e) {
-			Log.l.severe("Table jobs get record start timestamp error: " + e.getMessage());
+			Log.severe("Table jobs get record start timestamp error: " + e.getMessage());
 		}
 		try {
 			end = result.getTimestamp(COLUMN_NAME_COMPLETED_DATE_TIME).toLocalDateTime();
 		} catch (NullPointerException e) { // Do nothing
 		} catch (Exception e) {
-			Log.l.severe("Table jobs get record end timestamp error: " + e.getMessage());
+			Log.severe("Table jobs get record end timestamp error: " + e.getMessage());
 		}
 		String comment = result.getString(COLUMN_NAME_COMMENT);
 		RecordJob job = RecordJob.of(id, name, type, status, start, end, comment);
