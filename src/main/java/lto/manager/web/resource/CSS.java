@@ -2,7 +2,9 @@ package lto.manager.web.resource;
 
 public class CSS {
 	public final static String COMMON_CONTAINER = "common-container ";
+	public final static String COMMON_CONTAINER_NO_ALIGN = "common-container-no-align ";
 	public final static String COMMON_CONTAINER_CENTRE = "common-container-centre ";
+	public final static String COMMON_PADDING_FULL = "common-padding-full ";
 	public final static String GAP_NONE = "gap-none ";
 	public final static String GAP_HALF = "gap-half ";
 
@@ -42,6 +44,8 @@ public class CSS {
 	public final static String ICON_PRINTER = "icon-printer ";
 	public final static String ICON_ARROW_REPEAT = "icon-arrow-repeat ";
 	public final static String ICON_PDF = "icon-pdf ";
+	public final static String ICON_SVG = "icon-svg ";
+	public final static String ICON_HIGHLIGHTS = "icon-highlights ";
 
 	public final static String FV_ID = "id-wtree";
 	public final static String FV_ID_CONTEXT_CONTAINER = "wtree-context-container";

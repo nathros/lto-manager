@@ -11,6 +11,7 @@ import lto.manager.web.handlers.http.ajax.filelist.AJAXFilesListFetcher;
 import lto.manager.web.handlers.http.ajax.filelist.AJAXIconListFetcher;
 import lto.manager.web.handlers.http.ajax.labelgenerator.AJAXGenerateLTOLabelHTML;
 import lto.manager.web.handlers.http.ajax.labelgenerator.AJAXGenerateLTOLabelPDF;
+import lto.manager.web.handlers.http.ajax.labelgenerator.AJAXGenerateLTOLabelSVG;
 import lto.manager.web.handlers.http.api.APIVirtualDir;
 import lto.manager.web.handlers.http.pages.AssetHandler;
 import lto.manager.web.handlers.http.pages.LogInHandler;
@@ -30,7 +31,7 @@ import lto.manager.web.handlers.http.pages.jobs.JobsNewBackupHandler;
 import lto.manager.web.handlers.http.pages.jobs.JobsTypeHandler;
 import lto.manager.web.handlers.http.pages.library.LibraryCreateHandler;
 import lto.manager.web.handlers.http.pages.library.LibraryDeleteHandler;
-import lto.manager.web.handlers.http.pages.library.LibraryGenerateBarcodeAPIHandler;
+import lto.manager.web.handlers.http.pages.library.LibraryGenerateBarcodeHTMLHandler;
 import lto.manager.web.handlers.http.pages.library.LibraryGenerateBarcodeHandler;
 import lto.manager.web.handlers.http.pages.library.LibraryHandler;
 import lto.manager.web.handlers.http.pages.sandpit.DatabaseTestHandler;
@@ -66,7 +67,7 @@ public class Handlers {
 		ret.put(LibraryCreateHandler.PATH, new LibraryCreateHandler());
 		ret.put(LibraryDeleteHandler.PATH, new LibraryDeleteHandler());
 		ret.put(LibraryGenerateBarcodeHandler.PATH, new LibraryGenerateBarcodeHandler());
-		ret.put(LibraryGenerateBarcodeAPIHandler.PATH, new LibraryGenerateBarcodeAPIHandler());
+		ret.put(LibraryGenerateBarcodeHTMLHandler.PATH, new LibraryGenerateBarcodeHTMLHandler());
 
 		ret.put(DrivesHandler.PATH, new DrivesHandler());
 		ret.put(AJAXGetAttachedDrivesFetcher.PATH, new AJAXGetAttachedDrivesFetcher());
@@ -84,6 +85,7 @@ public class Handlers {
 		ret.put(AJAXGetOnloadError.PATH, new AJAXGetOnloadError());
 		ret.put(AJAXGenerateLTOLabelHTML.PATH, new AJAXGenerateLTOLabelHTML());
 		ret.put(AJAXGenerateLTOLabelPDF.PATH, new AJAXGenerateLTOLabelPDF());
+		ret.put(AJAXGenerateLTOLabelSVG.PATH, new AJAXGenerateLTOLabelSVG());
 
 		ret.put(APIVirtualDir.PATH, new APIVirtualDir());
 

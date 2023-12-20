@@ -1,1 +1,10 @@
-
+b {
+	white-space: nowrap;
+}
+form {
+	padding-top: var(--padding-full);
+	padding-left: var(--padding-full);
+}
+.card {
+	flex: 1;
+}

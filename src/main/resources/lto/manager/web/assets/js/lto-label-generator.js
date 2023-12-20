@@ -1,12 +1,23 @@
 const barcodeForm = document.getElementById("barcode-form");
 const barcodePreview = document.getElementById("barcode-preview");
 const inputs = barcodeForm.getElementsByTagName("input");
+const selects = barcodeForm.getElementsByTagName("select");
 
-function onBarcodeInputChange() {
+function getBarcodeFormParams(preview) {
 	const formData = new FormData(barcodeForm);
-	console.log(formData);
-	//formData.delete()
-  	const params = new URLSearchParams(formData);
+	const params = new URLSearchParams(formData);
+	if (preview) {
+		const preCount = document.getElementById("preview-count").value;
+		const preScale = document.getElementById("preview-scale").value;
+		params.append("preview-count", preCount);
+		params.append("preview-scale", preScale);
+	}
+	return params;
+}
+
+function onBarcodeInputChange(event) {
+	console.log(event)
+	const params = getBarcodeFormParams(true);
 	fetch(`/ajax/generate/lto/label/html?` + params.toString(),
 	{
 		method: "GET",
@@ -29,18 +40,24 @@ function onBarcodeInputChange() {
 	});
 }
 
+function generateBarcode(href) {
+	const params = getBarcodeFormParams(false);
+	Object.assign(document.createElement('a'), {
+		target: '_blank',
+		rel: 'noopener noreferrer',
+		href: `${href}?${params.toString()}`,
+		download: "lto-label"
+	}).click();
+}
+
 if ((barcodePreview != null) && (barcodeForm != null)) {
-	console.log(inputs)
 	for (let index = 0; index < inputs.length; index++) {
 		const input = inputs[index];
-		input.onchange = (event) => {
-			console.log(`onchange ${event}`);
-			onBarcodeInputChange();
-		};
-		input.onkeyup = (event) => {
-			console.log(`onkeyup ${event}`);
-			onBarcodeInputChange();
-		}
+		input.onchange = (event) => { onBarcodeInputChange(event); }; // TODO incorrectly triggered on leave
+		input.onkeyup = (event) => { onBarcodeInputChange(event); }
+	}
+	for (let index = 0; index < selects.length; index++) {
+		selects[index].onchange = (event) => { onBarcodeInputChange(event); };
 	}
 	onBarcodeInputChange();
 }

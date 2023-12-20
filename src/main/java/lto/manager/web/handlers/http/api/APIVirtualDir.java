@@ -21,44 +21,44 @@ public class APIVirtualDir extends BaseHTTPHandler {
 
 		final String newDirName = bm.getQueryNoNull("name");
 		if ((newDirName == null) || (newDirName.length() == 0)) {
-			requestHandleCompleteAPIJSON(he, JSON.populateAPIResponse(APIStatus.error, "Directory name empty"));
+			requestHandleCompleteAPIText(he, JSON.populateAPIResponse(APIStatus.error, "Directory name empty"), CONTENT_TYPE_JSON);
 			return;
 		} else {
 			final String basePath = bm.getQueryNoNull("path");
 			if ((basePath == null) || (basePath.length() == 0)) {
-				requestHandleCompleteAPIJSON(he, JSON.populateAPIResponse(APIStatus.error, "Directory path empty"));
+				requestHandleCompleteAPIText(he, JSON.populateAPIResponse(APIStatus.error, "Directory path empty"), CONTENT_TYPE_JSON);
 				return;
 			}
 			try {
 				switch (operation) {
 				case "new":
 					if (Database.addVirtualDir(basePath, newDirName)) {
-						requestHandleCompleteAPIJSON(he,
-								JSON.populateAPIResponse(APIStatus.ok, APIStatus.ok.toString()));
+						requestHandleCompleteAPIText(he,
+								JSON.populateAPIResponse(APIStatus.ok, APIStatus.ok.toString()), CONTENT_TYPE_JSON);
 						return;
 					}
 					throw new Exception("Failed to add new virtual directory: " + basePath + newDirName);
 
 				case "del":
 					if (Database.delVirtualDir(basePath)) {
-						requestHandleCompleteAPIJSON(he,
-								JSON.populateAPIResponse(APIStatus.ok, APIStatus.ok.toString()));
+						requestHandleCompleteAPIText(he,
+								JSON.populateAPIResponse(APIStatus.ok, APIStatus.ok.toString()), CONTENT_TYPE_JSON);
 						return;
 					}
 					throw new Exception("Failed to delete virtual directory: " + basePath + newDirName);
 
 				case "rename":
 					if (Database.renameVirtualDir(basePath, newDirName)) {
-						requestHandleCompleteAPIJSON(he,
-								JSON.populateAPIResponse(APIStatus.ok, APIStatus.ok.toString()));
+						requestHandleCompleteAPIText(he,
+								JSON.populateAPIResponse(APIStatus.ok, APIStatus.ok.toString()), CONTENT_TYPE_JSON);
 						return;
 					}
 					throw new Exception("Failed to rename virtual directory: " + basePath + newDirName);
 
 				case "changeico":
 					if (Database.chageVirtualDirIcon(basePath, newDirName)) {
-						requestHandleCompleteAPIJSON(he,
-								JSON.populateAPIResponse(APIStatus.ok, APIStatus.ok.toString()));
+						requestHandleCompleteAPIText(he,
+								JSON.populateAPIResponse(APIStatus.ok, APIStatus.ok.toString()), CONTENT_TYPE_JSON);
 						return;
 					}
 					throw new Exception("Failed to rename virtual directory: " + basePath + newDirName);
@@ -68,7 +68,7 @@ public class APIVirtualDir extends BaseHTTPHandler {
 				}
 
 			} catch (Exception e) {
-				requestHandleCompleteAPIJSON(he, JSON.populateAPIResponse(APIStatus.error, e.getMessage()));
+				requestHandleCompleteAPIText(he, JSON.populateAPIResponse(APIStatus.error, e.getMessage()), CONTENT_TYPE_JSON);
 			}
 		}
 

@@ -14,6 +14,10 @@ public class JS {
 	public static String fnGetDirIcons() { return "getDirIcons(this);"; }
 	public static String fnSetDirIcon() { return "setDirIcon(this);"; }
 
+	public static final String INPUT_UPPERCASE = "this.value=this.value.toUpperCase()";
+
 	public static String commonHideToast() { return "hideToast();"; }
 	public static String confirmToast(String url) { return "toastConfirm('" + url + "')"; }
+
+	public static String generateLTOLabel(final String path) { return "generateBarcode('" + path + "')"; }
 }

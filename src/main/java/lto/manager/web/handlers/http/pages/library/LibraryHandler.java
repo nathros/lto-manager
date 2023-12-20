@@ -38,7 +38,7 @@ public class LibraryHandler extends BaseHTTPHandler {
 		view
 			.div()
 				.a().attrClass(CSS.BUTTON).attrHref(LibraryCreateHandler.PATH).text("Add New Tape").__()
-				.a().attrClass(CSS.BUTTON).attrHref(LibraryGenerateBarcodeHandler.PATH).text("Generate Barcode").__()
+				.a().attrClass(CSS.BUTTON).attrHref(LibraryGenerateBarcodeHandler.PATH).text("Generate Label").__()
 				.table().attrClass(CSS.TABLE).of(table -> {
 					table.attrBorder(EnumBorderType._1).tr()
 						.th().text("Tape ID").__()

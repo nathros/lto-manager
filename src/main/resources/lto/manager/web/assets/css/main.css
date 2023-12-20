@@ -18,6 +18,7 @@
 	--background-ok: #e9ffd9;
 	--background-info: #e3f7fc;
 	--padding: 0.5rem;
+	--padding-full: 1rem;
 	--border: 1px solid #ccc;
 	--border-error: 1px solid red;
 }
@@ -35,11 +36,11 @@ a {
 hr {
 	border: var(--border);
 }
-input, textarea {
+input, textarea, select {
 	padding: var(--padding);
 	border: var(--border);
 }
-input:focus, textarea:focus {
+input:focus, textarea:focus, select:focus {
 	outline: var(--border);
 }
 input.error {
@@ -231,6 +232,12 @@ input.error:focus {
 .icon-pdf:before {
 	background-image: url('/assets/img/file-earmark-pdf-fill.svg');
 }
+.icon-svg:before {
+	background-image: url('/assets/img/filetype-svg.svg');
+}
+.icon-highlights:before {
+	background-image: url('/assets/img/highlights.svg');
+}
 .menu-list {
 	list-style-type: none;
 	padding: 0;
@@ -302,6 +309,7 @@ input.error:focus {
 	touch-action: manipulation;
 	vertical-align: baseline;
 	width: auto;
+	font-size: inherit;
 }
 .btn-s {
 	align-items: center;
@@ -501,10 +509,10 @@ input.error:focus {
 	line-break: anywhere;
 }
 .inline-message > div > div:nth-child(even) {
-	background-color: white;
+	background-color: rgba(255, 255, 255, 0.5);
 }
 .inline-message.error > div > div:hover {
-	background-color: rgba(255, 0, 0, 0.5);
+	background-color: rgba(255, 0, 0, 0.25);
 }
 .inline-message.error span {
 	background-color: red;
@@ -602,8 +610,15 @@ https://codepen.io/sudeepgumaste/pen/abdrorB
 	align-items: center;
 	gap: 1rem;
 }
+.common-container-no-align {
+	display: flex;
+	gap: 1rem;
+}
 .common-container-centre {
 	justify-content: center;
+}
+.common-padding-full {
+	padding: var(--padding-full);
 }
 .gap-none {
 	gap: 0;

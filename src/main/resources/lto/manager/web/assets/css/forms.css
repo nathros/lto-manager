@@ -3,5 +3,5 @@
 	grid-template-columns: fit-content(20%) minmax(auto, 20rem);
 	align-items: center;
 	gap: var(--padding);
-	padding-bottom: var(--padding);
+	padding-bottom: var(--padding-full);
 }

@@ -70,8 +70,12 @@ public class AssetHandler extends BaseHTTPHandler {
 		return loader.getResourceAsStream(resource);
 	}
 
-	public static String getResourceAsString(String requestedFile) throws IOException {
-		var bytes = getResourceLoader(requestedFile).readAllBytes();
+	public static String getResourceAsString(final String requestedFile) throws IOException {
+		InputStream resource = getResourceLoader(requestedFile);
+		if (resource == null) {
+			throw new IOException("Unable to find resource: " + requestedFile);
+		}
+		var bytes = resource.readAllBytes();
 		return new String(bytes, StandardCharsets.UTF_8);
 	}
 

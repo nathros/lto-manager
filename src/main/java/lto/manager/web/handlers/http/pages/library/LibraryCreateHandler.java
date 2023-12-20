@@ -18,6 +18,7 @@ import lto.manager.common.database.tables.records.RecordTape;
 import lto.manager.common.database.tables.records.RecordTape.RecordTapeFormatType;
 import lto.manager.common.database.tables.records.RecordTapeType;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
+import lto.manager.web.handlers.http.partial.LTOTapeTypeSelect;
 import lto.manager.web.handlers.http.templates.TemplatePage.BreadCrumbs;
 import lto.manager.web.handlers.http.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.http.templates.TemplatePage.TemplatePageModel;
@@ -77,7 +78,6 @@ public class LibraryCreateHandler extends BaseHTTPHandler {
 			e.printStackTrace();
 		}
 
-		final List<RecordTapeType> typesList = t;
 		final List<RecordManufacturer> manuList = m;
 
 		if (model.hasQuery()) {
@@ -99,26 +99,11 @@ public class LibraryCreateHandler extends BaseHTTPHandler {
 			.div()
 				.form()
 					.b().attrStyle("width:300px;display:inline-block").text("LTO Tape Type: ").__()
-					.select().attrId("select-type").attrName(TAPETYPE).of(select -> {
-						select.attrOnchange("onSelectType()")
-							.option().of(o -> HTML.option(o, typeIndex == -1, true)).text("Select").__();
-						int index = 0;
-						for (RecordTapeType item: typesList) {
-							final int indexCopy = index;
-							select.option()
-								.of(sel -> {
-									if (indexCopy == typeIndex) {
-										sel.of(o -> HTML.option(o, true));
-									}
-								})
-								.addAttr("data-des", item.getDesignation())
-								.addAttr("data-worm", item.getDesignationWORM())
-								.attrValue(String.valueOf(index))
-								.text(item.getType())
-							.__();
-							index++;
-						}
-					}).__().br().__()
+					.select()
+						.of(select -> LTOTapeTypeSelect.content(select, "select-type", TAPETYPE, typeIndex))
+					.__()
+
+					.br().__()
 
 					.b().attrStyle("width:300px;display:inline-block").text("LTO Manufacturer: ").__()
 					.select().attrName(MANU).of(select -> {

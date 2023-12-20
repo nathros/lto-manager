@@ -1,5 +1,6 @@
 package lto.manager.web.handlers.http;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -47,12 +48,17 @@ public abstract class BaseHTTPHandler implements HttpHandler {
 
 	public static final String COOKIE_SESSION = "session";
 
+	public static final String CONTENT_TYPE_PDF = "application/pdf";
+	public static final String CONTENT_TYPE_JSON = "application/json";
+	public static final String CONTENT_TYPE_SVG = "image/svg+xml";
+
 	private static int count = 0;
 
 	@Override
 	public void handle(HttpExchange he) throws IOException {
 		if (Options.getData(OptionsSetting.LOG_REQUESTS) == Boolean.TRUE) {
-			String message = "Request (" + String.format("%04d", count) + "): " + he.getRequestHeaders().getFirst("Host") + he.getRequestURI();
+			String message = "Request (" + String.format("%04d", count) + "): "
+					+ he.getRequestHeaders().getFirst("Host") + he.getRequestURI();
 			if (Options.getData(OptionsSetting.LOG_REQUESTS_ASSETS) == Boolean.TRUE) {
 				Log.info(message);
 			} else if (!he.getRequestURI().toString().contains(AssetHandler.PATH)) {
@@ -65,7 +71,8 @@ public abstract class BaseHTTPHandler implements HttpHandler {
 			final String session = getSessionCookie(he);
 			if (!State.isLoginSessionValid(session)) {
 				handler = new LogInHandler();
-				Log.info("User not logged in show login page: " + he.getRequestHeaders().getFirst("Host") + he.getRequestURI());
+				Log.info("User not logged in show login page: " + he.getRequestHeaders().getFirst("Host")
+						+ he.getRequestURI());
 			}
 		}
 
@@ -105,7 +112,8 @@ public abstract class BaseHTTPHandler implements HttpHandler {
 		}
 	}
 
-	protected void requestHandleCompletePage(HttpExchange he, TemplatePageModel tpm) throws IOException, InterruptedException, ExecutionException {
+	protected void requestHandleCompletePage(HttpExchange he, TemplatePageModel tpm)
+			throws IOException, InterruptedException, ExecutionException {
 		CompletableFuture<String> future = TemplatePage.view.renderAsync(tpm);
 		String response = future.get();
 		addResponseCookies(he, tpm);
@@ -115,7 +123,8 @@ public abstract class BaseHTTPHandler implements HttpHandler {
 		os.close();
 	}
 
-	protected void requestHandleCompleteFuture(HttpExchange he, CompletableFuture<String> future, TemplatePageModel tpm) throws IOException, InterruptedException, ExecutionException {
+	protected void requestHandleCompleteFuture(HttpExchange he, CompletableFuture<String> future, TemplatePageModel tpm)
+			throws IOException, InterruptedException, ExecutionException {
 		String response = future.get();
 		addResponseCookies(he, tpm);
 		he.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length());
@@ -124,7 +133,8 @@ public abstract class BaseHTTPHandler implements HttpHandler {
 		os.close();
 	}
 
-	protected void requestHandleCompleteFetcher(HttpExchange he, TemplateFetcherModel tfm) throws IOException, InterruptedException, ExecutionException {
+	protected void requestHandleCompleteFetcher(HttpExchange he, TemplateFetcherModel tfm)
+			throws IOException, InterruptedException, ExecutionException {
 		CompletableFuture<String> future = TemplateAJAX.view.renderAsync(tfm);
 		String response = future.get();
 		he.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length());
@@ -133,11 +143,22 @@ public abstract class BaseHTTPHandler implements HttpHandler {
 		os.close();
 	}
 
-	protected void requestHandleCompleteAPIJSON(HttpExchange he, String json) throws IOException, InterruptedException, ExecutionException {
-		he.getResponseHeaders().set("Content-Type", "application/json");
-		he.sendResponseHeaders(HttpURLConnection.HTTP_OK, json.length());
+	protected void requestHandleCompleteAPIText(HttpExchange he, final String text, final String contentType)
+			throws IOException, InterruptedException, ExecutionException {
+		he.getResponseHeaders().set("Content-Type", contentType);
+		he.sendResponseHeaders(HttpURLConnection.HTTP_OK, text.length());
 		OutputStream os = he.getResponseBody();
-		os.write(json.getBytes());
+		os.write(text.getBytes());
+		os.close();
+	}
+
+	protected void requestHandleCompleteAPIBinary(HttpExchange he, ByteArrayOutputStream bin, final String contentType)
+			throws IOException, InterruptedException, ExecutionException {
+		he.getResponseHeaders().set("Content-Type", contentType);
+		final var data = bin.toByteArray();
+		he.sendResponseHeaders(HttpURLConnection.HTTP_OK, data.length);
+		OutputStream os = he.getResponseBody();
+		os.write(data);
 		os.close();
 	}
 
