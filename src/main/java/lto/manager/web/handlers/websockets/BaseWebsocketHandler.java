@@ -12,6 +12,13 @@ public abstract class BaseWebsocketHandler {
 		conn.add(ws);
 	}
 
+	public void removeConnection(WebSocket ws) {
+		conn.remove(ws);
+	}
+
+	public abstract void onNewMessage(final String message);
+
 	public abstract boolean start();
+
 
 }

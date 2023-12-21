@@ -2,6 +2,7 @@ package lto.manager.web.resource;
 
 import org.xmlet.htmlapifaster.Input;
 import org.xmlet.htmlapifaster.Option;
+import org.xmlet.htmlapifaster.Textarea;
 
 public class HTML {
 	public static final String TARGET_BLANK = "_blank";
@@ -32,6 +33,13 @@ public class HTML {
 			option = option.addAttr("selected", "");
 		}
 		return option;
+	}
+
+	public static Textarea<?> textArea(Textarea<?> textArea, boolean readOnly) {
+		if (readOnly) {
+			textArea = textArea.addAttr("readonly", "");
+		}
+		return textArea;
 	}
 
 }

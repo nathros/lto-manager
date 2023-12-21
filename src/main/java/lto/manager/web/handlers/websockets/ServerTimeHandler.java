@@ -28,5 +28,11 @@ public class ServerTimeHandler extends BaseWebsocketHandler {
 		return false;
 	}
 
+	@Override
+	public void onNewMessage(String message) {
+		// TODO Auto-generated method stub
+
+	}
+
 
 }

@@ -1,26 +1,46 @@
-function test() {
-	const host = "ws://" + location.hostname + ":8887/time";
-	console.log(host);
+function openWS(path, open, close, error, message) {
+	const host = `ws://${location.hostname}:8887${path}`;
 	const ws = new WebSocket(host);
+	ws.onopen = open;
+	ws.onclose = close;
+	ws.onerror = error;
+	ws.onmessage = message;
+	return ws;
+}
 
-	ws.onopen = (event) => {
-		console.log("OPEN" + event);
-	};
+function testWS(sender) {
+	if (testWS.ws !== undefined) {
+		testWS.ws.close();
+		sender.classList.remove("background-green");
+		sender.classList.remove("background-error");
+		sender.innerText = "Connect";
+		testWS.ws = undefined;
+		return;
+	}
+	if (testWS.event === undefined) {
+		testWS.event = document.getElementById("ws-event");
+		testWS.event.value = "";
+		testWS.rx = document.getElementById("ws-rx");
+		testWS.rx.value = "";
+	}
+	sender.classList.add("background-green");
+	sender.classList.remove("background-error");
+	sender.innerText = "Close";
 
-	ws.onclose = (event) => {
-		if (event.wasClean) {
-			console.log("CLOSED ok");
-		} else {
-			console.log("CLOSED bad");
-		}
-		console.log(`[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`)
-	};
-
-	ws.onerror = (error) => {
-		console.log("ERROR " + error);
-	};
-
-	ws.onmessage = (event) => {
-		console.log("RX " + event.data);
-	};
+	testWS.ws = openWS(document.getElementById("ws-path").value,
+	(event) => { // Open
+		testWS.event.value += `Open new connection path=[${event.target.url}]\n`;
+	},
+	(event) => { // Close
+		sender.classList.remove("background-green");
+		sender.classList.add("background-error");
+		sender.innerText = "Closed";
+		testWS.event.value += `Connection closed, code=${event.code} clean=${event.wasClean} reason=${event.reason}\n`;
+	},
+	(error) => { // Error
+		testWS.event.value += `Error [${error}]\n`;
+	},
+	(event) => { // RX
+		testWS.rx.value += event.data + "\n";
+	});
 }

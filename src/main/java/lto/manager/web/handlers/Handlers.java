@@ -45,6 +45,7 @@ import lto.manager.web.handlers.http.pages.sandpit.SandpitHandler;
 import lto.manager.web.handlers.http.pages.sandpit.WebsocketTestHandler;
 import lto.manager.web.handlers.websockets.BaseWebsocketHandler;
 import lto.manager.web.handlers.websockets.ServerTimeHandler;
+import lto.manager.web.handlers.websockets.admin.LoggingHandler;
 
 public class Handlers {
 	public final static HashMap<String, HttpHandler> httpHandlers = getHTTPHandlers();
@@ -106,6 +107,7 @@ public class Handlers {
 	private static HashMap<String, BaseWebsocketHandler> getWebsocketHandlers() {
 		HashMap<String, BaseWebsocketHandler> ret = new HashMap<String, BaseWebsocketHandler>();
 		ret.put(ServerTimeHandler.PATH, new ServerTimeHandler());
+		ret.put(LoggingHandler.PATH, new LoggingHandler());
 		return ret;
 	}
 }
