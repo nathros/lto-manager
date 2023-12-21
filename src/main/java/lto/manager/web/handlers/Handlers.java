@@ -18,6 +18,7 @@ import lto.manager.web.handlers.http.pages.LogInHandler;
 import lto.manager.web.handlers.http.pages.LogOutHandler;
 import lto.manager.web.handlers.http.pages.RootHandler;
 import lto.manager.web.handlers.http.pages.admin.AdminHandler;
+import lto.manager.web.handlers.http.pages.admin.LoggingHandler;
 import lto.manager.web.handlers.http.pages.admin.SessionViewerHandler;
 import lto.manager.web.handlers.http.pages.admin.UpdateOptionsHandler;
 import lto.manager.web.handlers.http.pages.admin.externalprocess.ExternalProcessHandler;
@@ -41,11 +42,12 @@ import lto.manager.web.handlers.http.pages.sandpit.EchoPostHandler;
 import lto.manager.web.handlers.http.pages.sandpit.InternalErrorInlineAJAXTesterHandler;
 import lto.manager.web.handlers.http.pages.sandpit.InternalErrorInlineTesterHandler;
 import lto.manager.web.handlers.http.pages.sandpit.InternalErrorTesterHandler;
+import lto.manager.web.handlers.http.pages.sandpit.LogTestHandler;
 import lto.manager.web.handlers.http.pages.sandpit.SandpitHandler;
 import lto.manager.web.handlers.http.pages.sandpit.WebsocketTestHandler;
 import lto.manager.web.handlers.websockets.BaseWebsocketHandler;
 import lto.manager.web.handlers.websockets.ServerTimeHandler;
-import lto.manager.web.handlers.websockets.admin.LoggingHandler;
+import lto.manager.web.handlers.websockets.admin.LoggingWebsocketHandler;
 
 public class Handlers {
 	public final static HashMap<String, HttpHandler> httpHandlers = getHTTPHandlers();
@@ -63,6 +65,7 @@ public class Handlers {
 		ret.put(ExternalProcessHandler.PATH, new ExternalProcessHandler());
 		ret.put(ExternalProcessViewerHandler.PATH, new ExternalProcessViewerHandler());
 		ret.put(SessionViewerHandler.PATH, new SessionViewerHandler());
+		ret.put(LoggingHandler.PATH, new LoggingHandler());
 
 		ret.put(LibraryHandler.PATH, new LibraryHandler());
 		ret.put(LibraryCreateHandler.PATH, new LibraryCreateHandler());
@@ -100,6 +103,7 @@ public class Handlers {
 			ret.put(SandpitHandler.PATH, new SandpitHandler());
 			ret.put(DatabaseTestHandler.PATH, new DatabaseTestHandler());
 			ret.put(WebsocketTestHandler.PATH, new WebsocketTestHandler());
+			ret.put(LogTestHandler.PATH, new LogTestHandler());
 		}
 		return ret;
 	}
@@ -107,7 +111,7 @@ public class Handlers {
 	private static HashMap<String, BaseWebsocketHandler> getWebsocketHandlers() {
 		HashMap<String, BaseWebsocketHandler> ret = new HashMap<String, BaseWebsocketHandler>();
 		ret.put(ServerTimeHandler.PATH, new ServerTimeHandler());
-		ret.put(LoggingHandler.PATH, new LoggingHandler());
+		ret.put(LoggingWebsocketHandler.PATH, new LoggingWebsocketHandler());
 		return ret;
 	}
 }

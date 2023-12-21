@@ -12,7 +12,7 @@ import lto.manager.web.handlers.http.BaseHTTPHandler;
 
 public class EchoPostHandler extends BaseHTTPHandler {
 
-	public static final String PATH = "/echoPost";
+	public static final String PATH = "/echopost";
 
 	@Override
 	public void requestHandle(HttpExchange he) throws IOException {

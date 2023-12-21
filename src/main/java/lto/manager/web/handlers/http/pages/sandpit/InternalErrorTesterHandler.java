@@ -8,7 +8,6 @@ import org.xmlet.htmlapifaster.Div;
 import com.sun.net.httpserver.HttpExchange;
 
 import lto.manager.web.handlers.http.BaseHTTPHandler;
-import lto.manager.web.handlers.http.templates.TemplatePage.BreadCrumbs;
 import lto.manager.web.handlers.http.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.http.templates.TemplatePage.TemplatePageModel;
 import lto.manager.web.handlers.http.templates.models.BodyModel;
@@ -29,8 +28,7 @@ public class InternalErrorTesterHandler extends BaseHTTPHandler {
 	@Override
 	public void requestHandle(HttpExchange he) throws IOException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of(NAME);
-		BreadCrumbs crumbs = new BreadCrumbs().add(NAME, PATH);
-		TemplatePageModel tpm = TemplatePageModel.of(InternalErrorTesterHandler::content, thm, SelectedPage.Admin, BodyModel.of(he, null), crumbs);
+		TemplatePageModel tpm = TemplatePageModel.of(InternalErrorTesterHandler::content, thm, SelectedPage.Admin, BodyModel.of(he, null), null);
 		requestHandleCompletePage(he, tpm);
 	}
 

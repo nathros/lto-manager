@@ -7,6 +7,7 @@ import com.sun.net.httpserver.HttpExchange;
 
 import lto.manager.web.handlers.Handlers;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
+import lto.manager.web.handlers.http.templates.TemplatePage.BreadCrumbs;
 import lto.manager.web.handlers.http.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.http.templates.TemplatePage.TemplatePageModel;
 import lto.manager.web.handlers.http.templates.models.BodyModel;
@@ -16,7 +17,7 @@ import lto.manager.web.resource.CSS;
 import lto.manager.web.resource.HTML;
 
 public class WebsocketTestHandler extends BaseHTTPHandler {
-	public static final String PATH = "/sandpit/websocket";
+	public static final String PATH = Asset.PATH_SANDPIT_BASE + "websocket";
 	public static final String NAME = "Websocket Tester";
 
 	static Void content(Div<?> view, BodyModel model) {
@@ -55,7 +56,7 @@ public class WebsocketTestHandler extends BaseHTTPHandler {
 				.__()
 				.button()
 					.attrClass(CSS.BUTTON)
-					.attrOnclick("testWS.ws.send(document.getElementById('ws-tx').value)")
+					.attrOnclick("testWS.ws === undefined ? alert('Not connected') : testWS.ws.send(document.getElementById('ws-tx').value)")
 					.text("Send")
 				.__()
 			.__()
@@ -82,7 +83,7 @@ public class WebsocketTestHandler extends BaseHTTPHandler {
 				.textarea()
 					.of(t -> HTML.textArea(t, true))
 					.attrClass(CSS.FONT_MONOSPACE)
-					.attrStyle("flex:1;resize:vertical;height:10rem")
+					.attrStyle("flex:1;resize:vertical;height:8rem")
 					.attrId("ws-event")
 				.__()
 				.button()
@@ -98,7 +99,8 @@ public class WebsocketTestHandler extends BaseHTTPHandler {
 	public void requestHandle(HttpExchange he) throws Exception {
 		HeadModel thm = HeadModel.of(NAME);
 		thm.addScript(Asset.JS_WEBSOCKET);
-		TemplatePageModel tpm = TemplatePageModel.of(WebsocketTestHandler::content, thm, SelectedPage.Sandpit, BodyModel.of(he, null), null);
+		BreadCrumbs crumbs = new BreadCrumbs().add(SandpitHandler.NAME, SandpitHandler.PATH).add(NAME, PATH);
+		TemplatePageModel tpm = TemplatePageModel.of(WebsocketTestHandler::content, thm, SelectedPage.Sandpit, BodyModel.of(he, null), crumbs);
 		requestHandleCompletePage(he, tpm);
 	}
 

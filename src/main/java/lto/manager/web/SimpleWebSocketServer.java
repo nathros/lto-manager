@@ -7,6 +7,7 @@ import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
+import lto.manager.common.log.Log;
 import lto.manager.web.handlers.Handlers;
 
 public class SimpleWebSocketServer extends WebSocketServer {
@@ -36,39 +37,59 @@ public class SimpleWebSocketServer extends WebSocketServer {
 		if (handler != null) {
 			handler.addNewConnection(conn);
 		} else {
-			// conn.send("ERROR: " + path + " not found");
 			conn.close(EVENT_CODE_PATH_NOT_FOUND, "path: " + path + " not found");
+			Log.warning("Incoming websocket connection from unknown path: " + path);
 		}
 	}
 
 	@Override
 	public void onClose(WebSocket conn, int code, String reason, boolean remote) {
-		System.out.println(
-				"closed " + conn.getRemoteSocketAddress() + " with exit code " + code + " additional info: " + reason);
+		var handler = Handlers.websocketHandlers.get(conn.getResourceDescriptor());
+		final String detailedInfo = "Websocket closed " + conn.getRemoteSocketAddress() + ", exit code: " + code
+				+ ", reason: " + reason;
+		if (handler != null) {
+			if (handler.removeConnection(conn) == false) {
+				Log.warning(
+						"Websocket closed from unknown client: " + conn.getResourceDescriptor() + " " + detailedInfo);
+			}
+		} else {
+			Log.warning("Websocket closed from unknown path: " + conn.getResourceDescriptor() + " " + detailedInfo);
+		}
+		Log.fine(detailedInfo);
 	}
 
 	@Override
 	public void onMessage(WebSocket conn, String message) {
-		System.out.println("received message from " + conn.getRemoteSocketAddress() + ": " + message);
-		conn.send("echo " + message);
-
+		var handler = Handlers.websocketHandlers.get(conn.getResourceDescriptor());
+		if (handler != null) {
+			handler.onNewMessage(conn, message);
+		} else {
+			Log.warning("Websocket message from unknown path: " + conn.getResourceDescriptor());
+		}
 	}
 
 	@Override
 	public void onMessage(WebSocket conn, ByteBuffer message) {
-
-		System.out.println("received ByteBuffer from " + conn.getRemoteSocketAddress());
+		var handler = Handlers.websocketHandlers.get(conn.getResourceDescriptor());
+		if (handler != null) {
+			handler.onNewMessage(conn, message);
+		} else {
+			Log.warning("Websocket message from unknown path: " + conn.getResourceDescriptor());
+		}
 	}
 
 	@Override
 	public void onError(WebSocket conn, Exception ex) {
-		System.err.println("an error occurred on connection " + conn.getRemoteSocketAddress() + ":" + ex);
+		if (conn == null) {
+			Log.severe("Websocket error on null connection: " + ex);
+		} else {
+			Log.severe("Websocket error on connection " + conn.getRemoteSocketAddress() + ":" + ex);
+		}
 	}
 
 	@Override
 	public void onStart() {
-		System.out.println(
-				"Websocket server started at ws://" + getAddress().getHostName() + ":" + getAddress().getPort());
+		Log.info("Websocket server started at ws://" + getAddress().getHostName() + ":" + getAddress().getPort());
 	}
 
 	public static void main(String[] args) {

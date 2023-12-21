@@ -14,7 +14,7 @@ import lto.manager.web.handlers.http.BaseHTTPHandler;
 
 public class EchoHeaderHandler extends BaseHTTPHandler {
 
-	public static final String PATH = "/echoHeader";
+	public static final String PATH = "/echoheader";
 
 	@Override
 	public void requestHandle(HttpExchange he) throws IOException {
