@@ -31,7 +31,7 @@ public class DatabaseTestHandler extends BaseHTTPHandler {
 	@Override
 	public void requestHandle(HttpExchange he) throws Exception {
 		HeadModel thm = HeadModel.of("Database Test");
-		TemplatePageModel tpm = TemplatePageModel.of(DatabaseTestHandler::content, thm, SelectedPage.Sandpit, BodyModel.of(he, null), null);
+		TemplatePageModel tpm = TemplatePageModel.of(DatabaseTestHandler::content, null, thm, SelectedPage.Sandpit, BodyModel.of(he, null), null);
 		requestHandleCompletePage(he, tpm);
 	}
 }

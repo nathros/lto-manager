@@ -28,7 +28,7 @@ public class RootHandler extends BaseHTTPHandler {
 	@Override
 	public void requestHandle(HttpExchange he) throws IOException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of("Root");
-		TemplatePageModel tpm = TemplatePageModel.of(RootHandler::content, thm, SelectedPage.Admin, BodyModel.of(he, null), null);
+		TemplatePageModel tpm = TemplatePageModel.of(RootHandler::content, null, thm, SelectedPage.Admin, BodyModel.of(he, null), null);
 		requestHandleCompletePage(he, tpm);
 	}
 }

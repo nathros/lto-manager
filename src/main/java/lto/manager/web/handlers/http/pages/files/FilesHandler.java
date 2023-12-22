@@ -70,7 +70,7 @@ public class FilesHandler extends BaseHTTPHandler {
 	public void requestHandle(HttpExchange he) throws IOException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of(NAME);
 		BreadCrumbs crumbs = new BreadCrumbs().add(NAME, PATH);
-		TemplatePageModel tpm = TemplatePageModel.of(FilesHandler::content, thm, SelectedPage.Files, BodyModel.of(he, null), crumbs);
+		TemplatePageModel tpm = TemplatePageModel.of(FilesHandler::content, null, thm, SelectedPage.Files, BodyModel.of(he, null), crumbs);
 		requestHandleCompletePage(he, tpm);
 	}
 }

@@ -33,7 +33,7 @@ public class JobsTypeHandler extends BaseHTTPHandler {
 	public void requestHandle(HttpExchange he) throws IOException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of(NAME);
 		BreadCrumbs crumbs = new BreadCrumbs().add(JobsHandler.NAME, JobsHandler.PATH).add(NAME, PATH);
-		TemplatePageModel tpm = TemplatePageModel.of(JobsTypeHandler::content, thm, SelectedPage.Jobs, BodyModel.of(he, null), crumbs);
+		TemplatePageModel tpm = TemplatePageModel.of(JobsTypeHandler::content, null, thm, SelectedPage.Jobs, BodyModel.of(he, null), crumbs);
 		requestHandleCompletePage(he, tpm);
 	}
 

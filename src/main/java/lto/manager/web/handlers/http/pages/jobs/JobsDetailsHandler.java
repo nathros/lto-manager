@@ -73,7 +73,7 @@ public class JobsDetailsHandler extends BaseHTTPHandler {
 	@Override
 	public void requestHandle(HttpExchange he) throws IOException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of("Jobs");
-		TemplatePageModel tpm = TemplatePageModel.of(JobsDetailsHandler::content, thm, SelectedPage.Jobs, BodyModel.of(he, null), null);
+		TemplatePageModel tpm = TemplatePageModel.of(JobsDetailsHandler::content, null, thm, SelectedPage.Jobs, BodyModel.of(he, null), null);
 		requestHandleCompletePage(he, tpm);
 	}
 

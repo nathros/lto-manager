@@ -8,6 +8,10 @@ public class CSS {
 	public final static String GAP_NONE = "gap-none ";
 	public final static String GAP_HALF = "gap-half ";
 
+	public final static String HEADER_ITEM = "header-item ";
+	public final static String HEADER_LABEL_TOP = "header-label-top ";
+	public final static String HEADER_MENU_ITEM_ICON = "icon ";
+
 	public final static String BUTTON = "btn ";
 	public final static String BUTTON_IMAGE = "btn-image ";
 	public final static String BUTTON_IMAGE_W_TEXT = "btn-image-w-text ";

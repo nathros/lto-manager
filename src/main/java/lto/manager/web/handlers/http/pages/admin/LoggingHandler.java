@@ -8,6 +8,7 @@ import org.xmlet.htmlapifaster.Div;
 import com.sun.net.httpserver.HttpExchange;
 
 import lto.manager.web.handlers.http.BaseHTTPHandler;
+import lto.manager.web.handlers.http.pages.LogOutHandler;
 import lto.manager.web.handlers.http.templates.TemplatePage.BreadCrumbs;
 import lto.manager.web.handlers.http.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.http.templates.TemplatePage.TemplatePageModel;
@@ -42,8 +43,54 @@ public class LoggingHandler extends BaseHTTPHandler {
 		thm.addCSS(Asset.CSS_LOGGING);
 		thm.addScript(Asset.JS_WEBSOCKET).addScriptDefer(Asset.JS_LOGGING);
 		BreadCrumbs crumbs = new BreadCrumbs().add(AdminHandler.NAME, AdminHandler.PATH).add(NAME, PATH);
-		TemplatePageModel tpm = TemplatePageModel.of(LoggingHandler::content, thm, SelectedPage.Admin, BodyModel.of(he, null), crumbs);
+		TemplatePageModel tpm = TemplatePageModel.of(LoggingHandler::content, LoggingHandler::header, thm, SelectedPage.Admin, BodyModel.of(he, null), crumbs);
 		requestHandleCompletePage(he, tpm);
 	}
 
+	static Void header(Div<?> view, BodyModel model) {
+		view
+			.div()
+				.attrClass(CSS.HEADER_ITEM + "")
+				.ul().attrClass("menu-list")
+					.li()
+						.a()
+							.attrClass(CSS.ICON_BOX_ARROW_RIGHT)
+							.attrHref(LogOutHandler.PATH)
+							.text("Test")
+						.__()
+					.__()
+				.__() // ul
+			.__() // div
+			.div()
+				.attrClass(CSS.HEADER_ITEM + "header-icon-caret-down")
+				.ul().attrClass("menu-list")
+					.li()
+						.attrClass(CSS.HEADER_LABEL_TOP)
+						.text("Autoscroll")
+					.__()
+					.li()
+						.a()
+							.attrClass(CSS.ICON_BOX_ARROW_RIGHT)
+							.text("Test")
+						.__()
+					.__()
+				.__() // ul
+			.__() // div
+			.div()
+				.attrClass(CSS.HEADER_ITEM + "header-icon-funnel")
+				.ul().attrClass("menu-list")
+					.li()
+						.attrClass(CSS.HEADER_LABEL_TOP)
+						.text("Filter")
+					.__()
+					.li()
+						.a()
+							.attrClass(CSS.ICON_BOX_ARROW_RIGHT)
+							.text("Test")
+						.__()
+					.__()
+				.__() // ul
+			.__(); // div
+		return null;
+	}
 }

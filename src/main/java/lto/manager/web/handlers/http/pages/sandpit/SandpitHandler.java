@@ -46,7 +46,7 @@ public class SandpitHandler extends BaseHTTPHandler {
 	public void requestHandle(HttpExchange he) throws IOException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of(NAME);
 		BreadCrumbs crumbs = new BreadCrumbs().add(SandpitHandler.NAME, SandpitHandler.PATH);
-		TemplatePageModel tpm = TemplatePageModel.of(SandpitHandler::content, thm, SelectedPage.Sandpit, BodyModel.of(he, null), crumbs);
+		TemplatePageModel tpm = TemplatePageModel.of(SandpitHandler::content, null, thm, SelectedPage.Sandpit, BodyModel.of(he, null), crumbs);
 		requestHandleCompletePage(he, tpm);
 	}
 }

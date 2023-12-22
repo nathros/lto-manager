@@ -51,7 +51,7 @@ public class LogOutHandler extends BaseHTTPHandler {
 	@Override
 	public void requestHandle(HttpExchange he) throws IOException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of("Logout");
-		TemplatePageModel tpm = TemplatePageModel.of(null, thm, SelectedPage.Missing, BodyModel.of(he, null), null);
+		TemplatePageModel tpm = TemplatePageModel.of(null, null, thm, SelectedPage.Missing, BodyModel.of(he, null), null);
 		requestHandleCompleteFuture(he, view.renderAsync(tpm), tpm);
 	}
 

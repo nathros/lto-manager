@@ -28,7 +28,7 @@ public class InternalErrorTesterHandler extends BaseHTTPHandler {
 	@Override
 	public void requestHandle(HttpExchange he) throws IOException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of(NAME);
-		TemplatePageModel tpm = TemplatePageModel.of(InternalErrorTesterHandler::content, thm, SelectedPage.Admin, BodyModel.of(he, null), null);
+		TemplatePageModel tpm = TemplatePageModel.of(InternalErrorTesterHandler::content, null, thm, SelectedPage.Admin, BodyModel.of(he, null), null);
 		requestHandleCompletePage(he, tpm);
 	}
 

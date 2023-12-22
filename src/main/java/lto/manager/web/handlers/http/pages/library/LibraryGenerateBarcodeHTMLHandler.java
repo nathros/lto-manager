@@ -59,7 +59,7 @@ public class LibraryGenerateBarcodeHTMLHandler extends BaseHTTPHandler {
 	public void requestHandle(HttpExchange he) throws IOException, SQLException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of(NAME);
 		thm.addCSS(Asset.CSS_LIBRARY);
-		TemplatePageModel tpm = TemplatePageModel.of(null, thm, SelectedPage.Missing, BodyModel.of(he, null), null);
+		TemplatePageModel tpm = TemplatePageModel.of(null, null, thm, SelectedPage.Missing, BodyModel.of(he, null), null);
 		requestHandleCompleteFuture(he, view.renderAsync(tpm), tpm);
 	}
 }

@@ -47,7 +47,7 @@ public class AdminHandler extends BaseHTTPHandler {
 		HeadModel thm = HeadModel.of(NAME);
 		thm.addCSS(Asset.CSS_PIE);
 		BreadCrumbs crumbs = new BreadCrumbs().add(NAME, PATH);
-		TemplatePageModel tpm = TemplatePageModel.of(AdminHandler::content, thm, SelectedPage.Admin, BodyModel.of(he, null), crumbs);
+		TemplatePageModel tpm = TemplatePageModel.of(AdminHandler::content, null, thm, SelectedPage.Admin, BodyModel.of(he, null), crumbs);
 		requestHandleCompletePage(he, tpm);
 	}
 

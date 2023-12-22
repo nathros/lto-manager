@@ -15,6 +15,8 @@ import java.util.UUID;
 import com.sun.net.httpserver.HttpExchange;
 
 import lto.manager.common.Util;
+import lto.manager.common.security.LoginSession;
+import lto.manager.common.state.State;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
 
 public class BodyModel {
@@ -227,6 +229,17 @@ public class BodyModel {
 			return UUID.fromString(session);
 		}
 		return null;
+	}
+
+	public String getUserNameViaSession() {
+		final UUID uuid = getSession();
+		if (uuid != null) {
+			final LoginSession loginSession = State.getLoginSession(uuid);
+			if (loginSession != null) {
+				return loginSession.user().getUsername();
+			}
+		}
+		return "Unknown User";
 	}
 
 	public void setNewSession(UUID uuid) {

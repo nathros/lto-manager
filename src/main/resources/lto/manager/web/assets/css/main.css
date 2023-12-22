@@ -113,17 +113,20 @@ input.error:focus {
 	filter: invert(1);
 	opacity: 50%;
 }
-.header-user {
+.header-item {
 	width: 3rem;
-	height: 100%;
+	height: 3rem;
 	transition: 0.3s ease;
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 }
-.header-user:hover {
+.header-item:hover {
 	background-color: rgba(255, 255, 255, 0.1);
 }
-.header-user::before {
+.header-item::before {
 	content: '';
-	background-image: url(/assets/img/person-fill.svg);
 	background-position: center;
 	background-repeat: no-repeat;
 	background-size: 2rem;
@@ -131,16 +134,45 @@ input.error:focus {
 	width: 100%;
 	height: 100%;
 	filter: invert(1);
+	opacity: 50%;
+	position: absolute;
+}
+.header-item:hover::before {
+	opacity: 100%;
+}
+.header-user {
+	display: block;
+}
+.header-user::before {
+	background-image: url(/assets/img/person-fill.svg);
+}
+.header-label-top {
+	text-align: center;
+	background-color: var(--common-selected-colour);
+	color: white;
+}
+.header-label-top:hover {
+	cursor: default !important;
 }
 .header-user > ul {
 	background-color: #101820;
-	position: fixed;
-	top: 3rem;
+	position: absolute;
 	right: 0;
 	display: none;
 }
-.header-user:hover > ul {
+.header-item > ul {
+	background-color: #101820;
+	display: none;
+	top: 100%;
+}
+.header-item:hover > ul {
 	display: block;
+}
+.header-icon-funnel::before {
+	background-image: url(/assets/img/funnel-fill.svg);
+}
+.header-icon-caret-down::before {
+	background-image: url(/assets/img/caret-down-square-fill.svg);
 }
 .nav-area {
 	background-color: var(--common-background-colour);
@@ -180,7 +212,7 @@ input.error:focus {
     height: 100%;
     padding: 0.5rem;
 }
-.menu-list a:before {
+.menu-list a.icon:before {
 	content: '';
 	height: 2rem;
 	width: 2rem;
@@ -242,6 +274,8 @@ input.error:focus {
 	list-style-type: none;
 	padding: 0;
 	margin: 0;
+	position: relative;
+	width: max-content;
 }
 .menu-list a:hover:before,
 .menu-list a.selected:before  {

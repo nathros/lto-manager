@@ -118,7 +118,7 @@ public class LogTestHandler extends BaseHTTPHandler {
 	public void requestHandle(HttpExchange he) throws Exception {
 		HeadModel thm = HeadModel.of(NAME);
 		BreadCrumbs crumbs = new BreadCrumbs().add(SandpitHandler.NAME, SandpitHandler.PATH).add(NAME, PATH);
-		TemplatePageModel tpm = TemplatePageModel.of(LogTestHandler::content, thm, SelectedPage.Sandpit, BodyModel.of(he, null), crumbs);
+		TemplatePageModel tpm = TemplatePageModel.of(LogTestHandler::content, null, thm, SelectedPage.Sandpit, BodyModel.of(he, null), crumbs);
 		requestHandleCompletePage(he, tpm);
 	}
 

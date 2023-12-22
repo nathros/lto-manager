@@ -37,7 +37,7 @@ public class DrivesHandler extends BaseHTTPHandler {
 		thm.addCSS(Asset.CSS_DRIVES);
 		thm.addScript(Asset.JS_ON_LOAD_AJAX);
 		BreadCrumbs crumbs = new BreadCrumbs().add(NAME, PATH);
-		TemplatePageModel tpm = TemplatePageModel.of(DrivesHandler::body, thm, SelectedPage.Drives, BodyModel.of(he, null), crumbs);
+		TemplatePageModel tpm = TemplatePageModel.of(DrivesHandler::body, null, thm, SelectedPage.Drives, BodyModel.of(he, null), crumbs);
 		requestHandleCompletePage(he, tpm);
 	}
 }

@@ -82,7 +82,27 @@ public class LibraryHandler extends BaseHTTPHandler {
 	public void requestHandle(HttpExchange he) throws IOException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of(NAME);
 		BreadCrumbs crumbs = new BreadCrumbs().add(NAME, PATH);
-		TemplatePageModel tpm = TemplatePageModel.of(LibraryHandler::body, thm, SelectedPage.Library, BodyModel.of(he, null), crumbs);
+		TemplatePageModel tpm = TemplatePageModel.of(LibraryHandler::body, LibraryHandler::header, thm, SelectedPage.Library, BodyModel.of(he, null), crumbs);
 		requestHandleCompletePage(he, tpm);
+	}
+
+	static Void header(Div<?> view, BodyModel model) {
+		view
+			.div()
+				.attrClass(CSS.HEADER_ITEM + CSS.ICON_PRINTER)
+				.ul().attrClass("menu-list")
+					.li()
+						.attrClass(CSS.HEADER_LABEL_TOP)
+						.text("Tools")
+					.__()
+					.li()
+						.a()
+							.attrHref(LibraryGenerateBarcodeHandler.PATH)
+							.text("Generate LTO Label")
+						.__()
+					.__()
+				.__() // ul
+			.__();
+		return null;
 	}
 }

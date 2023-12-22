@@ -206,7 +206,7 @@ public class LibraryCreateHandler extends BaseHTTPHandler {
 		HeadModel thm = HeadModel.of(NAME);
 		thm.addScript(Asset.JS_ADD_TAPE);
 		BreadCrumbs crumbs = new BreadCrumbs().add(LibraryHandler.NAME, LibraryHandler.PATH).add(NAME, PATH);
-		TemplatePageModel tpm = TemplatePageModel.of(LibraryCreateHandler::body, thm, SelectedPage.Library, BodyModel.of(he, null), crumbs);
+		TemplatePageModel tpm = TemplatePageModel.of(LibraryCreateHandler::body, null, thm, SelectedPage.Library, BodyModel.of(he, null), crumbs);
 		requestHandleCompletePage(he, tpm);
 	}
 }

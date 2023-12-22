@@ -48,6 +48,10 @@ public class State {
 		}
 	}
 
+	public static LoginSession getLoginSession(final UUID uuid) {
+		return loginSessions.get(uuid);
+	}
+
 	public static void startBackgroundCleanup() {
 		if (backgroundCleanUp == null) {
 			final Integer repeatEveryMinutes = Options.getData(OptionsSetting.BACKGROUND_CLEANUP_TIMER);

@@ -44,24 +44,27 @@ public class TemplatePage {
 		final HeadModel head;
 		final SelectedPage page;
 		final BodyModel body;
-		final BiFunction<Div<?>, BodyModel, Void> contentFunction;
+		final BiFunction<Div<?>, BodyModel, Void> mainContentFunction;
+		final BiFunction<Div<?>, BodyModel, Void> headerButtonsFunction;
 		final BreadCrumbs breadcrumbs;
 
-		private TemplatePageModel(HeadModel head, SelectedPage page, BodyModel body, BiFunction<Div<?>, BodyModel, Void> contentFunction, BreadCrumbs breadcrumbs) {
+		private TemplatePageModel(HeadModel head, SelectedPage page, BodyModel body, BiFunction<Div<?>, BodyModel, Void> mainContentFunction, BiFunction<Div<?>, BodyModel, Void> headerButtonsFunction, BreadCrumbs breadcrumbs) {
 			this.head = head;
 			this.page = page;
 			this.body = body;
-			this.contentFunction = contentFunction;
+			this.mainContentFunction = mainContentFunction;
+			this.headerButtonsFunction = headerButtonsFunction;
 			this.breadcrumbs = breadcrumbs;
 		}
 
-		public static TemplatePageModel of(BiFunction<Div<?>, BodyModel, Void> func, HeadModel head, SelectedPage page, BodyModel body, BreadCrumbs breadcrumbs) {
-			return new TemplatePageModel(head, page, body, func, breadcrumbs);
+		public static TemplatePageModel of(BiFunction<Div<?>, BodyModel, Void> func, BiFunction<Div<?>, BodyModel, Void> header, HeadModel head, SelectedPage page, BodyModel body, BreadCrumbs breadcrumbs) {
+			return new TemplatePageModel(head, page, body, func, header, breadcrumbs);
 		}
 
 		public BodyModel getBodyModel() { return body; }
 		public HeadModel getHeadModel() { return head; }
-		public BiFunction<Div<?>, BodyModel, Void> getContent() { return contentFunction; }
+		public BiFunction<Div<?>, BodyModel, Void> getMainContent() { return mainContentFunction; }
+		public BiFunction<Div<?>, BodyModel, Void> getHeaderContent() { return headerButtonsFunction; }
 		public static BiFunction<Div<?>, BodyModel, Void> parametrisedMethod(BiFunction<Div<?>, BodyModel, Void> function) { return function; }
 		public BreadCrumbs getBreadCrumbs() { return breadcrumbs; }
 	}
@@ -105,14 +108,28 @@ public class TemplatePage {
 					.__() // Toast
 					.header().attrClass("header-root")
 					.div().attrClass("header-root-container")
-						.div().attrClass("header-user")
+						.div().attrClass(CSS.HEADER_ITEM + "header-user")
 							.ul().attrClass("menu-list")
+								.<TemplatePageModel>dynamic((ul, model) -> {
+									ul.li()
+										.attrClass(CSS.HEADER_LABEL_TOP)
+										.text(model.getBodyModel().getUserNameViaSession())
+									.__();
+								})
 								.li()
-									.a().attrClass(CSS.ICON_BOX_ARROW_RIGHT).attrHref(LogOutHandler.PATH).text("Log Out").__()
+									.a()
+										.attrClass(CSS.ICON_BOX_ARROW_RIGHT + CSS.HEADER_MENU_ITEM_ICON)
+										.attrHref(LogOutHandler.PATH)
+										.text("Log Out")
+									.__()
 								.__()
 							.__()
 						.__()
 						.<TemplatePageModel>dynamic((div, model) -> {
+							final var header = model.getHeaderContent();
+							if (header != null) {
+								header.apply(div, model.getBodyModel());
+							}
 							final var crumb = model.getBreadCrumbs();
 							if (crumb != null) {
 								final List<Pair<String, String>> items = crumb.getItems();
@@ -141,31 +158,31 @@ public class TemplatePage {
 								.<TemplatePageModel>dynamic((ul, model) -> {
 									ul.li()
 										.a().of(a -> a.attrHref(AdminHandler.PATH)
-											.attrClass(CSS.ICON_ADMIN + (model.page == SelectedPage.Admin ? selected : ""))
+											.attrClass(CSS.ICON_ADMIN + CSS.HEADER_MENU_ITEM_ICON + (model.page == SelectedPage.Admin ? selected : ""))
 											.text("Admin"))
 										.__()
 									.__()
 									.li()
 										.a().of(a -> a.attrHref(LibraryHandler.PATH)
-											.attrClass(CSS.ICON_TAPE + (model.page == SelectedPage.Library ? selected : ""))
+											.attrClass(CSS.ICON_TAPE + CSS.HEADER_MENU_ITEM_ICON + (model.page == SelectedPage.Library ? selected : ""))
 											.text("Library"))
 										.__()
 									.__()
 									.li()
 										.a().of(a -> a.attrHref(DrivesHandler.PATH)
-											.attrClass(CSS.ICON_DRIVE + (model.page == SelectedPage.Drives ? selected : ""))
+											.attrClass(CSS.ICON_DRIVE + CSS.HEADER_MENU_ITEM_ICON + (model.page == SelectedPage.Drives ? selected : ""))
 											.text("Drives"))
 										.__()
 									.__()
 									.li()
 										.a().of(a -> a.attrHref(FilesHandler.PATH)
-											.attrClass(CSS.ICON_FOLDER + (model.page == SelectedPage.Files ? selected : ""))
+											.attrClass(CSS.ICON_FOLDER + CSS.HEADER_MENU_ITEM_ICON + (model.page == SelectedPage.Files ? selected : ""))
 											.text("Files"))
 										.__()
 									.__()
 									.li()
 										.a().of(a -> a.attrHref(JobsHandler.PATH)
-											.attrClass(CSS.ICON_JOBS + (model.page == SelectedPage.Jobs ? selected : ""))
+											.attrClass(CSS.ICON_JOBS + CSS.HEADER_MENU_ITEM_ICON + (model.page == SelectedPage.Jobs ? selected : ""))
 											.text("Jobs"))
 										.__()
 									.__()
@@ -173,7 +190,7 @@ public class TemplatePage {
 										if (Main.DEBUG_MODE) {
 											li
 												.a()
-													.attrHref(SandpitHandler.PATH).attrClass(CSS.ICON_SANDPIT + (model.page == SelectedPage.Sandpit ? selected : ""))
+													.attrHref(SandpitHandler.PATH).attrClass(CSS.ICON_SANDPIT + CSS.HEADER_MENU_ITEM_ICON + (model.page == SelectedPage.Sandpit ? selected : ""))
 													.text("Sandpit")
 												.__();
 										}
@@ -185,7 +202,7 @@ public class TemplatePage {
 				.div().attrClass("main-content")
 					.div().attrClass("nav-area").__()
 					.div().attrClass("main-content-wrapper")
-						.<TemplatePageModel>dynamic((div, bodyModel) -> bodyModel.getContent().apply(div, bodyModel.getBodyModel()))
+						.<TemplatePageModel>dynamic((div, bodyModel) -> bodyModel.getMainContent().apply(div, bodyModel.getBodyModel()))
 					.__() // div
 				.__() //div
 			.__() // body

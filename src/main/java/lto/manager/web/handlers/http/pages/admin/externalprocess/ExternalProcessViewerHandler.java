@@ -69,7 +69,7 @@ public class ExternalProcessViewerHandler extends BaseHTTPHandler {
 	public void requestHandle(HttpExchange he) throws IOException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of("External Processes Viewer");
 		BreadCrumbs crumbs = new BreadCrumbs().add(AdminHandler.NAME, AdminHandler.PATH).add(ExternalProcessHandler.NAME, ExternalProcessHandler.PATH).add(NAME, "");
-		TemplatePageModel tpm = TemplatePageModel.of(ExternalProcessViewerHandler::content, thm, SelectedPage.Admin, BodyModel.of(he, null), crumbs);
+		TemplatePageModel tpm = TemplatePageModel.of(ExternalProcessViewerHandler::content, null, thm, SelectedPage.Admin, BodyModel.of(he, null), crumbs);
 		requestHandleCompletePage(he, tpm);
 	}
 

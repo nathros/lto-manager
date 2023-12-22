@@ -242,7 +242,7 @@ public class LibraryGenerateBarcodeHandler extends BaseHTTPHandler {
 		thm.addCSS(Asset.CSS_FORMS).addCSS(Asset.CSS_LIBRARY);
 		thm.addScriptDefer(Asset.JS_LTO_LABEL_GENERATOR);
 		BreadCrumbs crumbs = new BreadCrumbs().add(LibraryHandler.NAME, LibraryHandler.PATH).add(NAME, PATH);
-		TemplatePageModel tpm = TemplatePageModel.of(LibraryGenerateBarcodeHandler::body, thm, SelectedPage.Library, BodyModel.of(he, null), crumbs);
+		TemplatePageModel tpm = TemplatePageModel.of(LibraryGenerateBarcodeHandler::body, null, thm, SelectedPage.Library, BodyModel.of(he, null), crumbs);
 		requestHandleCompletePage(he, tpm);
 	}
 }

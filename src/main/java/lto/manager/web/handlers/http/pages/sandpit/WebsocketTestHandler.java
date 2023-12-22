@@ -100,7 +100,7 @@ public class WebsocketTestHandler extends BaseHTTPHandler {
 		HeadModel thm = HeadModel.of(NAME);
 		thm.addScript(Asset.JS_WEBSOCKET);
 		BreadCrumbs crumbs = new BreadCrumbs().add(SandpitHandler.NAME, SandpitHandler.PATH).add(NAME, PATH);
-		TemplatePageModel tpm = TemplatePageModel.of(WebsocketTestHandler::content, thm, SelectedPage.Sandpit, BodyModel.of(he, null), crumbs);
+		TemplatePageModel tpm = TemplatePageModel.of(WebsocketTestHandler::content, null, thm, SelectedPage.Sandpit, BodyModel.of(he, null), crumbs);
 		requestHandleCompletePage(he, tpm);
 	}
 
