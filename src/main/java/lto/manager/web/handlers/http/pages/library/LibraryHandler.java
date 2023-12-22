@@ -37,8 +37,6 @@ public class LibraryHandler extends BaseHTTPHandler {
 
 		view
 			.div()
-				.a().attrClass(CSS.BUTTON).attrHref(LibraryCreateHandler.PATH).text("Add New Tape").__()
-				.a().attrClass(CSS.BUTTON).attrHref(LibraryGenerateBarcodeHandler.PATH).text("Generate Label").__()
 				.table().attrClass(CSS.TABLE).of(table -> {
 					table.attrBorder(EnumBorderType._1).tr()
 						.th().text("Tape ID").__()
@@ -90,7 +88,7 @@ public class LibraryHandler extends BaseHTTPHandler {
 		view
 			.div()
 				.attrClass(CSS.HEADER_ITEM + CSS.ICON_PRINTER)
-				.ul().attrClass("menu-list")
+				.ul().attrClass(CSS.MENU_LIST)
 					.li()
 						.attrClass(CSS.HEADER_LABEL_TOP)
 						.text("Tools")
@@ -102,7 +100,22 @@ public class LibraryHandler extends BaseHTTPHandler {
 						.__()
 					.__()
 				.__() // ul
-			.__();
+			.__() // div
+			.div()
+				.attrClass(CSS.HEADER_ITEM + CSS.ICON_PLUS_SQUARE)
+				.ul().attrClass(CSS.MENU_LIST)
+					.li()
+						.attrClass(CSS.HEADER_LABEL_TOP)
+						.text("New")
+					.__()
+					.li()
+						.a()
+							.attrHref(LibraryCreateHandler.PATH)
+							.text("Add New Tape")
+						.__()
+					.__()
+				.__() // ul
+			.__(); // div
 		return null;
 	}
 }

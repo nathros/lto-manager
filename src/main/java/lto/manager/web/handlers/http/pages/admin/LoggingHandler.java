@@ -62,8 +62,8 @@ public class LoggingHandler extends BaseHTTPHandler {
 				.__() // ul
 			.__() // div
 			.div()
-				.attrClass(CSS.HEADER_ITEM + "header-icon-caret-down")
-				.ul().attrClass("menu-list")
+				.attrClass(CSS.HEADER_ITEM + CSS.ICON_CARET_DOWN)
+				.ul().attrClass(CSS.MENU_LIST)
 					.li()
 						.attrClass(CSS.HEADER_LABEL_TOP)
 						.text("Autoscroll")
@@ -77,8 +77,8 @@ public class LoggingHandler extends BaseHTTPHandler {
 				.__() // ul
 			.__() // div
 			.div()
-				.attrClass(CSS.HEADER_ITEM + "header-icon-funnel")
-				.ul().attrClass("menu-list")
+				.attrClass(CSS.HEADER_ITEM + CSS.ICON_FUNNEL)
+				.ul().attrClass(CSS.MENU_LIST)
 					.li()
 						.attrClass(CSS.HEADER_LABEL_TOP)
 						.text("Filter")

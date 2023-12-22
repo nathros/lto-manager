@@ -27,6 +27,7 @@ import lto.manager.web.handlers.http.templates.models.BodyModel;
 import lto.manager.web.handlers.http.templates.models.HeadModel;
 import lto.manager.web.resource.Asset;
 import lto.manager.web.resource.CSS;
+import lto.manager.web.resource.HTML;
 import lto.manager.web.resource.JS;
 
 public class TemplatePage {
@@ -109,7 +110,7 @@ public class TemplatePage {
 					.header().attrClass("header-root")
 					.div().attrClass("header-root-container")
 						.div().attrClass(CSS.HEADER_ITEM + "header-user")
-							.ul().attrClass("menu-list")
+							.ul().attrClass(CSS.MENU_LIST)
 								.<TemplatePageModel>dynamic((ul, model) -> {
 									ul.li()
 										.attrClass(CSS.HEADER_LABEL_TOP)
@@ -125,10 +126,49 @@ public class TemplatePage {
 								.__()
 							.__()
 						.__()
+						.div()
+							.attrClass(CSS.HEADER_ITEM + CSS.ICON_INFO_CIRCLE)
+							.ul().attrClass(CSS.MENU_LIST)
+								.li()
+									.attrClass(CSS.HEADER_LABEL_TOP)
+									.text("Help")
+								.__()
+								.li()
+									.a()
+										.attrHref("https://github.com/nathros/lto-manager")
+										.attrTarget(HTML.TARGET_BLANK)
+										.text("Documentation")
+									.__()
+								.__()
+								.li()
+									.a()
+										.attrHref("https://github.com/nathros/lto-manager/issues")
+										.attrTarget(HTML.TARGET_BLANK)
+										.text("Report Bug")
+									.__()
+								.__()
+							.__() // ul
+						.__() // div
+						.div()
+							.attrClass(CSS.HEADER_ITEM + CSS.ICON_BELL)
+							.ul().attrClass(CSS.MENU_LIST)
+								.li()
+									.attrClass(CSS.HEADER_LABEL_TOP)
+									.text("Notifications")
+								.__()
+								.li()
+									.a()
+										.attrClass(CSS.ICON_BOX_ARROW_RIGHT)
+										.text("Empty")
+									.__()
+								.__()
+							.__() // ul
+						.__() // div
+						.div().attrStyle("color:white;opacity:50%;user-select:none;").text("|").__()
 						.<TemplatePageModel>dynamic((div, model) -> {
-							final var header = model.getHeaderContent();
-							if (header != null) {
-								header.apply(div, model.getBodyModel());
+							final var customHeaderIcons = model.getHeaderContent();
+							if (customHeaderIcons != null) {
+								customHeaderIcons.apply(div, model.getBodyModel());
 							}
 							final var crumb = model.getBreadCrumbs();
 							if (crumb != null) {
@@ -153,7 +193,7 @@ public class TemplatePage {
 								.span().__()
 							.__() // div
 							.ul()
-								.attrClass("menu-list")
+								.attrClass(CSS.MENU_LIST)
 								.attrId("nav-menu")
 								.<TemplatePageModel>dynamic((ul, model) -> {
 									ul.li()

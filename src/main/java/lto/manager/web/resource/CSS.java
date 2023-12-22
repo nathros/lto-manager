@@ -11,6 +11,7 @@ public class CSS {
 	public final static String HEADER_ITEM = "header-item ";
 	public final static String HEADER_LABEL_TOP = "header-label-top ";
 	public final static String HEADER_MENU_ITEM_ICON = "icon ";
+	public final static String MENU_LIST = "menu-list ";
 
 	public final static String BUTTON = "btn ";
 	public final static String BUTTON_IMAGE = "btn-image ";
@@ -50,6 +51,11 @@ public class CSS {
 	public final static String ICON_PDF = "icon-pdf ";
 	public final static String ICON_SVG = "icon-svg ";
 	public final static String ICON_HIGHLIGHTS = "icon-highlights ";
+	public final static String ICON_BELL = "icon-bell ";
+	public final static String ICON_CARET_DOWN = "icon-caret-down ";
+	public final static String ICON_FUNNEL = "icon-funnel ";
+	public final static String ICON_PLUS_SQUARE = "icon-plus-square ";
+	public final static String ICON_INFO_CIRCLE = "icon-info-circle ";
 
 	public final static String FV_ID = "id-wtree";
 	public final static String FV_ID_CONTEXT_CONTAINER = "wtree-context-container";
