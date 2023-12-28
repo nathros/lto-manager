@@ -35,6 +35,7 @@ import lto.manager.web.handlers.http.pages.library.LibraryDeleteHandler;
 import lto.manager.web.handlers.http.pages.library.LibraryGenerateBarcodeHTMLHandler;
 import lto.manager.web.handlers.http.pages.library.LibraryGenerateBarcodeHandler;
 import lto.manager.web.handlers.http.pages.library.LibraryHandler;
+import lto.manager.web.handlers.http.pages.sandpit.CheckBoxTestHandler;
 import lto.manager.web.handlers.http.pages.sandpit.DatabaseTestHandler;
 import lto.manager.web.handlers.http.pages.sandpit.EchoGetHandler;
 import lto.manager.web.handlers.http.pages.sandpit.EchoHeaderHandler;
@@ -104,6 +105,7 @@ public class Handlers {
 			ret.put(DatabaseTestHandler.PATH, new DatabaseTestHandler());
 			ret.put(WebsocketTestHandler.PATH, new WebsocketTestHandler());
 			ret.put(LogTestHandler.PATH, new LogTestHandler());
+			ret.put(CheckBoxTestHandler.PATH, new CheckBoxTestHandler());
 		}
 		return ret;
 	}

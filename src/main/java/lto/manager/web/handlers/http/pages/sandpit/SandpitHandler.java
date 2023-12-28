@@ -31,6 +31,7 @@ public class SandpitHandler extends BaseHTTPHandler {
 			.__()
 			.div().attrClass(CSS.CARD).addAttr(CSS.CARD_ATTRIBUTE, "Frontend")
 				.a().attrClass(CSS.BUTTON).attrHref("").text("Toast").__()
+				.a().attrClass(CSS.BUTTON).attrHref(CheckBoxTestHandler.PATH).text(CheckBoxTestHandler.NAME).__()
 			.__()
 			.div().attrClass(CSS.CARD).addAttr(CSS.CARD_ATTRIBUTE, "Networking")
 				.a().attrClass(CSS.BUTTON).attrHref(WebsocketTestHandler.PATH).text(WebsocketTestHandler.NAME).__()

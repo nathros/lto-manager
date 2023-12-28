@@ -1,4 +1,4 @@
-b {
+form b {
 	white-space: nowrap;
 }
 form {
@@ -6,5 +6,12 @@ form {
 	padding-left: var(--padding-full);
 }
 .card {
+	flex: 1;
+}
+.button-container {
+	display: flex;
+	gap: var(--padding);
+}
+.button-container > * {
 	flex: 1;
 }

@@ -36,8 +36,11 @@ a {
 hr {
 	border: var(--border);
 }
-input, textarea, select {
+input:not([type=checkbox]), textarea, select {
 	padding: var(--padding);
+	border: var(--border);
+}
+input[type=checkbox] {
 	border: var(--border);
 }
 input:focus, textarea:focus, select:focus {
@@ -48,6 +51,54 @@ input.error {
 }
 input.error:focus {
 	outline: var(--border-error);
+}
+input:disabled {
+	cursor: not-allowed !important;
+}
+.checkbox-container {
+	display: inline-flex;
+	gap: var(--padding);
+	align-items: center;
+	cursor: pointer;
+}
+.checkbox-container input[type=checkbox] {
+	appearance: none;
+	height: 1.5rem;
+	width: 1.5rem;
+	position: relative;
+	margin: 0;
+	cursor: pointer;
+	transition: 0.3s;
+	background-color: transparent;
+	outline: none;
+}
+.checkbox-container input[type=checkbox]:after {
+	content: "";
+	display: block;
+	position: absolute;
+	border: 2px solid var(--b, transparent);
+	border-top: 0;
+	border-left: 0;
+	width: 5px;
+	height: 9px;
+	left: 9px;
+	top: 5px;
+	transform: rotate(var(--r, 20deg));
+	transition: 0.3s;
+}
+.checkbox-container input[type=checkbox]:checked {
+	background-color: var(--common-background-colour);
+}
+.checkbox-container:has(input[type=checkbox]:disabled) {
+	opacity: 50%;
+	cursor: not-allowed;
+}
+.checkbox-container input[type=checkbox]:checked {
+	--r: 43deg;
+	--b: white;
+}
+.checkbox-container * {
+	box-sizing: inherit;
 }
 .monospace, .monospace * {
 	font-family: 'Space Mono', monospace;

@@ -18,6 +18,13 @@ public class HTML {
 		return input;
 	}
 
+	public static Input<?> disabled(Input<?> input, boolean disabled) {
+		if (disabled) {
+			return input.addAttr("disabled", "");
+		}
+		return input;
+	}
+
 	public static Option<?> option(Option<?> option, boolean selected, boolean disabled) {
 		if (selected) {
 			option = option.addAttr("selected", "");

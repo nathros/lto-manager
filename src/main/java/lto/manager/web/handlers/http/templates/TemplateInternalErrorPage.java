@@ -72,9 +72,9 @@ public class TemplateInternalErrorPage {
 
 					String query = model.he.getRequestURI().getQuery();
 					String requestQuery = query == null ? "null" : query;
-					final String style = "background-color:darkblue; color:white;font-family:system-ui";
+					final String style = "background-color:darkblue; color:white;font-family:system-ui;padding:4px";
 
-					div.p().attrStyle("padding:1rem; font-weight:bold; font-size:1rem;" + style).text("HTTP Status 500 - Internal Error").__()
+					div.p().attrStyle(style + ";padding:1rem;font-weight:bold;font-size:1rem;").text("HTTP Status 500 - Internal Error").__()
 					.hr().__()
 					.p().b().attrStyle(style).text("Path: ").__().__()
 					.p().of(p -> p.text(path)).__()
