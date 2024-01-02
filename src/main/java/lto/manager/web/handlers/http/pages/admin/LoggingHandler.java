@@ -2,6 +2,7 @@ package lto.manager.web.handlers.http.pages.admin;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
 
 import org.xmlet.htmlapifaster.Div;
 
@@ -9,6 +10,10 @@ import com.sun.net.httpserver.HttpExchange;
 
 import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.pages.LogOutHandler;
+import lto.manager.web.handlers.http.partial.components.CheckBox;
+import lto.manager.web.handlers.http.partial.components.CheckBox.CheckBoxOptions;
+import lto.manager.web.handlers.http.partial.components.Switch;
+import lto.manager.web.handlers.http.partial.components.Switch.SwitchOptions;
 import lto.manager.web.handlers.http.templates.TemplatePage.BreadCrumbs;
 import lto.manager.web.handlers.http.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.http.templates.TemplatePage.TemplatePageModel;
@@ -70,8 +75,11 @@ public class LoggingHandler extends BaseHTTPHandler {
 					.__()
 					.li()
 						.a()
-							.attrClass(CSS.ICON_BOX_ARROW_RIGHT)
-							.text("Test")
+							.attrStyle("padding:0;")
+							.div()
+								.attrStyle("display:flex;width:inherit")
+								.of(div -> Switch.content(div, SwitchOptions.of().setChecked()))
+							.__()
 						.__()
 					.__()
 				.__() // ul
@@ -85,8 +93,56 @@ public class LoggingHandler extends BaseHTTPHandler {
 					.__()
 					.li()
 						.a()
-							.attrClass(CSS.ICON_BOX_ARROW_RIGHT)
-							.text("Test")
+							.attrStyle("padding:0;")
+							.div()
+								.attrStyle("display:flex;width:inherit")
+								.of(div -> CheckBox.content(div, CheckBoxOptions.of(Level.FINEST.toString()).setChecked().setID(Level.FINEST.toString()).setKeepBoarderChecked().setHasPadding().setFillContainer()))
+							.__()
+						.__()
+					.__()
+					.li()
+						.a()
+							.attrStyle("padding:0;")
+							.div()
+								.attrStyle("display:flex;width:inherit")
+								.of(div -> CheckBox.content(div, CheckBoxOptions.of(Level.FINER.toString()).setChecked().setID(Level.FINEST.toString()).setKeepBoarderChecked().setHasPadding().setFillContainer()))
+							.__()
+						.__()
+					.__()
+					.li()
+						.a()
+							.attrStyle("padding:0;")
+							.div()
+								.attrStyle("display:flex;width:inherit")
+								.of(div -> CheckBox.content(div, CheckBoxOptions.of(Level.FINE.toString()).setChecked().setID(Level.FINE.toString()).setKeepBoarderChecked().setHasPadding().setFillContainer()))
+							.__()
+						.__()
+					.__()
+					.li()
+						.a()
+							.attrStyle("padding:0;")
+							.div()
+								.attrStyle("display:flex;width:inherit")
+								.of(div -> CheckBox.content(div, CheckBoxOptions.of(Level.INFO.toString()).setChecked().setID(Level.INFO.toString()).setKeepBoarderChecked().setHasPadding().setFillContainer()))
+							.__()
+						.__()
+					.__()
+					.li()
+						.a()
+							.attrStyle("padding:0;")
+							.div()
+								.attrStyle("display:flex;width:inherit")
+								.of(div -> CheckBox.content(div, CheckBoxOptions.of(Level.WARNING.toString()).setChecked().setID(Level.WARNING.toString()).setKeepBoarderChecked().setHasPadding().setFillContainer()))
+							.__()
+						.__()
+					.__()
+					.li()
+						.a()
+							.attrStyle("padding:0;")
+							.div()
+								.attrStyle("display:flex;width:inherit")
+								.of(div -> CheckBox.content(div, CheckBoxOptions.of(Level.SEVERE.toString()).setChecked().setID(Level.SEVERE.toString()).setKeepBoarderChecked().setHasPadding().setFillContainer()))
+							.__()
 						.__()
 					.__()
 				.__() // ul

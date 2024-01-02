@@ -10,11 +10,17 @@ td {
 	width: 1rem;
 }
 .SEVERE {
-	box-shadow: inset 0 0 1000px rgba(255, 0, 0, 0.4);
+	box-shadow: inset 0 0 1000px red;
 }
 .FINE {
-	background-color: yellow; 
+	box-shadow: inset 0 0 1000px rgba(111, 111, 111, 0.3); 
+}
+.FINER {
+	box-shadow: inset 0 0 1000px rgba(50, 50, 50, 0.3); 
+}
+.FINEST {
+	box-shadow: inset 0 0 1000px rgba(2, 2, 2, 0.3); 
 }
 .INFO {
-	box-shadow: inset 0 0 1000px rgba(0, 0, 255, 0.4);
+	box-shadow: inset 0 0 1000px rgba(0, 115, 255, 0.3);
 }

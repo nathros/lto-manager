@@ -64,6 +64,11 @@ public class Switch {
 			return this;
 		}
 
+		public SwitchOptions setChecked() {
+			this.isChecked = true;
+			return this;
+		}
+
 		public boolean getChecked() {
 			return isChecked;
 		}

@@ -23,7 +23,7 @@ public class LoggingWebsocketHandler extends BaseWebsocketHandler {
 
 	@Override
 	public void onNewMessage(final WebSocket conn, String message) {
-		if ("all".equals(message)) {
+		if ("all".equals(message)) { // Request from client to get all messages
 			final String logPath = Log.getLogFilePath() + ".0";
 			File file = new File(logPath);
 			if (!file.exists()) {

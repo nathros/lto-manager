@@ -241,7 +241,7 @@ public class TemplatePage {
 				.__() // header-root
 				.div().attrClass("main-content")
 					.div().attrClass("nav-area").__()
-					.div().attrClass("main-content-wrapper")
+					.div().attrClass("main-content-wrapper").attrId("main-content-wrapper")
 						.<TemplatePageModel>dynamic((div, bodyModel) -> bodyModel.getMainContent().apply(div, bodyModel.getBodyModel()))
 					.__() // div
 				.__() //div

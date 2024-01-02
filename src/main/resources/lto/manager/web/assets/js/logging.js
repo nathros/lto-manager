@@ -1,4 +1,10 @@
 const tableLog = document.getElementById("table-logging");
+const filterFinest = document.getElementById("FINEST");
+const filterFiner = document.getElementById("FINER");
+const filterFine = document.getElementById("FINE");
+const filterInfo = document.getElementById("INFO");
+const filterWarning = document.getElementById("WARNING");
+const filterSevere = document.getElementById("SEVERE");
 
 function splitMessage(lines) {
 	const messages = lines.split("\n");
@@ -32,12 +38,25 @@ function addTableMessage(lines) {
 		const cell1 = row.insertCell();
 		cell1.classList.add(line[1]);
 		cell1.innerText = line[1];
+		switch (line[1]) {
+			case "FINEST": if (!filterFinest.checked) row.style.display = "none"; break;
+			case "FINER": if (!filterFiner.checked) row.style.display = "none"; break;
+			case "FINE": if (!filterFine.checked) row.style.display = "none"; break;
+			case "INFO": if (!filterInfo.checked) row.style.display = "none"; break;
+			case "WARNING": if (!filterWarning.checked) row.style.display = "none"; break;
+			case "SEVERE": if (!filterSevere.checked) row.style.display = "none"; break;
+		}
 		row.insertCell().innerText = line[2];
 		row.insertCell().innerText = line[3];
 		row.insertCell().innerText = line[4];
 	});
 	if (lines.length > 128) tableLog.style.display = "initial";
 }
+function scrollToBottom() {
+	const cont = document.getElementById("main-content-wrapper");
+	cont.scrollTo({top: cont.children[0].scrollHeight, behavior: "smooth"});
+}
+new ResizeObserver(scrollToBottom).observe(document.getElementById("main-content-wrapper").children[0]);
 
 const tableWS = openWS("/ws/logging",
 (/*event*/) => { // Open

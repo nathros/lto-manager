@@ -20,6 +20,7 @@
 	--padding: 0.5rem;
 	--padding-full: 1rem;
 	--border: 1px solid #ccc;
+	--border-ncolour: 1px solid;
 	--border-error: 1px solid red;
 }
 * {
@@ -44,13 +45,28 @@ input[type=checkbox] {
 	border: var(--border);
 }
 input:focus, textarea:focus, select:focus {
+	outline: var(--border-ncolour) var(--common-selected-colour) !important;
+	border: var(--border-ncolour) var(--common-selected-colour);
+}
+input:focus[type=checkbox] {
+	outline: none !important;
+	border: var(--border);
+}
+input[type=checkbox] {
+	outline: none !important;
+}
+input:hover, textarea:hover, select:hover {
 	outline: var(--border);
 }
 input.error {
 	border: var(--border-error);
 }
-input.error:focus {
-	outline: var(--border-error);
+input.error:focus, textarea.error:focus, select.error:focus {
+	border: var(--border-error);
+	outline: var(--border-error) !important;
+}
+input.error:hover, textarea.error:hover, select.error:hover {
+	outline: var(--border-error) !important;
 }
 input:disabled {
 	cursor: not-allowed !important;
@@ -60,6 +76,7 @@ input:disabled {
 	gap: var(--padding);
 	align-items: center;
 	cursor: pointer;
+	flex: 1;
 }
 .checkbox-container input[type=checkbox] {
 	appearance: none;
@@ -90,6 +107,9 @@ input:disabled {
 .switch-container input:checked + span {
 	background-color: var(--common-background-colour);
 	border: 1px solid var(--common-background-colour);
+}
+.checkbox-container input[type=checkbox].keep-boarder:checked {
+	border: var(--border);
 }
 .checkbox-container:has(input[type=checkbox]:disabled),
 .switch-container:has(input[type=checkbox]:disabled) {
