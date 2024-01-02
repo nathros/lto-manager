@@ -8,6 +8,8 @@ import org.xmlet.htmlapifaster.Div;
 import com.sun.net.httpserver.HttpExchange;
 
 import lto.manager.web.handlers.http.BaseHTTPHandler;
+import lto.manager.web.handlers.http.pages.sandpit.frontend.CheckBoxTestHandler;
+import lto.manager.web.handlers.http.pages.sandpit.frontend.SwitchTestHandler;
 import lto.manager.web.handlers.http.templates.TemplatePage.BreadCrumbs;
 import lto.manager.web.handlers.http.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.http.templates.TemplatePage.TemplatePageModel;
@@ -32,6 +34,7 @@ public class SandpitHandler extends BaseHTTPHandler {
 			.div().attrClass(CSS.CARD).addAttr(CSS.CARD_ATTRIBUTE, "Frontend")
 				.a().attrClass(CSS.BUTTON).attrHref("").text("Toast").__()
 				.a().attrClass(CSS.BUTTON).attrHref(CheckBoxTestHandler.PATH).text(CheckBoxTestHandler.NAME).__()
+				.a().attrClass(CSS.BUTTON).attrHref(SwitchTestHandler.PATH).text(SwitchTestHandler.NAME).__()
 			.__()
 			.div().attrClass(CSS.CARD).addAttr(CSS.CARD_ATTRIBUTE, "Networking")
 				.a().attrClass(CSS.BUTTON).attrHref(WebsocketTestHandler.PATH).text(WebsocketTestHandler.NAME).__()

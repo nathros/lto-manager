@@ -86,10 +86,13 @@ input:disabled {
 	transform: rotate(var(--r, 20deg));
 	transition: 0.3s;
 }
-.checkbox-container input[type=checkbox]:checked {
+.checkbox-container input[type=checkbox]:checked,
+.switch-container input:checked + span {
 	background-color: var(--common-background-colour);
+	border: 1px solid var(--common-background-colour);
 }
-.checkbox-container:has(input[type=checkbox]:disabled) {
+.checkbox-container:has(input[type=checkbox]:disabled),
+.switch-container:has(input[type=checkbox]:disabled) {
 	opacity: 50%;
 	cursor: not-allowed;
 }
@@ -99,6 +102,41 @@ input:disabled {
 }
 .checkbox-container * {
 	box-sizing: inherit;
+}
+.switch-container {
+	position: relative;
+	display: inline-block;
+	width: 3.5em;
+	height: 2em;
+}
+.switch-container input[type="checkbox"] {
+	display: none;
+}
+.switch-container span {
+	position: absolute;
+	cursor: pointer;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	border: var(--border);
+	transition: 0.3s ease;
+	border-radius: 30px;
+}
+.switch-container span:before {
+	position: absolute;
+	content: "";
+	height: 1.4em;
+	width: 1.4em;
+	border-radius: 100%;
+	left: 0.27em;
+	bottom: 0.25em;
+	background-color: #ccc;
+	transition: 0.3s ease;
+}
+.switch-container input:checked + span:before {
+	transform: translateX(1.4em);
+	background-color: #fff;
 }
 .monospace, .monospace * {
 	font-family: 'Space Mono', monospace;

@@ -1,10 +1,11 @@
-package lto.manager.web.handlers.http.pages.sandpit;
+package lto.manager.web.handlers.http.pages.sandpit.frontend;
 
 import org.xmlet.htmlapifaster.Div;
 
 import com.sun.net.httpserver.HttpExchange;
 
 import lto.manager.web.handlers.http.BaseHTTPHandler;
+import lto.manager.web.handlers.http.pages.sandpit.SandpitHandler;
 import lto.manager.web.handlers.http.partial.components.CheckBox;
 import lto.manager.web.handlers.http.partial.components.CheckBox.CheckBoxOptions;
 import lto.manager.web.handlers.http.templates.TemplatePage.BreadCrumbs;

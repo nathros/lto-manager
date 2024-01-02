@@ -35,7 +35,6 @@ import lto.manager.web.handlers.http.pages.library.LibraryDeleteHandler;
 import lto.manager.web.handlers.http.pages.library.LibraryGenerateBarcodeHTMLHandler;
 import lto.manager.web.handlers.http.pages.library.LibraryGenerateBarcodeHandler;
 import lto.manager.web.handlers.http.pages.library.LibraryHandler;
-import lto.manager.web.handlers.http.pages.sandpit.CheckBoxTestHandler;
 import lto.manager.web.handlers.http.pages.sandpit.DatabaseTestHandler;
 import lto.manager.web.handlers.http.pages.sandpit.EchoGetHandler;
 import lto.manager.web.handlers.http.pages.sandpit.EchoHeaderHandler;
@@ -46,6 +45,8 @@ import lto.manager.web.handlers.http.pages.sandpit.InternalErrorTesterHandler;
 import lto.manager.web.handlers.http.pages.sandpit.LogTestHandler;
 import lto.manager.web.handlers.http.pages.sandpit.SandpitHandler;
 import lto.manager.web.handlers.http.pages.sandpit.WebsocketTestHandler;
+import lto.manager.web.handlers.http.pages.sandpit.frontend.CheckBoxTestHandler;
+import lto.manager.web.handlers.http.pages.sandpit.frontend.SwitchTestHandler;
 import lto.manager.web.handlers.websockets.BaseWebsocketHandler;
 import lto.manager.web.handlers.websockets.ServerTimeHandler;
 import lto.manager.web.handlers.websockets.admin.LoggingWebsocketHandler;
@@ -106,6 +107,7 @@ public class Handlers {
 			ret.put(WebsocketTestHandler.PATH, new WebsocketTestHandler());
 			ret.put(LogTestHandler.PATH, new LogTestHandler());
 			ret.put(CheckBoxTestHandler.PATH, new CheckBoxTestHandler());
+			ret.put(SwitchTestHandler.PATH, new SwitchTestHandler());
 		}
 		return ret;
 	}
