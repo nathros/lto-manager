@@ -9,6 +9,17 @@ td {
 	font-size: small;
 	width: 1rem;
 }
+th {
+	position: sticky;
+	top: calc((var(--padding) * -1) - 1px);
+}
+#main-content-wrapper {
+	margin-top: calc(3rem + var(--padding)); /* 3rem from main.css - could use variable */
+	height: calc(100vh - 4rem - var(--padding));
+}
+#main-content-wrapper > div {
+	margin-top: calc((var(--padding) * -1) - 1px);
+}
 .SEVERE {
 	box-shadow: inset 0 0 1000px red;
 }
