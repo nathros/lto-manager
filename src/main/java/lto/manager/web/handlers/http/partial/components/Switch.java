@@ -13,13 +13,29 @@ public class Switch {
 			.label()
 				.attrClass("switch-container")
 				.attrFor(options.getID())
+				.of(label -> {
+					if (!"".equals(options.getOnlick())) {
+						label.attrOnclick(options.getOnlick());
+					}
+				})
 				.input()
 					.attrType(EnumTypeInputType.CHECKBOX)
 					.attrId(options.getID())
+					.of(label -> {
+						if (!"".equals(options.getOnChange())) {
+							label.attrOnchange(options.getOnChange());
+						}
+					})
 					.of(i -> HTML.check(i, options.getChecked()))
 					.of(i -> HTML.disabled(i, options.getDisabled()))
 				.__()
-				.span().__()
+				.span()
+					.of(span -> {
+						if (options.getKeepBoarderChecked()) {
+							span.attrStyle("border:var(--border)");
+						}
+					})
+				.__()
 			.__(); // label
 		return null;
 	}
@@ -29,6 +45,9 @@ public class Switch {
 		private String text;
 		private boolean isChecked = false;
 		private boolean isDisabled = false;
+		private boolean keepBoarderChecked = false;
+		private String onClick;
+		private String onChange;
 
 		public static SwitchOptions of() {
 			return new SwitchOptions();
@@ -81,5 +100,38 @@ public class Switch {
 		public boolean getDisabled() {
 			return isDisabled;
 		}
+
+		public SwitchOptions setKeepBoarderChecked(boolean keepBoarderChecked) {
+			this.keepBoarderChecked = keepBoarderChecked;
+			return this;
+		}
+
+		public SwitchOptions setKeepBoarderChecked() {
+			this.keepBoarderChecked = true;
+			return this;
+		}
+
+		public boolean getKeepBoarderChecked() {
+			return keepBoarderChecked;
+		}
+
+		public SwitchOptions setOnlick(final String js) {
+			this.onClick = js;
+			return this;
+		}
+
+		public String getOnlick() {
+			return onClick;
+		}
+
+		public SwitchOptions setOnChange(final String onChange) {
+			this.onChange = onChange;
+			return this;
+		}
+
+		public String getOnChange() {
+			return onChange;
+		}
+
 	}
 }

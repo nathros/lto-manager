@@ -1,11 +1,25 @@
 const tableLog = document.getElementById("table-logging");
-const filterFinest = document.getElementById("FINEST");
-const filterFiner = document.getElementById("FINER");
-const filterFine = document.getElementById("FINE");
-const filterInfo = document.getElementById("INFO");
-const filterWarning = document.getElementById("WARNING");
-const filterSevere = document.getElementById("SEVERE");
+tableLog.observerSkip = false;
+let filterConfig = getFilter();
+document.getElementById("FINEST").checked = filterConfig["FINEST"];
+document.getElementById("FINER").checked = filterConfig["FINER"];
+document.getElementById("FINE").checked = filterConfig["FINE"];
+document.getElementById("INFO").checked = filterConfig["INFO"];
+document.getElementById("WARNING").checked = filterConfig["WARNING"];
+document.getElementById("SEVERE").checked = filterConfig["SEVERE"];
+let autoScroll = getAutoscroll();
+document.getElementById("autoscroll").checked = autoScroll;
 
+function levelAction(level, func, def) {
+	switch (level) {
+		case "FINEST": return filterConfig["FINEST"] ? def() : func();
+		case "FINER": return filterConfig["FINER"] ? def() : func();
+		case "FINE": return filterConfig["FINE"] ? def() : func();
+		case "INFO": return filterConfig["INFO"] ? def() : func();
+		case "WARNING": return filterConfig["WARNING"] ? def() : func();
+		case "SEVERE": return filterConfig["SEVERE"] ? def() : func();
+	}
+}
 function splitMessage(lines) {
 	const messages = lines.split("\n");
 	messages.pop(); // Last is empty
@@ -21,7 +35,7 @@ function splitMessage(lines) {
 		row.push(tmp);
 		let lastIndex = item.indexOf(" ", firstIndex + 1);
 		if (lastIndex == -1) { console.log(`2:parse failure ${item}`); return; }
-		row.push(item.substring(firstIndex, lastIndex)); // Get function
+		row.push(item.substring(firstIndex, lastIndex)); // Get function name
 		firstIndex = item.indexOf("|", lastIndex);
 		if (firstIndex == -1) { console.log(`3:parse failure ${item}`); return; }
 		row.push(item.substring(firstIndex + 2)); // Get message
@@ -38,26 +52,91 @@ function addTableMessage(lines) {
 		const cell1 = row.insertCell();
 		cell1.classList.add(line[1]);
 		cell1.innerText = line[1];
-		switch (line[1]) {
-			case "FINEST": if (!filterFinest.checked) row.style.display = "none"; break;
-			case "FINER": if (!filterFiner.checked) row.style.display = "none"; break;
-			case "FINE": if (!filterFine.checked) row.style.display = "none"; break;
-			case "INFO": if (!filterInfo.checked) row.style.display = "none"; break;
-			case "WARNING": if (!filterWarning.checked) row.style.display = "none"; break;
-			case "SEVERE": if (!filterSevere.checked) row.style.display = "none"; break;
-		}
+		levelAction(line[1], () => {row.style.display = "none"}, () => {});
 		row.insertCell().innerText = line[2];
 		row.insertCell().innerText = line[3];
 		row.insertCell().innerText = line[4];
 	});
 	if (lines.length > 128) tableLog.style.display = "initial";
 }
-function scrollToBottom() {
+function scrollToPos(bottom) {
 	const cont = document.getElementById("main-content-wrapper");
-	cont.scrollTo({top: cont.children[0].scrollHeight, behavior: "smooth"});
+	const pos = bottom ? cont.children[0].scrollHeight :0;
+	cont.scrollTo({top: pos, behavior: "smooth"});
+}
+function scrollToBottom() {
+	if (tableLog.style.display != "none" && !tableLog.observerSkip) {
+		scrollToPos(true);
+	}
+	tableLog.observerSkip = false;
 }
 new ResizeObserver(scrollToBottom).observe(document.getElementById("main-content-wrapper").children[0]);
-
+function selectSingle(sender) {
+	document.getElementById("FINEST").checked =
+	document.getElementById("FINER").checked =
+	document.getElementById("FINE").checked =
+	document.getElementById("INFO").checked =
+	document.getElementById("WARNING").checked =
+	document.getElementById("SEVERE").checked = false;
+	sender.getElementsByTagName("input")[0].checked = true;
+	return false; // Disable context menu
+}
+function applyFilter() {
+	filterConfig["FINEST"] = document.getElementById("FINEST").checked;
+	filterConfig["FINER"] = document.getElementById("FINER").checked;
+	filterConfig["FINE"] = document.getElementById("FINE").checked;
+	filterConfig["INFO"] = document.getElementById("INFO").checked;
+	filterConfig["WARNING"] = document.getElementById("WARNING").checked;
+	filterConfig["SEVERE"] = document.getElementById("SEVERE").checked;
+	setCookie("log-filter", JSON.stringify(filterConfig));
+	tableLog.style.display = "none"; // Better performance if table is hidden
+	for (let i = 1; i < tableLog.rows.length; i++) {
+		const row = tableLog.rows[i];
+		levelAction(tableLog.rows[i].children[1].className, () => {row.style.display = "none"}, () => {row.style.display = "table-row"});
+	}
+	tableLog.observerSkip = true;
+	tableLog.style.display = "initial"; // Restore table
+}
+function resetFilter() {
+	document.getElementById("FINEST").checked =
+	document.getElementById("FINER").checked =
+	document.getElementById("FINE").checked =
+	document.getElementById("INFO").checked =
+	document.getElementById("WARNING").checked =
+	document.getElementById("SEVERE").checked = true;
+	applyFilter();
+}
+function getFilter() {
+	const filterCookie = getCookie("log-filter");
+	if (filterCookie == null) {
+		return {
+			"FINEST" : document.getElementById("FINEST").checked,
+			"FINER" : document.getElementById("FINER").checked,
+			"FINE" : document.getElementById("FINE").checked,
+			"INFO" : document.getElementById("INFO").checked,
+			"WARNING" : document.getElementById("WARNING").checked,
+			"SEVERE" : document.getElementById("SEVERE").checked,
+		};
+	} else {
+		try {
+			const filter = JSON.parse(filterCookie);
+			if (filter["SEVERE"] === undefined) throw new Error("Missing field");
+			return filter;
+		} catch (e) {
+			console.log(`Failed to parse filter cookie: [${filterCookie}] error: ${e.message}`);
+			eraseCookie("log-filter"); // Remove bad value
+			return getFilter(); // Call again which will return default, careful of infinite loop
+		}
+	}
+}
+function getAutoscroll() {
+	const scroll = getCookie("log-autoscroll");
+	return (scroll == null) ? true : (scroll == COOKIE_ON);
+}
+function setAutoscroll(value) {
+	console.log(value);
+	setCookie("log-autoscroll", value == true ? COOKIE_ON : COOKIE_OFF);
+}
 const tableWS = openWS("/ws/logging",
 (/*event*/) => { // Open
 	tableWS.send("all");

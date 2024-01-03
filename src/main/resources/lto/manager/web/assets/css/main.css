@@ -330,6 +330,18 @@ input:disabled {
 	opacity: 0.5;
 	background-size: contain;
 }
+.menu-list .menu-list-btn {
+	padding: var(--padding) var(--padding) 0 var(--padding);
+	text-align: center;
+	cursor: default !important;
+}
+.menu-list .menu-list-btn:first-child,
+.menu-list .menu-list-btn:last-child {
+	padding-bottom: var(--padding);
+}
+.menu-list menu-list-btn button {
+	padding: var(--padding);
+}
 .icon-folder:before {
 	background-image: url('/assets/img/folder-fill.svg');
 }
@@ -464,6 +476,11 @@ input:disabled {
 	vertical-align: baseline;
 	width: auto;
 	font-size: inherit;
+}
+.btn-menu-list {
+	width: 100%;
+	padding: var(--padding);
+	min-height: unset;
 }
 .btn-s {
 	align-items: center;

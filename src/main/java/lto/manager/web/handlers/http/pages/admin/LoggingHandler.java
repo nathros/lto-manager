@@ -9,7 +9,6 @@ import org.xmlet.htmlapifaster.Div;
 import com.sun.net.httpserver.HttpExchange;
 
 import lto.manager.web.handlers.http.BaseHTTPHandler;
-import lto.manager.web.handlers.http.pages.LogOutHandler;
 import lto.manager.web.handlers.http.partial.components.CheckBox;
 import lto.manager.web.handlers.http.partial.components.CheckBox.CheckBoxOptions;
 import lto.manager.web.handlers.http.partial.components.Switch;
@@ -55,18 +54,6 @@ public class LoggingHandler extends BaseHTTPHandler {
 	static Void header(Div<?> view, BodyModel model) {
 		view
 			.div()
-				.attrClass(CSS.HEADER_ITEM + "")
-				.ul().attrClass("menu-list")
-					.li()
-						.a()
-							.attrClass(CSS.ICON_BOX_ARROW_RIGHT)
-							.attrHref(LogOutHandler.PATH)
-							.text("Test")
-						.__()
-					.__()
-				.__() // ul
-			.__() // div
-			.div()
 				.attrClass(CSS.HEADER_ITEM + CSS.ICON_CARET_DOWN)
 				.ul().attrClass(CSS.MENU_LIST)
 					.li()
@@ -74,14 +61,30 @@ public class LoggingHandler extends BaseHTTPHandler {
 						.text("Autoscroll")
 					.__()
 					.li()
-						.a()
-							.attrStyle("padding:0;")
-							.div()
-								.attrStyle("display:flex;width:inherit")
-								.of(div -> Switch.content(div, SwitchOptions.of().setChecked()))
-							.__()
+						.attrClass(CSS.MENU_LIST_ITEM_BUTTON)
+						.div()
+							.attrStyle("width:inherit")
+							.of(div -> Switch.content(div, SwitchOptions.of().setID("autoscroll").setChecked().setOnChange("setAutoscroll(this.checked)").setKeepBoarderChecked()))
 						.__()
-					.__()
+					.__() // li
+					.li()
+						.attrClass(CSS.MENU_LIST_ITEM_BUTTON)
+						.button()
+							.attrStyle("border:var(--border)")
+							.attrClass(CSS.BUTTON + CSS.BUTTON_MENU_LIST)
+							.attrOnclick("scrollToPos(false)")
+							.text("To Top")
+						.__()
+					.__() //li
+					.li()
+						.attrClass(CSS.MENU_LIST_ITEM_BUTTON)
+						.button()
+							.attrStyle("border:var(--border)")
+							.attrClass(CSS.BUTTON + CSS.BUTTON_MENU_LIST)
+							.attrOnclick("scrollToPos(true)")
+							.text("To Bottom")
+						.__()
+					.__() //li
 				.__() // ul
 			.__() // div
 			.div()
@@ -95,56 +98,80 @@ public class LoggingHandler extends BaseHTTPHandler {
 						.a()
 							.attrStyle("padding:0;")
 							.div()
+								.addAttr("oncontextmenu", "return selectSingle(this)")
 								.attrStyle("display:flex;width:inherit")
 								.of(div -> CheckBox.content(div, CheckBoxOptions.of(Level.FINEST.toString()).setChecked().setID(Level.FINEST.toString()).setKeepBoarderChecked().setHasPadding().setFillContainer()))
 							.__()
 						.__()
-					.__()
+					.__() // li
 					.li()
 						.a()
 							.attrStyle("padding:0;")
 							.div()
+								.addAttr("oncontextmenu", "return selectSingle(this)")
 								.attrStyle("display:flex;width:inherit")
-								.of(div -> CheckBox.content(div, CheckBoxOptions.of(Level.FINER.toString()).setChecked().setID(Level.FINEST.toString()).setKeepBoarderChecked().setHasPadding().setFillContainer()))
+								.of(div -> CheckBox.content(div, CheckBoxOptions.of(Level.FINER.toString()).setChecked().setID(Level.FINER.toString()).setKeepBoarderChecked().setHasPadding().setFillContainer()))
 							.__()
 						.__()
-					.__()
+					.__() // li
 					.li()
 						.a()
 							.attrStyle("padding:0;")
 							.div()
+								.addAttr("oncontextmenu", "return selectSingle(this)")
 								.attrStyle("display:flex;width:inherit")
 								.of(div -> CheckBox.content(div, CheckBoxOptions.of(Level.FINE.toString()).setChecked().setID(Level.FINE.toString()).setKeepBoarderChecked().setHasPadding().setFillContainer()))
 							.__()
 						.__()
-					.__()
+					.__() // li
 					.li()
 						.a()
 							.attrStyle("padding:0;")
 							.div()
+								.addAttr("oncontextmenu", "return selectSingle(this)")
 								.attrStyle("display:flex;width:inherit")
 								.of(div -> CheckBox.content(div, CheckBoxOptions.of(Level.INFO.toString()).setChecked().setID(Level.INFO.toString()).setKeepBoarderChecked().setHasPadding().setFillContainer()))
 							.__()
 						.__()
-					.__()
+					.__() // li
 					.li()
 						.a()
 							.attrStyle("padding:0;")
 							.div()
+								.addAttr("oncontextmenu", "return selectSingle(this)")
 								.attrStyle("display:flex;width:inherit")
 								.of(div -> CheckBox.content(div, CheckBoxOptions.of(Level.WARNING.toString()).setChecked().setID(Level.WARNING.toString()).setKeepBoarderChecked().setHasPadding().setFillContainer()))
 							.__()
 						.__()
-					.__()
+					.__() // li
 					.li()
 						.a()
 							.attrStyle("padding:0;")
 							.div()
+								.addAttr("oncontextmenu", "return selectSingle(this)")
 								.attrStyle("display:flex;width:inherit")
 								.of(div -> CheckBox.content(div, CheckBoxOptions.of(Level.SEVERE.toString()).setChecked().setID(Level.SEVERE.toString()).setKeepBoarderChecked().setHasPadding().setFillContainer()))
 							.__()
 						.__()
-					.__()
+					.__() // li
+					.li()
+						.attrClass(CSS.MENU_LIST_ITEM_BUTTON)
+						.button()
+							.attrStyle("border:var(--border)")
+							.attrClass(CSS.BUTTON + CSS.BUTTON_MENU_LIST)
+							.attrOnclick("applyFilter()")
+							.text("Apply")
+						.__()
+					.__() // li
+					.li()
+						.attrClass(CSS.MENU_LIST_ITEM_BUTTON)
+						.button()
+							.attrStyle("border:var(--border)")
+							.attrClass(CSS.BUTTON + CSS.BUTTON_MENU_LIST)
+							.attrOnclick("resetFilter()")
+							.text("Reset")
+						.__()
+					.__() // li
 				.__() // ul
 			.__(); // div
 		return null;

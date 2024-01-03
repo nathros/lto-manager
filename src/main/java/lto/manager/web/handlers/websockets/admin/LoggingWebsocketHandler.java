@@ -52,7 +52,9 @@ public class LoggingWebsocketHandler extends BaseWebsocketHandler {
 
 	public void publishNewMessage(final String message) {
 		for (final var client : conn) {
-			client.send(message);
+			if (client.isOpen()) {
+				client.send(message);
+			}
 		}
 	}
 

@@ -12,11 +12,13 @@ public class CSS {
 	public final static String HEADER_LABEL_TOP = "header-label-top ";
 	public final static String HEADER_MENU_ITEM_ICON = "icon ";
 	public final static String MENU_LIST = "menu-list ";
+	public final static String MENU_LIST_ITEM_BUTTON = "menu-list-btn ";
 
 	public final static String BUTTON = "btn ";
 	public final static String BUTTON_IMAGE = "btn-image ";
 	public final static String BUTTON_IMAGE_W_TEXT = "btn-image-w-text ";
 	public final static String BUTTON_SMALL = "btn-s ";
+	public final static String BUTTON_MENU_LIST = "btn-menu-list ";
 	public final static String CARD = "card ";
 	public final static String CARD_ATTRIBUTE = "header-text";
 	public final static String BACKGROUND_CAUTION = "background-caution ";

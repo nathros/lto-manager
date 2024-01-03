@@ -44,18 +44,20 @@ public class SimpleWebSocketServer extends WebSocketServer {
 
 	@Override
 	public void onClose(WebSocket conn, int code, String reason, boolean remote) {
-		var handler = Handlers.websocketHandlers.get(conn.getResourceDescriptor());
-		final String detailedInfo = "Websocket closed " + conn.getRemoteSocketAddress() + ", exit code: " + code
-				+ ", reason: " + reason;
-		if (handler != null) {
-			if (handler.removeConnection(conn) == false) {
-				Log.warning(
-						"Websocket closed from unknown client: " + conn.getResourceDescriptor() + " " + detailedInfo);
+		if (code > 1001) {
+			var handler = Handlers.websocketHandlers.get(conn.getResourceDescriptor());
+			final String detailedInfo = "Websocket closed " + conn.getRemoteSocketAddress() + ", exit code: " + code
+					+ ", reason: " + reason;
+			if (handler != null) {
+				if (handler.removeConnection(conn) == false) {
+					Log.warning("Websocket closed from unknown client: " + conn.getResourceDescriptor() + " "
+							+ detailedInfo);
+				}
+			} else {
+				Log.warning("Websocket closed from unknown path: " + conn.getResourceDescriptor() + " " + detailedInfo);
 			}
-		} else {
-			Log.warning("Websocket closed from unknown path: " + conn.getResourceDescriptor() + " " + detailedInfo);
+			Log.fine(detailedInfo);
 		}
-		Log.fine(detailedInfo);
 	}
 
 	@Override
