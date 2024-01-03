@@ -27,7 +27,7 @@ import lto.manager.web.resource.Asset;
 import lto.manager.web.resource.CSS;
 
 public class LogInHandler extends BaseHTTPHandler {
-	public static HtmlViewAsync view = HtmlFlow.viewAsync(LogInHandler::content);
+	public static HtmlViewAsync<TemplatePageModel> view = HtmlFlow.viewAsync(LogInHandler::content);
 	public static final String PATH = "/login";
 
 	private static final String USER = "username";

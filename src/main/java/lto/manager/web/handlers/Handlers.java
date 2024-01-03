@@ -44,6 +44,7 @@ import lto.manager.web.handlers.http.pages.sandpit.InternalErrorInlineTesterHand
 import lto.manager.web.handlers.http.pages.sandpit.InternalErrorTesterHandler;
 import lto.manager.web.handlers.http.pages.sandpit.LogTestHandler;
 import lto.manager.web.handlers.http.pages.sandpit.SandpitHandler;
+import lto.manager.web.handlers.http.pages.sandpit.WebsocketListConnectionHandler;
 import lto.manager.web.handlers.http.pages.sandpit.WebsocketTestHandler;
 import lto.manager.web.handlers.http.pages.sandpit.frontend.CheckBoxTestHandler;
 import lto.manager.web.handlers.http.pages.sandpit.frontend.SwitchTestHandler;
@@ -105,6 +106,7 @@ public class Handlers {
 			ret.put(SandpitHandler.PATH, new SandpitHandler());
 			ret.put(DatabaseTestHandler.PATH, new DatabaseTestHandler());
 			ret.put(WebsocketTestHandler.PATH, new WebsocketTestHandler());
+			ret.put(WebsocketListConnectionHandler.PATH, new WebsocketListConnectionHandler());
 			ret.put(LogTestHandler.PATH, new LogTestHandler());
 			ret.put(CheckBoxTestHandler.PATH, new CheckBoxTestHandler());
 			ret.put(SwitchTestHandler.PATH, new SwitchTestHandler());

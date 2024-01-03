@@ -22,32 +22,33 @@ public class LoggingWebsocketHandler extends BaseWebsocketHandler {
 	}
 
 	@Override
-	public void onNewMessage(final WebSocket conn, String message) {
-		if ("all".equals(message)) { // Request from client to get all messages
-			final String logPath = Log.getLogFilePath() + ".0";
-			File file = new File(logPath);
-			if (!file.exists()) {
-				conn.send(Log.generateLogMessageAsString(Level.SEVERE,
-						"Cannot find log file: " + logPath));
-				return;
-			} else if (!file.canRead()) {
-				conn.send(Log.generateLogMessageAsString(Level.SEVERE,
-						"Cannot read log file: " + logPath));
-				return;
-			}
-			try {
-				String content = Files.readString(Paths.get(logPath));
-				conn.send(content);
-			} catch (IOException e) {
-				conn.send(Log.generateLogMessageAsString(Level.SEVERE,
-						"Failure with log file: " + logPath + " error: " + e.getMessage()));
-			}
+	public void onNewConnection(WebSocket conn) {
+		final String logPath = Log.getLogFilePath() + ".0";
+		File file = new File(logPath);
+		if (!file.exists()) {
+			conn.send(Log.generateLogMessageAsString(Level.SEVERE, "Cannot find log file: " + logPath));
+			return;
+		} else if (!file.canRead()) {
+			conn.send(Log.generateLogMessageAsString(Level.SEVERE, "Cannot read log file: " + logPath));
+			return;
+		}
+		try {
+			String content = Files.readString(Paths.get(logPath));
+			conn.send(content);
+		} catch (IOException e) {
+			conn.send(Log.generateLogMessageAsString(Level.SEVERE,
+					"Failure with log file: " + logPath + " error: " + e.getMessage()));
 		}
 	}
 
 	@Override
+	public void onNewMessage(final WebSocket conn, String message) {
+		Log.warning("No message expected - message discarded");
+	}
+
+	@Override
 	public void onNewMessage(final WebSocket conn, ByteBuffer message) {
-		Log.warning("ByteBuffer message not expected for LoggingHandler - message discarded");
+		Log.warning("No message expected - message discarded");
 	}
 
 	public void publishNewMessage(final String message) {
@@ -61,4 +62,5 @@ public class LoggingWebsocketHandler extends BaseWebsocketHandler {
 	public boolean hasClient() {
 		return conn.size() > 0;
 	}
+
 }

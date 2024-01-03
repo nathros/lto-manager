@@ -65,7 +65,7 @@ function scrollToPos(bottom) {
 	cont.scrollTo({top: pos, behavior: "smooth"});
 }
 function scrollToBottom() {
-	if (tableLog.style.display != "none" && !tableLog.observerSkip) {
+	if (tableLog.style.display != "none" && !tableLog.observerSkip && autoScroll) {
 		scrollToPos(true);
 	}
 	tableLog.observerSkip = false;
@@ -137,10 +137,27 @@ function setAutoscroll(value) {
 	console.log(value);
 	setCookie("log-autoscroll", value == true ? COOKIE_ON : COOKIE_OFF);
 }
+function downloadLogFile() {
+	console.log("new")
+	const tmpWS = openWS("/ws/logging",
+	(/*event*/) => { /* Open */ },
+	(/*event*/) => { /* Close */ },
+	(error) => { // Error
+		console.log(`Failed to download: ${error.message}`);
+	},
+	(event) => { // RX
+		let e = document.createElement('a');
+		e.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(event.data));
+		e.setAttribute('download', "logfile.txt");
+		e.style.display = 'none';
+		document.body.appendChild(e);
+		e.click();
+		document.body.removeChild(e);
+		tmpWS.close();
+	});
+}
 const tableWS = openWS("/ws/logging",
-(/*event*/) => { // Open
-	tableWS.send("all");
-},
+(/*event*/) => { /* Open */},
 (event) => { // Close
 	alert("closed");
 	console.log(event);

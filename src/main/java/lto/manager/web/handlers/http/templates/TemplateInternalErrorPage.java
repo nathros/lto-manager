@@ -19,7 +19,7 @@ import lto.manager.web.handlers.http.templates.models.HeadModel;
 import lto.manager.web.resource.CSS;
 
 public class TemplateInternalErrorPage {
-	public static HtmlView view = HtmlFlow.view(TemplateInternalErrorPage::template);
+	public static HtmlView<Object> view = HtmlFlow.view(TemplateInternalErrorPage::template);
 
 	public static class TemplateInternalErrorModelPage {
 		final Exception ex;

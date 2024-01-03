@@ -313,7 +313,10 @@ input:disabled {
 	*display: inline-block;
 	display: flex;
 	align-items: center;
-    width: 100%;
+    *width: 100%;
+    width: -webkit-fill-available;
+    width: -moz-available;
+    width: fill-available; /* Not supported 01/2024 */
     height: 100%;
     padding: 0.5rem;
 }
@@ -401,6 +404,9 @@ input:disabled {
 }
 .icon-info-circle::before {
 	background-image: url(/assets/img/info-circle-fill.svg);
+}
+.icon-download::before {
+	background-image: url(/assets/img/download.svg);
 }
 .menu-list {
 	list-style-type: none;

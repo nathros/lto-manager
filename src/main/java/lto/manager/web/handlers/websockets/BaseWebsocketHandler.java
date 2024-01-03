@@ -12,16 +12,19 @@ public abstract class BaseWebsocketHandler {
 
 	public void addNewConnection(WebSocket ws) {
 		conn.add(ws);
+		onNewConnection(ws);
 	}
 
 	public boolean removeConnection(WebSocket ws) {
-		return conn.remove(ws);
+		return conn.remove(ws); // TODO keep old for WebsocketListConnectionHandler
+	}
+
+	public final List<WebSocket> getConnections() {
+		return conn;
 	}
 
 	public abstract void onNewMessage(final WebSocket conn, final String message);
 	public abstract void onNewMessage(final WebSocket conn, final ByteBuffer message);
-
+	public abstract void onNewConnection(final WebSocket conn);
 	public abstract boolean start();
-
-
 }

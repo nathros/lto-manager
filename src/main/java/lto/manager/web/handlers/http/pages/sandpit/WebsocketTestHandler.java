@@ -51,7 +51,7 @@ public class WebsocketTestHandler extends BaseHTTPHandler {
 				.attrStyle("display:flex;gap:1rem")
 				.textarea()
 					.attrClass(CSS.FONT_MONOSPACE)
-					.attrStyle("flex:1;resize:vertical;height:10rem")
+					.attrStyle("flex:1;resize:vertical;height:9rem")
 					.attrId("ws-tx")
 				.__()
 				.button()
@@ -98,7 +98,7 @@ public class WebsocketTestHandler extends BaseHTTPHandler {
 	@Override
 	public void requestHandle(HttpExchange he) throws Exception {
 		HeadModel thm = HeadModel.of(NAME);
-		thm.addScript(Asset.JS_WEBSOCKET);
+		thm.addScript(Asset.JS_WEBSOCKET).addScript(Asset.JS_TEST_WEBSOCKET);
 		BreadCrumbs crumbs = new BreadCrumbs().add(SandpitHandler.NAME, SandpitHandler.PATH).add(NAME, PATH);
 		TemplatePageModel tpm = TemplatePageModel.of(WebsocketTestHandler::content, null, thm, SelectedPage.Sandpit, BodyModel.of(he, null), crumbs);
 		requestHandleCompletePage(he, tpm);

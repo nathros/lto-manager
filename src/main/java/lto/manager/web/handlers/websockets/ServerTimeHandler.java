@@ -42,4 +42,10 @@ public class ServerTimeHandler extends BaseWebsocketHandler {
 
 	}
 
+	@Override
+	public void onNewConnection(WebSocket conn) {
+		// TODO Auto-generated method stub
+
+	}
+
 }

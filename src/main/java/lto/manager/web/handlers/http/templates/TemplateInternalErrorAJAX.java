@@ -8,7 +8,7 @@ import htmlflow.HtmlView;
 import lto.manager.web.handlers.http.partial.inlinemessage.InlineErrorMessage;
 
 public class TemplateInternalErrorAJAX {
-	public static HtmlView view = HtmlFlow.view(TemplateInternalErrorAJAX::template);
+	public static HtmlView<TemplateInternalErrorModelAJAX> view = HtmlFlow.view(TemplateInternalErrorAJAX::template);
 
 	public static class TemplateInternalErrorModelAJAX {
 		final Exception ex;

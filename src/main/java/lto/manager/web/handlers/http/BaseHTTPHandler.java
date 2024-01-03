@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -186,22 +187,32 @@ public abstract class BaseHTTPHandler implements HttpHandler {
 		}
 	}
 
-	private String getSessionCookie(HttpExchange he) { // Similar to BodyModel.parseCookies - done twice
+	private String getSessionCookie(HttpExchange he) { // FIXME Similar to BodyModel.parseCookies - done twice
 		for (Map.Entry<String, List<String>> entry : he.getRequestHeaders().entrySet()) {
 			if (entry.getKey().equals("Cookie")) {
-				for (String cookieStr : entry.getValue()) {
-					String[] pairs = cookieStr.split(";");
-					for (String keyPair : pairs) {
-						String[] split = keyPair.split("=");
-						if (split.length == 2) {
-							if (split[0].trim().equals(BaseHTTPHandler.COOKIE_SESSION)) {
-								return split[1];
-							}
-						}
+				for (final String cookieStr : entry.getValue()) {
+					final var cookies = getCookieKeyPairs(cookieStr);
+					final String session = cookies.get(COOKIE_SESSION);
+					if (session != null) {
+						return session;
 					}
 				}
 			}
 		}
 		return "";
+	}
+
+	public static HashMap<String, String> getCookieKeyPairs(final String cookieStr) { // FIXME Similar to BodyModel.parseCookies - done twice
+		HashMap<String, String> map = new HashMap<String, String>();
+		String[] pairs = cookieStr.split(";");
+		for (String keyPair : pairs) {
+			String[] split = keyPair.split("=");
+			if (split.length == 2) {
+				map.put(split[0].trim(), split[1]);
+			} else {
+				Log.warning("Cookie string: " + cookieStr + " is malformed");
+			}
+		}
+		return map;
 	}
 }

@@ -38,6 +38,7 @@ public class SandpitHandler extends BaseHTTPHandler {
 			.__()
 			.div().attrClass(CSS.CARD).addAttr(CSS.CARD_ATTRIBUTE, "Networking")
 				.a().attrClass(CSS.BUTTON).attrHref(WebsocketTestHandler.PATH).text(WebsocketTestHandler.NAME).__()
+				.a().attrClass(CSS.BUTTON).attrHref(WebsocketListConnectionHandler.PATH).text(WebsocketListConnectionHandler.NAME).__()
 			.__()
 			.div().attrClass(CSS.CARD).addAttr(CSS.CARD_ATTRIBUTE, "Error Handling")
 				.a().attrClass(CSS.BUTTON).attrHref(InternalErrorTesterHandler.PATH).text(InternalErrorTesterHandler.NAME).__()

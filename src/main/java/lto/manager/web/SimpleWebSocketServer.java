@@ -7,8 +7,12 @@ import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
+import lto.manager.common.database.Options;
+import lto.manager.common.database.tables.records.RecordOptions.OptionsSetting;
 import lto.manager.common.log.Log;
+import lto.manager.common.state.State;
 import lto.manager.web.handlers.Handlers;
+import lto.manager.web.handlers.http.BaseHTTPHandler;
 
 public class SimpleWebSocketServer extends WebSocketServer {
 	private final static int EVENT_CODE_PATH_NOT_FOUND = 3001;
@@ -24,7 +28,10 @@ public class SimpleWebSocketServer extends WebSocketServer {
 		// broadcast( "new connection: " + handshake.getResourceDescriptor() ); //This
 		// method sends a message to all clients connected
 		// System.out.println("new connection to " + conn.getRemoteSocketAddress());
-
+		if (!validateSession(handshake)) {
+			Log.info("User not logged in, Websocket connection rejected");
+			return;
+		}
 		String path = handshake.getResourceDescriptor();
 		String query = "";
 		int index = path.indexOf('?');
@@ -38,24 +45,24 @@ public class SimpleWebSocketServer extends WebSocketServer {
 			handler.addNewConnection(conn);
 		} else {
 			conn.close(EVENT_CODE_PATH_NOT_FOUND, "path: " + path + " not found");
-			Log.warning("Incoming websocket connection from unknown path: " + path);
+			Log.warning("Refused incoming websocket connection from unknown path: " + path);
 		}
 	}
 
 	@Override
 	public void onClose(WebSocket conn, int code, String reason, boolean remote) {
-		if (code > 1001) {
-			var handler = Handlers.websocketHandlers.get(conn.getResourceDescriptor());
-			final String detailedInfo = "Websocket closed " + conn.getRemoteSocketAddress() + ", exit code: " + code
-					+ ", reason: " + reason;
-			if (handler != null) {
-				if (handler.removeConnection(conn) == false) {
-					Log.warning("Websocket closed from unknown client: " + conn.getResourceDescriptor() + " "
-							+ detailedInfo);
-				}
-			} else {
-				Log.warning("Websocket closed from unknown path: " + conn.getResourceDescriptor() + " " + detailedInfo);
+		var handler = Handlers.websocketHandlers.get(conn.getResourceDescriptor());
+		final String detailedInfo = "Websocket closed " + conn.getRemoteSocketAddress() + ", exit code: " + code
+				+ ", reason: " + reason;
+		if (handler != null) {
+			if (handler.removeConnection(conn) == false) {
+				Log.warning("Websocket closed from unknown client: " + conn.getResourceDescriptor() + " "
+						+ detailedInfo);
 			}
+		} else {
+			Log.warning("Websocket closed from unknown path: " + conn.getResourceDescriptor() + " " + detailedInfo);
+		}
+		if (code > 1001) {
 			Log.fine(detailedInfo);
 		}
 	}
@@ -85,6 +92,8 @@ public class SimpleWebSocketServer extends WebSocketServer {
 		if (conn == null) {
 			Log.severe("Websocket error on null connection: " + ex);
 		} else {
+			var handler = Handlers.websocketHandlers.get(conn.getResourceDescriptor());
+			handler.removeConnection(conn);
 			Log.severe("Websocket error on connection " + conn.getRemoteSocketAddress() + ":" + ex);
 		}
 	}
@@ -92,6 +101,18 @@ public class SimpleWebSocketServer extends WebSocketServer {
 	@Override
 	public void onStart() {
 		Log.info("Websocket server started at ws://" + getAddress().getHostName() + ":" + getAddress().getPort());
+	}
+
+	private boolean validateSession(ClientHandshake handshake) {
+		if ((boolean) Options.getData(OptionsSetting.ENABLE_LOGIN)) {
+			final var cookie = handshake.getFieldValue("Cookie");
+			final var cookieMap = BaseHTTPHandler.getCookieKeyPairs(cookie);
+			final String session = cookieMap.get(BaseHTTPHandler.COOKIE_SESSION);
+			if (!State.isLoginSessionValid(session)) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	public static void main(String[] args) {

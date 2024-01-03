@@ -54,11 +54,29 @@ public class LoggingHandler extends BaseHTTPHandler {
 	static Void header(Div<?> view, BodyModel model) {
 		view
 			.div()
+				.attrClass(CSS.HEADER_ITEM + CSS.ICON_DOWNLOAD)
+				.ul().attrClass(CSS.MENU_LIST)
+					.li()
+						.attrClass(CSS.HEADER_LABEL_TOP)
+						.text("Log File")
+					.__()
+					.li()
+						.attrClass(CSS.MENU_LIST_ITEM_BUTTON)
+						.button()
+							.attrStyle("border:var(--border)")
+							.attrClass(CSS.BUTTON + CSS.BUTTON_MENU_LIST)
+							.attrOnclick("downloadLogFile()")
+							.text("Download")
+						.__()
+					.__() //li
+				.__() // ul
+			.__() // div
+			.div()
 				.attrClass(CSS.HEADER_ITEM + CSS.ICON_CARET_DOWN)
 				.ul().attrClass(CSS.MENU_LIST)
 					.li()
 						.attrClass(CSS.HEADER_LABEL_TOP)
-						.text("Autoscroll")
+						.text("Scroll to new message")
 					.__()
 					.li()
 						.attrClass(CSS.MENU_LIST_ITEM_BUTTON)
@@ -73,7 +91,7 @@ public class LoggingHandler extends BaseHTTPHandler {
 							.attrStyle("border:var(--border)")
 							.attrClass(CSS.BUTTON + CSS.BUTTON_MENU_LIST)
 							.attrOnclick("scrollToPos(false)")
-							.text("To Top")
+							.text("Scroll To Top")
 						.__()
 					.__() //li
 					.li()
@@ -82,7 +100,7 @@ public class LoggingHandler extends BaseHTTPHandler {
 							.attrStyle("border:var(--border)")
 							.attrClass(CSS.BUTTON + CSS.BUTTON_MENU_LIST)
 							.attrOnclick("scrollToPos(true)")
-							.text("To Bottom")
+							.text("Scroll To Bottom")
 						.__()
 					.__() //li
 				.__() // ul
