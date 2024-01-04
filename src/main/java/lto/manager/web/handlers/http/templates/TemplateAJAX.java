@@ -10,7 +10,7 @@ import htmlflow.HtmlViewAsync;
 import lto.manager.web.handlers.http.templates.models.BodyModel;
 
 public class TemplateAJAX {
-	public static HtmlViewAsync<TemplateFetcherModel> view = HtmlFlow.viewAsync(TemplateAJAX::template);
+	public static HtmlViewAsync view = HtmlFlow.viewAsync(TemplateAJAX::template);
 
 	public static class TemplateFetcherModel {
 		final BiFunction<Div<?>, BodyModel, Void> contentFunction;

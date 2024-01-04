@@ -80,7 +80,7 @@ public class TemplatePage {
 		public final List<Pair<String, String>> getItems() { return crumbs; }
 	}
 
-	public static HtmlViewAsync<TemplatePageModel> view = HtmlFlow.viewAsync(TemplatePage::template);
+	public static HtmlViewAsync view = HtmlFlow.viewAsync(TemplatePage::template);
 
 	static void template(HtmlPage view) {
 		final String selected = "selected";

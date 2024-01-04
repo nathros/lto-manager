@@ -7,10 +7,13 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.HashSet;
 
 import com.sun.net.httpserver.HttpExchange;
 
+import lto.manager.common.database.Options;
+import lto.manager.common.database.tables.records.RecordOptions.OptionsSetting;
 import lto.manager.common.log.Log;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.resource.Asset;
@@ -50,6 +53,9 @@ public class AssetHandler extends BaseHTTPHandler {
 
 		if (is != null) {
 			byte[] data = is.readAllBytes();
+			if ((boolean)Options.getData(OptionsSetting.ENABLE_ASSET_CACHE)) {
+				he.getResponseHeaders().putIfAbsent("Cache-Control", Arrays.asList("max-age=604800")); // 1 week
+			}
 			he.sendResponseHeaders(HttpURLConnection.HTTP_OK, data.length);
 			OutputStream os = he.getResponseBody();
 			os.write(data);

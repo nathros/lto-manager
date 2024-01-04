@@ -27,7 +27,7 @@ import lto.manager.web.resource.Asset;
 import lto.manager.web.resource.CSS;
 
 public class LogInHandler extends BaseHTTPHandler {
-	public static HtmlViewAsync<TemplatePageModel> view = HtmlFlow.viewAsync(LogInHandler::content);
+	public static HtmlViewAsync view = HtmlFlow.viewAsync(LogInHandler::content);
 	public static final String PATH = "/login";
 
 	private static final String USER = "username";
@@ -45,6 +45,7 @@ public class LogInHandler extends BaseHTTPHandler {
 				loginSuccess = result != null;
 				if (loginSuccess) { // If login success redirect to /
 					model.getBodyModel().setNewSession(result);
+					model.getBodyModel().clearAssetCache();
 					root
 						.head()
 							.meta()
@@ -53,6 +54,7 @@ public class LogInHandler extends BaseHTTPHandler {
 							.__()
 						.__() // head
 						.body()
+							.attrStyle("display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;margin:0;")
 							.p().text("Login Success!").__()
 							.a().attrHref("/").text("Click here to continue").__()
 						.__();

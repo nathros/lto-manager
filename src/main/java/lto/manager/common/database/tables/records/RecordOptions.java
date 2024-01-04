@@ -35,7 +35,7 @@ public class RecordOptions {
 		PLACEHOLDER_L("placeholder l"),
 		PLACEHOLDER_M("placeholder M"),
 		ENABLE_LOGIN("Enable login"),
-		PLACEHOLDER_N("placeholder N"),
+		ENABLE_ASSET_CACHE("Enable /asset/ cache"),
 		PLACEHOLDER_O("placeholder O"),
 		PLACEHOLDER_P("placeholder P"),
 		PLACEHOLDER_Q("placeholder Q"),

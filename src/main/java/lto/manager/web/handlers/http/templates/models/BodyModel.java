@@ -250,6 +250,10 @@ public class BodyModel {
 		addResponseCookie(BaseHTTPHandler.COOKIE_SESSION, uuid.toString(), -1);
 	}
 
+	public void clearAssetCache() {
+		he.getResponseHeaders().putIfAbsent("Clear-Site-Data", Arrays.asList("\"cache\""));
+	}
+
 	public boolean hasQuery() {
 		String q = he.getRequestURI().getRawQuery();
 		return q != null;

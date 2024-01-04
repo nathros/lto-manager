@@ -19,7 +19,7 @@ import lto.manager.web.handlers.http.templates.models.BodyModel;
 import lto.manager.web.handlers.http.templates.models.HeadModel;
 
 public class LogOutHandler extends BaseHTTPHandler {
-	public static HtmlViewAsync<TemplatePageModel> view = HtmlFlow.viewAsync(LogOutHandler::content);
+	public static HtmlViewAsync view = HtmlFlow.viewAsync(LogOutHandler::content);
 	public static final String PATH = "/logout";
 
 
@@ -41,6 +41,7 @@ public class LogOutHandler extends BaseHTTPHandler {
 				.__()
 			.__() // head
 			.body()
+				.attrStyle("display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;margin:0;")
 				.p().text(removed ? "Logout Success!" : "Failed to remove session").__()
 				.a().attrHref("/").text("Click here to continue").__()
 			.__();

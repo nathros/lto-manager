@@ -36,7 +36,7 @@ public class Options {
 		def.put(OptionsSetting.PLACEHOLDER_L, Integer.MIN_VALUE);
 		def.put(OptionsSetting.PLACEHOLDER_M, Integer.MIN_VALUE);
 		def.put(OptionsSetting.ENABLE_LOGIN, Boolean.TRUE);
-		def.put(OptionsSetting.PLACEHOLDER_N, Integer.MIN_VALUE);
+		def.put(OptionsSetting.ENABLE_ASSET_CACHE, Boolean.TRUE);
 		def.put(OptionsSetting.PLACEHOLDER_O, Integer.MIN_VALUE);
 		def.put(OptionsSetting.PLACEHOLDER_P, Integer.MIN_VALUE);
 		def.put(OptionsSetting.PLACEHOLDER_Q, Integer.MIN_VALUE);

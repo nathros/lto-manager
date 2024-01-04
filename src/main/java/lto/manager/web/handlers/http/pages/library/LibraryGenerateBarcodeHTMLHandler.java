@@ -20,7 +20,7 @@ import lto.manager.web.resource.Asset;
 import lto.manager.web.resource.CSS;
 
 public class LibraryGenerateBarcodeHTMLHandler extends BaseHTTPHandler {
-	public static HtmlViewAsync<TemplatePageModel> view = HtmlFlow.viewAsync(LibraryGenerateBarcodeHTMLHandler::content);
+	public static HtmlViewAsync view = HtmlFlow.viewAsync(LibraryGenerateBarcodeHTMLHandler::content);
 	public static final String PATH = "/library/generate/html";
 	public static final String NAME = "Generate Barcode";
 
