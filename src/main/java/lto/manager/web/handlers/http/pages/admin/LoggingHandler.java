@@ -72,6 +72,22 @@ public class LoggingHandler extends BaseHTTPHandler {
 				.__() // ul
 			.__() // div
 			.div()
+				.attrClass(CSS.HEADER_ITEM + CSS.ICON_FILE_TEXT)
+				.ul().attrClass(CSS.MENU_LIST)
+					.li()
+						.attrClass(CSS.HEADER_LABEL_TOP)
+						.text("Compact Padding")
+					.__()
+					.li()
+						.attrClass(CSS.MENU_LIST_ITEM_BUTTON)
+						.div()
+							.attrStyle("width:inherit;display:flex;justify-content:center;")
+							.of(div -> Switch.content(div, SwitchOptions.of().setID("compact").setOnChange("setCompact(this.checked)").setKeepBoarderChecked()))
+						.__()
+					.__() // li
+				.__() // ul
+			.__() // div
+			.div()
 				.attrClass(CSS.HEADER_ITEM + CSS.ICON_CARET_DOWN)
 				.ul().attrClass(CSS.MENU_LIST)
 					.li()

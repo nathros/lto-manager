@@ -33,6 +33,7 @@ public class CheckBox {
 					})
 					.attrType(EnumTypeInputType.CHECKBOX)
 					.attrId(options.getID())
+					.attrName(options.getID())
 					.of(i -> HTML.check(i, options.getChecked()))
 					.of(i -> HTML.disabled(i, options.getDisabled()))
 				.__()

@@ -408,6 +408,9 @@ input:disabled {
 .icon-download::before {
 	background-image: url(/assets/img/download.svg);
 }
+.icon-file-text::before {
+	background-image: url(/assets/img/file-text-fill.svg);
+}
 .menu-list {
 	list-style-type: none;
 	padding: 0;

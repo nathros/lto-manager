@@ -9,6 +9,9 @@ document.getElementById("WARNING").checked = filterConfig["WARNING"];
 document.getElementById("SEVERE").checked = filterConfig["SEVERE"];
 let autoScroll = getAutoscroll();
 document.getElementById("autoscroll").checked = autoScroll;
+let enableCompact = getCompact();
+document.getElementById("compact").checked = enableCompact;
+setCompact(enableCompact);
 
 function levelAction(level, func, def) {
 	switch (level) {
@@ -88,7 +91,7 @@ function applyFilter() {
 	filterConfig["INFO"] = document.getElementById("INFO").checked;
 	filterConfig["WARNING"] = document.getElementById("WARNING").checked;
 	filterConfig["SEVERE"] = document.getElementById("SEVERE").checked;
-	setCookie("log-filter", JSON.stringify(filterConfig));
+	setCookie("log-filter", JSON.stringify(filterConfig), 365);
 	tableLog.style.display = "none"; // Better performance if table is hidden
 	for (let i = 1; i < tableLog.rows.length; i++) {
 		const row = tableLog.rows[i];
@@ -134,11 +137,19 @@ function getAutoscroll() {
 	return (scroll == null) ? true : (scroll == COOKIE_ON);
 }
 function setAutoscroll(value) {
-	console.log(value);
-	setCookie("log-autoscroll", value == true ? COOKIE_ON : COOKIE_OFF);
+	setCookie("log-autoscroll", value == true ? COOKIE_ON : COOKIE_OFF, 365);
+}
+function getCompact() {
+	const enabled = getCookie("log-compact");
+	return (enabled == null) ? false : (enabled == COOKIE_ON);
+}
+function setCompact(enabled) {
+	const root = document.querySelector(':root');
+	root.style.setProperty('--log-pad', enabled ? "0px" : "var(--padding)");
+	tableLog.observerSkip = true;
+	setCookie("log-compact", enabled ? COOKIE_ON : COOKIE_OFF, 365);
 }
 function downloadLogFile() {
-	console.log("new")
 	const tmpWS = openWS("/ws/logging",
 	(/*event*/) => { /* Open */ },
 	(/*event*/) => { /* Close */ },

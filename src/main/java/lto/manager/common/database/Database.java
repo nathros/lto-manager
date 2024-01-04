@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -81,6 +82,12 @@ public class Database {
 			e1.printStackTrace();
 		}
 		return null;
+	}
+
+	public static ResultSet executeRawQuery(final String query) throws SQLException {
+		var statment = connection.createStatement();
+		statment.execute(query);
+		return statment.getResultSet();
 	}
 
 	public static DBStatus addTape(RecordTape newTape) throws SQLException {

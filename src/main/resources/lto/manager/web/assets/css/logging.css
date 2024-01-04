@@ -1,3 +1,6 @@
+:root {
+	--log-pad: var(--padding);
+}
 #table-logging tr td:last-child {
 	width: 100%;
 }
@@ -8,10 +11,12 @@ td {
 	font-family: 'Space Mono', monospace;
 	font-size: small;
 	width: 1rem;
+	padding: var(--log-pad) !important;
 }
 th {
 	position: sticky;
 	top: calc((var(--padding) * -1) - 1px);
+	padding: var(--log-pad) !important;
 }
 #main-content-wrapper {
 	margin-top: calc(3rem + var(--padding)); /* 3rem from main.css - could use variable */

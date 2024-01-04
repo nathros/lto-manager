@@ -59,6 +59,7 @@ public class CSS {
 	public final static String ICON_PLUS_SQUARE = "icon-plus-square ";
 	public final static String ICON_INFO_CIRCLE = "icon-info-circle ";
 	public final static String ICON_DOWNLOAD = "icon-download ";
+	public final static String ICON_FILE_TEXT = "icon-file-text ";
 
 	public final static String FV_ID = "id-wtree";
 	public final static String FV_ID_CONTEXT_CONTAINER = "wtree-context-container";
