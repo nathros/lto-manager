@@ -779,7 +779,7 @@ https://codepen.io/sudeepgumaste/pen/abdrorB
 	margin-top: 1rem;
 }
 .card:before {
-	content: attr(header-text);
+	content: attr(data-header-text);
 	background-color: white;
 	position: absolute;
 	top: -12px;

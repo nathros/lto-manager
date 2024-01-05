@@ -11,7 +11,7 @@ import org.xmlet.htmlapifaster.EnumTypeInputType;
 
 import htmlflow.HtmlFlow;
 import htmlflow.HtmlPage;
-import htmlflow.HtmlViewAsync;
+import htmlflow.HtmlView;
 import lto.manager.common.Main;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.pages.LogOutHandler;
@@ -80,7 +80,7 @@ public class TemplatePage {
 		public final List<Pair<String, String>> getItems() { return crumbs; }
 	}
 
-	public static HtmlViewAsync view = HtmlFlow.viewAsync(TemplatePage::template);
+	public static HtmlView view = HtmlFlow.view(TemplatePage::template).threadSafe().setIndented(false);
 
 	static void template(HtmlPage view) {
 		final String selected = "selected";
@@ -181,7 +181,7 @@ public class TemplatePage {
 							}
 							div
 								.div().attrClass("head-logo").of(d -> { if (crumb != null) d.attrStyle("margin-right:0"); })
-									.img().attrSrc(Asset.IMG_LOGO).__()
+									.img().attrSrc(Asset.IMG_LOGO).attrAlt("Logo").__()
 									.text("LTO Manager")
 								.__();
 						})

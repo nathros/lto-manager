@@ -8,7 +8,7 @@ import com.sun.net.httpserver.HttpExchange;
 
 import htmlflow.HtmlFlow;
 import htmlflow.HtmlPage;
-import htmlflow.HtmlViewAsync;
+import htmlflow.HtmlView;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.ajax.labelgenerator.AJAXGenerateLTOLabelHTML;
 import lto.manager.web.handlers.http.partial.PartialHead;
@@ -20,7 +20,7 @@ import lto.manager.web.resource.Asset;
 import lto.manager.web.resource.CSS;
 
 public class LibraryGenerateBarcodeHTMLHandler extends BaseHTTPHandler {
-	public static HtmlViewAsync view = HtmlFlow.viewAsync(LibraryGenerateBarcodeHTMLHandler::content);
+	public static HtmlView view = HtmlFlow.view(LibraryGenerateBarcodeHTMLHandler::content).threadSafe().setIndented(false);
 	public static final String PATH = "/library/generate/html";
 	public static final String NAME = "Generate Barcode";
 
@@ -60,6 +60,6 @@ public class LibraryGenerateBarcodeHTMLHandler extends BaseHTTPHandler {
 		HeadModel thm = HeadModel.of(NAME);
 		thm.addCSS(Asset.CSS_LIBRARY);
 		TemplatePageModel tpm = TemplatePageModel.of(null, null, thm, SelectedPage.Missing, BodyModel.of(he, null), null);
-		requestHandleCompleteFuture(he, view.renderAsync(tpm), tpm);
+		requestHandleCompleteView(he, view, tpm);
 	}
 }

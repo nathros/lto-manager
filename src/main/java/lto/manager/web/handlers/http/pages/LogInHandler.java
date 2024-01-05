@@ -16,7 +16,7 @@ import com.sun.net.httpserver.HttpExchange;
 
 import htmlflow.HtmlFlow;
 import htmlflow.HtmlPage;
-import htmlflow.HtmlViewAsync;
+import htmlflow.HtmlView;
 import lto.manager.common.security.Security;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.templates.TemplatePage.SelectedPage;
@@ -27,7 +27,7 @@ import lto.manager.web.resource.Asset;
 import lto.manager.web.resource.CSS;
 
 public class LogInHandler extends BaseHTTPHandler {
-	public static HtmlViewAsync view = HtmlFlow.viewAsync(LogInHandler::content);
+	public static HtmlView view = HtmlFlow.view(LogInHandler::content).threadSafe().setIndented(false);
 	public static final String PATH = "/login";
 
 	private static final String USER = "username";
@@ -157,7 +157,7 @@ public class LogInHandler extends BaseHTTPHandler {
 	public void requestHandle(HttpExchange he) throws IOException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of("Login");
 		TemplatePageModel tpm = TemplatePageModel.of(null, null, thm, SelectedPage.Missing, BodyModel.of(he, null), null);
-		requestHandleCompleteFuture(he, view.renderAsync(tpm), tpm);
+		requestHandleCompleteView(he, view, tpm);
 	}
 
 }

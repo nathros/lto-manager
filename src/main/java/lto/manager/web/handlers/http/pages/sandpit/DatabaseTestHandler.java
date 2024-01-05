@@ -1,6 +1,7 @@
 package lto.manager.web.handlers.http.pages.sandpit;
 
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
 import org.xmlet.htmlapifaster.Div;
@@ -18,7 +19,6 @@ import lto.manager.web.handlers.http.templates.models.BodyModel;
 import lto.manager.web.handlers.http.templates.models.HeadModel;
 import lto.manager.web.resource.Asset;
 import lto.manager.web.resource.CSS;
-import lto.manager.web.resource.HTML;
 
 public class DatabaseTestHandler extends BaseHTTPHandler {
 	public static final String PATH = Asset.PATH_SANDPIT_BASE + "database";
@@ -44,7 +44,6 @@ public class DatabaseTestHandler extends BaseHTTPHandler {
 		view
 			.form()
 				.attrMethod(EnumMethodType.POST)
-				.attrAction("")
 				.div()
 					.attrClass(CSS.CARD)
 					.addAttr(CSS.CARD_ATTRIBUTE, "Send SQLite Query")
@@ -65,28 +64,40 @@ public class DatabaseTestHandler extends BaseHTTPHandler {
 					.attrClass(CSS.CARD)
 					.addAttr(CSS.CARD_ATTRIBUTE, "Query Response")
 					.attrStyle("display:flex;gap:1rem")
-					.textarea()
-						.of(t -> HTML.textArea(t, true))
-						.attrClass(CSS.FONT_MONOSPACE)
-						.attrStyle("flex:1;resize:vertical;height:20rem")
-						.of(t -> {
+					.div()
+						.attrStyle("flex:1;resize:vertical;min-height:20rem")
+						.of(d -> {
 							if (errorString != null) {
-								t.text(errorString);
-							} else if (results != null) {
-								try {
-									String text = "";
-									while (results.next()) {
-										text = text.concat(results.getString(1) + "\n");
-									}
-									t.text(text);
-								} catch (SQLException e) {
-									e.printStackTrace();
-								}
+								d.b().attrStyle("color:red").text(errorString).__();
+							} else {
+								d.table()
+								.attrClass(CSS.TABLE)
+									.of(t -> {
+										if (results == null) return;
+										try {
+											ResultSetMetaData meta = results.getMetaData();
+											var tr = t.tr();
+											for (int i = 1; i < meta.getColumnCount(); i++) {
+												tr = tr.th().text(meta.getColumnName(i)).__();
+											}
+											var resTR = tr.__();
+											while (results.next()) {
+												var row = resTR.tr();
+												for (int i = 1; i < meta.getColumnCount(); i++) {
+													row.td().text(results.getString(1)).__();
+												}
+												row.__();
+											}
+										} catch (SQLException e) {
+											t.text("Results failure: " + e.getMessage());
+										}
+									})
+								.__(); // table
 							}
 						})
-					.__()
-				.__()
-			.__();
+					.__() // div
+				.__() // div card
+			.__(); // form
 		return null;
 	}
 

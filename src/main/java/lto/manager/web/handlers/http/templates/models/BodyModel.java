@@ -251,6 +251,7 @@ public class BodyModel {
 	}
 
 	public void clearAssetCache() {
+		// Only works via localhost or HTTPS
 		he.getResponseHeaders().putIfAbsent("Clear-Site-Data", Arrays.asList("\"cache\""));
 	}
 

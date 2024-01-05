@@ -77,6 +77,10 @@ public class ClearCacheHandler extends BaseHTTPHandler {
 					.attrStyle("color:red")
 					.text("Note: clearing cookies will log you out")
 				.__()
+				.p()
+					.attrStyle("color:red")
+					.text("Note: this uses Clear-Site-Data in response header so it only works over localhost and secure contexts (HTTPS)")
+				.__()
 			.__()
 
 			.div()

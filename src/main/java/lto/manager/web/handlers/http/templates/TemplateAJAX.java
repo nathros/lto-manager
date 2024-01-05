@@ -6,11 +6,11 @@ import org.xmlet.htmlapifaster.Div;
 
 import htmlflow.HtmlFlow;
 import htmlflow.HtmlPage;
-import htmlflow.HtmlViewAsync;
+import htmlflow.HtmlView;
 import lto.manager.web.handlers.http.templates.models.BodyModel;
 
 public class TemplateAJAX {
-	public static HtmlViewAsync view = HtmlFlow.viewAsync(TemplateAJAX::template);
+	public static HtmlView view = HtmlFlow.view(TemplateAJAX::template).threadSafe();
 
 	public static class TemplateFetcherModel {
 		final BiFunction<Div<?>, BodyModel, Void> contentFunction;

@@ -7,12 +7,12 @@ import java.net.HttpURLConnection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
+import htmlflow.HtmlView;
 import lto.manager.common.database.Options;
 import lto.manager.common.database.tables.records.RecordOptions.OptionsSetting;
 import lto.manager.common.log.Log;
@@ -115,8 +115,7 @@ public abstract class BaseHTTPHandler implements HttpHandler {
 
 	protected void requestHandleCompletePage(HttpExchange he, TemplatePageModel tpm)
 			throws IOException, InterruptedException, ExecutionException {
-		CompletableFuture<String> future = TemplatePage.view.renderAsync(tpm);
-		String response = future.get();
+		final String response = TemplatePage.view.render(tpm);
 		addResponseCookies(he, tpm);
 		he.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length());
 		OutputStream os = he.getResponseBody();
@@ -124,9 +123,9 @@ public abstract class BaseHTTPHandler implements HttpHandler {
 		os.close();
 	}
 
-	protected void requestHandleCompleteFuture(HttpExchange he, CompletableFuture<String> future, TemplatePageModel tpm)
+	protected void requestHandleCompleteView(HttpExchange he, HtmlView view, TemplatePageModel tpm)
 			throws IOException, InterruptedException, ExecutionException {
-		String response = future.get();
+		final String response = view.render(tpm);
 		addResponseCookies(he, tpm);
 		he.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length());
 		OutputStream os = he.getResponseBody();
@@ -136,8 +135,7 @@ public abstract class BaseHTTPHandler implements HttpHandler {
 
 	protected void requestHandleCompleteFetcher(HttpExchange he, TemplateFetcherModel tfm)
 			throws IOException, InterruptedException, ExecutionException {
-		CompletableFuture<String> future = TemplateAJAX.view.renderAsync(tfm);
-		String response = future.get();
+		final String response = TemplateAJAX.view.render(tfm);
 		he.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length());
 		OutputStream os = he.getResponseBody();
 		os.write(response.getBytes());
