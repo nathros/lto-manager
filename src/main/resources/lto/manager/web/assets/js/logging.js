@@ -21,6 +21,7 @@ function levelAction(level, func, def) {
 		case "INFO": return filterConfig["INFO"] ? def() : func();
 		case "WARNING": return filterConfig["WARNING"] ? def() : func();
 		case "SEVERE": return filterConfig["SEVERE"] ? def() : func();
+		default: console.log(`Unknown log level: ${level}`);
 	}
 }
 function splitMessage(lines) {

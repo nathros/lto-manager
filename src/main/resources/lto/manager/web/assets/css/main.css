@@ -580,8 +580,7 @@ input:disabled {
 	opacity: 0;
 	min-width: min(75%, 25rem);
 	transform: translateX(-50%);
-	color: white;
-	background-color: black;
+	background-color: white;
 	text-align: center;
 	border-radius: var(--menu-border-radius);
 	position: fixed;
@@ -590,18 +589,58 @@ input:disabled {
 	top: 4rem;
 	max-width: 5rem;
 	pointer-events: none;
+	box-shadow: inset 0 0 0 3px var(--col);
+}
+#toast div:first-of-type {
+	display: flex;
+	align-items: center;
+	padding: 0;
+}
+#toast div:last-of-type {
+	display: flex;
+	gap: var(--padding);
+	padding: var(--padding);
+	justify-content: center;
+}
+#toast div:first-of-type span {
+	width: 2rem;
+	height: 2rem;
+	margin-left: var(--padding-full);
+	mask-size: 2rem;
+}
+#toast hr {
+	border-bottom: 0;
+	width: 90%;
+	margin-top: 0;
+	margin-bottom: 0;
 }
 #toast.error {
-	background-color: #e51c23;
+	--col: #e51c23;
+}
+#toast.error div:first-of-type span {
+	mask-image: url(/assets/img/x-circle-fill.svg);
+	background-color: var(--col);
 }
 #toast.warning {
-	background-color: #ff9800;
+	--col: #ff9800;
+}
+#toast.warning div:first-of-type span {
+	mask-image: url(/assets/img/exclamation-circle-fill.svg);
+	background-color: var(--col);
 }
 #toast.good {
-	background-color: #4caf50;
+	--col: #4caf50;
+}
+#toast.good div:first-of-type span {
+	mask-image: url(/assets/img/check-circle-fill.svg);
+	background-color: var(--col);
 }
 #toast.info {
-	background-color: #3465A4;
+	--col: #3465A4;
+}
+#toast.info div:first-of-type span {
+	mask-image: url(/assets/img/info-circle-fill.svg);
+	background-color: var(--col);
 }
 #toast.show {
 	animation: showtoast 0.5s;
@@ -636,12 +675,8 @@ input:disabled {
 #toast-cross:hover {
 	opacity: 1;
 }
-#toast div {
-	padding: 8px;
-}
 #toast-message {
-	padding-left: 3rem;
-	padding-right: 3rem;
+	padding-left: 1rem;
 }
 .inline-message {
 	border-radius: var(--menu-border-radius);
@@ -696,22 +731,18 @@ input:disabled {
 }
 .inline-message.error span {
 	background-color: red;
-	-webkit-mask-image: url(/assets/img/x-circle-fill.svg);
 	mask-image: url(/assets/img/x-circle-fill.svg);
 }
 .inline-message.warning span {
 	background-color: orange;
-	-webkit-mask-image: url(/assets/img/exclamation-circle-fill.svg);
 	mask-image: url(/assets/img/exclamation-circle-fill.svg);
 }
 .inline-message.ok span {
 	background-color: green;
-	-webkit-mask-image: url(/assets/img/check-circle-fill.svg);
 	mask-image: url(/assets/img/check-circle-fill.svg);
 }
 .inline-message.info span {
 	background-color: blue;
-	-webkit-mask-image: url(/assets/img/info-circle-fill.svg);
 	mask-image: url(/assets/img/info-circle-fill.svg);
 }
 .inline-details-content {

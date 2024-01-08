@@ -10,6 +10,7 @@ import com.sun.net.httpserver.HttpExchange;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.pages.sandpit.frontend.CheckBoxTestHandler;
 import lto.manager.web.handlers.http.pages.sandpit.frontend.SwitchTestHandler;
+import lto.manager.web.handlers.http.pages.sandpit.frontend.ToastTestHandler;
 import lto.manager.web.handlers.http.templates.TemplatePage.BreadCrumbs;
 import lto.manager.web.handlers.http.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.http.templates.TemplatePage.TemplatePageModel;
@@ -33,7 +34,7 @@ public class SandpitHandler extends BaseHTTPHandler {
 				.a().attrClass(CSS.BUTTON).attrHref(DatabaseTestHandler.PATH).text(DatabaseTestHandler.NAME).__()
 			.__()
 			.div().attrClass(CSS.CARD).addAttr(CSS.CARD_ATTRIBUTE, "Frontend")
-				.a().attrClass(CSS.BUTTON).attrHref("").text("Toast").__()
+				.a().attrClass(CSS.BUTTON).attrHref(ToastTestHandler.PATH).text(ToastTestHandler.NAME).__()
 				.a().attrClass(CSS.BUTTON).attrHref(CheckBoxTestHandler.PATH).text(CheckBoxTestHandler.NAME).__()
 				.a().attrClass(CSS.BUTTON).attrHref(SwitchTestHandler.PATH).text(SwitchTestHandler.NAME).__()
 			.__()

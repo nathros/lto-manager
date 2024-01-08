@@ -39,8 +39,8 @@ const ToastResponse = {
 }
 
 async function showToast(level, message, time, url, showCancel) {
-	var toast = document.getElementById("toast");
-	var toastMessage = document.getElementById("toast-message");
+	let toast = document.getElementById("toast");
+	let toastMessage = document.getElementById("toast-message");
 	if ((toast != null) && (toastMessage != null)) {
 		toastMessage.innerHTML = message;
 		toast.classList = "";
@@ -49,7 +49,7 @@ async function showToast(level, message, time, url, showCancel) {
 		showToast.toastLevel = level;
 		document.getElementById("toast-cancel").style.display = showCancel ? "inline-flex" : "none";
 		clearTimeout(showToast.toastTimeout);
-		if (time == null) time = 5000;
+		if (!time) time = 5000;
 		if (time > 0) {
 			document.getElementById("toast-cross").style.display = "block";
 			showToast.toastTimeout = setTimeout(function(){ toast.className = "hide " + level }, time);
@@ -64,8 +64,8 @@ async function showToast(level, message, time, url, showCancel) {
 }
 
 async function showToastCallback(level, message, callBack, showCancel) {
-	var toast = document.getElementById("toast");
-	var toastMessage = document.getElementById("toast-message");
+	let toast = document.getElementById("toast");
+	let toastMessage = document.getElementById("toast-message");
 	if ((toast != null) && (toastMessage != null)) {
 		toastMessage.innerHTML = message;
 		toast.classList = "";
@@ -103,7 +103,7 @@ function toastButtonPromise(url) {
 		let cancel = document.getElementById("toast-cancel");
 		let okFn = () => {
 			resolve(ToastResponse.Ok);
-			if (link !== undefined) {
+			if (link) {
 				window.location = link;
 			}
 			cancel.click(); // Remove other listener

@@ -49,6 +49,7 @@ import lto.manager.web.handlers.http.pages.sandpit.WebsocketListConnectionHandle
 import lto.manager.web.handlers.http.pages.sandpit.WebsocketTestHandler;
 import lto.manager.web.handlers.http.pages.sandpit.frontend.CheckBoxTestHandler;
 import lto.manager.web.handlers.http.pages.sandpit.frontend.SwitchTestHandler;
+import lto.manager.web.handlers.http.pages.sandpit.frontend.ToastTestHandler;
 import lto.manager.web.handlers.websockets.BaseWebsocketHandler;
 import lto.manager.web.handlers.websockets.ServerTimeHandler;
 import lto.manager.web.handlers.websockets.admin.LoggingWebsocketHandler;
@@ -112,6 +113,7 @@ public class Handlers {
 			ret.put(CheckBoxTestHandler.PATH, new CheckBoxTestHandler());
 			ret.put(SwitchTestHandler.PATH, new SwitchTestHandler());
 			ret.put(ClearCacheHandler.PATH, new ClearCacheHandler());
+			ret.put(ToastTestHandler.PATH, new ToastTestHandler());
 		}
 		return ret;
 	}

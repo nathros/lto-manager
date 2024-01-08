@@ -95,7 +95,7 @@ function selectFile(sender) {
 }
 
 function selectPathEditBox(sender) {
-	let input = sender.nextElementSibling.childNodes[1];
+	let input = sender.nextElementSibling.children[0];
 	// Blur event fires before the focus happens so the element hides as you try to focus it
 	input.classList.add('active');
 	input.focus();
@@ -248,7 +248,7 @@ function contextMenu(sender, virtual, event) {
 
 	const container = document.getElementById(HOST_FILEVIEW_CONEXT_CONTAINER_ID + getIDPostFix(virtual));
 	container.setAttribute(ATTR_PATH, path); // Used for set icons
-	const menu = container.childNodes[1];
+	const menu = container.children[0];
 	container.style.display = "block";
 	menu.style.top = event.pageY + 1 + "px";
 	menu.style.left = event.pageX + 1 + "px";
@@ -257,7 +257,7 @@ function contextMenu(sender, virtual, event) {
 
 function contextMenuHide(virtual) {
 	let container = document.getElementById(HOST_FILEVIEW_CONEXT_CONTAINER_ID + getIDPostFix(virtual));
-	let menu = container.childNodes[1];
+	let menu = container.children[0];
 	if (!menu.contains(document.activeElement)) {
 		container.style.display = ""; // Lost focus so hide context menu
 	}
