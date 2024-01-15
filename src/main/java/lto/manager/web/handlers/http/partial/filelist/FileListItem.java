@@ -28,7 +28,7 @@ public class FileListItem {
 					.addAttr(DATA_TIME, "0")
 					.addAttr(DATA_NAME, ABS_PATH)
 					.of(s -> {
-						s.addAttr("oncontextmenu", JS.fnFileContextMenu(fileTree.getOptions().isVirtual()));
+						s.attrOncontextmenu(JS.fnFileContextMenu(fileTree.getOptions().isVirtual()));
 						if (!fileTree.getOptions().isVirtual()) {
 							s.input()
 								.attrType(EnumTypeInputType.CHECKBOX)
