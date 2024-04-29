@@ -19,7 +19,7 @@ public class AJAXGenerateLTOLabelHTML extends BaseHTTPHandler {
 		view
 			.of(o -> {
 				for (final String svg: labelsSVGs) {
-					o.text(svg);
+					o.raw(svg);
 				}
 			});
 		return null;

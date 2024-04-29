@@ -14,12 +14,12 @@ ul {
 	border-left: 1px solid #ddd;
 	border-bottom: 1px solid #ddd;
 	width: 19px;
-	height: 15px;
+	height: 32px;
 }
 .wtree li:after {
 	position: absolute;
 	content: "";
-	top: 5px;
+	top: 22px;
 	left: -20px;
 	border-left: 1px solid #ddd;
 	border-top: 1px solid #ddd;

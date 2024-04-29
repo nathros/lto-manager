@@ -22,7 +22,7 @@ public class InternalErrorInlineTesterHandler extends BaseHTTPHandler {
 	static Void content(Div<?> view, BodyModel model) {
 		view.div().attrId("inline-example").text("This text should be overridden").__()
 		.script()
-			.text("const inline = document.getElementById('inline-example');"
+			.raw("const inline = document.getElementById('inline-example');"
 					+ "document.addEventListener('DOMContentLoaded', function(){"
 					+ "fetch('" + InternalErrorInlineAJAXTesterHandler.PATH + "',"
 					+ "	{"

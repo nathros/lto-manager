@@ -239,7 +239,7 @@ public class BodyModel {
 				return loginSession.user().getUsername();
 			}
 		}
-		return "Unknown User";
+		return null;
 	}
 
 	public void setNewSession(UUID uuid) {

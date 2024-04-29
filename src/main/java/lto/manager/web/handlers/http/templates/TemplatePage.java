@@ -80,7 +80,8 @@ public class TemplatePage {
 		public final List<Pair<String, String>> getItems() { return crumbs; }
 	}
 
-	public static HtmlView view = HtmlFlow.view(TemplatePage::template).threadSafe().setIndented(false);
+	private static HtmlView<TemplatePageModel> v = HtmlFlow.view(TemplatePage::template);
+	public static HtmlView<TemplatePageModel> view = v.threadSafe().setIndented(false);
 
 	static void template(HtmlPage view) {
 		final String selected = "selected";
@@ -116,18 +117,22 @@ public class TemplatePage {
 						.div().attrClass(CSS.HEADER_ITEM + "header-user")
 							.ul().attrClass(CSS.MENU_LIST)
 								.<TemplatePageModel>dynamic((ul, model) -> {
+									final String user = model.getBodyModel().getUserNameViaSession();
+									final String userShow = user == null ? "Anonymous User" : user;
 									ul.li()
 										.attrClass(CSS.HEADER_LABEL_TOP)
-										.text(model.getBodyModel().getUserNameViaSession())
+										.text(userShow)
 									.__();
+									if (user != null) {
+										ul.li()
+											.a()
+												.attrClass(CSS.ICON_BOX_ARROW_RIGHT + CSS.HEADER_MENU_ITEM_ICON)
+												.attrHref(LogOutHandler.PATH)
+												.text("Log Out")
+											.__()
+										.__();
+									}
 								})
-								.li()
-									.a()
-										.attrClass(CSS.ICON_BOX_ARROW_RIGHT + CSS.HEADER_MENU_ITEM_ICON)
-										.attrHref(LogOutHandler.PATH)
-										.text("Log Out")
-									.__()
-								.__()
 							.__()
 						.__()
 						.div()

@@ -123,7 +123,7 @@ public abstract class BaseHTTPHandler implements HttpHandler {
 		os.close();
 	}
 
-	protected void requestHandleCompleteView(HttpExchange he, HtmlView view, TemplatePageModel tpm)
+	protected void requestHandleCompleteView(HttpExchange he, HtmlView<TemplatePageModel> view, TemplatePageModel tpm)
 			throws IOException, InterruptedException, ExecutionException {
 		final String response = view.render(tpm);
 		addResponseCookies(he, tpm);

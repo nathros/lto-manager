@@ -19,7 +19,8 @@ import lto.manager.web.handlers.http.templates.models.HeadModel;
 import lto.manager.web.resource.CSS;
 
 public class TemplateInternalErrorPage {
-	public static HtmlView view = HtmlFlow.view(TemplateInternalErrorPage::template).threadSafe().setIndented(false);
+	private static HtmlView<TemplateInternalErrorModelPage> v = HtmlFlow.view(TemplateInternalErrorPage::template);
+	public static HtmlView<TemplateInternalErrorModelPage> view = v.threadSafe().setIndented(false);
 
 	public static class TemplateInternalErrorModelPage {
 		final Exception ex;
@@ -74,26 +75,26 @@ public class TemplateInternalErrorPage {
 					String requestQuery = query == null ? "null" : query;
 					final String style = "background-color:darkblue; color:white;font-family:system-ui;padding:4px";
 
-					div.p().attrStyle(style + ";padding:1rem;font-weight:bold;font-size:1rem;").text("HTTP Status 500 - Internal Error").__()
+					div.p().attrStyle(style + ";padding:1rem;font-weight:bold;font-size:1rem;").raw("HTTP Status 500 - Internal Error").__()
 					.hr().__()
-					.p().b().attrStyle(style).text("Path: ").__().__()
-					.p().of(p -> p.text(path)).__()
-					.hr().__()
-
-					.p().b().attrStyle(style).text("Request Query: ").__().__()
-					.p().of(p -> p.text(requestQuery)).__()
+					.p().b().attrStyle(style).raw("Path: ").__().__()
+					.p().of(p -> p.raw(path)).__()
 					.hr().__()
 
-					.p().b().attrStyle(style).text("Request Body: ").__().__()
-					.p().of(p -> p.text(requestBody)).__()
+					.p().b().attrStyle(style).raw("Request Query: ").__().__()
+					.p().of(p -> p.raw(requestQuery)).__()
 					.hr().__()
 
-					.p().b().attrStyle(style).text("Request Headers: ").__().__()
-					.p().of(p -> p.text(headers)).__()
+					.p().b().attrStyle(style).raw("Request Body: ").__().__()
+					.p().of(p -> p.raw(requestBody)).__()
 					.hr().__()
 
-					.p().b().attrStyle(style).text("Stack Trace: ").__().__()
-					.p().of(p -> p.text(trace)).__()
+					.p().b().attrStyle(style).raw("Request Headers: ").__().__()
+					.p().of(p -> p.raw(headers)).__()
+					.hr().__()
+
+					.p().b().attrStyle(style).raw("Stack Trace: ").__().__()
+					.p().of(p -> p.raw(trace)).__()
 					.hr().__();
 				})
 			.__() // div

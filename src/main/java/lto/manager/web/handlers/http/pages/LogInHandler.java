@@ -27,7 +27,8 @@ import lto.manager.web.resource.Asset;
 import lto.manager.web.resource.CSS;
 
 public class LogInHandler extends BaseHTTPHandler {
-	public static HtmlView view = HtmlFlow.view(LogInHandler::content).threadSafe().setIndented(false);
+	private static HtmlView<TemplatePageModel> v = HtmlFlow.view(LogInHandler::content);
+	public static HtmlView<TemplatePageModel> view = v.threadSafe().setIndented(false);
 	public static final String PATH = "/login";
 
 	private static final String USER = "username";
@@ -115,10 +116,10 @@ public class LogInHandler extends BaseHTTPHandler {
 					.title().of(title -> title.text(model.getHeadModel().getTitle())).__()
 					.link().addAttr(BaseHTTPHandler.ICON_KEY, BaseHTTPHandler.ICON_VALUE).attrHref(IMGFavico).addAttr(BaseHTTPHandler.TYPE_KEY, BaseHTTPHandler.TYPE_SVG).__()
 					.meta().attrName(BaseHTTPHandler.VIEWPORT_KEY).attrContent(BaseHTTPHandler.VIEWPORT_VALUE).__()
-					.style().text(CSSMain).__()
-					.style().text(CSSMobile).__()
-					.style().text(CSSLogin).__()
-					.script().text(JSMain).__()
+					.style().raw(CSSMain).__()
+					.style().raw(CSSMobile).__()
+					.style().raw(CSSLogin).__()
+					.script().raw(JSMain).__()
 				.__()
 				.body()
 					.div()

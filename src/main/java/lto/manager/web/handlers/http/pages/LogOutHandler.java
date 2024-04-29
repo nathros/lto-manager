@@ -19,7 +19,8 @@ import lto.manager.web.handlers.http.templates.models.BodyModel;
 import lto.manager.web.handlers.http.templates.models.HeadModel;
 
 public class LogOutHandler extends BaseHTTPHandler {
-	public static HtmlView view = HtmlFlow.view(LogOutHandler::content).threadSafe().setIndented(false);
+	private static HtmlView<TemplatePageModel> v = HtmlFlow.view(LogOutHandler::content);
+	public static HtmlView<TemplatePageModel> view = v.threadSafe().setIndented(false);
 	public static final String PATH = "/logout";
 
 

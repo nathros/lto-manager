@@ -20,7 +20,8 @@ import lto.manager.web.resource.Asset;
 import lto.manager.web.resource.CSS;
 
 public class LibraryGenerateBarcodeHTMLHandler extends BaseHTTPHandler {
-	public static HtmlView view = HtmlFlow.view(LibraryGenerateBarcodeHTMLHandler::content).threadSafe().setIndented(false);
+	private static HtmlView<TemplatePageModel> v = HtmlFlow.view(LibraryGenerateBarcodeHTMLHandler::content);
+	public static HtmlView<TemplatePageModel> view = v.threadSafe().setIndented(false);
 	public static final String PATH = "/library/generate/html";
 	public static final String NAME = "Generate Barcode";
 

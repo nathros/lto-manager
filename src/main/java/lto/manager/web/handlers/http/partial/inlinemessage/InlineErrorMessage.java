@@ -12,7 +12,7 @@ public class InlineErrorMessage {
 	public static Void contentGeneric(Div<?> view, final Exception ex) {
 		view.div().attrClass(CSS.INLINE_MESSAGE + CSS.ERROR)
 			.span().__()
-			.b().text("Error: " + ex.getMessage()).__()
+			.b().raw("Error: " + ex.getMessage()).__()
 			.a().attrClass(CSS.INLINE_MESSAGE_DETAILS_LINK).attrTabIndex(1).text("Show Details").__()
 			.div().attrClass(CSS.INLINE_MESSAGE_DETAILS_CONTENT + CSS.FONT_MONOSPACE + CSS.FONT_SMALL).attrTabIndex(2)
 				.of(div -> {
@@ -20,7 +20,7 @@ public class InlineErrorMessage {
 					PrintWriter pw = new PrintWriter(sw);
 					ex.printStackTrace(pw);
 					final String stackTrace = "<div>" + sw.toString().replace(System.lineSeparator(), "</div><div>");
-					div.text(stackTrace);
+					div.raw(stackTrace);
 				})
 			.__()
 		.__();
