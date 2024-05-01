@@ -279,6 +279,21 @@ input:disabled {
 .header-item:hover > ul {
 	display: block;
 }
+.header-item-notification {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	user-select: none;
+	width: 1rem;
+	height: 1rem;
+	background-color: #F44433;
+	position: absolute;
+	color: white;
+	border-radius: 100%;
+	font-size: x-small;
+	right: 2px;
+	top: 2px;
+}
 .nav-area {
 	background-color: var(--common-background-colour);
 	min-width: 12rem;
@@ -359,6 +374,9 @@ input:disabled {
 }
 .icon-admin:before {
 	background-image: url('/assets/img/person-fill.svg');
+}
+.icon-dashboard:before {
+	background-image: url('/assets/img/dashboard-fill.svg');
 }
 .icon-sandpit:before {
 	background-image: url('/assets/img/bucket-spade-fill.svg');

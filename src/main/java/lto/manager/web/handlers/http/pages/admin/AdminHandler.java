@@ -31,6 +31,7 @@ public class AdminHandler extends BaseHTTPHandler {
 				.a().attrClass(CSS.BUTTON).attrHref(ExternalProcessHandler.PATH).text("View External Processes").__()
 				.a().attrClass(CSS.BUTTON).attrHref(SessionViewerHandler.PATH).text("View Login Sessions").__()
 				.a().attrClass(CSS.BUTTON).attrHref(LoggingHandler.PATH).text("Logging").__()
+				.a().attrClass(CSS.BUTTON).attrHref(AppUpdateHandler.PATH).text("Check Updates").__()
 				.div().attrClass(CSS.CARD).addAttr(CSS.CARD_ATTRIBUTE, "System information")
 					.div().attrClass(CSS.PIE_CONTAINER)
 						.of(pie -> PieCPUUsage.content(pie))

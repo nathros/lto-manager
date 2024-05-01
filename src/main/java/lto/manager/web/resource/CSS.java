@@ -13,6 +13,7 @@ public class CSS {
 	public final static String HEADER_MENU_ITEM_ICON = "icon ";
 	public final static String MENU_LIST = "menu-list ";
 	public final static String MENU_LIST_ITEM_BUTTON = "menu-list-btn ";
+	public final static String HEADER_ITEM_NOTIFICATTION = "header-item-notification ";
 
 	public final static String BUTTON = "btn ";
 	public final static String BUTTON_IMAGE = "btn-image ";
@@ -43,6 +44,7 @@ public class CSS {
 	public final static String ICON_DRIVE = "icon-drive ";
 	public final static String ICON_JOBS = "icon-jobs ";
 	public final static String ICON_ADMIN = "icon-admin ";
+	public final static String ICON_DASHBOARD = "icon-dashboard ";
 	public final static String ICON_SANDPIT = "icon-sandpit ";
 	public final static String ICON_EDIT = "icon-edit ";
 	public final static String ICON_CHECK = "icon-check ";

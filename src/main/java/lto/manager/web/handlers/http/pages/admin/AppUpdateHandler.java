@@ -1,4 +1,4 @@
-package lto.manager.web.handlers.http.pages;
+package lto.manager.web.handlers.http.pages.admin;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
@@ -8,27 +8,28 @@ import org.xmlet.htmlapifaster.Div;
 import com.sun.net.httpserver.HttpExchange;
 
 import lto.manager.web.handlers.http.BaseHTTPHandler;
-import lto.manager.web.handlers.http.pages.sandpit.DatabaseTestHandler;
+import lto.manager.web.handlers.http.templates.TemplatePage.BreadCrumbs;
 import lto.manager.web.handlers.http.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.http.templates.TemplatePage.TemplatePageModel;
 import lto.manager.web.handlers.http.templates.models.BodyModel;
 import lto.manager.web.handlers.http.templates.models.HeadModel;
 
-public class RootHandler extends BaseHTTPHandler {
-	public static final String PATH = "/";
+public class AppUpdateHandler extends BaseHTTPHandler {
+	public static AppUpdateHandler self = new AppUpdateHandler();
+	public static final String PATH = "/admin/update";
+	public static final String NAME = "Update";
 
 	static Void content(Div<?> view, BodyModel model) {
-		view
-			.div()
-				.p().a().attrHref(DatabaseTestHandler.PATH).text("This is not in use!").__().__()
-			.__(); // div
+		view.div().text("Updater WIP").__(); //  div
 		return null;
 	}
 
 	@Override
 	public void requestHandle(HttpExchange he) throws IOException, InterruptedException, ExecutionException {
-		HeadModel thm = HeadModel.of("Root");
-		TemplatePageModel tpm = TemplatePageModel.of(RootHandler::content, null, thm, SelectedPage.Admin, BodyModel.of(he, null), null);
+		HeadModel thm = HeadModel.of(NAME);
+		BreadCrumbs crumbs = new BreadCrumbs().add(AdminHandler.NAME, AdminHandler.PATH).add(NAME, PATH);
+		TemplatePageModel tpm = TemplatePageModel.of(AppUpdateHandler::content, null, thm, SelectedPage.Admin, BodyModel.of(he, null), crumbs);
 		requestHandleCompletePage(he, tpm);
 	}
+
 }

@@ -17,6 +17,7 @@ import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.pages.LogOutHandler;
 import lto.manager.web.handlers.http.pages.RootHandler;
 import lto.manager.web.handlers.http.pages.admin.AdminHandler;
+import lto.manager.web.handlers.http.pages.dashboard.DashBoardHandler;
 import lto.manager.web.handlers.http.pages.drives.DrivesHandler;
 import lto.manager.web.handlers.http.pages.files.FilesHandler;
 import lto.manager.web.handlers.http.pages.jobs.JobsHandler;
@@ -32,6 +33,7 @@ import lto.manager.web.resource.JS;
 
 public class TemplatePage {
 	public static enum SelectedPage {
+		Dashboard,
 		Admin,
 		Library,
 		Drives,
@@ -160,6 +162,7 @@ public class TemplatePage {
 						.__() // div
 						.div()
 							.attrClass(CSS.HEADER_ITEM + CSS.ICON_BELL)
+							//.span().attrClass(CSS.HEADER_ITEM_NOTIFICATTION).text(5).__()
 							.ul().attrClass(CSS.MENU_LIST)
 								.li()
 									.attrClass(CSS.HEADER_LABEL_TOP)
@@ -206,6 +209,12 @@ public class TemplatePage {
 								.attrId("nav-menu")
 								.<TemplatePageModel>dynamic((ul, model) -> {
 									ul.li()
+										.a().of(a -> a.attrHref(DashBoardHandler.PATH)
+											.attrClass(CSS.ICON_DASHBOARD + CSS.HEADER_MENU_ITEM_ICON + (model.page == SelectedPage.Dashboard ? selected : ""))
+											.text("Dashboard"))
+										.__()
+									.__()
+									.li()
 										.a().of(a -> a.attrHref(AdminHandler.PATH)
 											.attrClass(CSS.ICON_ADMIN + CSS.HEADER_MENU_ITEM_ICON + (model.page == SelectedPage.Admin ? selected : ""))
 											.text("Admin"))

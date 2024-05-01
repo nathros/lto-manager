@@ -18,11 +18,13 @@ import lto.manager.web.handlers.http.pages.LogInHandler;
 import lto.manager.web.handlers.http.pages.LogOutHandler;
 import lto.manager.web.handlers.http.pages.RootHandler;
 import lto.manager.web.handlers.http.pages.admin.AdminHandler;
+import lto.manager.web.handlers.http.pages.admin.AppUpdateHandler;
 import lto.manager.web.handlers.http.pages.admin.LoggingHandler;
 import lto.manager.web.handlers.http.pages.admin.SessionViewerHandler;
 import lto.manager.web.handlers.http.pages.admin.UpdateOptionsHandler;
 import lto.manager.web.handlers.http.pages.admin.externalprocess.ExternalProcessHandler;
 import lto.manager.web.handlers.http.pages.admin.externalprocess.ExternalProcessViewerHandler;
+import lto.manager.web.handlers.http.pages.dashboard.DashBoardHandler;
 import lto.manager.web.handlers.http.pages.drives.DrivesHandler;
 import lto.manager.web.handlers.http.pages.files.FilesBrowserHandler2;
 import lto.manager.web.handlers.http.pages.files.FilesHandler;
@@ -60,7 +62,8 @@ public class Handlers {
 
 	private static HashMap<String, HttpHandler> getHTTPHandlers() {
 		HashMap<String, HttpHandler> ret = new HashMap<String, HttpHandler>();
-		ret.put(RootHandler.PATH, new RootHandler());
+		ret.put(RootHandler.PATH, new DashBoardHandler());
+		ret.put(DashBoardHandler.PATH, new DashBoardHandler());
 		ret.put(AssetHandler.PATH, new AssetHandler());
 		ret.put(LogInHandler.PATH, new LogInHandler());
 		ret.put(LogOutHandler.PATH, new LogOutHandler());
@@ -71,6 +74,7 @@ public class Handlers {
 		ret.put(ExternalProcessViewerHandler.PATH, new ExternalProcessViewerHandler());
 		ret.put(SessionViewerHandler.PATH, new SessionViewerHandler());
 		ret.put(LoggingHandler.PATH, new LoggingHandler());
+		ret.put(AppUpdateHandler.PATH, new AppUpdateHandler());
 
 		ret.put(LibraryHandler.PATH, new LibraryHandler());
 		ret.put(LibraryCreateHandler.PATH, new LibraryCreateHandler());
