@@ -11,8 +11,19 @@ fi
 
 # Remove console log
 echo "See: config/logfile.log for messages and errors"
-echo "Server: http://localhost:$HTTP_PORT"
-java -Xmx512M -jar $JAR httpport $HTTP_PORT > /dev/null 2>&1
+echo "Server started at: http://localhost:$HTTP_PORT"
+while true
+do
+	java -Xmx512M -jar $JAR httpport $HTTP_PORT > /dev/null 2>&1
+	if [ $? -eq 0 ]; then
+		break; # Exit normally
+	elif [ $? -eq 5 ]; then
+		continue; # Loop as app has been updated, restart
+	else
+		echo "Exit with error code: $?"
+		break;
+	fi
+done
 
 # Keep console log
 #java -Xmx1024M -jar $JAR httpport $HTTP_PORT

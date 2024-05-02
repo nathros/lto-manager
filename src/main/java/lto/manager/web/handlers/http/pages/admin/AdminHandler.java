@@ -7,6 +7,7 @@ import org.xmlet.htmlapifaster.Div;
 
 import com.sun.net.httpserver.HttpExchange;
 
+import lto.manager.Version;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.pages.admin.externalprocess.ExternalProcessHandler;
 import lto.manager.web.handlers.http.partial.pie.PieCPUUsage;
@@ -38,6 +39,17 @@ public class AdminHandler extends BaseHTTPHandler {
 						.of(pie -> PieJVMMemoryUsage.content(pie))
 					.__()
 				.__()
+				.p().text("Version: " + Version.VERSION).__()
+				.p().text("Tag: " + Version.TAG).__()
+				.p().text("Branch: " + Version.BRANCH).__()
+				.p().text("Commit: " + Version.COMMIT_HASH).__()
+				.p().text("Build Date: " + Version.BUILD_DATE).__()
+				.of(o -> {
+					for (int i = 0; i < lto.manager.Version.DEPENDENCIES.size(); i += 3) {
+						o.p().text(Version.DEPENDENCIES.get(i) + " : version : "
+								+ lto.manager.Version.DEPENDENCIES.get(i + 1) + " " + lto.manager.Version.DEPENDENCIES.get(i + 2)).__();
+					}
+				})
 			.__(); // div
 		}).__(); //  div
 		return null;
