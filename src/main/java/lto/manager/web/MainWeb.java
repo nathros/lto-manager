@@ -4,9 +4,13 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.logging.Level;
 
 import lto.manager.common.Main;
 import lto.manager.common.database.Database;
+import lto.manager.common.log.Log;
 import lto.manager.common.state.State;
 
 public class MainWeb {
@@ -26,18 +30,63 @@ public class MainWeb {
 	public static final String STOREPASS = "storepass";
 	public static final String KEYPASS = "keypass";
 
-	public static void main(String[] args) {
+	public static final BlockingQueue<ExitReason> exitWait = new LinkedBlockingDeque<>();
+
+	public static void main(String[] args) throws InterruptedException {
 		if (processArgs(args)) {
 			SimpleHttpServer httpServer = new SimpleHttpServer();
-			httpServer.Start(portHTTP, portHTTPS > 0);
+			SimpleHttpsServer httpsServer = null;
+			httpServer.start(portHTTP, portHTTPS > 0);
 
 			if (portHTTPS > 0) {
-				SimpleHttpsServer httpsServer = new SimpleHttpsServer();
-				httpsServer.Start(portHTTPS, keyStoreFile, storePass.toCharArray(), keyPass.toCharArray());
+				httpsServer = new SimpleHttpsServer();
+				httpsServer.start(portHTTPS, keyStoreFile, storePass.toCharArray(), keyPass.toCharArray());
 			}
 			Database.openDatabase(dbPath);
 			State.startBackgroundCleanup();
 			SimpleWebSocketServer.main(null);
+
+			ExitReason exit = exitWait.take();
+
+			try {
+				Log.info("Closing WebSocket server");
+				SimpleWebSocketServer.stopServer();
+			} catch (Exception e) {
+				Log.log(Level.SEVERE, "Failure in stopping WebSocket server", e);
+			}
+
+			Log.info("Closing HTTP sever");
+			httpServer.stop();
+			if (httpsServer != null) {
+				Log.info("Closing HTTPS server");
+				httpsServer.stop();
+			}
+
+			try {
+				Log.info("Closing database");
+				Database.close();
+			} catch (Exception e) {
+				Log.log(Level.SEVERE, "Failed to close database", e);
+			}
+			State.stopBackgroundCleanup();
+
+			System.exit(exit.getValue());
+		}
+
+		System.exit(ExitReason.BAD_PARAM.getValue());
+	}
+
+	public enum ExitReason {
+		NORMAL(0), BAD_PARAM(1), UPDATE(5);
+
+		private final int value;
+
+		private ExitReason(int value) {
+			this.value = value;
+		}
+
+		public int getValue() {
+			return value;
 		}
 	}
 

@@ -29,7 +29,7 @@ public class SimpleHttpsServer {
 	private HttpsServer server;
 	private static final String protocol = "TLS";
 
-	public void Start(int port, String keystoreFilename, char[] storepass, char[] keypass) {
+	public void start(int port, String keystoreFilename, char[] storepass, char[] keypass) {
 		try {
 			// Load certificate
 			FileInputStream fIn = new FileInputStream(keystoreFilename);
@@ -103,7 +103,7 @@ public class SimpleHttpsServer {
 		}
 	}
 
-	public void Stop() {
+	public void stop() {
 		server.stop(0);
 		System.out.println("HTTPS server stopped");
 	}

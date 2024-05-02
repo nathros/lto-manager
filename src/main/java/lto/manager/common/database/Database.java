@@ -84,6 +84,15 @@ public class Database {
 		return null;
 	}
 
+	public static boolean close() throws SQLException {
+		if (connection.isClosed()) {
+			return false;
+		} else {
+			connection.close();
+			return true;
+		}
+	}
+
 	public static ResultSet executeRawQuery(final String query) throws SQLException {
 		var statment = connection.createStatement();
 		statment.execute(query);

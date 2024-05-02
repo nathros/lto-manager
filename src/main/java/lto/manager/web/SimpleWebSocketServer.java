@@ -16,6 +16,7 @@ import lto.manager.web.handlers.http.BaseHTTPHandler;
 
 public class SimpleWebSocketServer extends WebSocketServer {
 	private final static int EVENT_CODE_PATH_NOT_FOUND = 3001;
+	private static WebSocketServer server = null;
 
 	public SimpleWebSocketServer(InetSocketAddress address) {
 		super(address);
@@ -118,7 +119,16 @@ public class SimpleWebSocketServer extends WebSocketServer {
 	public static void main(String[] args) {
 		final String host = "0.0.0.0";
 		final int port = 8887;
-		WebSocketServer server = new SimpleWebSocketServer(new InetSocketAddress(host, port));
+		server = new SimpleWebSocketServer(new InetSocketAddress(host, port));
 		server.start();
+	}
+
+	public static boolean stopServer() throws InterruptedException {
+		if (server == null) {
+			return false;
+		} else {
+			server.stop();
+			return true;
+		}
 	}
 }

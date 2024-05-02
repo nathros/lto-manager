@@ -21,6 +21,7 @@ import lto.manager.web.handlers.http.pages.admin.AdminHandler;
 import lto.manager.web.handlers.http.pages.admin.AppUpdateHandler;
 import lto.manager.web.handlers.http.pages.admin.LoggingHandler;
 import lto.manager.web.handlers.http.pages.admin.SessionViewerHandler;
+import lto.manager.web.handlers.http.pages.admin.ShutdownHandler;
 import lto.manager.web.handlers.http.pages.admin.UpdateOptionsHandler;
 import lto.manager.web.handlers.http.pages.admin.externalprocess.ExternalProcessHandler;
 import lto.manager.web.handlers.http.pages.admin.externalprocess.ExternalProcessViewerHandler;
@@ -69,6 +70,7 @@ public class Handlers {
 		ret.put(LogOutHandler.PATH, new LogOutHandler());
 
 		ret.put(AdminHandler.PATH, new AdminHandler());
+		ret.put(ShutdownHandler.PATH, new ShutdownHandler());
 		ret.put(UpdateOptionsHandler.PATH, new UpdateOptionsHandler());
 		ret.put(ExternalProcessHandler.PATH, new ExternalProcessHandler());
 		ret.put(ExternalProcessViewerHandler.PATH, new ExternalProcessViewerHandler());

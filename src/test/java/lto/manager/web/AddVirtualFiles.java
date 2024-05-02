@@ -16,7 +16,11 @@ import lto.manager.common.database.tables.records.RecordTape.RecordTapeFormatTyp
 public class AddVirtualFiles {
 
 	public static void main(String[] args) throws InterruptedException, SQLException, IOException {
-		Runnable runnable = () -> { lto.manager.web.MainWeb.main(args); };
+		Runnable runnable = () -> { try {
+			lto.manager.web.MainWeb.main(args);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} };
 		Thread thread = new Thread(runnable);
 		thread.start();
 		Thread.sleep(1000);

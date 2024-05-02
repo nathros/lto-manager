@@ -16,7 +16,7 @@ import lto.manager.web.handlers.http.HTTPSRedirectHandler;
 public class SimpleHttpServer {
 	private HttpServer server;
 
-	public void Start(int port, boolean redirectOnly) {
+	public void start(int port, boolean redirectOnly) {
 		try {
 			server = HttpServer.create(new InetSocketAddress(port), 10);
 			Log.info("HTTP " + (redirectOnly ? "redirect " : "") + "server started at port: http://localhost:" + port);
@@ -38,7 +38,7 @@ public class SimpleHttpServer {
 		}
 	}
 
-	public void Stop() {
+	public void stop() {
 		server.stop(0);
 		Log.info("HTTP server stopped");
 	}

@@ -8,7 +8,7 @@ public class Main {
 
 	public static final boolean DEBUG_MODE = ManagementFactory.getRuntimeMXBean().getInputArguments().toString().indexOf("-agentlib:jdwp") > 0;
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InterruptedException {
 		if (args.length > 0) {
 			if (args[0].equals(WEB)) {
 				lto.manager.web.MainWeb.main(args);
