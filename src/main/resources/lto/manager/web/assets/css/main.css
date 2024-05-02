@@ -396,6 +396,9 @@ input:disabled {
 .icon-printer:before {
 	background-image: url('/assets/img/printer-fill.svg');
 }
+.icon-power:before {
+	background-image: url('/assets/img/power.svg');
+}
 .icon-arrow-repeat:before {
 	background-image: url('/assets/img/arrow-repeat.svg');
 }

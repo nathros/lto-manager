@@ -51,6 +51,7 @@ public class CSS {
 	public final static String ICON_CROSS = "icon-cross ";
 	public final static String ICON_BOX_ARROW_RIGHT = "icon-box-arrow-right ";
 	public final static String ICON_PRINTER = "icon-printer ";
+	public final static String ICON_POWER = "icon-power ";
 	public final static String ICON_ARROW_REPEAT = "icon-arrow-repeat ";
 	public final static String ICON_PDF = "icon-pdf ";
 	public final static String ICON_SVG = "icon-svg ";

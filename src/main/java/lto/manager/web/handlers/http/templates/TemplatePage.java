@@ -16,6 +16,7 @@ import lto.manager.common.Main;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.pages.LogOutHandler;
 import lto.manager.web.handlers.http.pages.RootHandler;
+import lto.manager.web.handlers.http.pages.ShutdownHandler;
 import lto.manager.web.handlers.http.pages.admin.AdminHandler;
 import lto.manager.web.handlers.http.pages.dashboard.DashBoardHandler;
 import lto.manager.web.handlers.http.pages.drives.DrivesHandler;
@@ -134,6 +135,13 @@ public class TemplatePage {
 											.__()
 										.__();
 									}
+									ul.li()
+										.a()
+											.attrClass(CSS.ICON_POWER + CSS.HEADER_MENU_ITEM_ICON)
+											.attrHref(ShutdownHandler.PATH)
+											.text("Shutdown")
+										.__()
+									.__();
 								})
 							.__()
 						.__()
