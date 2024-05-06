@@ -1,7 +1,9 @@
 package lto.manager.web.handlers.http.pages.admin;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.util.concurrent.ExecutionException;
+import java.util.function.Supplier;
 
 import org.xmlet.htmlapifaster.Div;
 
@@ -13,8 +15,6 @@ import lto.manager.web.handlers.http.pages.admin.externalprocess.ExternalProcess
 import lto.manager.web.handlers.http.partial.components.ButtonExtended.ButtonExtendedOptions;
 import lto.manager.web.handlers.http.partial.components.ButtonExtendedGroup;
 import lto.manager.web.handlers.http.partial.components.ButtonExtendedGroup.ButtonExtendedGroupOptions;
-import lto.manager.web.handlers.http.partial.pie.PieCPUUsage;
-import lto.manager.web.handlers.http.partial.pie.PieJVMMemoryUsage;
 import lto.manager.web.handlers.http.templates.TemplatePage.BreadCrumbs;
 import lto.manager.web.handlers.http.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.http.templates.TemplatePage.TemplatePageModel;
@@ -35,34 +35,67 @@ public class AdminHandler extends BaseHTTPHandler {
 	private static final ButtonExtendedOptions advOptionSession = ButtonExtendedOptions.of("Sessions", "View login sessions", SessionViewerHandler.PATH, CSS.ICON_PERSON_CARD);
 	private static final ButtonExtendedOptions advOptionDatabase = ButtonExtendedOptions.of("Database", "Execute SQL", DatabaseHandler.PATH, CSS.ICON_DATABASE);
 	private static final ButtonExtendedOptions advOptionExt = ButtonExtendedOptions.of("Processes", "View external processes", ExternalProcessHandler.PATH, CSS.ICON_TERMINAL);
-	private static final ButtonExtendedGroupOptions groupOptionAdvanced = ButtonExtendedGroupOptions.of("Advanced", CSS.ICON_TOOLS, advOptionLog, advOptionSession, advOptionDatabase, advOptionExt);
+	private static final ButtonExtendedOptions advOptionWSCon = ButtonExtendedOptions.of("Websocket Connnections", "View open WebSockets", WebsocketListConnectionAdminHandler.PATH, CSS.ICON_DIAGRAM_2);
+	private static final ButtonExtendedOptions advOptionWSTest = ButtonExtendedOptions.of("Websocket Tester", "Test WebSockets", WebsocketTestAdminHandler.PATH, CSS.ICON_DIAGRAM_3);
+	private static final ButtonExtendedGroupOptions groupOptionAdvanced = ButtonExtendedGroupOptions.of("Advanced", CSS.ICON_TOOLS, advOptionLog, advOptionSession, advOptionDatabase, advOptionExt, advOptionWSCon, advOptionWSTest);
+
+	private static final Supplier<String> hostNameSupplier = () -> {
+		try {
+			return InetAddress.getLocalHost().getHostName();
+		} catch (IOException e) {
+			return "Not found";
+		}
+	};
 
 	static Void content(Div<?> view, BodyModel model) {
+		final String hostname = hostNameSupplier.get();
 		view
 		.div()
 			.of(o -> ButtonExtendedGroup.content(o, groupOptionSystem))
 			.of(o -> ButtonExtendedGroup.content(o, groupOptionAdvanced))
-			.of(div -> {
-				div
-				.hr().__()
-				.div().attrClass(CSS.CARD).addAttr(CSS.CARD_ATTRIBUTE, "System information")
-					.div().attrClass(CSS.PIE_CONTAINER)
-						.of(pie -> PieCPUUsage.content(pie))
-						.of(pie -> PieJVMMemoryUsage.content(pie))
-					.__()
+		.__() //  div
+		.hr().__()
+		.div()
+			.attrClass(CSS.CARD_CONTAINER)
+			.div()
+				.attrClass(CSS.CARD)
+				.h3().text("System Information").__()
+				.h4().text("Overview").__()
+				.div()
+					.attrClass("system-info")
+					.b().text("Version: ").__()
+					.span().text(Version.VERSION).__()
+					.b().text("Build Date: ").__()
+					.span().text(Version.BUILD_DATE).__()
+					.b().text("Tag: ").__()
+					.span().text(Version.TAG).__()
+					.b().text("Version: ").__()
+					.span().text(Version.VERSION).__()
+					.b().text("Hostname: ").__()
+					.span().text(hostname).__()
 				.__()
-				.p().text("Version: " + Version.VERSION).__()
-				.p().text("Tag: " + Version.TAG).__()
-				.p().text("Branch: " + Version.BRANCH).__()
-				.p().text("Commit: " + Version.COMMIT_HASH).__()
-				.p().text("Build Date: " + Version.BUILD_DATE).__()
-				.of(o -> {
-					for (int i = 0; i < lto.manager.Version.DEPENDENCIES.size(); i += 3) {
-						o.p().text(Version.DEPENDENCIES.get(i) + " : version : "
-								+ lto.manager.Version.DEPENDENCIES.get(i + 1) + " " + lto.manager.Version.DEPENDENCIES.get(i + 2)).__();
-					}
-				});
-		}).__(); //  div
+				.h4().text("Libraries").__()
+				.div()
+					.attrClass("system-info")
+					.of(div -> {
+						for (int i = 0; i < Version.DEPENDENCIES.size(); i += 3) {
+							div.b().text(Version.DEPENDENCIES.get(i)).__();
+							div
+								.span()
+									.text(Version.DEPENDENCIES.get(i + 1) + ": ")
+									.a()
+										.attrStyle("font-size:small")
+										.attrTarget("_blank")
+										.attrHref(Version.DEPENDENCIES.get(i + 2))
+										.text(Version.DEPENDENCIES.get(i + 2))
+									.__()
+								.__();
+						}
+					})
+				.__()
+			.__()
+
+		.__(); // div
 		return null;
 	}
 

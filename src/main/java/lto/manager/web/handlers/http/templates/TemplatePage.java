@@ -194,6 +194,7 @@ public class TemplatePage {
 							final var crumb = model.getBreadCrumbs();
 							if (crumb != null) {
 								final List<Pair<String, String>> items = crumb.getItems();
+								div.a().attrClass("back").attrHref(items.get(items.size() - 2).getRight()).attrTitle("Back").__();
 								for (int i = items.size() - 1; i >= 0; i--) {
 									final Pair<String, String> item = items.get(i);
 									div.a().attrHref(item.getRight()).text(item.getLeft()).__();

@@ -25,7 +25,6 @@ public class ExternalProcessHandler extends BaseHTTPHandler {
 	static Void content(Div<?> view, BodyModel model) {
 		view
 		.div()
-			.a().attrClass(CSS.BUTTON).attrOnclick("history.back()").text("Back").__()
 			.div().attrClass("card").addAttr("header-text", "Current Processes").of(d -> {
 				var keyList = ExternalProcess.getCurrentProcessKeyList();
 				for (String key: keyList) {

@@ -25,7 +25,7 @@ public class SandpitHandler extends BaseHTTPHandler {
 
 	static Void content(Div<?> view, BodyModel model) {
 		view
-			.div().attrClass(CSS.CARD).addAttr(CSS.CARD_ATTRIBUTE, "General Debug")
+			.div().attrClass(CSS.GROUP).addAttr(CSS.GROUP_ATTRIBUTE, "General Debug")
 				.a().attrClass(CSS.BUTTON).attrHref(EchoHeaderHandler.PATH).text("Echo Request Header").__()
 				.a().attrClass(CSS.BUTTON).attrHref(EchoGetHandler.PATH).text("Echo GET").__()
 				.a().attrClass(CSS.BUTTON).attrHref(EchoPostHandler.PATH).text("Echo POST").__()
@@ -33,16 +33,16 @@ public class SandpitHandler extends BaseHTTPHandler {
 				.a().attrClass(CSS.BUTTON).attrHref(ClearCacheHandler.PATH).text(ClearCacheHandler.NAME).__()
 				.a().attrClass(CSS.BUTTON).attrHref(DatabaseTestHandler.PATH).text(DatabaseTestHandler.NAME).__()
 			.__()
-			.div().attrClass(CSS.CARD).addAttr(CSS.CARD_ATTRIBUTE, "Frontend")
+			.div().attrClass(CSS.GROUP).addAttr(CSS.GROUP_ATTRIBUTE, "Frontend")
 				.a().attrClass(CSS.BUTTON).attrHref(ToastTestHandler.PATH).text(ToastTestHandler.NAME).__()
 				.a().attrClass(CSS.BUTTON).attrHref(CheckBoxTestHandler.PATH).text(CheckBoxTestHandler.NAME).__()
 				.a().attrClass(CSS.BUTTON).attrHref(SwitchTestHandler.PATH).text(SwitchTestHandler.NAME).__()
 			.__()
-			.div().attrClass(CSS.CARD).addAttr(CSS.CARD_ATTRIBUTE, "Networking")
+			.div().attrClass(CSS.GROUP).addAttr(CSS.GROUP_ATTRIBUTE, "Networking")
 				.a().attrClass(CSS.BUTTON).attrHref(WebsocketTestHandler.PATH).text(WebsocketTestHandler.NAME).__()
 				.a().attrClass(CSS.BUTTON).attrHref(WebsocketListConnectionHandler.PATH).text(WebsocketListConnectionHandler.NAME).__()
 			.__()
-			.div().attrClass(CSS.CARD).addAttr(CSS.CARD_ATTRIBUTE, "Error Handling")
+			.div().attrClass(CSS.GROUP).addAttr(CSS.GROUP_ATTRIBUTE, "Error Handling")
 				.a().attrClass(CSS.BUTTON).attrHref(InternalErrorTesterHandler.PATH).text(InternalErrorTesterHandler.NAME).__()
 				.a().attrClass(CSS.BUTTON).attrHref(InternalErrorInlineTesterHandler.PATH).text(InternalErrorInlineTesterHandler.NAME).__()
 			.__();

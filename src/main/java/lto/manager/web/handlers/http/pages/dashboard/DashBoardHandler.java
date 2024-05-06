@@ -12,6 +12,7 @@ import lto.manager.web.handlers.http.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.http.templates.TemplatePage.TemplatePageModel;
 import lto.manager.web.handlers.http.templates.models.BodyModel;
 import lto.manager.web.handlers.http.templates.models.HeadModel;
+import lto.manager.web.resource.CSS;
 
 public class DashBoardHandler extends BaseHTTPHandler {
 	public static final String PATH = "/dashboard";
@@ -20,7 +21,14 @@ public class DashBoardHandler extends BaseHTTPHandler {
 	static Void content(Div<?> view, BodyModel model) {
 		view
 			.div()
-				.p().text("Empty").__()
+				.attrClass(CSS.CARD_CONTAINER)
+				.div()
+					.attrClass(CSS.CARD)
+					.h2().text("Information").__()
+					.div()
+
+					.__()
+				.__() // div
 			.__(); // div
 		return null;
 	}

@@ -1,4 +1,4 @@
-package lto.manager.web.handlers.http.pages.sandpit;
+package lto.manager.web.handlers.http.pages.admin;
 
 import org.xmlet.htmlapifaster.Div;
 import org.xmlet.htmlapifaster.EnumTypeInputType;
@@ -16,8 +16,8 @@ import lto.manager.web.resource.Asset;
 import lto.manager.web.resource.CSS;
 import lto.manager.web.resource.HTML;
 
-public class WebsocketTestHandler extends BaseHTTPHandler {
-	public static final String PATH = Asset.PATH_SANDPIT_BASE + "websocket";
+public class WebsocketTestAdminHandler extends BaseHTTPHandler {
+	public static final String PATH = AdminHandler.PATH + "/websocket";
 	public static final String NAME = "Websocket Tester";
 
 	static Void content(Div<?> view, BodyModel model) {
@@ -99,8 +99,8 @@ public class WebsocketTestHandler extends BaseHTTPHandler {
 	public void requestHandle(HttpExchange he) throws Exception {
 		HeadModel thm = HeadModel.of(NAME);
 		thm.addScript(Asset.JS_WEBSOCKET).addScript(Asset.JS_TEST_WEBSOCKET);
-		BreadCrumbs crumbs = new BreadCrumbs().add(SandpitHandler.NAME, SandpitHandler.PATH).add(NAME, PATH);
-		TemplatePageModel tpm = TemplatePageModel.of(WebsocketTestHandler::content, null, thm, SelectedPage.Sandpit, BodyModel.of(he, null), crumbs);
+		BreadCrumbs crumbs = new BreadCrumbs().add(AdminHandler.NAME, AdminHandler.PATH).add(NAME, PATH);
+		TemplatePageModel tpm = TemplatePageModel.of(WebsocketTestAdminHandler::content, null, thm, SelectedPage.Admin, BodyModel.of(he, null), crumbs);
 		requestHandleCompletePage(he, tpm);
 	}
 

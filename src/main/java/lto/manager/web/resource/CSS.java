@@ -22,14 +22,16 @@ public class CSS {
 	public final static String BUTTON_IMAGE_EXT_GROUP = "btn-image-ext-group ";
 	public final static String BUTTON_SMALL = "btn-s ";
 	public final static String BUTTON_MENU_LIST = "btn-menu-list ";
-	public final static String CARD = "card ";
-	public final static String CARD_ATTRIBUTE = "data-header-text";
+	public final static String GROUP = "group ";
+	public final static String GROUP_ATTRIBUTE = "data-header-text";
 	public final static String BACKGROUND_CAUTION = "background-caution ";
 	public final static String BACKGROUND_ACTIVE = "background-active ";
 	public final static String BACKGROUND_GRAY = "background-gray ";
 	public final static String BACKGROUND_ERROR = "background-error ";
 	public final static String BACKGROUND_GREEN = "background-green ";
 	public final static String FONT_SMALL = "font-small ";
+	public final static String CARD_CONTAINER = "card-container ";
+	public final static String CARD = "card ";
 
 	public final static String TABLE = "table ";
 
@@ -71,6 +73,8 @@ public class CSS {
 	public final static String ICON_TERMINAL = "icon-terminal ";
 	public final static String ICON_GEAR = "icon-gear ";
 	public final static String ICON_WRENCH = "icon-wrench ";
+	public final static String ICON_DIAGRAM_2 = "icon-diagram-2 ";
+	public final static String ICON_DIAGRAM_3 = "icon-diagram-3 ";
 
 	public final static String FV_ID = "id-wtree";
 	public final static String FV_ID_CONTEXT_CONTAINER = "wtree-context-container";

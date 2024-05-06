@@ -199,13 +199,16 @@ input:disabled {
 .header-root-container > a:first-of-type {
 	margin-right: auto;
 }
-.header-root-container > a:last-of-type {
+.header-root-container > a:last-of-type, .header-root-container > a.back {
 	mask-image: url('/assets/img/house-door-fill.svg');
 	mask-repeat: no-repeat;
 	mask-position: center;
 	padding: 1rem;
 	background-color: white;
 	opacity: 50%;
+}
+.header-root-container > a.back {
+	mask-image: url('/assets/img/arrow-90deg-left-short.svg');
 }
 .head-logo {
 	display: flex;
@@ -382,10 +385,10 @@ input:disabled {
 	mask-image: url('/assets/img/bucket-spade-fill.svg');
 }
 .icon-edit:before {
-	background-image: url('/assets/img/pencil-fill.svg');
+	mask-image: url('/assets/img/pencil-fill.svg');
 }
 .icon-check:before {
-	background-image: url('/assets/img/check-lg.svg');
+	mask-image: url('/assets/img/check-lg.svg');
 }
 .icon-cross:before {
 	background-image: url('/assets/img/x.svg');
@@ -449,6 +452,12 @@ input:disabled {
 }
 .icon-wrench::before {
 	mask-image: url(/assets/img/wrench-adjustable-circle-fill.svg);
+}
+.icon-diagram-2::before {
+	mask-image: url(/assets/img/diagram-2-fill.svg);
+}
+.icon-diagram-3::before {
+	mask-image: url(/assets/img/diagram-3-fill.svg);
 }
 .menu-list {
 	list-style-type: none;
@@ -579,9 +588,15 @@ input:disabled {
 .btn-image-w-text:before {
 	margin-right: 0.5rem;
 }
+.btn-image-ext {
+	width: 21rem;
+}
 .btn-image-ext div {
 	display: flex;
 	flex-direction: column;
+}
+.btn-image-ext > div {
+	flex-grow: 1;
 }
 .btn-image-ext:before {
 	height: 2rem;
@@ -601,7 +616,7 @@ input:disabled {
 	mask-size: 1rem;
 	background-color: white;
 	mask-image: url('/assets/img/chevron-right.svg');
-	margin: auto;
+	margin: auto 0 auto auto;
 }
 .btn-image-ext-group {
 	display: flex;
@@ -882,14 +897,14 @@ https://codepen.io/sudeepgumaste/pen/abdrorB
 .loading-container div:nth-child(5) {
 	animation-delay: 0.5s;
 }
-.card {
+.group {
 	border-radius: var(--menu-border-radius);
 	border: 2px solid;
 	padding: 1rem;
 	position: relative;
 	margin-top: 1rem;
 }
-.card:before {
+.group:before {
 	content: attr(data-header-text);
 	background-color: white;
 	position: absolute;
@@ -916,4 +931,25 @@ https://codepen.io/sudeepgumaste/pen/abdrorB
 }
 .gap-half {
 	gap: 0.5rem;
+}
+.card-container {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--padding);
+}
+.card {
+	padding: var(--padding);
+	background-color: var(--common-background-colour);
+	color: white;
+	border-radius: 0.5rem;
+}
+.card > h3 {
+	margin-top: 0;
+}
+.system-info {
+	display: flex;
+	flex-wrap: wrap;
+}
+.system-info > * {
+	flex-basis: 50%;
 }

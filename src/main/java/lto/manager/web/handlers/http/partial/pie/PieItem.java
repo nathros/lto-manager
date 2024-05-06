@@ -22,7 +22,7 @@ public class PieItem {
 							.attrStyle("top:" + settings.toolTipTop() +
 									";left:" + settings.toolTipLeft() +
 									";width:" + settings.toolTipWidth())
-							.text(settings.toolTipText())
+							.raw(settings.toolTipText())
 						.__()
 					.__()
 				.__()
