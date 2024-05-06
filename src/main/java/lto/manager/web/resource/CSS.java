@@ -18,6 +18,8 @@ public class CSS {
 	public final static String BUTTON = "btn ";
 	public final static String BUTTON_IMAGE = "btn-image ";
 	public final static String BUTTON_IMAGE_W_TEXT = "btn-image-w-text ";
+	public final static String BUTTON_IMAGE_EXT = "btn-image-ext ";
+	public final static String BUTTON_IMAGE_EXT_GROUP = "btn-image-ext-group ";
 	public final static String BUTTON_SMALL = "btn-s ";
 	public final static String BUTTON_MENU_LIST = "btn-menu-list ";
 	public final static String CARD = "card ";
@@ -63,6 +65,12 @@ public class CSS {
 	public final static String ICON_INFO_CIRCLE = "icon-info-circle ";
 	public final static String ICON_DOWNLOAD = "icon-download ";
 	public final static String ICON_FILE_TEXT = "icon-file-text ";
+	public final static String ICON_TOOLS = "icon-tools ";
+	public final static String ICON_PERSON_CARD = "icon-person-vcard ";
+	public final static String ICON_DATABASE = "icon-database ";
+	public final static String ICON_TERMINAL = "icon-terminal ";
+	public final static String ICON_GEAR = "icon-gear ";
+	public final static String ICON_WRENCH = "icon-wrench ";
 
 	public final static String FV_ID = "id-wtree";
 	public final static String FV_ID_CONTEXT_CONTAINER = "wtree-context-container";

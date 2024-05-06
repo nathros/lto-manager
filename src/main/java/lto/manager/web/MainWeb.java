@@ -48,6 +48,7 @@ public class MainWeb {
 
 			ExitReason exit = exitWait.take();
 
+			State.stopBackgroundCleanup();
 			try {
 				Log.info("Closing WebSocket server");
 				SimpleWebSocketServer.stopServer();
@@ -68,11 +69,9 @@ public class MainWeb {
 			} catch (Exception e) {
 				Log.log(Level.SEVERE, "Failed to close database", e);
 			}
-			State.stopBackgroundCleanup();
 
 			System.exit(exit.getValue());
 		}
-
 		System.exit(ExitReason.BAD_PARAM.getValue());
 	}
 

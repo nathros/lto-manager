@@ -10,6 +10,9 @@ import com.sun.net.httpserver.HttpExchange;
 import lto.manager.Version;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.pages.admin.externalprocess.ExternalProcessHandler;
+import lto.manager.web.handlers.http.partial.components.ButtonExtended.ButtonExtendedOptions;
+import lto.manager.web.handlers.http.partial.components.ButtonExtendedGroup;
+import lto.manager.web.handlers.http.partial.components.ButtonExtendedGroup.ButtonExtendedGroupOptions;
 import lto.manager.web.handlers.http.partial.pie.PieCPUUsage;
 import lto.manager.web.handlers.http.partial.pie.PieJVMMemoryUsage;
 import lto.manager.web.handlers.http.templates.TemplatePage.BreadCrumbs;
@@ -24,15 +27,24 @@ public class AdminHandler extends BaseHTTPHandler {
 	public static final String PATH = "/admin";
 	public static final String NAME = "Admin";
 
+	private static final ButtonExtendedOptions sysOptionSetting = ButtonExtendedOptions.of("Settings", "Change system settings", UpdateOptionsHandler.PATH, CSS.ICON_WRENCH);
+	private static final ButtonExtendedOptions sysOptionUpdate = ButtonExtendedOptions.of("Update", "Check for updates", AppUpdateHandler.PATH, CSS.ICON_ARROW_REPEAT);
+	private static final ButtonExtendedGroupOptions groupOptionSystem = ButtonExtendedGroupOptions.of("System", CSS.ICON_GEAR, sysOptionSetting, sysOptionUpdate);
+
+	private static final ButtonExtendedOptions advOptionLog = ButtonExtendedOptions.of("Logging", "View system logs", LoggingHandler.PATH, CSS.ICON_FILE_TEXT);
+	private static final ButtonExtendedOptions advOptionSession = ButtonExtendedOptions.of("Sessions", "View login sessions", SessionViewerHandler.PATH, CSS.ICON_PERSON_CARD);
+	private static final ButtonExtendedOptions advOptionDatabase = ButtonExtendedOptions.of("Database", "Execute SQL", DatabaseHandler.PATH, CSS.ICON_DATABASE);
+	private static final ButtonExtendedOptions advOptionExt = ButtonExtendedOptions.of("Processes", "View external processes", ExternalProcessHandler.PATH, CSS.ICON_TERMINAL);
+	private static final ButtonExtendedGroupOptions groupOptionAdvanced = ButtonExtendedGroupOptions.of("Advanced", CSS.ICON_TOOLS, advOptionLog, advOptionSession, advOptionDatabase, advOptionExt);
+
 	static Void content(Div<?> view, BodyModel model) {
 		view
-		.div().of(div -> {
-			div
-				.a().attrClass(CSS.BUTTON).attrHref(UpdateOptionsHandler.PATH).text("Change Settings").__()
-				.a().attrClass(CSS.BUTTON).attrHref(ExternalProcessHandler.PATH).text("View External Processes").__()
-				.a().attrClass(CSS.BUTTON).attrHref(SessionViewerHandler.PATH).text("View Login Sessions").__()
-				.a().attrClass(CSS.BUTTON).attrHref(LoggingHandler.PATH).text("Logging").__()
-				.a().attrClass(CSS.BUTTON).attrHref(AppUpdateHandler.PATH).text("Check Updates").__()
+		.div()
+			.of(o -> ButtonExtendedGroup.content(o, groupOptionSystem))
+			.of(o -> ButtonExtendedGroup.content(o, groupOptionAdvanced))
+			.of(div -> {
+				div
+				.hr().__()
 				.div().attrClass(CSS.CARD).addAttr(CSS.CARD_ATTRIBUTE, "System information")
 					.div().attrClass(CSS.PIE_CONTAINER)
 						.of(pie -> PieCPUUsage.content(pie))
@@ -49,8 +61,7 @@ public class AdminHandler extends BaseHTTPHandler {
 						o.p().text(Version.DEPENDENCIES.get(i) + " : version : "
 								+ lto.manager.Version.DEPENDENCIES.get(i + 1) + " " + lto.manager.Version.DEPENDENCIES.get(i + 2)).__();
 					}
-				})
-			.__(); // div
+				});
 		}).__(); //  div
 		return null;
 	}

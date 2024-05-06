@@ -20,6 +20,7 @@ import lto.manager.web.handlers.http.pages.RootHandler;
 import lto.manager.web.handlers.http.pages.ShutdownHandler;
 import lto.manager.web.handlers.http.pages.admin.AdminHandler;
 import lto.manager.web.handlers.http.pages.admin.AppUpdateHandler;
+import lto.manager.web.handlers.http.pages.admin.DatabaseHandler;
 import lto.manager.web.handlers.http.pages.admin.LoggingHandler;
 import lto.manager.web.handlers.http.pages.admin.SessionViewerHandler;
 import lto.manager.web.handlers.http.pages.admin.UpdateOptionsHandler;
@@ -77,6 +78,7 @@ public class Handlers {
 		ret.put(SessionViewerHandler.PATH, new SessionViewerHandler());
 		ret.put(LoggingHandler.PATH, new LoggingHandler());
 		ret.put(AppUpdateHandler.PATH, new AppUpdateHandler());
+		ret.put(DatabaseHandler.PATH, new DatabaseHandler());
 
 		ret.put(LibraryHandler.PATH, new LibraryHandler());
 		ret.put(LibraryCreateHandler.PATH, new LibraryCreateHandler());

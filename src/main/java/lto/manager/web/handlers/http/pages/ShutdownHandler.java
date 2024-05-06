@@ -75,6 +75,7 @@ public class ShutdownHandler extends BaseHTTPHandler {
 					.title().of(title -> title.text(model.getHeadModel().getTitle())).__()
 					.link().addAttr(BaseHTTPHandler.ICON_KEY, BaseHTTPHandler.ICON_VALUE).attrHref(IMGFavico).addAttr(BaseHTTPHandler.TYPE_KEY, BaseHTTPHandler.TYPE_SVG).__()
 					.meta().attrName(BaseHTTPHandler.VIEWPORT_KEY).attrContent(BaseHTTPHandler.VIEWPORT_VALUE).__()
+					.script().raw("window.history.replaceState(null, null, '/'); // Remove /shutdown from URL") .__()
 					.style().raw(CSSMain).__()
 					.style().raw(CSSMobile).__()
 					.style().raw(CSSLogin).__()

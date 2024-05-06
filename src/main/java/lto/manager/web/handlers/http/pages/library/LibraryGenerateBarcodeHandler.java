@@ -42,8 +42,7 @@ public class LibraryGenerateBarcodeHandler extends BaseHTTPHandler {
 		final LTOColourThemeMap colourTheme = LTOColourThemeMap.of();
 		try {
 			tapeTypes.addAll(Database.getAllTapeTypes());
-		} catch (Exception e) {
-		}
+		} catch (Exception e) {}
 		// FIXME enter a bad value in input - click show details which will refresh AJAX
 		view.div().attrClass(CSS.COMMON_CONTAINER_NO_ALIGN)
 			.form()
