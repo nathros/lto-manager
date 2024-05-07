@@ -12,6 +12,7 @@ import lto.manager.web.handlers.http.ajax.filelist.AJAXIconListFetcher;
 import lto.manager.web.handlers.http.ajax.labelgenerator.AJAXGenerateLTOLabelHTML;
 import lto.manager.web.handlers.http.ajax.labelgenerator.AJAXGenerateLTOLabelPDF;
 import lto.manager.web.handlers.http.ajax.labelgenerator.AJAXGenerateLTOLabelSVG;
+import lto.manager.web.handlers.http.api.APISystemInfo;
 import lto.manager.web.handlers.http.api.APIVirtualDir;
 import lto.manager.web.handlers.http.pages.AssetHandler;
 import lto.manager.web.handlers.http.pages.LogInHandler;
@@ -28,7 +29,7 @@ import lto.manager.web.handlers.http.pages.admin.WebsocketListConnectionAdminHan
 import lto.manager.web.handlers.http.pages.admin.WebsocketTestAdminHandler;
 import lto.manager.web.handlers.http.pages.admin.externalprocess.ExternalProcessHandler;
 import lto.manager.web.handlers.http.pages.admin.externalprocess.ExternalProcessViewerHandler;
-import lto.manager.web.handlers.http.pages.dashboard.DashBoardHandler;
+import lto.manager.web.handlers.http.pages.dashboard.DashboardHandler;
 import lto.manager.web.handlers.http.pages.drives.DrivesHandler;
 import lto.manager.web.handlers.http.pages.files.FilesBrowserHandler2;
 import lto.manager.web.handlers.http.pages.files.FilesHandler;
@@ -66,8 +67,8 @@ public class Handlers {
 
 	private static HashMap<String, HttpHandler> getHTTPHandlers() {
 		HashMap<String, HttpHandler> ret = new HashMap<String, HttpHandler>();
-		ret.put(RootHandler.PATH, new DashBoardHandler());
-		ret.put(DashBoardHandler.PATH, new DashBoardHandler());
+		ret.put(RootHandler.PATH, new DashboardHandler());
+		ret.put(DashboardHandler.PATH, new DashboardHandler());
 		ret.put(AssetHandler.PATH, new AssetHandler());
 		ret.put(LogInHandler.PATH, new LogInHandler());
 		ret.put(LogOutHandler.PATH, new LogOutHandler());
@@ -109,6 +110,7 @@ public class Handlers {
 		ret.put(AJAXGenerateLTOLabelSVG.PATH, new AJAXGenerateLTOLabelSVG());
 
 		ret.put(APIVirtualDir.PATH, new APIVirtualDir());
+		ret.put(APISystemInfo.PATH, new APISystemInfo());
 
 		if (Main.DEBUG_MODE) {
 			ret.put(InternalErrorTesterHandler.PATH, new InternalErrorTesterHandler());

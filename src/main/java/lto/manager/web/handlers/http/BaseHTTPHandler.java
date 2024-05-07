@@ -71,7 +71,7 @@ public abstract class BaseHTTPHandler implements HttpHandler {
 		if ((boolean) Options.getData(OptionsSetting.ENABLE_LOGIN)) {
 			final String session = getSessionCookie(he);
 			if (!State.isLoginSessionValid(session)) {
-				handler = new LogInHandler();
+				handler = new LogInHandler(); // Replace hander with login page
 				Log.info("User not logged in show login page: " + he.getRequestHeaders().getFirst("Host")
 						+ he.getRequestURI());
 			}

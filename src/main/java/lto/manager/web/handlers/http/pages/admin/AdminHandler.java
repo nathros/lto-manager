@@ -1,20 +1,22 @@
 package lto.manager.web.handlers.http.pages.admin;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.util.concurrent.ExecutionException;
-import java.util.function.Supplier;
 
 import org.xmlet.htmlapifaster.Div;
 
 import com.sun.net.httpserver.HttpExchange;
 
-import lto.manager.Version;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.pages.admin.externalprocess.ExternalProcessHandler;
 import lto.manager.web.handlers.http.partial.components.ButtonExtended.ButtonExtendedOptions;
 import lto.manager.web.handlers.http.partial.components.ButtonExtendedGroup;
 import lto.manager.web.handlers.http.partial.components.ButtonExtendedGroup.ButtonExtendedGroupOptions;
+import lto.manager.web.handlers.http.partial.dashboard.DashboardContainer;
+import lto.manager.web.handlers.http.partial.dashboard.DashboardVersion;
+import lto.manager.web.handlers.http.partial.dashboard.DashboardVersion.DashboardVersionOptions;
+import lto.manager.web.handlers.http.partial.pie.PieCPUUsage;
+import lto.manager.web.handlers.http.partial.pie.PieJVMMemoryUsage;
 import lto.manager.web.handlers.http.templates.TemplatePage.BreadCrumbs;
 import lto.manager.web.handlers.http.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.http.templates.TemplatePage.TemplatePageModel;
@@ -39,63 +41,24 @@ public class AdminHandler extends BaseHTTPHandler {
 	private static final ButtonExtendedOptions advOptionWSTest = ButtonExtendedOptions.of("Websocket Tester", "Test WebSockets", WebsocketTestAdminHandler.PATH, CSS.ICON_DIAGRAM_3);
 	private static final ButtonExtendedGroupOptions groupOptionAdvanced = ButtonExtendedGroupOptions.of("Advanced", CSS.ICON_TOOLS, advOptionLog, advOptionSession, advOptionDatabase, advOptionExt, advOptionWSCon, advOptionWSTest);
 
-	private static final Supplier<String> hostNameSupplier = () -> {
-		try {
-			return InetAddress.getLocalHost().getHostName();
-		} catch (IOException e) {
-			return "Not found";
-		}
-	};
-
 	static Void content(Div<?> view, BodyModel model) {
-		final String hostname = hostNameSupplier.get();
 		view
 		.div()
 			.of(o -> ButtonExtendedGroup.content(o, groupOptionSystem))
 			.of(o -> ButtonExtendedGroup.content(o, groupOptionAdvanced))
 		.__() //  div
 		.hr().__()
-		.div()
-			.attrClass(CSS.CARD_CONTAINER)
-			.div()
-				.attrClass(CSS.CARD)
-				.h3().text("System Information").__()
-				.h4().text("Overview").__()
-				.div()
-					.attrClass("system-info")
-					.b().text("Version: ").__()
-					.span().text(Version.VERSION).__()
-					.b().text("Build Date: ").__()
-					.span().text(Version.BUILD_DATE).__()
-					.b().text("Tag: ").__()
-					.span().text(Version.TAG).__()
-					.b().text("Version: ").__()
-					.span().text(Version.VERSION).__()
-					.b().text("Hostname: ").__()
-					.span().text(hostname).__()
-				.__()
-				.h4().text("Libraries").__()
-				.div()
-					.attrClass("system-info")
-					.of(div -> {
-						for (int i = 0; i < Version.DEPENDENCIES.size(); i += 3) {
-							div.b().text(Version.DEPENDENCIES.get(i)).__();
-							div
-								.span()
-									.text(Version.DEPENDENCIES.get(i + 1) + ": ")
-									.a()
-										.attrStyle("font-size:small")
-										.attrTarget("_blank")
-										.attrHref(Version.DEPENDENCIES.get(i + 2))
-										.text(Version.DEPENDENCIES.get(i + 2))
-									.__()
-								.__();
-						}
-					})
-				.__()
+		.div().attrClass(CSS.GROUP).addAttr(CSS.GROUP_ATTRIBUTE, "System information")
+			.div().attrClass(CSS.PIE_CONTAINER)
+				.of(pie -> PieCPUUsage.content(pie))
+				.of(pie -> PieJVMMemoryUsage.content(pie))
 			.__()
-
-		.__(); // div
+		.__()
+		.div()
+			.of(div -> DashboardContainer.content(div, innerDiv -> {
+				DashboardVersion.content(innerDiv, DashboardVersionOptions.of(true));
+			}))
+		.__(); // DashboardContainer
 		return null;
 	}
 

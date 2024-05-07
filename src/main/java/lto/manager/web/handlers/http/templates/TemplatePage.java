@@ -18,7 +18,7 @@ import lto.manager.web.handlers.http.pages.LogOutHandler;
 import lto.manager.web.handlers.http.pages.RootHandler;
 import lto.manager.web.handlers.http.pages.ShutdownHandler;
 import lto.manager.web.handlers.http.pages.admin.AdminHandler;
-import lto.manager.web.handlers.http.pages.dashboard.DashBoardHandler;
+import lto.manager.web.handlers.http.pages.dashboard.DashboardHandler;
 import lto.manager.web.handlers.http.pages.drives.DrivesHandler;
 import lto.manager.web.handlers.http.pages.files.FilesHandler;
 import lto.manager.web.handlers.http.pages.jobs.JobsHandler;
@@ -219,7 +219,7 @@ public class TemplatePage {
 								.attrId("nav-menu")
 								.<TemplatePageModel>dynamic((ul, model) -> {
 									ul.li()
-										.a().of(a -> a.attrHref(DashBoardHandler.PATH)
+										.a().of(a -> a.attrHref(DashboardHandler.PATH)
 											.attrClass(CSS.ICON_DASHBOARD + CSS.HEADER_MENU_ITEM_ICON + (model.page == SelectedPage.Dashboard ? selected : ""))
 											.text("Dashboard"))
 										.__()

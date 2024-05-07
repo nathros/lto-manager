@@ -8,7 +8,7 @@ public class PieJVMMemoryUsage {
 	public static Void content(Div<?> view) {
 		final int maxMemoryMB = (int) (Util.getJVMMaxMemory() / 1024 / 1024);
 		final int allocatedMB = (int) (Util.getJVMAllocatedMemory() / 1024 / 1024);
-		final int usedMemMB = (int) ((Util.getJVMAllocatedMemory() - Util.getUsedMemory()) / 1024 / 1024);
+		final int usedMemMB = (int) (Util.getUsedMemory() / 1024 / 1024);
 		int p = (int) (((double)usedMemMB / (double)maxMemoryMB) * 100);
 
 		final var po = new PieOptions(p, "JVM Memory Usage", "orange", "16rem", "-98px", "-124px",

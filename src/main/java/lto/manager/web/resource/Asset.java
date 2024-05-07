@@ -22,6 +22,7 @@ public class Asset {
 	public static final String JS_ON_LOAD_AJAX = AssetHandler.PATH + "/js/on_load_ajax.js";
 	public static final String JS_LTO_LABEL_GENERATOR = AssetHandler.PATH + "/js/lto-label-generator.js";
 	public static final String JS_LOGGING = AssetHandler.PATH + "/js/logging.js";
+	public static final String JS_DASHBOARD = AssetHandler.PATH + "/js/dashboard.js";
 	public static final String JS_TEST_WEBSOCKET = AssetHandler.PATH + "/js/sandpit/websocket.js";
 
 	public static final String IMG_FAVICO_SVG = AssetHandler.PATH + "/img/favico.svg";

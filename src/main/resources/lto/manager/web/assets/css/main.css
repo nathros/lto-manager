@@ -394,7 +394,7 @@ input:disabled {
 	background-image: url('/assets/img/x.svg');
 }
 .icon-box-arrow-right:before {
-	background-image: url('/assets/img/box-arrow-right.svg');
+	mask-image: url('/assets/img/box-arrow-right.svg');
 }
 .icon-printer:before {
 	mask-image: url('/assets/img/printer-fill.svg');
@@ -932,23 +932,24 @@ https://codepen.io/sudeepgumaste/pen/abdrorB
 .gap-half {
 	gap: 0.5rem;
 }
-.card-container {
+.dashboard-container {
 	display: flex;
 	flex-wrap: wrap;
 	gap: var(--padding);
 }
-.card {
+.dashboard-item {
 	padding: var(--padding);
 	background-color: var(--common-background-colour);
 	color: white;
 	border-radius: 0.5rem;
 }
-.card > h3 {
+.dashboard-item > h3 {
 	margin-top: 0;
 }
 .system-info {
 	display: flex;
 	flex-wrap: wrap;
+	width: 20rem;
 }
 .system-info > * {
 	flex-basis: 50%;

@@ -158,6 +158,7 @@ function downloadLogFile() {
 		console.log(`Failed to download: ${error.message}`);
 	},
 	(event) => { // RX
+		tmpWS.close();
 		let e = document.createElement('a');
 		e.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(event.data));
 		e.setAttribute('download', "logfile.txt");
@@ -165,7 +166,6 @@ function downloadLogFile() {
 		document.body.appendChild(e);
 		e.click();
 		document.body.removeChild(e);
-		tmpWS.close();
 	});
 }
 const tableWS = openWS("/ws/logging",

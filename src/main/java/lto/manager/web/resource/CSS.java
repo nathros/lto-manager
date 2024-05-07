@@ -30,8 +30,8 @@ public class CSS {
 	public final static String BACKGROUND_ERROR = "background-error ";
 	public final static String BACKGROUND_GREEN = "background-green ";
 	public final static String FONT_SMALL = "font-small ";
-	public final static String CARD_CONTAINER = "card-container ";
-	public final static String CARD = "card ";
+	public final static String DASHBOARD_CONTAINER = "dashboard-container ";
+	public final static String DASHBOARD_ITEM = "dashboard-item ";
 
 	public final static String TABLE = "table ";
 
