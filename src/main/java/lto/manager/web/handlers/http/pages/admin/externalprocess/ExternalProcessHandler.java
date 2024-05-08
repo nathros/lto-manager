@@ -25,7 +25,7 @@ public class ExternalProcessHandler extends BaseHTTPHandler {
 	static Void content(Div<?> view, BodyModel model) {
 		view
 		.div()
-			.div().attrClass("card").addAttr("header-text", "Current Processes").of(d -> {
+			.div().attrClass(CSS.GROUP).addAttr(CSS.GROUP_ATTRIBUTE, "Current Processes").of(d -> {
 				var keyList = ExternalProcess.getCurrentProcessKeyList();
 				for (String key: keyList) {
 					final String link = ExternalProcessViewerHandler.PATH + "?" + ExternalProcessViewerHandler.TYPE
@@ -35,7 +35,7 @@ public class ExternalProcessHandler extends BaseHTTPHandler {
 					d.a().attrClass(CSS.BUTTON).attrHref(link).text(ep.getClass().getSimpleName() + " (" + key + ")").__();
 				}
 			}).__()
-			.div().attrClass("card").addAttr("header-text", "Completed Processes").of(d -> {
+			.div().attrClass(CSS.GROUP).addAttr(CSS.GROUP_ATTRIBUTE, "Completed Processes").of(d -> {
 				var keyList = ExternalProcess.getFinishedProcessKeyList();
 				for (String key: keyList) {
 					final String link = ExternalProcessViewerHandler.PATH + "?" + ExternalProcessViewerHandler.TYPE

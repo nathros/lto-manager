@@ -24,12 +24,10 @@ public class DashboardHandler extends BaseHTTPHandler {
 
 	static Void content(Div<?> view, BodyModel model) {
 		view
-			.div()
-				.of(div -> DashboardContainer.content(div, innerDiv -> {
-					DashboardVersion.content(innerDiv, DashboardVersionOptions.of(false));
-					DashboardMemory.content(innerDiv/*, DashboardMemoryOptions.of(true)*/);
-				})) // of
-			.__();
+			.of(parent -> DashboardContainer.content(parent, innerDiv -> {
+				DashboardVersion.content(innerDiv, DashboardVersionOptions.of(false));
+				DashboardMemory.content(innerDiv/*, DashboardMemoryOptions.of(true)*/);
+			}));
 		return null;
 	}
 

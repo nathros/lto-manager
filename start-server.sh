@@ -14,7 +14,7 @@ echo "See: config/logfile.log for messages and errors"
 echo "Server started at: http://localhost:$HTTP_PORT"
 while true
 do
-	java -Xmx512M -jar $JAR httpport $HTTP_PORT > /dev/null 2>&1
+	java -Xmx256M -jar $JAR httpport $HTTP_PORT > /dev/null 2>&1
 	if [ $? -eq 0 ]; then
 		break; # Exit normally
 	elif [ $? -eq 5 ]; then

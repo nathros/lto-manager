@@ -54,11 +54,10 @@ public class AdminHandler extends BaseHTTPHandler {
 				.of(pie -> PieJVMMemoryUsage.content(pie))
 			.__()
 		.__()
-		.div()
-			.of(div -> DashboardContainer.content(div, innerDiv -> {
-				DashboardVersion.content(innerDiv, DashboardVersionOptions.of(true));
-			}))
-		.__(); // DashboardContainer
+		.of(parent -> DashboardContainer.content(parent, innerDiv -> {
+			DashboardVersion.content(innerDiv, DashboardVersionOptions.of(true));
+		}));
+
 		return null;
 	}
 
