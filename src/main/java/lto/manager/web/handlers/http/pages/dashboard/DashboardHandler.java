@@ -8,6 +8,7 @@ import org.xmlet.htmlapifaster.Div;
 import com.sun.net.httpserver.HttpExchange;
 
 import lto.manager.web.handlers.http.BaseHTTPHandler;
+import lto.manager.web.handlers.http.partial.dashboard.DashboardCPU;
 import lto.manager.web.handlers.http.partial.dashboard.DashboardContainer;
 import lto.manager.web.handlers.http.partial.dashboard.DashboardMemory;
 import lto.manager.web.handlers.http.partial.dashboard.DashboardVersion;
@@ -27,6 +28,7 @@ public class DashboardHandler extends BaseHTTPHandler {
 			.of(parent -> DashboardContainer.content(parent, innerDiv -> {
 				DashboardVersion.content(innerDiv, DashboardVersionOptions.of(false));
 				DashboardMemory.content(innerDiv/*, DashboardMemoryOptions.of(true)*/);
+				DashboardCPU.content(innerDiv/*, DashboardMemoryOptions.of(true)*/);
 			}));
 		return null;
 	}

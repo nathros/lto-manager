@@ -48,7 +48,7 @@ public class FileListItem {
 					.img().attrClass(CSS.FV_FILE_ICON).attrSrc(getFileTypeIcon(fileTree.getTree())).attrAlt("").__()
 					.a()
 						.attrOnclick(JS.fnFileViewListChangeDir(ABS_PATH, fileTree.getOptions().isVirtual()))
-						.text(fileTree.getTree().getName())
+						.text(" " + fileTree.getTree().getName())
 					.__()
 					.of(con -> {
 						boolean show = fileTree.getOptions().isVirtual();

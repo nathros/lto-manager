@@ -34,6 +34,9 @@ public class ExternalProcessHandler extends BaseHTTPHandler {
 					final var ep = ExternalProcess.getCurrentProcess(key);
 					d.a().attrClass(CSS.BUTTON).attrHref(link).text(ep.getClass().getSimpleName() + " (" + key + ")").__();
 				}
+				if (keyList.size() == 0) {
+					d.p().text("Empty").__();
+				}
 			}).__()
 			.div().attrClass(CSS.GROUP).addAttr(CSS.GROUP_ATTRIBUTE, "Completed Processes").of(d -> {
 				var keyList = ExternalProcess.getFinishedProcessKeyList();
@@ -44,7 +47,11 @@ public class ExternalProcessHandler extends BaseHTTPHandler {
 					final var ep = ExternalProcess.getFinishedProcess(key);
 					d.a().attrClass(CSS.BUTTON).attrHref(link).text(ep.getClass().getSimpleName() + " (" + key + ")").__();
 				}
+				if (keyList.size() == 0) {
+					d.p().text("Empty").__();
+				}
 			}).__()
+			.i().attrStyle("float:right").text("Note: completed processes are periodically cleared").__()
 		.__(); //  div
 		return null;
 	}

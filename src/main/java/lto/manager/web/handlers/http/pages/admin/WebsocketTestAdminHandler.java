@@ -62,7 +62,7 @@ public class WebsocketTestAdminHandler extends BaseHTTPHandler {
 			.__()
 			.div()
 				.attrClass(CSS.GROUP)
-				.addAttr(CSS.GROUP_ATTRIBUTE, "Received Message")
+				.addAttr(CSS.GROUP_ATTRIBUTE, "Received Messages")
 				.attrStyle("display:flex;gap:1rem")
 				.textarea()
 					.of(t -> HTML.textArea(t, true))

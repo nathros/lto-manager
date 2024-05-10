@@ -14,8 +14,8 @@
     <a href="https://github.com/nathros/lto-manager"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/nathros/lto-manager">View Demo</a>
-    ·
+    <!--<a href="https://github.com/nathros/lto-manager">View Demo</a>
+    ·-->
     <a href="https://github.com/nathros/lto-manager/issues">Report Bug</a>
     ·
     <a href="https://github.com/nathros/lto-manager/issues">Request Feature</a>
@@ -55,9 +55,9 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+<!-- [![Product Name Screen Shot][product-screenshot]](https://example.com) -->
 
-Here's a blank template to get started: To avoid retyping too much info. Do a search and replace with your text editor for the following: `github_username`, `repo_name`, `twitter_handle`, `linkedin_username`, `email_client`, `email`, `project_title`, `project_description`
+This tool is intended for managing a single tape drive.
 
 ### Built With
 
@@ -75,7 +75,7 @@ To get a local copy up and running follow these simple example steps.
 
 ### Prerequisites
 * Java 17 LTS recommended
-* Gradle 7.2 or higher
+* Gradle 7.x
 * LTFS
 
 ### Linux Dependencies
@@ -113,31 +113,34 @@ mv ltfs/{.[!.],}* /opt/ltfs/
 ./configure
 make
 sudo make install
+sudo ldconfig
 
+ltfs # test command
+```
+<!--
 #if you run ltfs now it will complain that libraries are missing - the fix
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/ltfs/src/libltfs/.libs/
 echo export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/ltfs/src/libltfs/.libs/ >> ~/.bashrc
 
-ltfs # test command
-```
+sudo apt install make automake autoconf libtool fuse uuid libxml2 libxml2-dev libsnmp-dev pkg-config libfuse-dev uuid-dev icu-devtools
+
+ubuntu 22.04
+./autogen.sh
+./configure --disable-dependency-tracking
+make
+sudo make install
+sudo ldconfig -v
+-->
 
 ### Install Gradle
 ```sh
-export VER=7.2
-sudo mkdir /opt/gradle
-sudo chown $(whoami) /opt/gradle
-mkdir /opt/gradle/gradle-$VER/
-cd /opt/gradle/gradle-$VER/
-wget https://services.gradle.org/distributions/gradle-$VER-bin.zip
-unzip gradle-$VER-bin.zip
-rm gradle-$VER-bin.zip
-export PATH=$PATH:/opt/gradle/gradle-$VER/bin
-echo export PATH=$PATH:/opt/gradle/gradle-$VER/bin >> ~/.bashrc
+sudo ./helpers/install-gradle.sh
 ```
+This will install the latest release from version 7
 </details>
 <hr>
 
-### Windows Dependencies
+<!--### Windows Dependencies
 <details>
 <summary><u><b>Expand</b></u></summary>
 
@@ -172,6 +175,7 @@ or
 Add `C:\Gradle\bin` to `Environmental Variables`
 </details>
 <hr>
+-->
 
 
 ### Build Project
@@ -183,24 +187,22 @@ Add `C:\Gradle\bin` to `Environmental Variables`
    ```sh
    cd lto-manager
    gradle shadowJar
+   # Or if you used the install script: helpers/install-gradle.sh
+   gradle7.xx shadowJar # Replace xx with installed version
    ```
-<details>
+<!--<details>
 <summary>Optional build parameters</summary>
   Minify CSS and JavaScript
 
   ```sh
   gradle shadowJarMinify
   ```
-</details>
+</details>-->
 
 
 3. Compiled Jar will be named `lto-manager-all.jar` in `build/libs`
 
 ## Usage
-
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
-
-_For more examples, please refer to the [Documentation](https://example.com)_
 
 Run
 ```sh
@@ -290,15 +292,21 @@ These are all available launch parameters
 <!-- ROADMAP -->
 ## Roadmap
 
-- [ ] Feature 1
-- [ ] Feature 2
-- [ ] Feature 3
-    - [ ] Nested Feature
+- [ ] (In progress) Virtual filesystem on top of tape library
+- [ ] (In progress) Support for Linear Tape File System (LTFS)
+- [ ] (In progress) Support for tar
+- [ ] (In progress) LTO barcode generator
+    - [x] Modify colour schemes and styles
+    - [x] Export to HTML
+    - [x] Export to SVG
+    - [x] Export to PDF
+        - [ ] Support easy peel labels
+- [ ] Initial release
+- [ ] Support for Simple Tape File System (STFS)
 
-See the [open issues](https://github.com/github_username/repo_name/issues) for a full list of proposed features (and known issues).
+See the [open issues](https://github.com/nathros/lto-manager/issues?q=is%3Aissue+is%3Aopen+) for a full list of proposed features (and known issues).
 
 <p align="right">(<a href="#top">back to top</a>)</p>
-
 
 
 <!-- CONTRIBUTING -->
@@ -322,7 +330,7 @@ Don't forget to give the project a star! Thanks again!
 <!-- LICENSE -->
 ## License
 
-Distributed under the MIT License. See `LICENSE.txt` for more information.
+Distributed under the MIT License. See `LICENSE` for more information.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -331,9 +339,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 <!-- CONTACT -->
 ## Contact
 
-Your Name - [@twitter_handle](https://twitter.com/twitter_handle) - email@email_client.com
-
-Project Link: [https://github.com/github_username/repo_name](https://github.com/github_username/repo_name)
+Open new issue at: [https://github.com/nathros/lto-manager/issues](https://github.com/nathros/lto-manager/issues)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -342,9 +348,7 @@ Project Link: [https://github.com/github_username/repo_name](https://github.com/
 <!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
 
-* []()
-* []()
-* []()
+* []() Acknowledgments
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -354,5 +358,5 @@ Project Link: [https://github.com/github_username/repo_name](https://github.com/
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 [java-17]: https://img.shields.io/badge/Java-17-orange?style=for-the-badge&logo=java
 [java-17-url]: https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html
-[gradle]: https://img.shields.io/badge/Gradle-7.2-%2302303a?style=for-the-badge&logo=gradle
+[gradle]: https://img.shields.io/badge/Gradle-7-%2302303a?style=for-the-badge&logo=gradle
 [gradle-url]: https://gradle.org/

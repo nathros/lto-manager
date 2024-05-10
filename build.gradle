@@ -4,8 +4,8 @@ plugins {
 	id 'java'
 	id 'application'
 	//id 'org.openjfx.javafxplugin' version '0.0.9'
-	id 'com.github.johnrengelman.shadow' version '7.0.0'
-	id "org.gradlewebtools.minify" version "1.3.1"
+	id 'com.github.johnrengelman.shadow' version '7.1.2'
+	id "org.gradlewebtools.minify" version "2.1.0" // This depends on Closure which will soon be depreciated 
 }
 
 repositories {
@@ -41,9 +41,14 @@ dependencies {
     modules = [ 'javafx.controls', 'javafx.fxml' ]
 }*/
 
-mainClassName = 'lto.manager.web.MainWeb'
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
+application {
+	mainClass.set("lto.manager.web.MainWeb")
+}
+
+java {
+	sourceCompatibility = JavaVersion.VERSION_17
+	targetCompatibility = JavaVersion.VERSION_17
+}
 
 /*tasks.withType(JavaExec) { // Needed to debug JavaFX
 	// https://www.javafixing.com/2022/06/fixed-how-to-generate-javafx-jar-from.html
@@ -52,7 +57,6 @@ targetCompatibility = JavaVersion.VERSION_17
 	}
 }*/
 
-shadowJar {}
 
 def version = project.projectDir.toString() + "/src/main/java/lto/manager/Version.java"
 def versionBackup = version + ".bak"
@@ -68,6 +72,12 @@ def gitCommand = { String[] cmd ->
 
 // Before compile edit Version.java file
 compileJava.doFirst {
+	if (new File(version).readLines().get(0).equals("// build.gradle")) {
+		// This is not original version has been modified by previous build
+		project.logger.lifecycle("${version} was not restored from previous build, reverted")
+		gitCommand(new String[]{"git", "checkout", "--", version}) // Revert
+	}
+
 	new File(versionBackup).bytes = new File(version).bytes // Backup file
 	project.logger.lifecycle("Create dynamic version class: ${version}")
 
@@ -75,7 +85,7 @@ compileJava.doFirst {
 	final ln = System.getProperty('line.separator')
 
 	File file = new File(version)
-	file.write ""
+	file.write "// build.gradle${ln}" // Comment in file to show has been edited by script
 	new File(versionBackup).eachLine { line ->
 		// Go through each line and replace Strings with real values
 		if (line.contains('VERSION = "UNDEFINED";')) {
@@ -106,7 +116,9 @@ compileJava.doFirst {
 			def sqlbuild = "\"SqlBuilder\",\"${versionSqlBuilder}\",\"https://github.com/jahlborn/sqlbuilder\""
 			def html = "\"HtmlFlow\",\"${versionHtmlflow}\",\"https://github.com/xmlet/HtmlFlow\""
 			def websocket = "\"Java-WebSocket\",\"${versionJavaWebSocket}\",\"https://github.com/TooTallNate/Java-WebSocket\""
-			file << line.replace('"UNDEFINED", "UNDEFINED", "UNDEFINED"', "${sql},${sqlbuild},${html},${websocket}") << ln
+			def breeze = "\"KDE Breeze Icons\",\"5.80.0\",\"https://github.com/KDE/breeze-icons\""
+			def bootstrap = "\"Bootstrap Icons\",\"1.11.0\",\"https://icons.getbootstrap.com/\""
+			file << line.replace('"UNDEFINED", "UNDEFINED", "UNDEFINED"', "${sql},${sqlbuild},${html},${websocket},${breeze},${bootstrap}") << ln
 
 		} else {
 			file << line << ln
@@ -120,6 +132,7 @@ compileJava.doLast {
 	delete(versionBackup)
 }
 
+/*
 task shadowJarMinify(type: ShadowJar) {
 	dependsOn 'cssMinify'
 	dependsOn 'jsMinify'
@@ -130,6 +143,7 @@ task shadowJarMinify(type: ShadowJar) {
 	from sourceSets.main.output
 	configurations = [project.configurations.compileClasspath]
 }
+*/
 
 sourceSets {
 	shadowJarMinify {
@@ -139,6 +153,7 @@ sourceSets {
 		}
 	}
 }
+
 
 sourceSets {
 	main {

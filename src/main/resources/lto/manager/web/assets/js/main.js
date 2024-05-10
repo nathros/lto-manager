@@ -152,3 +152,9 @@ function getUUID() { // Not cryptographic
 		return v.toString(16);
 	});
 }
+async function shutdownConfirm() {
+	let response = await showToast(Toast.Warning, 'Are you sure? This will shutdown service' , -1, undefined, true);
+	if (response != ToastResponse.Cancel) {
+		window.location.href = "/shutdown"
+	}
+}

@@ -2,6 +2,7 @@ package lto.manager.web.handlers.http.pages.admin.externalprocess;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
+import java.util.function.BiFunction;
 
 import org.xmlet.htmlapifaster.Div;
 
@@ -27,37 +28,45 @@ public class ExternalProcessViewerHandler extends BaseHTTPHandler {
 	public static final String TYPE_COMPLETE = "1";
 	public static final String TYPE_CURRENT = "2";
 
+	private static final BiFunction<String, String, ExternalProcess> getExternalProcess = (final String typeQuery, final String idQuery) -> {
+		if (typeQuery.equals(TYPE_COMPLETE)) {
+			return ExternalProcess.getFinishedProcess(idQuery);
+		} else if (typeQuery.equals(TYPE_CURRENT)) {
+			return ExternalProcess.getCurrentProcess(idQuery);
+		}
+		return null;
+	};
+
 	static Void content(Div<?> view, BodyModel model) {
-		final String type = model.getQueryNoNull(TYPE);
 		final String id = model.getQueryNoNull(ID);
 
 		view
 			.div()
-				.a().attrClass(CSS.BUTTON).attrOnclick("history.back()").text("Back").__()
 				.of(div -> {
-					ExternalProcess ep = null;
-					if (type.equals(TYPE_COMPLETE)) {
-						ep = ExternalProcess.getFinishedProcess(id);
-					} else if (type.equals(TYPE_CURRENT)) {
-						ep = ExternalProcess.getCurrentProcess(id);
-					}
-					final ExternalProcess pro = ep;
+					final ExternalProcess pro = getExternalProcess.apply(model.getQueryNoNull(TYPE), id);
 					if (pro != null) {
 						div
-							.br().__()
-							.b().text("stdout").__().br().__()
-							.of(o -> {
-								for (String i: pro.getStdout()) {
-									o.i().text(i).__().br().__();
-								}
-							})
-							.hr().__()
-							.b().text("stderr").__().br().__()
-							.of(o -> {
-								for (String i: pro.getStderr()) {
-									o.i().text(i).__().br().__();
-								}
-							});
+							.b().text("Command: ").__()
+							.span()
+								.attrClass(CSS.FONT_MONOSPACE)
+								.text(pro.getArgsAsString())
+							.__()
+
+							.div().attrClass(CSS.GROUP).addAttr(CSS.GROUP_ATTRIBUTE, "stdout")
+								.div().attrClass(CSS.FONT_MONOSPACE + CSS.FONT_SMALL).of(d -> {
+									for (String i: pro.getStdout()) {
+										d.i().text(i).__().br().__();
+									}
+								}).__() // div inner
+							.__() // div group
+
+							.div().attrClass(CSS.GROUP + CSS.FONT_MONOSPACE).addAttr(CSS.GROUP_ATTRIBUTE, "stderr")
+								.div().attrClass(CSS.FONT_MONOSPACE + CSS.FONT_SMALL).of(d -> {
+									for (String i: pro.getStderr()) {
+										d.i().text(i).__().br().__();
+									}
+								}).__() // div inner
+							.__(); // div group
 					} else {
 						div.text("ID: " + id + " NOT FOUND");
 					}

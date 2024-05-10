@@ -15,8 +15,6 @@ import lto.manager.web.handlers.http.partial.components.ButtonExtendedGroup.Butt
 import lto.manager.web.handlers.http.partial.dashboard.DashboardContainer;
 import lto.manager.web.handlers.http.partial.dashboard.DashboardVersion;
 import lto.manager.web.handlers.http.partial.dashboard.DashboardVersion.DashboardVersionOptions;
-import lto.manager.web.handlers.http.partial.pie.PieCPUUsage;
-import lto.manager.web.handlers.http.partial.pie.PieJVMMemoryUsage;
 import lto.manager.web.handlers.http.templates.TemplatePage.BreadCrumbs;
 import lto.manager.web.handlers.http.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.http.templates.TemplatePage.TemplatePageModel;
@@ -48,12 +46,6 @@ public class AdminHandler extends BaseHTTPHandler {
 			.of(o -> ButtonExtendedGroup.content(o, groupOptionAdvanced))
 		.__() //  div
 		.hr().__()
-		.div().attrClass(CSS.GROUP).addAttr(CSS.GROUP_ATTRIBUTE, "System information")
-			.div().attrClass(CSS.PIE_CONTAINER)
-				.of(pie -> PieCPUUsage.content(pie))
-				.of(pie -> PieJVMMemoryUsage.content(pie))
-			.__()
-		.__()
 		.of(parent -> DashboardContainer.content(parent, innerDiv -> {
 			DashboardVersion.content(innerDiv, DashboardVersionOptions.of(true));
 		}));
