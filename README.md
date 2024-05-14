@@ -74,8 +74,8 @@ This is an example of how you may give instructions on setting up your project l
 To get a local copy up and running follow these simple example steps.
 
 ### Prerequisites
-* Java 17 LTS recommended
-* Gradle 7.x
+* Java 17 LTS recommended (should build with 21)
+* Gradle 7.x (8.x builds successfully with warnings)
 * LTFS
 
 ### Linux Dependencies
@@ -83,11 +83,11 @@ To get a local copy up and running follow these simple example steps.
 <summary><u><b>Expand</b></u></summary>
 
 ### Install Java
+These commands apply to Debian and derivatives such as Ubuntu, your own system maybe different
 ```sh
 sudo apt-get update
 sudo apt-get install openjdk-17-jdk openjdk-17-jre
 ```
-These commands apply to Debian and derivatives such as Ubuntu
 
 ### Install LTFS
 Make sure your tape drive is visible, if this returns nothing then check cables / system configuration

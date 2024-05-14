@@ -699,7 +699,7 @@ div > .btn-image-ext-group:first-child {
 	justify-content: center;
 }
 #toast div:first-of-type span {
-	width: 2rem;
+	min-width: 2rem;
 	height: 2rem;
 	margin-left: var(--padding-full);
 	mask-size: 2rem;
@@ -773,6 +773,9 @@ div > .btn-image-ext-group:first-child {
 }
 #toast-message {
 	padding-left: var(--padding-full);
+	padding-right: 3rem;
+	text-wrap: balance;
+	width: 100%;
 }
 .inline-message {
 	border-radius: var(--menu-border-radius);

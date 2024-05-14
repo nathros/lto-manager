@@ -155,7 +155,7 @@ async function hostChangeDir(path, virtual) {
 		root.outerHTML = div;
 	}).catch((error) => {
 		console.log(error);
-	})
+	});
 }
 
 function hideFileTree(sender) {
@@ -213,6 +213,13 @@ function bytesToHumanReadable(bytes) {
 	}
 }
 
+function replaceName(path, newName) {
+	// example path = "/test1/inner1/", newName = "inner2", return =  "/test1/inner2/"
+	let lastIndex = path.lastIndexOf("/", path.length - 2);
+	const result = path.substring(0, lastIndex + 1) + newName + "/";
+	return result;
+}
+
 function calculateSelectedFileSizeTotal() {
 	let container = document.getElementById(HOST_FILEVIEW_ROOT_ID + getIDPostFix(false));
 	let size = 0;
@@ -236,6 +243,7 @@ function recalculateSelectedFileSize() {
 
 function contextMenu(sender, virtual, event) {
 	if (!virtual) return true;
+	contextMenu.lastSender = sender;
 
 	const delBtn = document.getElementById(HOST_FILEVIEW_FV_ID_DEL_BTN + getIDPostFix(virtual));
 	const path = sender.getAttribute(ATTR_PATH);
@@ -329,7 +337,12 @@ function renameVirtualDir(dir, newName) {
 	}).then((json) => {
 		switch (json.status) {
 		case APIStatus.Ok:
-			hostChangeDir(getParentPath(dir), true); // Dir has been changed, refresh page
+			contextMenu.lastSender.children[1].innerText = ` ${newName}`;
+			const newPath = replaceName(dir, newName);
+			contextMenu.lastSender.setAttribute(ATTR_PATH, newPath);
+			const linkClick = contextMenu.lastSender.children[1].getAttribute("onclick");
+			contextMenu.lastSender.children[1].setAttribute("onclick", linkClick.replace(dir, newPath));
+			document.activeElement.blur();
 			break;
 		case APIStatus.Error:
 		default:
@@ -337,7 +350,7 @@ function renameVirtualDir(dir, newName) {
 			break;
 		}
 	}).catch((error) => {
-		showToast(Toast.Error, `Failed to delete directory: ${error}`, -1, undefined, false);
+		showToast(Toast.Error, `Failed to rename directory: ${error}`, -1, undefined, false);
 	});
 }
 
@@ -370,7 +383,7 @@ function setDirIcon(sender) {
 	}).then((json) => {
 		switch (json.status) {
 		case APIStatus.Ok:
-			hostChangeDir(getParentPath(path), true); // Dir has been changed, refresh page
+			contextMenu.lastSender.children[0].src = sender.src; // Change icon
 			break;
 		case APIStatus.Error:
 		default:

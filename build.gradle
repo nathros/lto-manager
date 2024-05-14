@@ -5,7 +5,7 @@ plugins {
 	id 'application'
 	//id 'org.openjfx.javafxplugin' version '0.0.9'
 	id 'com.github.johnrengelman.shadow' version '7.1.2'
-	id "org.gradlewebtools.minify" version "2.1.0" // This depends on Closure which will soon be depreciated 
+	//id "org.gradlewebtools.minify" version "2.1.0" // This depends on Closure which will soon be depreciated
 }
 
 repositories {
@@ -143,7 +143,6 @@ task shadowJarMinify(type: ShadowJar) {
 	from sourceSets.main.output
 	configurations = [project.configurations.compileClasspath]
 }
-*/
 
 sourceSets {
 	shadowJarMinify {
@@ -153,7 +152,7 @@ sourceSets {
 		}
 	}
 }
-
+*/
 
 sourceSets {
 	main {
@@ -163,7 +162,7 @@ sourceSets {
 	}
 }
 
-minification {
+/*minification {
     css {
         srcDir = project.file("src/main/resources/lto/manager/web/assets/css")
         dstDir = project.file("build/resources/main/lto/manager/web/assets/css")
@@ -174,4 +173,4 @@ minification {
         dstDir = project.file("build/resources/main/lto/manager/web/assets/js")
         options.originalFileNames = true
     }
-}
+}*/

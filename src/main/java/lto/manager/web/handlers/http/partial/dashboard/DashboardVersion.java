@@ -7,6 +7,7 @@ import java.util.function.Supplier;
 import org.xmlet.htmlapifaster.Div;
 
 import lto.manager.Version;
+import lto.manager.web.handlers.http.api.APISystemInfo;
 import lto.manager.web.resource.CSS;
 
 public class DashboardVersion {
@@ -20,6 +21,13 @@ public class DashboardVersion {
 
 	public static Void content(Div<?> view, final DashboardVersionOptions options) {
 		final String hostname = hostNameSupplier.get();
+		final long uptime = (System.currentTimeMillis() - APISystemInfo.startTime);
+		final long uptimeSeconds = uptime / 1000;
+		final String sec = String.format("%02d", uptimeSeconds % 60);
+		final String min = String.format("%02d", (uptimeSeconds / 60) % 60);
+		final String hours = String.format("%02d", (uptimeSeconds / 60 / 60) % 60);
+		final String days = String.format("%01d", (uptimeSeconds / 60 / 60 / 60) % 24);
+		final String uptimeStr = String.valueOf(days) + " Days, " + hours + ":" + min + ":" + sec;
 		view
 			.div()
 				.attrClass(CSS.DASHBOARD_ITEM)
@@ -37,6 +45,8 @@ public class DashboardVersion {
 					.span().text(Version.BRANCH).__()
 					.b().text("Hostname: ").__()
 					.span().text(hostname).__()
+					.b().text("Uptime: ").__()
+					.span().attrId("uptime").text(uptimeStr).__()
 				.__()
 				.of(div -> {
 					if (!options.getShowLibraries()) return;
