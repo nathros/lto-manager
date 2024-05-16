@@ -1,10 +1,15 @@
 package lto.manager.common;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.jar.Attributes;
+import java.util.jar.JarInputStream;
+import java.util.jar.Manifest;
 
 import lto.manager.common.log.Log;
 
@@ -45,6 +50,23 @@ public class Util {
 
 	public static long getJVMAllocatedMemory() {
 		return Runtime.getRuntime().totalMemory();
+	}
+
+	public static String getVersionNumberFromJar(final String jarPath) throws IOException {
+		JarInputStream jarStream = new JarInputStream(new FileInputStream(jarPath));
+		Manifest manifest = jarStream.getManifest();
+		try {
+			final Attributes mainAttributes = manifest.getMainAttributes();
+			final String versionNumber = mainAttributes.getValue("Version");
+			jarStream.close();
+			if (versionNumber == null) {
+				throw new IllegalArgumentException("No version number found in Jar");
+			}
+			return versionNumber;
+		} catch (Exception e) {
+			jarStream.close();
+			throw new IllegalArgumentException("No manifest found in Jar");
+		}
 	}
 
 	public static String virtualDirSeperatorsAdd(String input) {

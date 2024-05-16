@@ -444,6 +444,9 @@ input:disabled {
 .icon-database::before {
 	mask-image: url(/assets/img/database-fill.svg);
 }
+.icon-database-check::before {
+	mask-image: url(/assets/img/database-fill-check.svg);
+}
 .icon-terminal::before {
 	mask-image: url(/assets/img/terminal-fill.svg);
 }
@@ -458,6 +461,9 @@ input:disabled {
 }
 .icon-diagram-3::before {
 	mask-image: url(/assets/img/diagram-3-fill.svg);
+}
+.icon-sliders::before {
+	mask-image: url(/assets/img/sliders2.svg);
 }
 .menu-list {
 	list-style-type: none;

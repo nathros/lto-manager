@@ -23,6 +23,7 @@ import lto.manager.web.handlers.http.pages.admin.AdminHandler;
 import lto.manager.web.handlers.http.pages.admin.AppUpdateHandler;
 import lto.manager.web.handlers.http.pages.admin.DatabaseHandler;
 import lto.manager.web.handlers.http.pages.admin.LoggingHandler;
+import lto.manager.web.handlers.http.pages.admin.ServicesHandler;
 import lto.manager.web.handlers.http.pages.admin.SessionViewerHandler;
 import lto.manager.web.handlers.http.pages.admin.UpdateOptionsHandler;
 import lto.manager.web.handlers.http.pages.admin.WebsocketListConnectionAdminHandler;
@@ -84,6 +85,7 @@ public class Handlers {
 		ret.put(DatabaseHandler.PATH, new DatabaseHandler());
 		ret.put(WebsocketListConnectionAdminHandler.PATH, new WebsocketListConnectionAdminHandler());
 		ret.put(WebsocketTestAdminHandler.PATH, new WebsocketTestAdminHandler());
+		ret.put(ServicesHandler.PATH, new ServicesHandler());
 
 		ret.put(LibraryHandler.PATH, new LibraryHandler());
 		ret.put(LibraryCreateHandler.PATH, new LibraryCreateHandler());

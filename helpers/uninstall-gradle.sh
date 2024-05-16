@@ -6,20 +6,29 @@ if [ "$EUID" -ne 0 ]; then
   exit 1
 fi
 
+INSTALL_LOC=/opt/gradle
+
 uninstall() {
-	if [ -d "/opt/gradle/gradle-$1/" ]; then
-		rm -rf /opt/gradle/gradle-$1/
-		rm /usr/local/bin/gradle$1
-		echo "Uninstalled Gradle $1"
+	PACKAGE=$INSTALL_LOC/gradle-$1/
+	LAUNCH=/usr/local/bin/gradle$1
+	if [ -d $PACKAGE ]; then
+		rm -rf $PACKAGE
+		echo "Uninstalled Gradle $1 package: $PACKAGE"
 	else
-		echo "Gradle $1 not found"
+		echo "Gradle $1 package not found"
+	fi
+	if [ -f $LAUNCH ]; then
+		rm -f $LAUNCH
+		echo "Uninstalled Gradle $1 launcher: $LAUNCH"
+	else
+		echo "Gradle $1 launcher not found"
 	fi
 }
 
 if [ "$#" -ne 1 ]; then
-	if [ -d "/opt/gradle/" ]; then
+	if [ -d "$INSTALL_LOC/" ]; then
 		set +e
-		INSTALLED=($(ls -d /opt/gradle/* 2>/dev/null))
+		INSTALLED=($(ls -d $INSTALL_LOC/* 2>/dev/null))
 		set -e
 		if [ "${#INSTALLED[@]}" -eq 0 ]; then
 			echo "Gradle not installed"

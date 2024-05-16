@@ -3,9 +3,7 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 plugins {
 	id 'java'
 	id 'application'
-	//id 'org.openjfx.javafxplugin' version '0.0.9'
 	id 'com.github.johnrengelman.shadow' version '7.1.2'
-	//id "org.gradlewebtools.minify" version "2.1.0" // This depends on Closure which will soon be depreciated
 }
 
 repositories {
@@ -37,29 +35,24 @@ dependencies {
 }
 
 /*javafx {
-    version = "17"
-    modules = [ 'javafx.controls', 'javafx.fxml' ]
-}*/
-
-application {
-	mainClass.set("lto.manager.web.MainWeb")
+	version = "17"
+	modules = [ 'javafx.controls', 'javafx.fxml' ]
 }
 
-java {
-	sourceCompatibility = JavaVersion.VERSION_17
-	targetCompatibility = JavaVersion.VERSION_17
-}
-
-/*tasks.withType(JavaExec) { // Needed to debug JavaFX
+tasks.withType(JavaExec) { // Needed to debug JavaFX
 	// https://www.javafixing.com/2022/06/fixed-how-to-generate-javafx-jar-from.html
 	if (System.getProperty('DEBUG', 'false') == 'true') {
 		jvmArgs '-Xdebug', '-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=9999'
 	}
 }*/
 
-
-def version = project.projectDir.toString() + "/src/main/java/lto/manager/Version.java"
-def versionBackup = version + ".bak"
+sourceSets {
+	main {
+		java {
+			exclude 'lto/manager/gui/*' // Exclude JavaFX
+		}
+	}
+}
 
 def gitCommand = { String[] cmd ->
     def stdout = new ByteArrayOutputStream()
@@ -69,6 +62,33 @@ def gitCommand = { String[] cmd ->
     }
     return stdout.toString().replace("\n", "").replace("\r", "").trim()
 }
+
+def getVersionNumber = { ->
+	final versionTag = gitCommand(new String[]{"git", "tag", "--points-at", "HEAD"})
+	if (versionTag.equals("")) {
+		return "Dev Build"
+	} else {
+		return versionTag;
+	}
+}
+
+application {
+	mainClass.set("lto.manager.web.MainWeb")
+}
+
+jar {
+   manifest { // Add git tag to manifest
+       attributes 'Version': getVersionNumber()
+   }
+}
+
+java {
+	sourceCompatibility = JavaVersion.VERSION_17
+	targetCompatibility = JavaVersion.VERSION_17
+}
+
+def version = project.projectDir.toString() + "/src/main/java/lto/manager/Version.java"
+def versionBackup = version + ".bak"
 
 // Before compile edit Version.java file
 compileJava.doFirst {
@@ -131,46 +151,3 @@ compileJava.doLast {
 	new File(version).bytes = new File(versionBackup).bytes
 	delete(versionBackup)
 }
-
-/*
-task shadowJarMinify(type: ShadowJar) {
-	dependsOn 'cssMinify'
-	dependsOn 'jsMinify'
-	tasks.findByName('shadowJar').mustRunAfter 'cssMinify'
-	tasks.findByName('shadowJar').mustRunAfter 'jsMinify'
-
-	archiveClassifier.set("all")
-	from sourceSets.main.output
-	configurations = [project.configurations.compileClasspath]
-}
-
-sourceSets {
-	shadowJarMinify {
-		resources {
-			exclude '**/*.css' // exclude css from build
-			exclude '**/*.js' // exclude js from build
-		}
-	}
-}
-*/
-
-sourceSets {
-	main {
-		java {
-			exclude 'lto/manager/gui/*' // Exclude JavaFX
-		}
-	}
-}
-
-/*minification {
-    css {
-        srcDir = project.file("src/main/resources/lto/manager/web/assets/css")
-        dstDir = project.file("build/resources/main/lto/manager/web/assets/css")
-        options.originalFileNames = true
-    }
-    js {
-        srcDir = project.file("src/main/resources/lto/manager/web/assets/js")
-        dstDir = project.file("build/resources/main/lto/manager/web/assets/js")
-        options.originalFileNames = true
-    }
-}*/

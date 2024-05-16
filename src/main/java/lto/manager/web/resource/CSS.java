@@ -70,11 +70,13 @@ public class CSS {
 	public final static String ICON_TOOLS = "icon-tools ";
 	public final static String ICON_PERSON_CARD = "icon-person-vcard ";
 	public final static String ICON_DATABASE = "icon-database ";
+	public final static String ICON_DATABASE_CHECK = "icon-database-check ";
 	public final static String ICON_TERMINAL = "icon-terminal ";
 	public final static String ICON_GEAR = "icon-gear ";
 	public final static String ICON_WRENCH = "icon-wrench ";
 	public final static String ICON_DIAGRAM_2 = "icon-diagram-2 ";
 	public final static String ICON_DIAGRAM_3 = "icon-diagram-3 ";
+	public final static String ICON_SLIDERS = "icon-sliders ";
 
 	public final static String FV_ID = "id-wtree";
 	public final static String FV_ID_CONTEXT_CONTAINER = "wtree-context-container";
