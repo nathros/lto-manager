@@ -152,7 +152,7 @@ async function hostChangeDir(path, virtual) {
 	}).then((response) => {
 		return response.text();
 	}).then((div) => {
-		root.outerHTML = div;
+		updateElement(root, div);
 	}).catch((error) => {
 		console.log(error);
 	});
@@ -191,8 +191,7 @@ function expandDir(sender, path, virtual) {
 	}).then((response) => {
 		return response.text();
 	}).then((div) => {
-		div = div.substring(6, div.length - 6); // Remove <div>...</div>
-		sender.parentElement.parentElement.innerHTML = div;
+		updateElementInner(sender.parentElement.parentElement, div);
 	}).catch((error) => {
 		console.log(error);
 	});

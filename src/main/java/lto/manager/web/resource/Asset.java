@@ -19,7 +19,7 @@ public class Asset {
 	public static final String JS_ADD_TAPE = AssetHandler.PATH + "/js/add_tape.js";
 	public static final String JS_ADD_JOB = AssetHandler.PATH + "/js/add_job.js";
 	public static final String JS_WEBSOCKET = AssetHandler.PATH + "/js/websocket.js";
-	public static final String JS_ON_LOAD_AJAX = AssetHandler.PATH + "/js/on_load_ajax.js";
+	public static final String JS_AJAX = AssetHandler.PATH + "/js/ajax.js";
 	public static final String JS_LTO_LABEL_GENERATOR = AssetHandler.PATH + "/js/lto-label-generator.js";
 	public static final String JS_LOGGING = AssetHandler.PATH + "/js/logging.js";
 	public static final String JS_DASHBOARD = AssetHandler.PATH + "/js/dashboard.js";

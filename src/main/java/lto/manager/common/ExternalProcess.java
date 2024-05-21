@@ -39,13 +39,13 @@ public abstract class ExternalProcess {
 			throws IOException, InterruptedException, IllegalArgumentException {
 		if (inProgress.get())
 			return false;
-		this.uuid = uuid;
+		this.uuid = this.getClass().getSimpleName() + "-" + uuid;
 		this.isCompletedSemaphore = completedSemaphore;
 		cmd = commands;
-		if (currentProcesses.get(uuid) != null) {
+		if (currentProcesses.get(this.uuid) != null) {
 			throw new IllegalArgumentException("uuid already exists: " + uuid);
 		}
-		currentProcesses.put(uuid, this);
+		currentProcesses.put(this.uuid, this);
 		if (isCompletedSemaphore != null)
 			isCompletedSemaphore.acquire(1);
 		inProgress.set(true);

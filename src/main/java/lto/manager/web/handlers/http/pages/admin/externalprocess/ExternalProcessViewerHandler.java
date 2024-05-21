@@ -2,7 +2,6 @@ package lto.manager.web.handlers.http.pages.admin.externalprocess;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
-import java.util.function.BiFunction;
 
 import org.xmlet.htmlapifaster.Div;
 
@@ -19,7 +18,6 @@ import lto.manager.web.handlers.http.templates.models.HeadModel;
 import lto.manager.web.resource.CSS;
 
 public class ExternalProcessViewerHandler extends BaseHTTPHandler {
-	public static ExternalProcessViewerHandler self = new ExternalProcessViewerHandler();
 	public static final String PATH = "/admin/ext/view";
 	public static final String NAME = "External Processes Viewer";
 
@@ -28,7 +26,7 @@ public class ExternalProcessViewerHandler extends BaseHTTPHandler {
 	public static final String TYPE_COMPLETE = "1";
 	public static final String TYPE_CURRENT = "2";
 
-	private static final BiFunction<String, String, ExternalProcess> getExternalProcess = (final String typeQuery, final String idQuery) -> {
+	private static final ExternalProcess getExternalProcess(final String typeQuery, final String idQuery) {
 		if (typeQuery.equals(TYPE_COMPLETE)) {
 			return ExternalProcess.getFinishedProcess(idQuery);
 		} else if (typeQuery.equals(TYPE_CURRENT)) {
@@ -43,7 +41,7 @@ public class ExternalProcessViewerHandler extends BaseHTTPHandler {
 		view
 			.div()
 				.of(div -> {
-					final ExternalProcess pro = getExternalProcess.apply(model.getQueryNoNull(TYPE), id);
+					final ExternalProcess pro = getExternalProcess(model.getQueryNoNull(TYPE), id);
 					if (pro != null) {
 						div
 							.b().text("Command: ").__()

@@ -18,7 +18,6 @@ import lto.manager.web.handlers.http.templates.models.HeadModel;
 import lto.manager.web.resource.CSS;
 
 public class ExternalProcessHandler extends BaseHTTPHandler {
-	public static ExternalProcessHandler self = new ExternalProcessHandler();
 	public static final String PATH = "/admin/ext";
 	public static final String NAME = "External Processes";
 
@@ -31,8 +30,7 @@ public class ExternalProcessHandler extends BaseHTTPHandler {
 					final String link = ExternalProcessViewerHandler.PATH + "?" + ExternalProcessViewerHandler.TYPE
 						+ "=" + ExternalProcessViewerHandler.TYPE_CURRENT + "&" + ExternalProcessViewerHandler.ID
 						+ "=" + key;
-					final var ep = ExternalProcess.getCurrentProcess(key);
-					d.a().attrClass(CSS.BUTTON).attrHref(link).text(ep.getClass().getSimpleName() + " (" + key + ")").__();
+					d.a().attrClass(CSS.BUTTON).attrHref(link).text(key).__();
 				}
 				if (keyList.size() == 0) {
 					d.p().text("Empty").__();
@@ -44,8 +42,7 @@ public class ExternalProcessHandler extends BaseHTTPHandler {
 					final String link = ExternalProcessViewerHandler.PATH + "?" + ExternalProcessViewerHandler.TYPE
 						+ "=" + ExternalProcessViewerHandler.TYPE_COMPLETE + "&" + ExternalProcessViewerHandler.ID
 						+ "=" + key;
-					final var ep = ExternalProcess.getFinishedProcess(key);
-					d.a().attrClass(CSS.BUTTON).attrHref(link).text(ep.getClass().getSimpleName() + " (" + key + ")").__();
+					d.a().attrClass(CSS.BUTTON).attrHref(link).text(key).__();
 				}
 				if (keyList.size() == 0) {
 					d.p().text("Empty").__();

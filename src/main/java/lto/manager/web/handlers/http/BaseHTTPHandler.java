@@ -136,10 +136,19 @@ public abstract class BaseHTTPHandler implements HttpHandler {
 	protected void requestHandleCompleteFetcher(HttpExchange he, TemplateFetcherModel tfm)
 			throws IOException, InterruptedException, ExecutionException {
 		final String response = TemplateAJAX.view.render(tfm);
-		he.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length());
-		OutputStream os = he.getResponseBody();
-		os.write(response.getBytes());
-		os.close();
+		if (tfm.getRemoveParentDiv()) {
+			// As HtmlFlow is type safe, root element must be div
+			final String cutResponse = response.substring(5, response.length() - 5 - 6);
+			he.sendResponseHeaders(HttpURLConnection.HTTP_OK, cutResponse.length());
+			OutputStream os = he.getResponseBody();
+			os.write(cutResponse.getBytes());
+			os.close();
+		} else {
+			he.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length());
+			OutputStream os = he.getResponseBody();
+			os.write(response.getBytes());
+			os.close();
+		}
 	}
 
 	protected void requestHandleCompleteAPIText(HttpExchange he, final String text, final String contentType)
@@ -200,7 +209,8 @@ public abstract class BaseHTTPHandler implements HttpHandler {
 		return "";
 	}
 
-	public static HashMap<String, String> getCookieKeyPairs(final String cookieStr) { // FIXME Similar to BodyModel.parseCookies - done twice
+	// FIXME Similar to BodyModel.parseCookies - done twice
+	public static HashMap<String, String> getCookieKeyPairs(final String cookieStr) {
 		HashMap<String, String> map = new HashMap<String, String>();
 		String[] pairs = cookieStr.split(";");
 		for (String keyPair : pairs) {

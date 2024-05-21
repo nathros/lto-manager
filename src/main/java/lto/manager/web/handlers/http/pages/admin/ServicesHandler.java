@@ -15,7 +15,6 @@ import lto.manager.web.handlers.http.templates.models.BodyModel;
 import lto.manager.web.handlers.http.templates.models.HeadModel;
 
 public class ServicesHandler extends BaseHTTPHandler {
-	public static ServicesHandler self = new ServicesHandler();
 	public static final String PATH = "/admin/services";
 	public static final String NAME = "Services";
 

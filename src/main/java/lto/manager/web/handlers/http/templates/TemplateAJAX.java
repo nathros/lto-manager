@@ -16,14 +16,27 @@ public class TemplateAJAX {
 	public static class TemplateFetcherModel {
 		final BiFunction<Div<?>, BodyModel, Void> contentFunction;
 		final BodyModel model;
+		final boolean removeParentDiv;
 
 		public TemplateFetcherModel(BiFunction<Div<?>, BodyModel, Void> contentFunction, BodyModel model) {
 			this.contentFunction = contentFunction;
 			this.model = model;
+			this.removeParentDiv = false;
+		}
+
+		public TemplateFetcherModel(BiFunction<Div<?>, BodyModel, Void> contentFunction, BodyModel model,
+				boolean removeParentDiv) {
+			this.contentFunction = contentFunction;
+			this.model = model;
+			this.removeParentDiv = removeParentDiv;
 		}
 
 		public void render(Div<?> div) {
 			contentFunction.apply(div, model);
+		}
+
+		public boolean getRemoveParentDiv() {
+			return removeParentDiv;
 		}
 	}
 

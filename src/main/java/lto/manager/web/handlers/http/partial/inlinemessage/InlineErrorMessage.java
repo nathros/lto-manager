@@ -10,7 +10,7 @@ import lto.manager.web.resource.CSS;
 
 public class InlineErrorMessage {
 	public static Void contentGeneric(Div<?> view, final Exception ex) {
-		view.div().attrClass(CSS.INLINE_MESSAGE + CSS.ERROR)
+		view.attrClass(CSS.INLINE_MESSAGE + CSS.ERROR)
 			.span().__()
 			.b().raw("Error: " + ex.getMessage()).__()
 			.a().attrClass(CSS.INLINE_MESSAGE_DETAILS_LINK).attrTabIndex(1).text("Show Details").__()
@@ -22,13 +22,25 @@ public class InlineErrorMessage {
 					final String stackTrace = "<div>" + sw.toString().replace(System.lineSeparator(), "</div><div>");
 					div.raw(stackTrace);
 				})
+			.__();
+		return null;
+	}
+
+	public static Void contentGeneric(Div<?> view, final String title, final String message) {
+		view.attrClass(CSS.INLINE_MESSAGE + CSS.ERROR)
+			.span().__()
+			.b().text(title).__()
+			.a().attrClass(CSS.INLINE_MESSAGE_DETAILS_LINK).attrTabIndex(1).text("Show Details").__()
+			.div()
+				.attrClass(CSS.INLINE_MESSAGE_DETAILS_CONTENT + CSS.FONT_MONOSPACE + CSS.FONT_SMALL).attrTabIndex(2)
+				.text(message)
 			.__()
 		.__();
 		return null;
 	}
 
 	public static Void contentExternalProcess(Div<?> view, final String uuid) {
-		view.div().attrClass(CSS.INLINE_MESSAGE + CSS.ERROR)
+		view.attrClass(CSS.INLINE_MESSAGE + CSS.ERROR)
 			.span().__()
 			.b().text("Error getting data").__()
 			.a().attrClass(CSS.INLINE_MESSAGE_DETAILS_LINK).attrTabIndex(1).text("Show Details").__()
@@ -67,8 +79,7 @@ public class InlineErrorMessage {
 						div.p().text("Unable to get details UUID is missing").__();
 					}
 				})
-			.__()
-		.__();
+			.__();
 		return null;
 	}
 }

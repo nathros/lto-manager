@@ -19,7 +19,6 @@ import lto.manager.web.handlers.http.templates.models.HeadModel;
 import lto.manager.web.resource.CSS;
 
 public class SessionViewerHandler extends BaseHTTPHandler {
-	public static SessionViewerHandler self = new SessionViewerHandler();
 	public static final String PATH = "/admin/session";
 	public static final String NAME = "Login Sessions";
 
