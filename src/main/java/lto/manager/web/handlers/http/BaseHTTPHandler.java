@@ -49,6 +49,7 @@ public abstract class BaseHTTPHandler implements HttpHandler {
 
 	public static final String COOKIE_SESSION = "session";
 
+	public static final String CONTENT_TYPE_HTML = "text/html";
 	public static final String CONTENT_TYPE_PDF = "application/pdf";
 	public static final String CONTENT_TYPE_JSON = "application/json";
 	public static final String CONTENT_TYPE_SVG = "image/svg+xml";
@@ -117,7 +118,19 @@ public abstract class BaseHTTPHandler implements HttpHandler {
 			throws IOException, InterruptedException, ExecutionException {
 		final String response = TemplatePage.view.render(tpm);
 		addResponseCookies(he, tpm);
+		he.getResponseHeaders().set("Content-Type", CONTENT_TYPE_HTML);
 		he.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length());
+		OutputStream os = he.getResponseBody();
+		os.write(response.getBytes());
+		os.close();
+	}
+
+	protected void requestHandleCompletePage404(HttpExchange he, TemplatePageModel tpm)
+			throws IOException, InterruptedException, ExecutionException {
+		final String response = TemplatePage.view.render(tpm);
+		addResponseCookies(he, tpm);
+		he.getResponseHeaders().set("Content-Type", CONTENT_TYPE_HTML);
+		he.sendResponseHeaders(HttpURLConnection.HTTP_NOT_FOUND, response.length());
 		OutputStream os = he.getResponseBody();
 		os.write(response.getBytes());
 		os.close();
@@ -127,6 +140,7 @@ public abstract class BaseHTTPHandler implements HttpHandler {
 			throws IOException, InterruptedException, ExecutionException {
 		final String response = view.render(tpm);
 		addResponseCookies(he, tpm);
+		he.getResponseHeaders().set("Content-Type", CONTENT_TYPE_HTML);
 		he.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length());
 		OutputStream os = he.getResponseBody();
 		os.write(response.getBytes());
@@ -136,6 +150,7 @@ public abstract class BaseHTTPHandler implements HttpHandler {
 	protected void requestHandleCompleteFetcher(HttpExchange he, TemplateFetcherModel tfm)
 			throws IOException, InterruptedException, ExecutionException {
 		final String response = TemplateAJAX.view.render(tfm);
+		he.getResponseHeaders().set("Content-Type", CONTENT_TYPE_HTML);
 		if (tfm.getRemoveParentDiv()) {
 			// As HtmlFlow is type safe, root element must be div
 			final String cutResponse = response.substring(5, response.length() - 5 - 6);
@@ -151,10 +166,38 @@ public abstract class BaseHTTPHandler implements HttpHandler {
 		}
 	}
 
+	protected void requestHandleCompleteFetcher404(HttpExchange he, TemplateFetcherModel tfm)
+			throws IOException, InterruptedException, ExecutionException {
+		final String response = TemplateAJAX.view.render(tfm);
+		he.getResponseHeaders().set("Content-Type", CONTENT_TYPE_HTML);
+		if (tfm.getRemoveParentDiv()) {
+			// As HtmlFlow is type safe, root element must be div
+			final String cutResponse = response.substring(5, response.length() - 5 - 6);
+			he.sendResponseHeaders(HttpURLConnection.HTTP_NOT_FOUND, cutResponse.length());
+			OutputStream os = he.getResponseBody();
+			os.write(cutResponse.getBytes());
+			os.close();
+		} else {
+			he.sendResponseHeaders(HttpURLConnection.HTTP_NOT_FOUND, response.length());
+			OutputStream os = he.getResponseBody();
+			os.write(response.getBytes());
+			os.close();
+		}
+	}
+
 	protected void requestHandleCompleteAPIText(HttpExchange he, final String text, final String contentType)
 			throws IOException, InterruptedException, ExecutionException {
 		he.getResponseHeaders().set("Content-Type", contentType);
 		he.sendResponseHeaders(HttpURLConnection.HTTP_OK, text.length());
+		OutputStream os = he.getResponseBody();
+		os.write(text.getBytes());
+		os.close();
+	}
+
+	protected void requestHandleCompleteAPIText404(HttpExchange he, final String text, final String contentType)
+			throws IOException, InterruptedException, ExecutionException {
+		he.getResponseHeaders().set("Content-Type", contentType);
+		he.sendResponseHeaders(HttpURLConnection.HTTP_NOT_FOUND, text.length());
 		OutputStream os = he.getResponseBody();
 		os.write(text.getBytes());
 		os.close();
@@ -173,6 +216,7 @@ public abstract class BaseHTTPHandler implements HttpHandler {
 	protected void errorHandlePage(HttpExchange he, Exception exception) {
 		try {
 			String response = TemplateInternalErrorPage.view.render(TemplateInternalErrorModelPage.of(exception, he));
+			he.getResponseHeaders().set("Content-Type", CONTENT_TYPE_HTML);
 			he.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, response.length());
 			OutputStream os = he.getResponseBody();
 			os.write(response.getBytes());
@@ -185,6 +229,7 @@ public abstract class BaseHTTPHandler implements HttpHandler {
 	protected void errorHandleAJAX(HttpExchange he, Exception exception) {
 		try {
 			String response = TemplateInternalErrorAJAX.view.render(TemplateInternalErrorModelAJAX.of(exception, he));
+			he.getResponseHeaders().set("Content-Type", CONTENT_TYPE_HTML);
 			he.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, response.length());
 			OutputStream os = he.getResponseBody();
 			os.write(response.getBytes());

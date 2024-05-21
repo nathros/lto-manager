@@ -26,7 +26,7 @@ import lto.manager.web.resource.Asset;
 public class ShutdownHandler extends BaseHTTPHandler {
 	private static HtmlView<TemplatePageModel> v = HtmlFlow.view(ShutdownHandler::content);
 	public static HtmlView<TemplatePageModel> view = v.threadSafe().setIndented(false);
-	public static final String PATH = "/shutdown";
+	public static final String PATH = "/shutdown/";
 
 	public static void content(HtmlPage view) {
 		view

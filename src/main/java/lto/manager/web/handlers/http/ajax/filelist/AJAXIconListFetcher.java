@@ -17,7 +17,7 @@ import lto.manager.web.resource.CSS;
 import lto.manager.web.resource.JS;
 
 public class AJAXIconListFetcher extends BaseHTTPHandler {
-	public static final String PATH = "/ajax/iconlist";
+	public static final String PATH = "/ajax/iconlist/";
 
 	static Void content(Div<?> view, BodyModel model) {
 		var folderIcons = FileListItem.fileTypeCache.stream().filter(item -> item.contains("folder"))

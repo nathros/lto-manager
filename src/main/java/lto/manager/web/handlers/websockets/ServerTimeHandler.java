@@ -8,7 +8,7 @@ import org.java_websocket.WebSocket;
 import lto.manager.common.ExternalProcess;
 
 public class ServerTimeHandler extends BaseWebsocketHandler {
-	public static final String PATH = "/time";
+	public static final String PATH = "/time/";
 
 	private ExternalProcess ep;
 

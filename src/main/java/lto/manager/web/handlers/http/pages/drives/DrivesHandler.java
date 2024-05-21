@@ -19,7 +19,7 @@ import lto.manager.web.handlers.http.templates.models.HeadModel;
 import lto.manager.web.resource.Asset;
 
 public class DrivesHandler extends BaseHTTPHandler {
-	public static final String PATH = "/drives";
+	public static final String PATH = "/drives/";
 	public static final String NAME = "Drives";
 	public static final String DATA_AJAX = "data-ajax";
 

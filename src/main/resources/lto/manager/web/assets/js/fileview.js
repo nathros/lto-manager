@@ -142,7 +142,7 @@ async function hostChangeDir(path, virtual) {
 		}
 	}
 
-	fetch("/ajax/fileslist",
+	fetch("/ajax/fileslist/",
 	{
 		method: "post",
 		headers: {
@@ -181,7 +181,7 @@ function expandDir(sender, path, virtual) {
 	params.append(HOST_FILEVIEW_QUERY_IS_ROOT, false);
 	params.append(HOST_FILEVIEW_QUERY_IS_VIRTUAL, virtual);
 
-	fetch("/ajax/fileslist",
+	fetch("/ajax/fileslist/",
 	{
 		method: "post",
 		headers: {
@@ -274,7 +274,7 @@ function newVirtualDir(path, newDir) {
 	if (newDir === "") { return showToast(Toast.Error, "Directory name cannot be empty", -1, undefined, false); }
 	if (path === "") { return showToast(Toast.Error, "Path name cannot be empty", -1, undefined, false); }
 
-	fetch(`/api/virtualdir?op=new&path=${path}&name=${newDir}`,
+	fetch(`/api/virtualdir/?op=new&path=${path}&name=${newDir}`,
 	{
 		method: "GET",
 		signal: AbortSignal.timeout(3000)
@@ -300,7 +300,7 @@ function delVirtualDir(dir) {
 
 	showToastCallback(Toast.Info, "Are you Sure?",
 		() => {
-			fetch(`/api/virtualdir?op=del&path=${dir}&name=${dir}`,
+			fetch(`/api/virtualdir/?op=del&path=${dir}&name=${dir}`,
 			{
 				method: "GET",
 				signal: AbortSignal.timeout(3000)
@@ -327,7 +327,7 @@ function renameVirtualDir(dir, newName) {
 	if (dir === "") { return showToast(Toast.Error, "Directory path cannot be empty", -1, undefined, false); }
 	if (newName === "") { return showToast(Toast.Error, "Directory name cannot be empty", -1, undefined, false); }
 
-	fetch(`/api/virtualdir?op=rename&path=${dir}&name=${newName}`,
+	fetch(`/api/virtualdir/?op=rename&path=${dir}&name=${newName}`,
 	{
 		method: "GET",
 		signal: AbortSignal.timeout(3000)
@@ -355,7 +355,7 @@ function renameVirtualDir(dir, newName) {
 
 function getDirIcons(sender) {
 	const replace = sender.nextElementSibling;
-	fetch("/ajax/iconlist",
+	fetch("/ajax/iconlist/",
 	{
 		method: "GET",
 		signal: AbortSignal.timeout(3000)
@@ -373,7 +373,7 @@ function setDirIcon(sender) {
 	const path = container.getAttribute(ATTR_PATH);
 	const iconName = sender.src.substr(sender.src.lastIndexOf("/") + 1).slice(0, -4);
 
-	fetch(`/api/virtualdir?op=changeico&path=${path}&name=${iconName}`,
+	fetch(`/api/virtualdir/?op=changeico&path=${path}&name=${iconName}`,
 	{
 		method: "GET",
 		signal: AbortSignal.timeout(3000)

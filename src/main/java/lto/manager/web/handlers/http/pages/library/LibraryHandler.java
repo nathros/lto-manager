@@ -22,7 +22,7 @@ import lto.manager.web.handlers.http.templates.models.HeadModel;
 import lto.manager.web.resource.CSS;
 
 public class LibraryHandler extends BaseHTTPHandler {
-	public static final String PATH = "/library";
+	public static final String PATH = "/library/";
 	public static final String NAME = "Library";
 
 	static Void body(Div<?> view, BodyModel model) {

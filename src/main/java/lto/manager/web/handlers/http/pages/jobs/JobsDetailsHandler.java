@@ -20,7 +20,7 @@ import lto.manager.web.handlers.http.templates.models.HeadModel;
 import lto.manager.web.resource.CSS;
 
 public class JobsDetailsHandler extends BaseHTTPHandler {
-	public static final String PATH = "/jobs/details";
+	public static final String PATH = "/jobs/details/";
 	public final static String ID = "id";
 
 	static Void content(Div<?> view, BodyModel model) {

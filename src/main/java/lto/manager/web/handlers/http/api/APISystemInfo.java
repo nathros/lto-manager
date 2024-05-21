@@ -12,7 +12,7 @@ import lto.manager.web.resource.JSON.APIStatus;
 import lto.manager.web.resource.JSON.JSONMap;
 
 public class APISystemInfo extends BaseHTTPHandler {
-	public static final String PATH = "/api/systeminfo";
+	public static final String PATH = "/api/systeminfo/";
 
 	public static final Long startTime = System.currentTimeMillis(); // Program start time
 

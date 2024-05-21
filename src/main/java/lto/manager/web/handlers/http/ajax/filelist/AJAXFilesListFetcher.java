@@ -16,7 +16,7 @@ import lto.manager.web.handlers.http.templates.TemplateAJAX.TemplateFetcherModel
 import lto.manager.web.handlers.http.templates.models.BodyModel;
 
 public class AJAXFilesListFetcher extends BaseHTTPHandler {
-	public static final String PATH = "/ajax/fileslist";
+	public static final String PATH = "/ajax/fileslist/";
 
 	static Void content(Div<?> view, BodyModel model) {
 		final List<String> selected = model.getQueryArray(FileListModel.FILE_SELECTED);

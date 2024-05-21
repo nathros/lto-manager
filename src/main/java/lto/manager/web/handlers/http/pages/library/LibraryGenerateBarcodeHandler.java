@@ -34,7 +34,7 @@ import lto.manager.web.resource.HTML;
 import lto.manager.web.resource.JS;
 
 public class LibraryGenerateBarcodeHandler extends BaseHTTPHandler {
-	public static final String PATH = "/library/generate";
+	public static final String PATH = "/library/generate/";
 	public static final String NAME = "Generate New Label";
 
 	static Void body(Div<?> view, BodyModel model) {

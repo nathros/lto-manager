@@ -21,7 +21,7 @@ import lto.manager.web.resource.Asset;
 import lto.manager.web.resource.CSS;
 
 public class DatabaseTestHandler extends BaseHTTPHandler {
-	public static final String PATH = Asset.PATH_SANDPIT_BASE + "database";
+	public static final String PATH = Asset.PATH_SANDPIT_BASE + "database/";
 	public static final String NAME = "Database";
 
 	public static final String QSQL = "sql";

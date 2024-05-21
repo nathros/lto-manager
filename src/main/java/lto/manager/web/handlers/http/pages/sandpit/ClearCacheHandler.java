@@ -20,7 +20,7 @@ import lto.manager.web.resource.Asset;
 import lto.manager.web.resource.CSS;
 
 public class ClearCacheHandler extends BaseHTTPHandler {
-	public static final String PATH = Asset.PATH_SANDPIT_BASE + "clear-cache";
+	public static final String PATH = Asset.PATH_SANDPIT_BASE + "clear-cache/";
 	public static final String NAME = "Clear Cache";
 
 	public static final String QCACHE = "cache";

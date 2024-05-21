@@ -20,7 +20,7 @@ import lto.manager.web.resource.CSS;
 import lto.manager.web.resource.HTML;
 
 public class LogTestHandler extends BaseHTTPHandler {
-	public static final String PATH = Asset.PATH_SANDPIT_BASE + "log";
+	public static final String PATH = Asset.PATH_SANDPIT_BASE + "log/";
 	public static final String NAME = "Logging Tester";
 
 	static Void content(Div<?> view, BodyModel model) {

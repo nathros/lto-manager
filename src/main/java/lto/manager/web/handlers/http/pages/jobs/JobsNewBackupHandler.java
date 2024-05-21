@@ -34,7 +34,7 @@ import lto.manager.web.resource.HTML;
 import lto.manager.web.resource.Query;
 
 public class JobsNewBackupHandler extends BaseHTTPHandler {
-	public static final String PATH = "/jobs/add";
+	public static final String PATH = "/jobs/add/";
 	public static final String NAME = "Add Job";
 
 	public static final String QNAME = "name";

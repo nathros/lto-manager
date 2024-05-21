@@ -22,7 +22,7 @@ import lto.manager.web.resource.Asset;
 import lto.manager.web.resource.CSS;
 
 public class LoggingHandler extends BaseHTTPHandler {
-	public static final String PATH = AdminHandler.PATH + "/logging";
+	public static final String PATH = AdminHandler.PATH + "logging/";
 	public static final String NAME = "Logging";
 
 	static Void content(Div<?> view, BodyModel model) {

@@ -29,7 +29,7 @@ import lto.manager.web.resource.CSS;
 public class LogInHandler extends BaseHTTPHandler {
 	private static HtmlView<TemplatePageModel> v = HtmlFlow.view(LogInHandler::content);
 	public static HtmlView<TemplatePageModel> view = v.threadSafe().setIndented(false);
-	public static final String PATH = "/login";
+	public static final String PATH = "/login/";
 
 	private static final String USER = "username";
 	private static final String PASS = "password";

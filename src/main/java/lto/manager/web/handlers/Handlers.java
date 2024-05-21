@@ -5,6 +5,7 @@ import java.util.HashMap;
 import com.sun.net.httpserver.HttpHandler;
 
 import lto.manager.common.Main;
+import lto.manager.web.handlers.http.ajax.AJAX404Fetcher;
 import lto.manager.web.handlers.http.ajax.AJAXGetAttachedDrivesFetcher;
 import lto.manager.web.handlers.http.ajax.AJAXGetOnloadError;
 import lto.manager.web.handlers.http.ajax.filelist.AJAXFilesListFetcher;
@@ -12,12 +13,13 @@ import lto.manager.web.handlers.http.ajax.filelist.AJAXIconListFetcher;
 import lto.manager.web.handlers.http.ajax.labelgenerator.AJAXGenerateLTOLabelHTML;
 import lto.manager.web.handlers.http.ajax.labelgenerator.AJAXGenerateLTOLabelPDF;
 import lto.manager.web.handlers.http.ajax.labelgenerator.AJAXGenerateLTOLabelSVG;
+import lto.manager.web.handlers.http.api.API404;
 import lto.manager.web.handlers.http.api.APISystemInfo;
 import lto.manager.web.handlers.http.api.APIVirtualDir;
 import lto.manager.web.handlers.http.pages.AssetHandler;
 import lto.manager.web.handlers.http.pages.LogInHandler;
 import lto.manager.web.handlers.http.pages.LogOutHandler;
-import lto.manager.web.handlers.http.pages.RootHandler;
+import lto.manager.web.handlers.http.pages.Page404Handler;
 import lto.manager.web.handlers.http.pages.ShutdownHandler;
 import lto.manager.web.handlers.http.pages.admin.AdminHandler;
 import lto.manager.web.handlers.http.pages.admin.AppUpdateHandler;
@@ -26,6 +28,7 @@ import lto.manager.web.handlers.http.pages.admin.LoggingHandler;
 import lto.manager.web.handlers.http.pages.admin.ServicesHandler;
 import lto.manager.web.handlers.http.pages.admin.SessionViewerHandler;
 import lto.manager.web.handlers.http.pages.admin.UpdateOptionsHandler;
+import lto.manager.web.handlers.http.pages.admin.UsersHandler;
 import lto.manager.web.handlers.http.pages.admin.WebsocketListConnectionAdminHandler;
 import lto.manager.web.handlers.http.pages.admin.WebsocketTestAdminHandler;
 import lto.manager.web.handlers.http.pages.admin.externalprocess.ExternalProcessHandler;
@@ -68,7 +71,7 @@ public class Handlers {
 
 	private static HashMap<String, HttpHandler> getHTTPHandlers() {
 		HashMap<String, HttpHandler> ret = new HashMap<String, HttpHandler>();
-		ret.put(RootHandler.PATH, new DashboardHandler());
+		ret.put("/", new Page404Handler());
 		ret.put(DashboardHandler.PATH, new DashboardHandler());
 		ret.put(AssetHandler.PATH, new AssetHandler());
 		ret.put(LogInHandler.PATH, new LogInHandler());
@@ -86,6 +89,7 @@ public class Handlers {
 		ret.put(WebsocketListConnectionAdminHandler.PATH, new WebsocketListConnectionAdminHandler());
 		ret.put(WebsocketTestAdminHandler.PATH, new WebsocketTestAdminHandler());
 		ret.put(ServicesHandler.PATH, new ServicesHandler());
+		ret.put(UsersHandler.PATH, new UsersHandler());
 
 		ret.put(LibraryHandler.PATH, new LibraryHandler());
 		ret.put(LibraryCreateHandler.PATH, new LibraryCreateHandler());
@@ -104,6 +108,7 @@ public class Handlers {
 		ret.put(JobsNewBackupHandler.PATH, new JobsNewBackupHandler());
 		ret.put(JobsDetailsHandler.PATH, new JobsDetailsHandler());
 
+		ret.put(AJAX404Fetcher.PATH, new AJAX404Fetcher());
 		ret.put(AJAXFilesListFetcher.PATH, new AJAXFilesListFetcher());
 		ret.put(AJAXIconListFetcher.PATH, new AJAXIconListFetcher());
 		ret.put(AJAXGetOnloadError.PATH, new AJAXGetOnloadError());
@@ -111,6 +116,7 @@ public class Handlers {
 		ret.put(AJAXGenerateLTOLabelPDF.PATH, new AJAXGenerateLTOLabelPDF());
 		ret.put(AJAXGenerateLTOLabelSVG.PATH, new AJAXGenerateLTOLabelSVG());
 
+		ret.put(API404.PATH, new API404());
 		ret.put(APIVirtualDir.PATH, new APIVirtualDir());
 		ret.put(APISystemInfo.PATH, new APISystemInfo());
 

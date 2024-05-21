@@ -20,7 +20,7 @@ import lto.manager.web.handlers.http.templates.models.HeadModel;
 import lto.manager.web.resource.CSS;
 
 public class DatabaseHandler extends BaseHTTPHandler {
-	public static final String PATH = AdminHandler.PATH + "/database";
+	public static final String PATH = AdminHandler.PATH + "database/";
 	public static final String NAME = "Database";
 
 	public static final String QSQL = "sql";

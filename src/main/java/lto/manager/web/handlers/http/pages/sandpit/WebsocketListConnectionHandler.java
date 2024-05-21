@@ -19,7 +19,7 @@ import lto.manager.web.resource.Asset;
 import lto.manager.web.resource.CSS;
 
 public class WebsocketListConnectionHandler extends BaseHTTPHandler {
-	public static final String PATH = Asset.PATH_SANDPIT_BASE + "websocket-con";
+	public static final String PATH = Asset.PATH_SANDPIT_BASE + "websocket-con/";
 	public static final String NAME = "Websocket Connections";
 
 	static Void content(Div<?> view, BodyModel model) {

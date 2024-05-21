@@ -18,7 +18,7 @@ import lto.manager.web.handlers.websockets.BaseWebsocketHandler;
 import lto.manager.web.resource.CSS;
 
 public class WebsocketListConnectionAdminHandler extends BaseHTTPHandler {
-	public static final String PATH = AdminHandler.PATH + "/websocket-con";
+	public static final String PATH = AdminHandler.PATH + "/websocket-con/";
 	public static final String NAME = "Websocket Connections";
 
 	static Void content(Div<?> view, BodyModel model) {

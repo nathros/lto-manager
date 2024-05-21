@@ -23,7 +23,7 @@ import lto.manager.web.resource.CSS;
 import lto.manager.web.resource.JS;
 
 public class JobsHandler extends BaseHTTPHandler {
-	public static final String PATH = "/jobs";
+	public static final String PATH = "/jobs/";
 	public static final String NAME = "Jobs";
 	private final static String DELETE_ID = "del";
 	private final static String START_ID = "start";

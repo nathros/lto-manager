@@ -15,7 +15,7 @@ import lto.manager.web.handlers.http.templates.models.BodyModel;
 import lto.manager.web.handlers.http.templates.models.HeadModel;
 
 public class AppUpdateHandler extends BaseHTTPHandler {
-	public static final String PATH = "/admin/update";
+	public static final String PATH = "/admin/update/";
 	public static final String NAME = "Update";
 
 	static Void content(Div<?> view, BodyModel model) {

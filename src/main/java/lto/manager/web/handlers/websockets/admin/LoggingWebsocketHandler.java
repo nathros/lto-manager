@@ -14,7 +14,7 @@ import lto.manager.web.handlers.websockets.BaseWebsocketHandler;
 import lto.manager.web.resource.Asset;
 
 public class LoggingWebsocketHandler extends BaseWebsocketHandler {
-	public static final String PATH = Asset.PATH_WEBSOCKET_BASE + "logging";
+	public static final String PATH = Asset.PATH_WEBSOCKET_BASE + "logging/";
 
 	@Override
 	public boolean start() {

@@ -165,6 +165,7 @@ public class BodyModel {
 
 	public HttpExchange getHttpExchange() { return he; }
 	public Object getModel() { return model; }
+	public String getUrl() { return he.getRequestURI().getPath(); }
 
 	public String getQuery(String key) {
 		Map<String, Object> queries = isGETMethod() ? queriesURL : body.getQueries();

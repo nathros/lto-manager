@@ -28,7 +28,7 @@ import lto.manager.web.handlers.http.templates.models.BodyModel;
 import lto.manager.web.resource.Asset;
 
 public class AJAXGenerateLTOLabelPDF extends BaseHTTPHandler {
-	public static final String PATH = Asset.PATH_AJAX_BASE + "generate/lto/label/pdf";
+	public static final String PATH = Asset.PATH_AJAX_BASE + "generate/lto/label/pdf/";
 
 	@Override
 	public void requestHandle(HttpExchange he) throws Exception { // FIXME finish PDF scale is wrong

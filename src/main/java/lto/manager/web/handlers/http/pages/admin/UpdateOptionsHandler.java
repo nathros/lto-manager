@@ -26,7 +26,7 @@ import lto.manager.web.resource.CSS;
 import lto.manager.web.resource.HTML;
 
 public class UpdateOptionsHandler extends BaseHTTPHandler {
-	public static final String PATH = "/admin/settings";
+	public static final String PATH = "/admin/settings/";
 	public static final String NAME = "Settings";
 
 	public static final String OPTIONS_INDEX = "options-index";

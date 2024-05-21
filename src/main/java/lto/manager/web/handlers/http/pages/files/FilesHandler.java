@@ -23,7 +23,7 @@ import lto.manager.web.handlers.http.templates.models.HeadModel;
 import lto.manager.web.resource.CSS;
 
 public class FilesHandler extends BaseHTTPHandler {
-	public static final String PATH = "/files";
+	public static final String PATH = "/files/";
 	public static final String NAME = "Files";
 
 	public static final String TAPE_ID = "tape_id";

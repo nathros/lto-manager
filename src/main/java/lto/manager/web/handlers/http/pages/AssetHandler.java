@@ -19,7 +19,7 @@ import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.resource.Asset;
 
 public class AssetHandler extends BaseHTTPHandler {
-	public static final String PATH = "/assets";
+	public static final String PATH = "/assets/";
 	private static final String path = "lto/manager/web";
 	private static ClassLoader loader = new Asset().getClass().getClassLoader();
 

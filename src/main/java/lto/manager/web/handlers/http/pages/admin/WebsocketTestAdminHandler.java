@@ -17,7 +17,7 @@ import lto.manager.web.resource.CSS;
 import lto.manager.web.resource.HTML;
 
 public class WebsocketTestAdminHandler extends BaseHTTPHandler {
-	public static final String PATH = AdminHandler.PATH + "/websocket";
+	public static final String PATH = AdminHandler.PATH + "/websocket/";
 	public static final String NAME = "Websocket Tester";
 
 	static Void content(Div<?> view, BodyModel model) {

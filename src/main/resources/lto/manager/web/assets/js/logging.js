@@ -168,7 +168,7 @@ function downloadLogFile() {
 		document.body.removeChild(e);
 	});
 }
-const tableWS = openWS("/ws/logging",
+const tableWS = openWS("/ws/logging/",
 (/*event*/) => { /* Open */},
 (event) => { // Close
 	alert("closed");

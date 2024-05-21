@@ -20,10 +20,10 @@ import lto.manager.web.handlers.http.templates.models.HeadModel;
 import lto.manager.web.resource.Asset;
 
 public class DashboardHandler extends BaseHTTPHandler {
-	public static final String PATH = "/dashboard";
+	public static final String PATH = "/dashboard/";
 	public static final String NAME = "Dashboard";
 
-	static Void content(Div<?> view, BodyModel model) {
+	public static Void content(Div<?> view, BodyModel model) {
 		view
 			.of(parent -> DashboardContainer.content(parent, innerDiv -> {
 				DashboardVersion.content(innerDiv, DashboardVersionOptions.of(false));

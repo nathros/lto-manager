@@ -15,7 +15,7 @@ import lto.manager.web.handlers.http.templates.models.HeadModel;
 import lto.manager.web.resource.Asset;
 
 public class InternalErrorTesterHandler extends BaseHTTPHandler {
-	public static final String PATH = Asset.PATH_SANDPIT_BASE + "internalerror";
+	public static final String PATH = Asset.PATH_SANDPIT_BASE + "internalerror/";
 	public static final String NAME = "Internal Error";
 
 	static Void content(Div<?> view, BodyModel model) {

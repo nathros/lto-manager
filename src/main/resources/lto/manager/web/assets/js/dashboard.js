@@ -2,7 +2,7 @@ let timeout = setTimeout(update, 1000);
 const uptime = document.getElementById("uptime");
 
 async function update() {
-	fetch("/api/systeminfo",
+	fetch("/api/systeminfo/",
 	{
 		method: "GET",
 		signal: AbortSignal.timeout(3000)

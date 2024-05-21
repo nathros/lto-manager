@@ -13,7 +13,7 @@ public class InternalErrorInlineAJAXTesterHandler extends BaseHTTPHandler {
 	// Asset.PATH_AJAX_BASE is needed for base of path, as an exception in this path
 	// will call template TemplateInternalErrorAJAX rather than
 	// TemplateInternalErrorPage
-	public static final String PATH = Asset.PATH_AJAX_BASE + "internalerrorinline";
+	public static final String PATH = Asset.PATH_AJAX_BASE + "internalerrorinline/";
 
 	public static Void content(Div<?> view, BodyModel model) {
 		int badInt = 32 / 0; // Cause exception

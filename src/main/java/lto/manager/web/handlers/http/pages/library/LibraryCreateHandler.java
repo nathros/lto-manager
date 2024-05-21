@@ -34,7 +34,7 @@ import lto.manager.web.resource.HTML;
 import lto.manager.web.resource.Query;
 
 public class LibraryCreateHandler extends BaseHTTPHandler {
-	public static final String PATH = "/library/new";
+	public static final String PATH = "/library/new/";
 	public static final String NAME = "New Tape";
 	private static final String SERIAL = "serial";
 	private static final String TAPETYPE = "type";

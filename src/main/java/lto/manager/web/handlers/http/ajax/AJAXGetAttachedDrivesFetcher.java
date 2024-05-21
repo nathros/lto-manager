@@ -19,7 +19,7 @@ import lto.manager.web.resource.Asset;
 import lto.manager.web.resource.CSS;
 
 public class AJAXGetAttachedDrivesFetcher extends BaseHTTPHandler {
-	public static final String PATH = Asset.PATH_AJAX_BASE + "driveslist";
+	public static final String PATH = Asset.PATH_AJAX_BASE + "driveslist/";
 	private static int requestNumber = 0;
 
 	static Void content(Div<?> view, BodyModel model) {

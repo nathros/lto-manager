@@ -16,7 +16,7 @@ import lto.manager.web.handlers.http.templates.models.HeadModel;
 import lto.manager.web.resource.Asset;
 
 public class SwitchTestHandler extends BaseHTTPHandler {
-	public static final String PATH = Asset.PATH_SANDPIT_BASE + "switch";
+	public static final String PATH = Asset.PATH_SANDPIT_BASE + "switch/";
 	public static final String NAME = "Switch";
 
 	static Void content(Div<?> view, BodyModel model) {

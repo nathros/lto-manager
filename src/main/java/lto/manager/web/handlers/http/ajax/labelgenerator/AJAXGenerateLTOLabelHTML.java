@@ -12,7 +12,7 @@ import lto.manager.web.handlers.http.templates.models.BodyModel;
 import lto.manager.web.resource.Asset;
 
 public class AJAXGenerateLTOLabelHTML extends BaseHTTPHandler {
-	public static final String PATH = Asset.PATH_AJAX_BASE + "generate/lto/label/html";
+	public static final String PATH = Asset.PATH_AJAX_BASE + "generate/lto/label/html/";
 
 	public static Void content(Div<?> view, BodyModel model) {
 		List<String> labelsSVGs = GenerateLTOLabelSVG.generate(LTOLabelOptions.of(model));

@@ -12,7 +12,7 @@ import lto.manager.web.resource.JSON;
 import lto.manager.web.resource.JSON.APIStatus;
 
 public class APIVirtualDir extends BaseHTTPHandler {
-	public static final String PATH = "/api/virtualdir";
+	public static final String PATH = "/api/virtualdir/";
 
 	@Override
 	public void requestHandle(HttpExchange he) throws IOException, InterruptedException, ExecutionException {

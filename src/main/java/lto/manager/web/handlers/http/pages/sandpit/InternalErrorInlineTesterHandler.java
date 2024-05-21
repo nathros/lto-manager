@@ -16,7 +16,7 @@ import lto.manager.web.handlers.http.templates.models.HeadModel;
 import lto.manager.web.resource.Asset;
 
 public class InternalErrorInlineTesterHandler extends BaseHTTPHandler {
-	public static final String PATH = Asset.PATH_SANDPIT_BASE + "internalerrorinline";
+	public static final String PATH = Asset.PATH_SANDPIT_BASE + "internalerrorinline/";
 	public static final String NAME = "Internal Error Inline";
 
 	static Void content(Div<?> view, BodyModel model) {

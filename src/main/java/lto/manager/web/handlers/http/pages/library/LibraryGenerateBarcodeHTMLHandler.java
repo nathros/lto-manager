@@ -22,7 +22,7 @@ import lto.manager.web.resource.CSS;
 public class LibraryGenerateBarcodeHTMLHandler extends BaseHTTPHandler {
 	private static HtmlView<TemplatePageModel> v = HtmlFlow.view(LibraryGenerateBarcodeHTMLHandler::content);
 	public static HtmlView<TemplatePageModel> view = v.threadSafe().setIndented(false);
-	public static final String PATH = "/library/generate/html";
+	public static final String PATH = "/library/generate/html/";
 	public static final String NAME = "Generate Barcode";
 
 	// FIXME finish FormValidator

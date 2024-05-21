@@ -18,7 +18,7 @@ import lto.manager.web.handlers.http.templates.models.HeadModel;
 import lto.manager.web.resource.Asset;
 
 public class FilesBrowserHandler2 extends BaseHTTPHandler {
-	public static final String PATH = "/files/browser2";
+	public static final String PATH = "/files/browser2/";
 
 	public static final String ONLY_ID = "only-id";
 

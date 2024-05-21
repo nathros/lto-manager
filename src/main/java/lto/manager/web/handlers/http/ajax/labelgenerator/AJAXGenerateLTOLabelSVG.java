@@ -9,7 +9,7 @@ import lto.manager.web.handlers.http.templates.models.BodyModel;
 import lto.manager.web.resource.Asset;
 
 public class AJAXGenerateLTOLabelSVG extends BaseHTTPHandler {
-	public static final String PATH = Asset.PATH_AJAX_BASE + "generate/lto/label/svg";
+	public static final String PATH = Asset.PATH_AJAX_BASE + "generate/lto/label/svg/";
 
 	@Override
 	public void requestHandle(HttpExchange he) throws Exception {

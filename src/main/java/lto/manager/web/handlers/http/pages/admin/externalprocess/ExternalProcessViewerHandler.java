@@ -18,7 +18,7 @@ import lto.manager.web.handlers.http.templates.models.HeadModel;
 import lto.manager.web.resource.CSS;
 
 public class ExternalProcessViewerHandler extends BaseHTTPHandler {
-	public static final String PATH = "/admin/ext/view";
+	public static final String PATH = "/admin/ext/view/";
 	public static final String NAME = "External Processes Viewer";
 
 	public static final String TYPE = "type";
