@@ -48,6 +48,7 @@ public class CSS {
 	public final static String ICON_DRIVE = "icon-drive ";
 	public final static String ICON_JOBS = "icon-jobs ";
 	public final static String ICON_ADMIN = "icon-admin ";
+	public final static String ICON_ADMIN_GEAR = "icon-admin-gear ";
 	public final static String ICON_DASHBOARD = "icon-dashboard ";
 	public final static String ICON_SANDPIT = "icon-sandpit ";
 	public final static String ICON_EDIT = "icon-edit ";
@@ -115,6 +116,8 @@ public class CSS {
 	public final static String PIE_ITEM = "pie-item ";
 	public final static String PIE_INFO = "pie-info ";
 	public final static String PIE_TOOLTIP = "pie-tooltip ";
+
+	public final static String LIST_CONTAINER = "list-container ";
 
 	public final static String DRIVE_CONTAINER = "drive-container ";
 

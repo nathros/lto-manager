@@ -19,6 +19,7 @@ import lto.manager.common.database.tables.TableJobs;
 import lto.manager.common.database.tables.TableJobsMetadata;
 import lto.manager.common.database.tables.TableManufacturer;
 import lto.manager.common.database.tables.TableOptions;
+import lto.manager.common.database.tables.TableRoles;
 import lto.manager.common.database.tables.TableTape;
 import lto.manager.common.database.tables.TableTapeType;
 import lto.manager.common.database.tables.TableUser;
@@ -27,6 +28,7 @@ import lto.manager.common.database.tables.records.RecordFile;
 import lto.manager.common.database.tables.records.RecordManufacturer;
 import lto.manager.common.database.tables.records.RecordOptions;
 import lto.manager.common.database.tables.records.RecordOptions.OptionsSetting;
+import lto.manager.common.database.tables.records.RecordRole;
 import lto.manager.common.database.tables.records.RecordTape;
 import lto.manager.common.database.tables.records.RecordTapeType;
 import lto.manager.common.database.tables.records.RecordUser;
@@ -49,6 +51,7 @@ public class Database {
 			op = (op && TableOptions.createTable(connection));
 			op = (op && TableJobs.createTable(connection));
 			op = (op && TableJobsMetadata.createTable(connection));
+			op = (op && TableRoles.createTable(connection));
 			op = (op && TableUser.createTable(connection));
 			Options.refreshCache(); // Cache is created but is empty
 		} catch (SQLException e) {
@@ -217,7 +220,11 @@ public class Database {
 		return TableFile.updateVirtualFileIcon(connection, changeFile.getID(), icon);
 	}
 
-	public static RecordUser getUserByName(String username) throws SQLException {
-		return TableUser.getUserByName(connection, username);
+	public static RecordUser getUserByName(String username, boolean includePermissions) throws SQLException, IOException {
+		return TableUser.getUserByName(connection, username, includePermissions);
+	}
+
+	public static List<RecordRole> getAllRoles() throws SQLException, IOException {
+		return TableRoles.getAll(Database.connection);
 	}
 }

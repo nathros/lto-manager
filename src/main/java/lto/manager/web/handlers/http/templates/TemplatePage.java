@@ -179,7 +179,6 @@ public class TemplatePage {
 								.li()
 									.a()
 										.attrStyle("cursor:default")
-										.attrClass(CSS.ICON_BOX_ARROW_RIGHT)
 										.text("Empty")
 									.__()
 								.__()

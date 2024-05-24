@@ -1,0 +1,25 @@
+.list-container {
+	border-radius: var(--menu-border-radius);
+    border: 2px solid;
+}
+.list-container > div {
+	border-bottom: 1px solid;
+}
+.list-container > div:hover {
+	background-color: #ddd;
+}
+.list-container > div:last-child {
+	border-bottom: none;
+}
+
+/* Custom */
+.list-item-role {
+	display: flex;
+	padding: var(--padding);
+}
+.list-item-role h4, .list-item-role p {
+	margin: 0;
+}
+.list-item-role > div:nth-child(2) {
+	margin-left: auto;
+}

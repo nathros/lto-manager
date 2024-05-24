@@ -13,6 +13,7 @@ public class Asset {
 	public static final String CSS_LOGIN = AssetHandler.PATH + "css/login.css";
 	public static final String CSS_LIBRARY = AssetHandler.PATH + "css/library.css";
 	public static final String CSS_LOGGING = AssetHandler.PATH + "css/logging.css";
+	public static final String CSS_LIST = AssetHandler.PATH + "css/list.css";
 
 	public static final String JS_MAIN = AssetHandler.PATH + "js/main.js";
 	public static final String JS_FILE_VIEW = AssetHandler.PATH + "js/fileview.js";
@@ -23,6 +24,7 @@ public class Asset {
 	public static final String JS_LTO_LABEL_GENERATOR = AssetHandler.PATH + "js/lto-label-generator.js";
 	public static final String JS_LOGGING = AssetHandler.PATH + "js/logging.js";
 	public static final String JS_DASHBOARD = AssetHandler.PATH + "js/dashboard.js";
+	public static final String JS_LIST = AssetHandler.PATH + "js/list.js";
 	public static final String JS_TEST_WEBSOCKET = AssetHandler.PATH + "js/sandpit/websocket.js";
 
 	public static final String IMG_FAVICO_SVG = AssetHandler.PATH + "img/favico.svg";

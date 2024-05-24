@@ -28,11 +28,12 @@ public class AdminHandler extends BaseHTTPHandler {
 	public static final String NAME = "Admin";
 
 	private static final ButtonExtendedOptions sysOptionSetting = ButtonExtendedOptions.of("Settings", "Change system settings", UpdateOptionsHandler.PATH, CSS.ICON_WRENCH);
-	private static final ButtonExtendedOptions sysOptionUsers = ButtonExtendedOptions.of("Users", "Manage Users", AppUpdateHandler.PATH, CSS.ICON_ADMIN);
+	private static final ButtonExtendedOptions sysOptionUsers = ButtonExtendedOptions.of("Users", "Manage Users", UsersHandler.PATH, CSS.ICON_ADMIN);
+	private static final ButtonExtendedOptions sysOptionRoles = ButtonExtendedOptions.of("Roles", "Manage role permissions", RolesHandler.PATH, CSS.ICON_ADMIN_GEAR);
 	private static final ButtonExtendedOptions sysOptionUpdate = ButtonExtendedOptions.of("Update", "Check for updates", AppUpdateHandler.PATH, CSS.ICON_ARROW_REPEAT);
 	private static final ButtonExtendedOptions sysOptionServices = ButtonExtendedOptions.of("Services", "Manage internal services", ServicesHandler.PATH, CSS.ICON_SLIDERS);
 	private static final ButtonExtendedOptions sysOptionDBBackup = ButtonExtendedOptions.of("Database Management", "Backup/restore database", ServicesHandler.PATH, CSS.ICON_DATABASE_CHECK);
-	private static final ButtonExtendedGroupOptions groupOptionSystem = ButtonExtendedGroupOptions.of("System", CSS.ICON_GEAR, sysOptionSetting, sysOptionUsers, sysOptionUpdate, sysOptionServices, sysOptionDBBackup);
+	private static final ButtonExtendedGroupOptions groupOptionSystem = ButtonExtendedGroupOptions.of("System", CSS.ICON_GEAR, sysOptionSetting, sysOptionUsers, sysOptionRoles, sysOptionUpdate, sysOptionServices, sysOptionDBBackup);
 
 	private static final ButtonExtendedOptions advOptionLog = ButtonExtendedOptions.of("Logging", "View system logs", LoggingHandler.PATH, CSS.ICON_FILE_TEXT);
 	private static final ButtonExtendedOptions advOptionSession = ButtonExtendedOptions.of("Sessions", "View login sessions", SessionViewerHandler.PATH, CSS.ICON_PERSON_CARD);

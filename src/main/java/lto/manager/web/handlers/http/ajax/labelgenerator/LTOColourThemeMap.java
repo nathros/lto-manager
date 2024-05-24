@@ -22,7 +22,7 @@ public record LTOColourThemeMap(HashMap<String, HashMap<String, String>> themeMa
 					final String name = line.replace("[", "").replace("]", "");
 					themeMapContainer.put(name, themeMap);
 				} else {
-					final String[] keyValue = line.split("=");
+					final String[] keyValue = line.split(" = ");
 					if ((themeMap == null) || (keyValue.length != 2)) {
 						Util.logAndException(new Exception("Malformed ini LTO colour theme file"));
 					}

@@ -15,8 +15,7 @@ public class PieJVMMemoryUsage {
 				"""
 				[In use] used from allocated, [Allocated] total request from OS,
 				[Maximum] max memory for JVM set by -Xmx<br>
-				""" + usedMemMB + " / " + maxMemoryMB + " * 100 = " + p + "%"
-				+ "<br>80%+ usage is normal");
+				""" + usedMemMB + " / " + maxMemoryMB + " * 100 = " + p + "%");
 		po.details().add(PieOptions.getDetailsPair("In use:", usedMemMB + " MB"));
 		po.details().add(PieOptions.getDetailsPair("Allocated:", allocatedMB + " MB"));
 		po.details().add(PieOptions.getDetailsPair("Maximum:", maxMemoryMB + " MB"));

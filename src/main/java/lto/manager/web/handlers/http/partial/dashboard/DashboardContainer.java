@@ -8,7 +8,7 @@ import org.xmlet.htmlapifaster.Element;
 import lto.manager.web.resource.CSS;
 
 public class DashboardContainer {
-	public static void content(Element<?,?> parent, Consumer<Div<?>> consumer) {
+	public static void content(Element<?, ?> parent, Consumer<Div<?>> consumer) {
 		new Div<>(parent)
 				.attrClass(CSS.DASHBOARD_CONTAINER)
 				.of(div -> {

@@ -77,17 +77,17 @@ public class TableTape {
 		String key[] = new String[] { COLUMN_NAME_ID };
 		table.primaryKey(COLUMN_NAME_ID, key);
 
-		DbColumn tapeTypeForegnColumn = table.addColumn(COLUMN_NAME_TYPE, Types.INTEGER, null);
+		DbColumn tapeTypeForeignColumn = table.addColumn(COLUMN_NAME_TYPE, Types.INTEGER, null);
 		DbTable tableTapeType = TableTapeType.table;
-		DbColumn columns[] = new DbColumn[] { tapeTypeForegnColumn };
+		DbColumn columns[] = new DbColumn[] { tapeTypeForeignColumn };
 		DbColumn columnsRef[] = new DbColumn[] { tableTapeType.getColumns().get(TableTapeType.COLUMN_INDEX_ID) };
 		table.foreignKey(TableTapeType.COLUMN_NAME_ID, columns, tableTapeType, columnsRef);
 
 		table.addColumn(COLUMN_NAME_BARCODE, Types.VARCHAR, MAX_LEN_BARCODE);
 		table.addColumn(COLUMN_NAME_SERIAL, Types.VARCHAR, MAX_LEN_SERIAL);
 
-		tapeTypeForegnColumn = table.addColumn(COLUMN_NAME_MANUFACTURER, Types.INTEGER, null);
-		columns = new DbColumn[] { tapeTypeForegnColumn };
+		tapeTypeForeignColumn = table.addColumn(COLUMN_NAME_MANUFACTURER, Types.INTEGER, null);
+		columns = new DbColumn[] { tapeTypeForeignColumn };
 		tableTapeType = TableManufacturer.table;
 		columnsRef = new DbColumn[] { tableTapeType.getColumns().get(TableManufacturer.COLUMN_INDEX_ID) };
 		table.foreignKey(TableManufacturer.COLUMN_NAME_ID, columns, tableTapeType, columnsRef);

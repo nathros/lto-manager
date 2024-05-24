@@ -18,7 +18,7 @@ function getBarcodeFormParams(preview) {
 function onBarcodeInputChange(event) {
 	console.log(event)
 	const params = getBarcodeFormParams(true);
-	fetch(`/ajax/generate/lto/label/html?` + params.toString(),
+	fetch(`/ajax/generate/lto/label/html/?` + params.toString(),
 	{
 		method: "GET",
 		signal: AbortSignal.timeout(3000)

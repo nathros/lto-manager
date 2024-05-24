@@ -378,6 +378,9 @@ input:disabled {
 .icon-admin:before {
 	mask-image: url('/assets/img/person-fill.svg');
 }
+.icon-admin-gear:before {
+	mask-image: url('/assets/img/person-fill-gear.svg');
+}
 .icon-dashboard:before {
 	mask-image: url('/assets/img/dashboard-fill.svg');
 }

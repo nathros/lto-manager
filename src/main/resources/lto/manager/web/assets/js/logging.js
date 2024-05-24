@@ -145,8 +145,8 @@ function getCompact() {
 	return (enabled == null) ? false : (enabled == COOKIE_ON);
 }
 function setCompact(enabled) {
-	const root = document.querySelector(':root');
-	root.style.setProperty('--log-pad', enabled ? "0px" : "var(--padding)");
+	const root = document.querySelector(":root");
+	root.style.setProperty("--log-pad", enabled ? "0px" : "var(--padding)");
 	tableLog.observerSkip = true;
 	setCookie("log-compact", enabled ? COOKIE_ON : COOKIE_OFF, 365);
 }
@@ -159,17 +159,17 @@ function downloadLogFile() {
 	},
 	(event) => { // RX
 		tmpWS.close();
-		let e = document.createElement('a');
-		e.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(event.data));
-		e.setAttribute('download', "logfile.txt");
-		e.style.display = 'none';
+		let e = document.createElement("a");
+		e.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(event.data));
+		e.setAttribute("download", "logfile.txt");
+		e.style.display = "none";
 		document.body.appendChild(e);
 		e.click();
 		document.body.removeChild(e);
 	});
 }
 const tableWS = openWS("/ws/logging/",
-(/*event*/) => { /* Open */},
+(/*event*/) => { /* Open */ },
 (event) => { // Close
 	alert("closed");
 	console.log(event);

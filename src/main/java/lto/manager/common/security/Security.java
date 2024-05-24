@@ -1,5 +1,6 @@
 package lto.manager.common.security;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.UUID;
 
@@ -11,7 +12,7 @@ import lto.manager.common.state.State;
 public class Security {
 	public static UUID loginUser(final String username, final String password) {
 		try {
-			final RecordUser user = Database.getUserByName(username);
+			final RecordUser user = Database.getUserByName(username, false);
 			final String calculatedHash = user.getHashedPassword(password);
 			final String hash = user.getHash();
 			if (calculatedHash.equals(hash)) {
@@ -19,7 +20,7 @@ public class Security {
 				State.addNewLoginSession(newID, user);
 				return newID;
 			}
-		} catch (SQLException e) {
+		} catch (SQLException | IOException e) {
 			Log.severe("Failed to login user [" + username + "] " + e.getMessage());
 		}
 		return null;

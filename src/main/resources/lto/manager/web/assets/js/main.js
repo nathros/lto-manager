@@ -138,6 +138,11 @@ function toastButtonPromiseCallBack(callBack) {
 	});
 }
 
+function confirmToast(href, message) {
+	showToastCallback(Toast.Warning, message, () => { window.location.href = href; }, true);
+	return false;
+}
+
 function getNameFromPath(path) {
 	// input: /abc/def/ghi/ output: ghi
 	path = path.slice(0, -1);
@@ -152,9 +157,6 @@ function getUUID() { // Not cryptographic
 		return v.toString(16);
 	});
 }
-async function shutdownConfirm() {
-	let response = await showToast(Toast.Warning, 'Are you sure?<br>This will shutdown service' , -1, undefined, true);
-	if (response != ToastResponse.Cancel) {
-		window.location.href = "/shutdown"
-	}
+function shutdownConfirm() {
+	return confirmToast("/shutdown", 'Are you sure?<br>This will shutdown service');
 }

@@ -1,5 +1,6 @@
 package lto.manager.common.database.tables;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,50 +11,70 @@ import com.healthmarketscience.sqlbuilder.BinaryCondition;
 import com.healthmarketscience.sqlbuilder.CreateTableQuery;
 import com.healthmarketscience.sqlbuilder.InsertQuery;
 import com.healthmarketscience.sqlbuilder.SelectQuery;
+import com.healthmarketscience.sqlbuilder.SelectQuery.JoinType;
 import com.healthmarketscience.sqlbuilder.dbspec.basic.DbColumn;
+import com.healthmarketscience.sqlbuilder.dbspec.basic.DbJoin;
 import com.healthmarketscience.sqlbuilder.dbspec.basic.DbSchema;
 import com.healthmarketscience.sqlbuilder.dbspec.basic.DbTable;
 
 import lto.manager.common.database.Database;
+import lto.manager.common.database.tables.records.RecordRole;
 import lto.manager.common.database.tables.records.RecordUser;
 
 public class TableUser {
 	public static final DbTable table = getSelf();
+	private static DbJoin roleJoin;
+
 	public static final String TABLE_NAME = "table_users";
+
 	public static final String COLUMN_NAME_ID = "id_user";
+	public static final String COLUMN_NAME_ROLE = "id_role";
 	public static final String COLUMN_NAME_USERNAME = "username";
 	public static final String COLUMN_NAME_HASH = "hash";
 	public static final String COLUMN_NAME_SALT = "salt";
-	public static final String COLUMN_NAME_PERMISSION_MASK = "permission";
 	public static final String COLUMN_NAME_ENABLED = "enabled";
 	public static final String COLUMN_NAME_CREATED = "created";
+	public static final String COLUMN_NAME_LANGUAGE = "language";
+	public static final String COLUMN_NAME_AVATAR = "avatar";
 
 	public static final int COLUMN_INDEX_ID = 0;
-	public static final int COLUMN_INDEX_USERNAME = 1;
-	public static final int COLUMN_INDEX_HASH = 2;
-	public static final int COLUMN_INDEX_SALT = 3;
-	public static final int COLUMN_INDEX_PERMISSION_MASK = 4;
+	public static final int COLUMN_INDEX_ROLE = 1;
+	public static final int COLUMN_INDEX_USERNAME = 2;
+	public static final int COLUMN_INDEX_HASH = 3;
+	public static final int COLUMN_INDEX_SALT = 4;
 	public static final int COLUMN_INDEX_ENABLED = 5;
 	public static final int COLUMN_INDEX_CREATED = 6;
+	public static final int COLUMN_INDEX_LANGUAGE = 7;
+	public static final int COLUMN_INDEX_AVATAR = 8;
 
 	static private DbTable getSelf() {
 		DbSchema schema = Database.schema;
 		DbTable table = schema.addTable(TABLE_NAME);
 
 		DbColumn id = table.addColumn(COLUMN_NAME_ID, Types.INTEGER, null);
-		//id.primaryKey();
+		// id.primaryKey();
 		id.unique();
 		id.notNull();
 
-		String key[] = new String[] { COLUMN_NAME_ID};
+		String key[] = new String[] { COLUMN_NAME_ID };
 		table.primaryKey(COLUMN_NAME_ID, key);
+
+		DbColumn roleForeignColumn = table.addColumn(COLUMN_NAME_ROLE, Types.INTEGER, null);
+		roleForeignColumn.notNull();
+		DbTable tableRole = TableRoles.table;
+		DbColumn columns[] = new DbColumn[] { roleForeignColumn };
+		DbColumn columnsRef[] = new DbColumn[] { tableRole.getColumns().get(TableRoles.COLUMN_INDEX_ID) };
+		table.foreignKey(TableRoles.COLUMN_NAME_ID, columns, tableRole, columnsRef);
 
 		table.addColumn(COLUMN_NAME_USERNAME, Types.VARCHAR, 128).unique();
 		table.addColumn(COLUMN_NAME_HASH, Types.VARCHAR, 128);
 		table.addColumn(COLUMN_NAME_SALT, Types.VARCHAR, 32);
-		table.addColumn(COLUMN_NAME_PERMISSION_MASK, Types.BIGINT, null);
 		table.addColumn(COLUMN_NAME_ENABLED, Types.BOOLEAN, null);
 		table.addColumn(COLUMN_NAME_CREATED, Types.TIMESTAMP_WITH_TIMEZONE, null);
+		table.addColumn(COLUMN_NAME_LANGUAGE, Types.INTEGER, null);
+		table.addColumn(COLUMN_NAME_AVATAR, Types.VARCHAR, 128);
+
+		roleJoin = Database.spec.addJoin(null, TABLE_NAME, null, TableRoles.TABLE_NAME, TableRoles.COLUMN_NAME_ID);
 
 		return table;
 	}
@@ -74,16 +95,17 @@ public class TableUser {
 		var statment = con.createStatement();
 
 		InsertQuery iq = new InsertQuery(table);
-		if (newUser.getID() != Database.NEW_RECORD_ID)
-		{
+		if (newUser.getID() != Database.NEW_RECORD_ID) {
 			iq.addColumn(table.getColumns().get(COLUMN_INDEX_ID), newUser.getID());
 		}
+		iq.addColumn(table.getColumns().get(COLUMN_INDEX_ROLE), newUser.getRole().getID());
 		iq.addColumn(table.getColumns().get(COLUMN_INDEX_USERNAME), newUser.getUsername());
 		iq.addColumn(table.getColumns().get(COLUMN_INDEX_HASH), newUser.getHash());
 		iq.addColumn(table.getColumns().get(COLUMN_INDEX_SALT), newUser.getSalt());
-		iq.addColumn(table.getColumns().get(COLUMN_INDEX_PERMISSION_MASK), newUser.getPermissionMask());
 		iq.addColumn(table.getColumns().get(COLUMN_INDEX_ENABLED), newUser.getEnabled());
 		iq.addColumn(table.getColumns().get(COLUMN_INDEX_CREATED), newUser.getCreated());
+		iq.addColumn(table.getColumns().get(COLUMN_INDEX_LANGUAGE), newUser.getLanguage());
+		iq.addColumn(table.getColumns().get(COLUMN_INDEX_AVATAR), newUser.getAvatar());
 
 		String sql = iq.validate().toString();
 		if (!statment.execute(sql)) {
@@ -92,12 +114,17 @@ public class TableUser {
 		return false;
 	}
 
-	public static RecordUser getUserByName(Connection con, String username) throws SQLException {
+	public static RecordUser getUserByName(Connection con, String username, boolean includePermissions)
+			throws SQLException, IOException {
 		var statment = con.createStatement();
 
 		SelectQuery sq = new SelectQuery();
 		sq.addAllTableColumns(table);
 		sq.addCondition(BinaryCondition.like(table.getColumns().get(COLUMN_INDEX_USERNAME), username));
+		if (includePermissions) {
+			sq.addAllTableColumns(TableRoles.table);
+			sq.addJoins(JoinType.INNER, roleJoin);
+		}
 
 		String sql = sq.validate().toString();
 		statment.execute(sql);
@@ -105,23 +132,29 @@ public class TableUser {
 		if (!results.next()) {
 			throw new SQLException("User not found: [" + username + "]");
 		}
-		RecordUser user = fromResultSet(results);
+		RecordUser user = fromResultSet(results, includePermissions);
 		if (results.next()) {
 			throw new SQLException("Multiple users have same name: [" + username + "]");
 		}
 		return user;
 	}
 
-	public static RecordUser fromResultSet(ResultSet result) throws SQLException {
+	public static RecordUser fromResultSet(ResultSet result, boolean includePermissions) throws SQLException, IOException {
 		final int id = result.getInt(COLUMN_NAME_ID);
 		final String username = result.getString(COLUMN_NAME_USERNAME);
 		final String hash = result.getString(COLUMN_NAME_HASH);
 		final String salt = result.getString(COLUMN_NAME_SALT);
-		final long permission = result.getLong(COLUMN_NAME_PERMISSION_MASK);
 		final boolean enabled = result.getBoolean(COLUMN_NAME_ENABLED);
 		final String createdStr = result.getString(COLUMN_NAME_CREATED);
 		final LocalDateTime created = LocalDateTime.parse(createdStr);
-		return RecordUser.of(id, username, hash, salt, permission, enabled, created);
+		final int language = result.getInt(COLUMN_NAME_LANGUAGE);
+		final String avatar = result.getString(COLUMN_NAME_AVATAR);
+		RecordUser user = RecordUser.of(id, username, hash, salt, enabled, created, language, avatar);
+		if (includePermissions) {
+			RecordRole role = TableRoles.fromResultSet(result);
+			user.setRole(role);
+		}
+		return user;
 	}
 
 }
