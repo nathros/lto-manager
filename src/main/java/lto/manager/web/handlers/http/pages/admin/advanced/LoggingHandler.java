@@ -1,4 +1,4 @@
-package lto.manager.web.handlers.http.pages.admin;
+package lto.manager.web.handlers.http.pages.admin.advanced;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
@@ -9,6 +9,7 @@ import org.xmlet.htmlapifaster.Div;
 import com.sun.net.httpserver.HttpExchange;
 
 import lto.manager.web.handlers.http.BaseHTTPHandler;
+import lto.manager.web.handlers.http.pages.admin.AdminHandler;
 import lto.manager.web.handlers.http.partial.components.CheckBox;
 import lto.manager.web.handlers.http.partial.components.CheckBox.CheckBoxOptions;
 import lto.manager.web.handlers.http.partial.components.Switch;

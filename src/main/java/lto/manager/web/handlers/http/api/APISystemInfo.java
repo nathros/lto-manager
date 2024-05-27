@@ -7,12 +7,13 @@ import com.sun.net.httpserver.HttpExchange;
 
 import lto.manager.common.Util;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
+import lto.manager.web.resource.Asset;
 import lto.manager.web.resource.JSON;
 import lto.manager.web.resource.JSON.APIStatus;
 import lto.manager.web.resource.JSON.JSONMap;
 
 public class APISystemInfo extends BaseHTTPHandler {
-	public static final String PATH = "/api/systeminfo/";
+	public static final String PATH = Asset.PATH_API_BASE + "systeminfo/";
 
 	public static final Long startTime = System.currentTimeMillis(); // Program start time
 

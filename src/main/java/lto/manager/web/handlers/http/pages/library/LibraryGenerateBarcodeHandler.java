@@ -220,7 +220,7 @@ public class LibraryGenerateBarcodeHandler extends BaseHTTPHandler {
 				.__() // div
 			.__() // form
 
-			.div().attrClass(CSS.GROUP).addAttr(CSS.GROUP_ATTRIBUTE, "Preview")
+			.div().attrClass(CSS.GROUP).attrStyle("width:100%").addAttr(CSS.GROUP_ATTRIBUTE, "Preview")
 				.div().attrId("barcode-preview").__()
 			.__()
 		.__() // div

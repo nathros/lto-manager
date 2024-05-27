@@ -7,6 +7,7 @@ public class CSS {
 	public final static String COMMON_PADDING_FULL = "common-padding-full ";
 	public final static String GAP_NONE = "gap-none ";
 	public final static String GAP_HALF = "gap-half ";
+	public final static String GAP_BOTTOM = "gap-margin ";
 
 	public final static String HEADER_ITEM = "header-item ";
 	public final static String HEADER_LABEL_TOP = "header-label-top ";
@@ -49,6 +50,7 @@ public class CSS {
 	public final static String ICON_JOBS = "icon-jobs ";
 	public final static String ICON_ADMIN = "icon-admin ";
 	public final static String ICON_ADMIN_GEAR = "icon-admin-gear ";
+	public final static String ICON_PEOPLE = "icon-people ";
 	public final static String ICON_DASHBOARD = "icon-dashboard ";
 	public final static String ICON_SANDPIT = "icon-sandpit ";
 	public final static String ICON_EDIT = "icon-edit ";

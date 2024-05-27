@@ -31,7 +31,7 @@ public class AJAXIconListFetcher extends BaseHTTPHandler {
 			for (String image: folderIcons) {
 				o.img()
 					.attrClass(CSS.FV_CONTEXT_WITH_HOVER)
-					.attrSrc(Asset.IMG_TYPES + image)
+					.attrSrc(Asset.IMG_TYPES_PATH + image)
 					.attrOnclick(JS.fnSetDirIcon())
 				.__();
 			}

@@ -1,4 +1,4 @@
-package lto.manager.web.handlers.http.pages.admin;
+package lto.manager.web.handlers.http.pages.admin.advanced;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -12,6 +12,7 @@ import com.sun.net.httpserver.HttpExchange;
 
 import lto.manager.common.database.Database;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
+import lto.manager.web.handlers.http.pages.admin.AdminHandler;
 import lto.manager.web.handlers.http.templates.TemplatePage.BreadCrumbs;
 import lto.manager.web.handlers.http.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.http.templates.TemplatePage.TemplatePageModel;

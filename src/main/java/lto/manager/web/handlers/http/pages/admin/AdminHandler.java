@@ -8,7 +8,14 @@ import org.xmlet.htmlapifaster.Div;
 import com.sun.net.httpserver.HttpExchange;
 
 import lto.manager.web.handlers.http.BaseHTTPHandler;
+import lto.manager.web.handlers.http.pages.admin.advanced.DatabaseHandler;
+import lto.manager.web.handlers.http.pages.admin.advanced.LoggingHandler;
+import lto.manager.web.handlers.http.pages.admin.advanced.SessionViewerHandler;
+import lto.manager.web.handlers.http.pages.admin.advanced.WebsocketListConnectionAdminHandler;
+import lto.manager.web.handlers.http.pages.admin.advanced.WebsocketTestAdminHandler;
 import lto.manager.web.handlers.http.pages.admin.externalprocess.ExternalProcessHandler;
+import lto.manager.web.handlers.http.pages.admin.roles.RolesHandler;
+import lto.manager.web.handlers.http.pages.admin.users.UsersHandler;
 import lto.manager.web.handlers.http.partial.components.ButtonExtended.ButtonExtendedOptions;
 import lto.manager.web.handlers.http.partial.components.ButtonExtendedGroup;
 import lto.manager.web.handlers.http.partial.components.ButtonExtendedGroup.ButtonExtendedGroupOptions;
@@ -28,7 +35,7 @@ public class AdminHandler extends BaseHTTPHandler {
 	public static final String NAME = "Admin";
 
 	private static final ButtonExtendedOptions sysOptionSetting = ButtonExtendedOptions.of("Settings", "Change system settings", UpdateOptionsHandler.PATH, CSS.ICON_WRENCH);
-	private static final ButtonExtendedOptions sysOptionUsers = ButtonExtendedOptions.of("Users", "Manage Users", UsersHandler.PATH, CSS.ICON_ADMIN);
+	private static final ButtonExtendedOptions sysOptionUsers = ButtonExtendedOptions.of("Users", "Manage Users", UsersHandler.PATH, CSS.ICON_PEOPLE);
 	private static final ButtonExtendedOptions sysOptionRoles = ButtonExtendedOptions.of("Roles", "Manage role permissions", RolesHandler.PATH, CSS.ICON_ADMIN_GEAR);
 	private static final ButtonExtendedOptions sysOptionUpdate = ButtonExtendedOptions.of("Update", "Check for updates", AppUpdateHandler.PATH, CSS.ICON_ARROW_REPEAT);
 	private static final ButtonExtendedOptions sysOptionServices = ButtonExtendedOptions.of("Services", "Manage internal services", ServicesHandler.PATH, CSS.ICON_SLIDERS);

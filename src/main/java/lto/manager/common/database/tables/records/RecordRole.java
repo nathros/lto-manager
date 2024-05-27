@@ -28,6 +28,10 @@ public class RecordRole {
 		return new RecordRole(Database.NEW_RECORD_ID, name, description, permission);
 	}
 
+	public static RecordRole of(Integer id) {
+		return new RecordRole(id, null, null, null);
+	}
+
 	public static List<RecordRole> getDefaultRoles() {
 		List<RecordRole> roles = new ArrayList<RecordRole>();
 		BitSet all = new BitSet(1024);

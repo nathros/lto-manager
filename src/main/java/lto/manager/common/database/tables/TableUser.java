@@ -6,12 +6,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.healthmarketscience.sqlbuilder.BinaryCondition;
 import com.healthmarketscience.sqlbuilder.CreateTableQuery;
+import com.healthmarketscience.sqlbuilder.DeleteQuery;
 import com.healthmarketscience.sqlbuilder.InsertQuery;
 import com.healthmarketscience.sqlbuilder.SelectQuery;
 import com.healthmarketscience.sqlbuilder.SelectQuery.JoinType;
+import com.healthmarketscience.sqlbuilder.UpdateQuery;
 import com.healthmarketscience.sqlbuilder.dbspec.basic.DbColumn;
 import com.healthmarketscience.sqlbuilder.dbspec.basic.DbJoin;
 import com.healthmarketscience.sqlbuilder.dbspec.basic.DbSchema;
@@ -47,6 +51,9 @@ public class TableUser {
 	public static final int COLUMN_INDEX_LANGUAGE = 7;
 	public static final int COLUMN_INDEX_AVATAR = 8;
 
+	public static final int MAX_LENGTH_USERNAME = 128;
+	public static final int MAX_LENGTH_AVATAR = 128;
+
 	static private DbTable getSelf() {
 		DbSchema schema = Database.schema;
 		DbTable table = schema.addTable(TABLE_NAME);
@@ -66,13 +73,13 @@ public class TableUser {
 		DbColumn columnsRef[] = new DbColumn[] { tableRole.getColumns().get(TableRoles.COLUMN_INDEX_ID) };
 		table.foreignKey(TableRoles.COLUMN_NAME_ID, columns, tableRole, columnsRef);
 
-		table.addColumn(COLUMN_NAME_USERNAME, Types.VARCHAR, 128).unique();
+		table.addColumn(COLUMN_NAME_USERNAME, Types.VARCHAR, MAX_LENGTH_USERNAME).unique();
 		table.addColumn(COLUMN_NAME_HASH, Types.VARCHAR, 128);
 		table.addColumn(COLUMN_NAME_SALT, Types.VARCHAR, 32);
 		table.addColumn(COLUMN_NAME_ENABLED, Types.BOOLEAN, null);
 		table.addColumn(COLUMN_NAME_CREATED, Types.TIMESTAMP_WITH_TIMEZONE, null);
 		table.addColumn(COLUMN_NAME_LANGUAGE, Types.INTEGER, null);
-		table.addColumn(COLUMN_NAME_AVATAR, Types.VARCHAR, 128);
+		table.addColumn(COLUMN_NAME_AVATAR, Types.VARCHAR, MAX_LENGTH_AVATAR);
 
 		roleJoin = Database.spec.addJoin(null, TABLE_NAME, null, TableRoles.TABLE_NAME, TableRoles.COLUMN_NAME_ID);
 
@@ -114,6 +121,50 @@ public class TableUser {
 		return false;
 	}
 
+	public static boolean deleteUser(Connection con, int id)
+			throws SQLException, IOException {
+		if (RecordUser.DEFAULT_ID == id) {
+			throw new IllegalArgumentException("Cannot delete default user");
+		}
+		var statment = con.createStatement();
+
+		DeleteQuery dq = new DeleteQuery(table);
+		dq.addCondition(BinaryCondition.equalTo(table.getColumns().get(COLUMN_INDEX_ID), id));
+
+		String sql = dq.validate().toString();
+		statment.execute(sql);
+		if (!statment.execute(sql)) {
+			return true;
+		}
+
+		return true;
+	}
+
+	public static boolean updateUser(Connection con, RecordUser user)
+			throws SQLException, IOException {
+		var statment = con.createStatement();
+
+		UpdateQuery uq = new UpdateQuery(table);
+		uq.addSetClause(table.getColumns().get(COLUMN_INDEX_ID), user.getID());
+		uq.addSetClause(table.getColumns().get(COLUMN_INDEX_ROLE), user.getRole().getID());
+		uq.addSetClause(table.getColumns().get(COLUMN_INDEX_USERNAME), user.getUsername());
+		uq.addSetClause(table.getColumns().get(COLUMN_INDEX_HASH), user.getHash());
+		uq.addSetClause(table.getColumns().get(COLUMN_INDEX_SALT), user.getSalt());
+		uq.addSetClause(table.getColumns().get(COLUMN_INDEX_ENABLED), user.getEnabled());
+		uq.addSetClause(table.getColumns().get(COLUMN_INDEX_CREATED), user.getCreated());
+		uq.addSetClause(table.getColumns().get(COLUMN_INDEX_LANGUAGE), user.getLanguage());
+		uq.addSetClause(table.getColumns().get(COLUMN_INDEX_AVATAR), user.getAvatar());
+		//uq.addCondition(BinaryCondition.equalTo(table.getColumns().get(COLUMN_INDEX_ID), user.getID()));
+
+		String sql = uq.validate().toString();
+		statment.execute(sql);
+		if (!statment.execute(sql)) {
+			return true;
+		}
+
+		return true;
+	}
+
 	public static RecordUser getUserByName(Connection con, String username, boolean includePermissions)
 			throws SQLException, IOException {
 		var statment = con.createStatement();
@@ -139,7 +190,73 @@ public class TableUser {
 		return user;
 	}
 
-	public static RecordUser fromResultSet(ResultSet result, boolean includePermissions) throws SQLException, IOException {
+	public static RecordUser getUserByID(Connection con, int id, boolean includePermissions)
+			throws SQLException, IOException {
+		var statment = con.createStatement();
+
+		SelectQuery sq = new SelectQuery();
+		sq.addAllTableColumns(table);
+		sq.addCondition(BinaryCondition.like(table.getColumns().get(COLUMN_INDEX_ID), id));
+		if (includePermissions) {
+			sq.addAllTableColumns(TableRoles.table);
+			sq.addJoins(JoinType.INNER, roleJoin);
+		}
+
+		String sql = sq.validate().toString();
+		statment.execute(sql);
+		var results = statment.getResultSet();
+		if (!results.next()) {
+			throw new SQLException("User not found: ID[" + id + "]");
+		}
+		RecordUser user = fromResultSet(results, includePermissions);
+		return user;
+	}
+
+	public static List<RecordUser> getUserByRole(Connection con, int roleID, boolean includePermissions)
+			throws SQLException, IOException {
+		var statment = con.createStatement();
+
+		SelectQuery sq = new SelectQuery();
+		sq.addAllTableColumns(table);
+		sq.addCondition(BinaryCondition.equalTo(table.getColumns().get(COLUMN_INDEX_ROLE), roleID));
+		if (includePermissions) {
+			sq.addAllTableColumns(TableRoles.table);
+			sq.addJoins(JoinType.INNER, roleJoin);
+		}
+
+		List<RecordUser> users = new ArrayList<RecordUser>();
+		String sql = sq.validate().toString();
+		statment.execute(sql);
+		var results = statment.getResultSet();
+		while (results.next()) {
+			users.add(fromResultSet(results, includePermissions));
+		}
+		return users;
+	}
+
+	public static List<RecordUser> getAllUsers(Connection con, boolean includePermissions)
+			throws SQLException, IOException {
+		var statment = con.createStatement();
+
+		SelectQuery sq = new SelectQuery();
+		sq.addAllTableColumns(table);
+		if (includePermissions) {
+			sq.addAllTableColumns(TableRoles.table);
+			sq.addJoins(JoinType.INNER, roleJoin);
+		}
+
+		List<RecordUser> users = new ArrayList<RecordUser>();
+		String sql = sq.validate().toString();
+		statment.execute(sql);
+		var results = statment.getResultSet();
+		while (results.next()) {
+			users.add(fromResultSet(results, includePermissions));
+		}
+		return users;
+	}
+
+	public static RecordUser fromResultSet(ResultSet result, boolean includePermissions)
+			throws SQLException, IOException {
 		final int id = result.getInt(COLUMN_NAME_ID);
 		final String username = result.getString(COLUMN_NAME_USERNAME);
 		final String hash = result.getString(COLUMN_NAME_HASH);

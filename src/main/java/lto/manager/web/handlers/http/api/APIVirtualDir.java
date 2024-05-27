@@ -8,11 +8,12 @@ import com.sun.net.httpserver.HttpExchange;
 import lto.manager.common.database.Database;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.templates.models.BodyModel;
+import lto.manager.web.resource.Asset;
 import lto.manager.web.resource.JSON;
 import lto.manager.web.resource.JSON.APIStatus;
 
 public class APIVirtualDir extends BaseHTTPHandler {
-	public static final String PATH = "/api/virtualdir/";
+	public static final String PATH = Asset.PATH_API_BASE + "virtualdir/";
 
 	@Override
 	public void requestHandle(HttpExchange he) throws IOException, InterruptedException, ExecutionException {
@@ -56,7 +57,7 @@ public class APIVirtualDir extends BaseHTTPHandler {
 					throw new Exception("Failed to rename virtual directory: " + basePath + newDirName);
 
 				case "changeico":
-					if (Database.chageVirtualDirIcon(basePath, newDirName)) {
+					if (Database.changeVirtualDirIcon(basePath, newDirName)) {
 						requestHandleCompleteAPIText(he,
 								JSON.populateAPIResponse(APIStatus.ok, APIStatus.ok.toString()), CONTENT_TYPE_JSON);
 						return;

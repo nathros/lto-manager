@@ -26,6 +26,23 @@ public class InlineErrorMessage {
 		return null;
 	}
 
+	public static Void contentGeneric(Div<?> view, final String title, final Exception ex) {
+		view.attrClass(CSS.INLINE_MESSAGE + CSS.ERROR)
+			.span().__()
+			.b().raw(title).__()
+			.a().attrClass(CSS.INLINE_MESSAGE_DETAILS_LINK).attrTabIndex(1).text("Show Details").__()
+			.div().attrClass(CSS.INLINE_MESSAGE_DETAILS_CONTENT + CSS.FONT_MONOSPACE + CSS.FONT_SMALL).attrTabIndex(2)
+				.of(div -> {
+					StringWriter sw = new StringWriter();
+					PrintWriter pw = new PrintWriter(sw);
+					ex.printStackTrace(pw);
+					final String stackTrace = "<div>" + sw.toString().replace(System.lineSeparator(), "</div><div>");
+					div.raw(stackTrace);
+				})
+			.__();
+		return null;
+	}
+
 	public static Void contentGeneric(Div<?> view, final String title, final String message) {
 		view.attrClass(CSS.INLINE_MESSAGE + CSS.ERROR)
 			.span().__()
@@ -35,6 +52,14 @@ public class InlineErrorMessage {
 				.attrClass(CSS.INLINE_MESSAGE_DETAILS_CONTENT + CSS.FONT_MONOSPACE + CSS.FONT_SMALL).attrTabIndex(2)
 				.text(message)
 			.__()
+		.__();
+		return null;
+	}
+
+	public static Void contentGeneric(Div<?> view, final String title) {
+		view.attrClass(CSS.INLINE_MESSAGE + CSS.ERROR)
+			.span().__()
+			.b().text(title).__()
 		.__();
 		return null;
 	}

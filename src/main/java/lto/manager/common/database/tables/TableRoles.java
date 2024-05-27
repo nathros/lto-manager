@@ -11,7 +11,9 @@ import java.util.List;
 
 import org.apache.pdfbox.util.Hex;
 
+import com.healthmarketscience.sqlbuilder.BinaryCondition;
 import com.healthmarketscience.sqlbuilder.CreateTableQuery;
+import com.healthmarketscience.sqlbuilder.DeleteQuery;
 import com.healthmarketscience.sqlbuilder.InsertQuery;
 import com.healthmarketscience.sqlbuilder.SelectQuery;
 import com.healthmarketscience.sqlbuilder.dbspec.basic.DbColumn;
@@ -114,6 +116,21 @@ public class TableRoles {
 		}
 
 		return list;
+	}
+
+	public static boolean deleteRole(Connection con, int id) throws SQLException, IOException {
+		var statment = con.createStatement();
+
+		DeleteQuery dq = new DeleteQuery(table);
+		dq.addCondition(BinaryCondition.equalTo(table.getColumns().get(COLUMN_INDEX_ID), id));
+
+		String sql = dq.validate().toString();
+
+		if (!statment.execute(sql)) {
+			return true;
+		}
+
+		return true;
 	}
 
 	public static RecordRole fromResultSet(ResultSet result) throws SQLException, IOException {

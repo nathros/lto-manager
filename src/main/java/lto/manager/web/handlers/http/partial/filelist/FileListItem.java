@@ -16,7 +16,7 @@ public class FileListItem {
 	private static final String DATA_SIZE = "data-size";
 	private static final String DATA_TIME = "data-time";
 	private static final String DATA_NAME = "data-name";
-	public static final HashSet<String> fileTypeCache = AssetHandler.getCachedFileListInDir(Asset.IMG_TYPES);
+	public static final HashSet<String> fileTypeCache = AssetHandler.getCachedFileListInDir(Asset.IMG_TYPES_PATH);
 
 	 static void content(Div<?> view, FileListModel fileTree) {
 		//final String LINK = FilesAddHandler.PATH + "?" + FilesAddHandler.DIR + "=";
@@ -107,21 +107,21 @@ public class FileListItem {
 	 static private String getFileTypeIcon(PathTreeBase file) { // TODO https://www.xfce-look.org/p/1498619
 		 final String customIcon = file.getCustomIcon();
 		 if (customIcon != null) {
-			 return Asset.IMG_TYPES + customIcon + ".svg";
+			 return Asset.IMG_TYPES_PATH + customIcon + ".svg";
 		 }
 		 if (file.isDirectory()) {
-			 return Asset.IMG_TYPES + "folder-.svg";
+			 return Asset.IMG_TYPES_PATH + "folder-.svg";
 		 } else {
 			 final String filename = file.getName();
 			 int index = filename.lastIndexOf(".");
 			 if (index >= 0) {
 				 final String ext = filename.substring(index + 1) + ".svg";
 				 if (fileTypeCache.contains(ext)) {
-					 final String asset = Asset.IMG_TYPES + ext;
+					 final String asset = Asset.IMG_TYPES_PATH + ext;
 					 return asset;
 				 }
 			 }
-			 return Asset.IMG_TYPES + "unknown.svg";
+			 return Asset.IMG_TYPES_PATH + "unknown.svg";
 		 }
 	 }
 }

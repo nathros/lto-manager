@@ -210,7 +210,7 @@ public class Database {
 		return TableFile.updateVirtualFiles(connection, files);
 	}
 
-	public static boolean chageVirtualDirIcon(String basePath, String icon) throws SQLException, IOException {
+	public static boolean changeVirtualDirIcon(String basePath, String icon) throws SQLException, IOException {
 		final List<RecordFile> files = TableFile.getFilesInDir(connection, basePath);
 		if (files.size() == 0) {
 			throw new IOException("Directory " + basePath + " does not exist");
@@ -224,7 +224,31 @@ public class Database {
 		return TableUser.getUserByName(connection, username, includePermissions);
 	}
 
+	public static RecordUser getUserByID(int id, boolean includePermissions) throws SQLException, IOException {
+		return TableUser.getUserByID(connection, id, includePermissions);
+	}
+
+	public static boolean deleteUser(int id) throws SQLException, IOException {
+		return TableUser.deleteUser(connection, id);
+	}
+
+	public static boolean updateUser(RecordUser user) throws SQLException, IOException {
+		return TableUser.updateUser(connection, user);
+	}
+
+	public static List<RecordUser> getUsersByRole(int roleID, boolean includePermissions) throws SQLException, IOException {
+		return TableUser.getUserByRole(connection, roleID, includePermissions);
+	}
+
+	public static List<RecordUser> getAllUsers(boolean includePermissions) throws SQLException, IOException {
+		return TableUser.getAllUsers(connection, includePermissions);
+	}
+
 	public static List<RecordRole> getAllRoles() throws SQLException, IOException {
 		return TableRoles.getAll(Database.connection);
+	}
+
+	public static boolean deleteRole(int id) throws SQLException, IOException {
+		return TableRoles.deleteRole(Database.connection, id);
 	}
 }

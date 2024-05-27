@@ -1,4 +1,4 @@
-package lto.manager.web.handlers.http.pages.admin;
+package lto.manager.web.handlers.http.pages.admin.advanced;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -11,6 +11,7 @@ import com.sun.net.httpserver.HttpExchange;
 
 import lto.manager.common.state.State;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
+import lto.manager.web.handlers.http.pages.admin.AdminHandler;
 import lto.manager.web.handlers.http.templates.TemplatePage.BreadCrumbs;
 import lto.manager.web.handlers.http.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.http.templates.TemplatePage.TemplatePageModel;

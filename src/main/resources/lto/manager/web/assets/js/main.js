@@ -158,5 +158,5 @@ function getUUID() { // Not cryptographic
 	});
 }
 function shutdownConfirm() {
-	return confirmToast("/shutdown", 'Are you sure?<br>This will shutdown service');
+	return confirmToast("/shutdown/", 'Are you sure?<br>This will shutdown service');
 }

@@ -381,6 +381,9 @@ input:disabled {
 .icon-admin-gear:before {
 	mask-image: url('/assets/img/person-fill-gear.svg');
 }
+.icon-people:before {
+	mask-image: url('/assets/img/people-fill.svg');
+}
 .icon-dashboard:before {
 	mask-image: url('/assets/img/dashboard-fill.svg');
 }
@@ -942,7 +945,13 @@ https://codepen.io/sudeepgumaste/pen/abdrorB
 	gap: 0;
 }
 .gap-half {
-	gap: 0.5rem;
+	gap: var(--padding);
+}
+.gap {
+	gap: var(--padding-full);
+}
+.gap-margin {
+	margin-bottom: var(--padding-full);
 }
 .dashboard-container {
 	display: flex;

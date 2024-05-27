@@ -18,7 +18,8 @@ public class RecordUser {
 	private int language;
 	private String avatar;
 
-	private static DecimalFormat df = new DecimalFormat("000"); // Faster than String.format("%03d", x);
+	public static int DEFAULT_ID = 1;
+	public static DecimalFormat df = new DecimalFormat("000"); // Faster than String.format("%03d", x);
 
 	public RecordUser(int id, String username, String password, boolean enabled, LocalDateTime dateAdded, int language,
 			String avatar) {
@@ -51,11 +52,13 @@ public class RecordUser {
 
 	public static RecordUser of(int id, RecordRole role, String username, String hash, String salt, boolean enabled,
 			LocalDateTime dateAdded, int language, String avatar) {
-		return new RecordUser(id, username, hash, salt, enabled, dateAdded, language, avatar);
+		var user = new RecordUser(id, username, hash, salt, enabled, dateAdded, language, avatar);
+		user.setRole(role);
+		return user;
 	}
 
 	public static RecordUser getDefaultUser() {
-		return new RecordUser(1, "root", "root", true, LocalDateTime.now(), 0, "default.svg")
+		return new RecordUser(DEFAULT_ID, "root", "root", true, LocalDateTime.now(), 0, "default.svg")
 				.setRole(RecordRole.getDefaultRoles().get(TableRoles.ROLE_ID_ADMIN - 1));
 	}
 

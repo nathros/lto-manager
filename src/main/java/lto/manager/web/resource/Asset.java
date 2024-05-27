@@ -29,12 +29,15 @@ public class Asset {
 
 	public static final String IMG_FAVICO_SVG = AssetHandler.PATH + "img/favico.svg";
 	public static final String IMG_LOGO = AssetHandler.PATH + "img/logo.svg";
-	public static final String IMG_TYPES = AssetHandler.PATH + "img/types/";
+	public static final String IMG_TYPES_PATH = AssetHandler.PATH + "img/types/";
+	public static final String IMG_AVATAR_PATH = AssetHandler.PATH + "img/avatar/";
 	public static final String IMG_COMPANY_LOGOS = AssetHandler.PATH + "img/company-logo/";
 	public static final String IMG_LTO_LABEL = AssetHandler.PATH + "img/lto-label/";
 	public static final String IMG_ICON_INFO = AssetHandler.PATH + "img/info-circle-fill.svg";
+	public static final String PATH_LOCALISATION = AssetHandler.PATH + "localisation/";
 
 	public static final String PATH_AJAX_BASE = "/ajax/";
+	public static final String PATH_API_BASE = "/api/";
 	public static final String PATH_SANDPIT_BASE = "/sandpit/";
-	public static final String PATH_WEBSOCKET_BASE = "/ws/";
+	public static final String PATH_WEBSOCKET_BASE = "/ws/";//
 }
