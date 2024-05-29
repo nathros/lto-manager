@@ -381,6 +381,9 @@ input:disabled {
 .icon-admin-gear:before {
 	mask-image: url('/assets/img/person-fill-gear.svg');
 }
+.icon-save:before {
+	mask-image: url('/assets/img/save2.svg');
+}
 .icon-people:before {
 	mask-image: url('/assets/img/people-fill.svg');
 }
@@ -470,6 +473,9 @@ input:disabled {
 }
 .icon-sliders::before {
 	mask-image: url(/assets/img/sliders2.svg);
+}
+.icon-arrow-left::before {
+	mask-image: url(/assets/img/arrow-90deg-left.svg);
 }
 .menu-list {
 	list-style-type: none;

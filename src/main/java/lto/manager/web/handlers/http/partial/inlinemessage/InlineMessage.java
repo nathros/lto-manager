@@ -8,8 +8,8 @@ import org.xmlet.htmlapifaster.Div;
 import lto.manager.common.ExternalProcess;
 import lto.manager.web.resource.CSS;
 
-public class InlineErrorMessage {
-	public static Void contentGeneric(Div<?> view, final Exception ex) {
+public class InlineMessage {
+	public static Void contentGenericError(Div<?> view, final Exception ex) {
 		view.attrClass(CSS.INLINE_MESSAGE + CSS.ERROR)
 			.span().__()
 			.b().raw("Error: " + ex.getMessage()).__()
@@ -26,7 +26,7 @@ public class InlineErrorMessage {
 		return null;
 	}
 
-	public static Void contentGeneric(Div<?> view, final String title, final Exception ex) {
+	public static Void contentGenericError(Div<?> view, final String title, final Exception ex) {
 		view.attrClass(CSS.INLINE_MESSAGE + CSS.ERROR)
 			.span().__()
 			.b().raw(title).__()
@@ -43,7 +43,7 @@ public class InlineErrorMessage {
 		return null;
 	}
 
-	public static Void contentGeneric(Div<?> view, final String title, final String message) {
+	public static Void contentGenericError(Div<?> view, final String title, final String message) {
 		view.attrClass(CSS.INLINE_MESSAGE + CSS.ERROR)
 			.span().__()
 			.b().text(title).__()
@@ -56,8 +56,16 @@ public class InlineErrorMessage {
 		return null;
 	}
 
-	public static Void contentGeneric(Div<?> view, final String title) {
+	public static Void contentGenericError(Div<?> view, final String title) {
 		view.attrClass(CSS.INLINE_MESSAGE + CSS.ERROR)
+			.span().__()
+			.b().text(title).__()
+		.__();
+		return null;
+	}
+
+	public static Void contentGenericOK(Div<?> view, final String title) {
+		view.attrClass(CSS.INLINE_MESSAGE + CSS.OK)
 			.span().__()
 			.b().text(title).__()
 		.__();

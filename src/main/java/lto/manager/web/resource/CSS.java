@@ -50,6 +50,7 @@ public class CSS {
 	public final static String ICON_JOBS = "icon-jobs ";
 	public final static String ICON_ADMIN = "icon-admin ";
 	public final static String ICON_ADMIN_GEAR = "icon-admin-gear ";
+	public final static String ICON_SAVE = "icon-save ";
 	public final static String ICON_PEOPLE = "icon-people ";
 	public final static String ICON_DASHBOARD = "icon-dashboard ";
 	public final static String ICON_SANDPIT = "icon-sandpit ";
@@ -80,6 +81,7 @@ public class CSS {
 	public final static String ICON_DIAGRAM_2 = "icon-diagram-2 ";
 	public final static String ICON_DIAGRAM_3 = "icon-diagram-3 ";
 	public final static String ICON_SLIDERS = "icon-sliders ";
+	public final static String ICON_ARROW_LEFT = "icon-arrow-left ";
 
 	public final static String FV_ID = "id-wtree";
 	public final static String FV_ID_CONTEXT_CONTAINER = "wtree-context-container";
@@ -112,6 +114,7 @@ public class CSS {
 	public final static String TABS_DESTINATION_ICON = "tab-dest-icon ";
 
 	public final static String FORMS_CONTAINER = "form-grid ";
+	public final static String FORMS_BUTTONS = "form-buttons ";
 
 	public final static String PIE_CONTAINER = "pie-container ";
 	public final static String PIE_CIRCLE = "pie ";
@@ -129,4 +132,5 @@ public class CSS {
 	public final static String INLINE_MESSAGE_DETAILS_LINK = "inline-details-link ";
 	public final static String INLINE_MESSAGE_DETAILS_CONTENT = "inline-details-content ";
 	public final static String ERROR = "error ";
+	public final static String OK = "ok ";
 }

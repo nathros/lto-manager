@@ -17,6 +17,10 @@ import lto.manager.common.database.tables.records.RecordManufacturer;
 import lto.manager.common.database.tables.records.RecordTape;
 import lto.manager.common.database.tables.records.RecordTape.RecordTapeFormatType;
 import lto.manager.common.database.tables.records.RecordTapeType;
+import lto.manager.web.check.FormValidator;
+import lto.manager.web.check.FormValidator.ValidatorOptions;
+import lto.manager.web.check.FormValidator.ValidatorStatus;
+import lto.manager.web.check.FormValidator.ValidatorType;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.partial.LTOTapeTypeSelect;
 import lto.manager.web.handlers.http.templates.TemplatePage.BreadCrumbs;
@@ -26,10 +30,6 @@ import lto.manager.web.handlers.http.templates.models.BodyModel;
 import lto.manager.web.handlers.http.templates.models.HeadModel;
 import lto.manager.web.resource.Asset;
 import lto.manager.web.resource.CSS;
-import lto.manager.web.resource.FormValidator;
-import lto.manager.web.resource.FormValidator.ValidatorOptions;
-import lto.manager.web.resource.FormValidator.ValidatorStatus;
-import lto.manager.web.resource.FormValidator.ValidatorType;
 import lto.manager.web.resource.HTML;
 import lto.manager.web.resource.Query;
 
@@ -186,7 +186,7 @@ public class LibraryCreateHandler extends BaseHTTPHandler {
 					.div().of(d -> {
 						if (model.hasQuery()) {
 							if (!barcodeStatus.statusOK()) {
-								d.p().text(barcodeStatus.userMessage()).__();
+								d.p().text(barcodeStatus.getUserMessage()).__();
 							}
 
 							if (errorMessage == null) {

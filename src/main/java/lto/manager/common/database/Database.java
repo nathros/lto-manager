@@ -232,6 +232,10 @@ public class Database {
 		return TableUser.deleteUser(connection, id);
 	}
 
+	public static boolean addUser(RecordUser user) throws SQLException, IOException {
+		return TableUser.addNewUser(connection, user);
+	}
+
 	public static boolean updateUser(RecordUser user) throws SQLException, IOException {
 		return TableUser.updateUser(connection, user);
 	}

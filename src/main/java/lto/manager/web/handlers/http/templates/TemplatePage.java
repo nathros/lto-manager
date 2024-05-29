@@ -20,6 +20,7 @@ import lto.manager.web.handlers.http.pages.admin.AdminHandler;
 import lto.manager.web.handlers.http.pages.dashboard.DashboardHandler;
 import lto.manager.web.handlers.http.pages.drives.DrivesHandler;
 import lto.manager.web.handlers.http.pages.files.FilesHandler;
+import lto.manager.web.handlers.http.pages.help.HelpHandler;
 import lto.manager.web.handlers.http.pages.jobs.JobsHandler;
 import lto.manager.web.handlers.http.pages.library.LibraryHandler;
 import lto.manager.web.handlers.http.pages.sandpit.SandpitHandler;
@@ -155,6 +156,13 @@ public class TemplatePage {
 								.li()
 									.a()
 										.attrHref("https://github.com/nathros/lto-manager")
+										.attrTarget(HTML.TARGET_BLANK)
+										.text("GitHub")
+									.__()
+								.__()
+								.li()
+									.a()
+										.attrHref(HelpHandler.PATH)
 										.attrTarget(HTML.TARGET_BLANK)
 										.text("Documentation")
 									.__()

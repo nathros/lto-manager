@@ -40,7 +40,7 @@ public class AJAXGenerateLTOLabelPDF extends BaseHTTPHandler {
 			var pdfwriter = PdfWriter.getInstance(document, stream);
 
 			document.open();
-			document.add(new Chunk("Test phase - scale is wrong"));
+			document.add(new Chunk("Test phase - barcode scale is wrong"));
 
 			SAXSVGDocumentFactory factory = new SAXSVGDocumentFactory(XMLResourceDescriptor.getXMLParserClassName());
 

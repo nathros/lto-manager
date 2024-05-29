@@ -15,7 +15,7 @@ import lto.manager.common.database.Database;
 import lto.manager.common.database.tables.records.RecordUser;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.pages.admin.AdminHandler;
-import lto.manager.web.handlers.http.partial.inlinemessage.InlineErrorMessage;
+import lto.manager.web.handlers.http.partial.inlinemessage.InlineMessage;
 import lto.manager.web.handlers.http.partial.list.ListContainer;
 import lto.manager.web.handlers.http.templates.TemplatePage.BreadCrumbs;
 import lto.manager.web.handlers.http.templates.TemplatePage.SelectedPage;
@@ -73,6 +73,7 @@ public class UsersHandler extends BaseHTTPHandler {
 						})
 					.__()
 					.div()
+						.attrClass(CSS.FORMS_BUTTONS)
 						.a()
 							.attrClass(CSS.BUTTON)
 							.attrHref(UsersEditHandler.PATH + "?" + UsersEditHandler.QID + "=" + user.getID())
@@ -111,7 +112,7 @@ public class UsersHandler extends BaseHTTPHandler {
 				if (errorMessage != null) {
 					parent
 						.div().attrClass(CSS.GAP_BOTTOM)
-						.div().of(d -> InlineErrorMessage.contentGeneric(d, "Failed to delete user: " + errorMessage))
+						.div().of(d -> InlineMessage.contentGenericError(d, "Failed to delete user: " + errorMessage))
 					.__();
 				}
 				ListContainer.content(parent, body);
@@ -123,7 +124,7 @@ public class UsersHandler extends BaseHTTPHandler {
 	@Override
 	public void requestHandle(HttpExchange he) throws IOException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of(NAME);
-		thm.addCSS(Asset.CSS_LIST);
+		thm.addCSS(Asset.CSS_LIST).addCSS(Asset.CSS_FORMS);
 		thm.addScript(Asset.JS_LIST);
 		BreadCrumbs crumbs = new BreadCrumbs().add(AdminHandler.NAME, AdminHandler.PATH).add(NAME, PATH);
 		TemplatePageModel tpm = TemplatePageModel.of(UsersHandler::content, UsersHandler::header, thm, SelectedPage.Admin, BodyModel.of(he, null), crumbs);
@@ -142,7 +143,7 @@ public class UsersHandler extends BaseHTTPHandler {
 					.__()
 					.li()
 						.a()
-							.attrHref(UsersNewHandler.PATH)
+							.attrHref(UsersNewHandler.PATH_NEW)
 							.text("Add New User")
 						.__()
 					.__()

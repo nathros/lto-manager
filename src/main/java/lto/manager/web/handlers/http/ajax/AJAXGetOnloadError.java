@@ -8,7 +8,7 @@ import org.xmlet.htmlapifaster.Div;
 import com.sun.net.httpserver.HttpExchange;
 
 import lto.manager.web.handlers.http.BaseHTTPHandler;
-import lto.manager.web.handlers.http.partial.inlinemessage.InlineErrorMessage;
+import lto.manager.web.handlers.http.partial.inlinemessage.InlineMessage;
 import lto.manager.web.handlers.http.templates.TemplateAJAX.TemplateFetcherModel;
 import lto.manager.web.handlers.http.templates.models.BodyModel;
 import lto.manager.web.resource.Asset;
@@ -19,7 +19,7 @@ public class AJAXGetOnloadError extends BaseHTTPHandler {
 	static Void content(Div<?> view, BodyModel model) {
 		final String title = model.getQuery("title");
 		final String message = model.getQuery("message");
-		view.of(div -> InlineErrorMessage.contentGeneric(div, title, message));
+		view.of(div -> InlineMessage.contentGenericError(div, title, message));
 		return null;
 	}
 

@@ -5,7 +5,7 @@ import com.sun.net.httpserver.HttpExchange;
 import htmlflow.HtmlFlow;
 import htmlflow.HtmlPage;
 import htmlflow.HtmlView;
-import lto.manager.web.handlers.http.partial.inlinemessage.InlineErrorMessage;
+import lto.manager.web.handlers.http.partial.inlinemessage.InlineMessage;
 
 public class TemplateInternalErrorAJAX {
 	private static HtmlView<TemplateInternalErrorModelAJAX> v = HtmlFlow.view(TemplateInternalErrorAJAX::template);
@@ -29,7 +29,7 @@ public class TemplateInternalErrorAJAX {
 		view
 		.div()
 			.<TemplateInternalErrorModelAJAX>dynamic((div, errorModel) -> {
-				InlineErrorMessage.contentGeneric(div, errorModel.ex);
+				InlineMessage.contentGenericError(div, errorModel.ex);
 			})
 		.__(); // div
 	}

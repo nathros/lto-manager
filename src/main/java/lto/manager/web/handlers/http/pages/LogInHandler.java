@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.UUID;
+import java.util.concurrent.CompletionException;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Supplier;
 
@@ -18,6 +19,8 @@ import htmlflow.HtmlFlow;
 import htmlflow.HtmlPage;
 import htmlflow.HtmlView;
 import lto.manager.common.security.Security;
+import lto.manager.web.check.CheckStatusType;
+import lto.manager.web.check.OperationStatus;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.http.templates.TemplatePage.TemplatePageModel;
@@ -35,17 +38,24 @@ public class LogInHandler extends BaseHTTPHandler {
 	private static final String PASS = "password";
 
 	public static void content(HtmlPage view) {
+		final OperationStatus loginResult = OperationStatus.undefined();
 		view
 		.html().attrLang(BaseHTTPHandler.LANG_VALUE)
 		.<TemplatePageModel>dynamic((root, model) -> {
 			final String username = model.getBodyModel().getQueryNoNull(USER);
 			final String password = model.getBodyModel().getQueryNoNull(PASS);
-			boolean loginSuccess = false;
 			if (model.getBodyModel().isPOSTMethod()) {
-				final UUID result = Security.loginUser(username, password);
-				loginSuccess = result != null;
-				if (loginSuccess) { // If login success redirect to /
-					model.getBodyModel().setNewSession(result);
+				try {
+					final UUID result = Security.loginUser(username, password);
+					loginResult.update(CheckStatusType.OK, null).setObject(result);
+				} catch (CompletionException e) {
+					loginResult.update(CheckStatusType.ERROR, "User is disabled");
+				} catch (Exception | IllegalAccessError e) {
+					loginResult.update(CheckStatusType.ERROR, "Failed to login");
+				}
+
+				if (loginResult.statusOK()) { // If login success redirect to /
+					model.getBodyModel().setNewSession((UUID)loginResult.getObject());
 					model.getBodyModel().clearAssetCache();
 					root
 						.head()
@@ -62,8 +72,6 @@ public class LogInHandler extends BaseHTTPHandler {
 					return;
 				}
 			}
-
-			final boolean loginComplete = loginSuccess;
 
 			Supplier<String> mainCSSSupplier = () -> {
 				try {
@@ -140,8 +148,8 @@ public class LogInHandler extends BaseHTTPHandler {
 								.__()
 								.button().attrClass(CSS.BUTTON).attrType(EnumTypeButtonType.SUBMIT).text("Login").__()
 								.of(f -> {
-									if (model.getBodyModel().isPOSTMethod() && !loginComplete) {
-										f.b().attrStyle("color:red").text("Failed to login").__();
+									if (model.getBodyModel().isPOSTMethod() && !loginResult.statusOK()) {
+										f.b().attrStyle("color:red").text(loginResult.getMessage()).__();
 									}
 								})
 							.__() // form

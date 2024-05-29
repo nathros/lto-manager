@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
+import lto.manager.common.database.Database;
 import lto.manager.common.database.tables.TableRoles;
 
 public class RecordUser {
@@ -62,6 +63,11 @@ public class RecordUser {
 				.setRole(RecordRole.getDefaultRoles().get(TableRoles.ROLE_ID_ADMIN - 1));
 	}
 
+	public static RecordUser getBlank() {
+		return new RecordUser(Database.NEW_RECORD_ID, "", "", true, LocalDateTime.now(), 0, "default.svg")
+				.setRole(RecordRole.getDefaultRoles().get(TableRoles.ROLE_ID_ADMIN - 1));
+	}
+
 	private static String generateSalt() {
 		final String salt = BCrypt.gensalt();
 		return salt;
@@ -108,6 +114,11 @@ public class RecordUser {
 
 	public RecordUser setHash(String hash) {
 		this.hash = hash;
+		return this;
+	}
+
+	public RecordUser setPassword(String password) {
+		this.hash = hashFunction(password, salt);
 		return this;
 	}
 

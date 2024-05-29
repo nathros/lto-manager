@@ -18,7 +18,7 @@ import lto.manager.common.database.tables.records.RecordRole;
 import lto.manager.common.database.tables.records.RecordUser;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.pages.admin.AdminHandler;
-import lto.manager.web.handlers.http.partial.inlinemessage.InlineErrorMessage;
+import lto.manager.web.handlers.http.partial.inlinemessage.InlineMessage;
 import lto.manager.web.handlers.http.partial.list.ListContainer;
 import lto.manager.web.handlers.http.templates.TemplatePage.BreadCrumbs;
 import lto.manager.web.handlers.http.templates.TemplatePage.SelectedPage;
@@ -104,12 +104,12 @@ public class RolesHandler extends BaseHTTPHandler {
 									usersList[0] += usersList[0].concat(u.getUsername()) + ", ";
 								}
 								usersList[0] = usersList[0].substring(0, usersList[0].length() - 2); // Remove last ','
-								parent.div().of(d -> InlineErrorMessage.contentGeneric(d, "Cannot delete as role is in use by following users: " + usersList[0]));
+								parent.div().of(d -> InlineMessage.contentGenericError(d, "Cannot delete as role is in use by following users: " + usersList[0]));
 							} catch (Exception e) {
-								parent.div().of(d -> InlineErrorMessage.contentGeneric(d, "Failed to get affected users", e));
+								parent.div().of(d -> InlineMessage.contentGenericError(d, "Failed to get affected users", e));
 							}
 						} else {
-							parent.div().attrClass(CSS.GAP_BOTTOM).of(d -> InlineErrorMessage.contentGeneric(d, "Failed to delete role: " + deleteIDStr + " with error: " + errorMessage));
+							parent.div().attrClass(CSS.GAP_BOTTOM).of(d -> InlineMessage.contentGenericError(d, "Failed to delete role: " + deleteIDStr + " with error: " + errorMessage));
 						}
 						parent.__(); // GAP_BOTTOM
 					}

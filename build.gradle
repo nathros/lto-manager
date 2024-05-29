@@ -12,10 +12,12 @@ repositories {
 
 ext {
 	// These are used in dependencies {} and baked in Version.java on build
-	versionSqlite = '3.45.3.0'
+	versionSqlite = '3.46.0.0'
 	versionHtmlflow = '4.5'
 	versionSqlBuilder = '3.0.2'
-	versionJavaWebSocket = '1.5.5'
+	versionJavaWebSocket = '1.5.6'
+	versionSpringSecurityCrypto = '6.3.0'
+	versionOpenhtmltopdf = '1.0.10'
 }
 
 dependencies {
@@ -23,11 +25,11 @@ dependencies {
 	implementation group: 'com.github.xmlet', name: 'htmlflow', version: versionHtmlflow
 	implementation group: 'com.healthmarketscience.sqlbuilder', name: 'sqlbuilder', version: versionSqlBuilder
 	implementation group: 'org.java-websocket', name: 'Java-WebSocket', version: versionJavaWebSocket
-	implementation group: 'org.springframework.security', name: 'spring-security-crypto', version: '6.2.4'
+	implementation group: 'org.springframework.security', name: 'spring-security-crypto', version: versionSpringSecurityCrypto
 
-	implementation group: 'com.openhtmltopdf', name: 'openhtmltopdf-core', version: '1.0.10'
-	implementation group: 'com.openhtmltopdf', name: 'openhtmltopdf-pdfbox', version: '1.0.10'
-	implementation group: 'com.openhtmltopdf', name: 'openhtmltopdf-svg-support', version: '1.0.10'
+	implementation group: 'com.openhtmltopdf', name: 'openhtmltopdf-core', version: versionOpenhtmltopdf
+	implementation group: 'com.openhtmltopdf', name: 'openhtmltopdf-pdfbox', version: versionOpenhtmltopdf
+	implementation group: 'com.openhtmltopdf', name: 'openhtmltopdf-svg-support', version: versionOpenhtmltopdf
 	implementation group: 'com.github.librepdf', name: 'openpdf', version: '1.3.33'
 	implementation group: 'org.apache.xmlgraphics', name: 'batik', version: '1.17'
 
@@ -136,9 +138,11 @@ compileJava.doFirst {
 			def sqlbuild = "\"SqlBuilder\",\"${versionSqlBuilder}\",\"https://github.com/jahlborn/sqlbuilder\""
 			def html = "\"HtmlFlow\",\"${versionHtmlflow}\",\"https://github.com/xmlet/HtmlFlow\""
 			def websocket = "\"Java-WebSocket\",\"${versionJavaWebSocket}\",\"https://github.com/TooTallNate/Java-WebSocket\""
+			def sec = "\"Spring Security Crypto\",\"${versionSpringSecurityCrypto}\",\"https://github.com/spring-projects/spring-security\""
+			def pdf = "\"Open HTML to PDF\",\"${versionOpenhtmltopdf}\",\"https://github.com/danfickle/openhtmltopdf\""
 			def breeze = "\"KDE Breeze Icons\",\"5.80.0\",\"https://github.com/KDE/breeze-icons\""
 			def bootstrap = "\"Bootstrap Icons\",\"1.11.0\",\"https://icons.getbootstrap.com/\""
-			file << line.replace('"UNDEFINED", "UNDEFINED", "UNDEFINED"', "${sql},${sqlbuild},${html},${websocket},${breeze},${bootstrap}") << ln
+			file << line.replace('"UNDEFINED", "UNDEFINED", "UNDEFINED"', "${sql},${sqlbuild},${html},${websocket},${sec},${pdf},${breeze},${bootstrap}") << ln
 
 		} else {
 			file << line << ln

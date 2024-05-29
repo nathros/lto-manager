@@ -74,8 +74,8 @@ public class TableUser {
 		table.foreignKey(TableRoles.COLUMN_NAME_ID, columns, tableRole, columnsRef);
 
 		table.addColumn(COLUMN_NAME_USERNAME, Types.VARCHAR, MAX_LENGTH_USERNAME).unique();
-		table.addColumn(COLUMN_NAME_HASH, Types.VARCHAR, 128);
-		table.addColumn(COLUMN_NAME_SALT, Types.VARCHAR, 32);
+		table.addColumn(COLUMN_NAME_HASH, Types.VARCHAR, 128).notNull();
+		table.addColumn(COLUMN_NAME_SALT, Types.VARCHAR, 32).notNull();
 		table.addColumn(COLUMN_NAME_ENABLED, Types.BOOLEAN, null);
 		table.addColumn(COLUMN_NAME_CREATED, Types.TIMESTAMP_WITH_TIMEZONE, null);
 		table.addColumn(COLUMN_NAME_LANGUAGE, Types.INTEGER, null);
@@ -145,7 +145,7 @@ public class TableUser {
 		var statment = con.createStatement();
 
 		UpdateQuery uq = new UpdateQuery(table);
-		uq.addSetClause(table.getColumns().get(COLUMN_INDEX_ID), user.getID());
+		uq.addCondition(BinaryCondition.equalTo(table.getColumns().get(COLUMN_INDEX_ID), user.getID()));
 		uq.addSetClause(table.getColumns().get(COLUMN_INDEX_ROLE), user.getRole().getID());
 		uq.addSetClause(table.getColumns().get(COLUMN_INDEX_USERNAME), user.getUsername());
 		uq.addSetClause(table.getColumns().get(COLUMN_INDEX_HASH), user.getHash());
@@ -154,7 +154,6 @@ public class TableUser {
 		uq.addSetClause(table.getColumns().get(COLUMN_INDEX_CREATED), user.getCreated());
 		uq.addSetClause(table.getColumns().get(COLUMN_INDEX_LANGUAGE), user.getLanguage());
 		uq.addSetClause(table.getColumns().get(COLUMN_INDEX_AVATAR), user.getAvatar());
-		//uq.addCondition(BinaryCondition.equalTo(table.getColumns().get(COLUMN_INDEX_ID), user.getID()));
 
 		String sql = uq.validate().toString();
 		statment.execute(sql);

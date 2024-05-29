@@ -167,9 +167,16 @@ public class BodyModel {
 	public Object getModel() { return model; }
 	public String getUrl() { return he.getRequestURI().getPath(); }
 
+	@SuppressWarnings("unchecked")
 	public String getQuery(String key) {
 		Map<String, Object> queries = isGETMethod() ? queriesURL : body.getQueries();
-		return (String) queries.get(key);
+		var result = queries.get(key);
+		if (result instanceof String) {
+			return (String) result;
+		} else if (result != null) {
+			return ((List<String>)result).get(0);
+		}
+		return null;
 	}
 
 	public String getQueryNoNull(String key) {

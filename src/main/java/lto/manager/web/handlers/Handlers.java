@@ -42,6 +42,7 @@ import lto.manager.web.handlers.http.pages.dashboard.DashboardHandler;
 import lto.manager.web.handlers.http.pages.drives.DrivesHandler;
 import lto.manager.web.handlers.http.pages.files.FilesBrowserHandler2;
 import lto.manager.web.handlers.http.pages.files.FilesHandler;
+import lto.manager.web.handlers.http.pages.help.HelpHandler;
 import lto.manager.web.handlers.http.pages.jobs.JobsDetailsHandler;
 import lto.manager.web.handlers.http.pages.jobs.JobsHandler;
 import lto.manager.web.handlers.http.pages.jobs.JobsNewBackupHandler;
@@ -117,6 +118,8 @@ public class Handlers {
 		ret.put(JobsTypeHandler.PATH, new JobsTypeHandler());
 		ret.put(JobsNewBackupHandler.PATH, new JobsNewBackupHandler());
 		ret.put(JobsDetailsHandler.PATH, new JobsDetailsHandler());
+
+		ret.put(HelpHandler.PATH, new HelpHandler());
 
 		ret.put(AJAX404Fetcher.PATH, new AJAX404Fetcher());
 		ret.put(AJAXFilesListFetcher.PATH, new AJAXFilesListFetcher());

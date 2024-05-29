@@ -1,8 +1,21 @@
+form {
+	width: fit-content;
+}
 .form-grid {
 	display: grid;
 	grid-template-columns: fit-content(20%) minmax(auto, 20rem);
 	align-items: center;
 	gap: var(--padding);
 	padding-bottom: var(--padding-full);
+}
+.form-grid b {
+	white-space: nowrap;
+}
+.form-buttons {
+	display: flex;
+	gap: var(--padding);
+}
+.form-buttons > *:first-child {
+	margin-left: auto;
 }
 /* https://getcssscan.com/css-checkboxes-examples 64 */

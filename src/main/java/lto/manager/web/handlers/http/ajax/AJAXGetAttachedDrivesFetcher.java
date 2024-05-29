@@ -12,7 +12,7 @@ import lto.manager.common.ExternalProcess;
 import lto.manager.common.ltfs.ListTapeDevices;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.pages.AssetHandler;
-import lto.manager.web.handlers.http.partial.inlinemessage.InlineErrorMessage;
+import lto.manager.web.handlers.http.partial.inlinemessage.InlineMessage;
 import lto.manager.web.handlers.http.templates.TemplateAJAX.TemplateFetcherModel;
 import lto.manager.web.handlers.http.templates.models.BodyModel;
 import lto.manager.web.resource.Asset;
@@ -30,7 +30,7 @@ public class AJAXGetAttachedDrivesFetcher extends BaseHTTPHandler {
 			Semaphore completedSemaphore = devices.startBlocking(uuid);
 			boolean success = completedSemaphore.tryAcquire(5, TimeUnit.SECONDS);
 			if (success == false || devices.getExitCode() != ExternalProcess.EXIT_CODE_OK) {
-				view.of(v -> InlineErrorMessage.contentExternalProcess(v, uuid));
+				view.of(v -> InlineMessage.contentExternalProcess(v, uuid));
 			} else {
 				view.of(v -> {
 					for (var dev: devices.getDevices()) {
