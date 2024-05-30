@@ -5,13 +5,15 @@ import java.util.BitSet;
 import java.util.List;
 
 import lto.manager.common.database.Database;
-import lto.manager.common.database.tables.TableRoles;
 
 public class RecordRole {
 	private Integer id;
 	private String name;
 	private String description;
 	private BitSet permission; // Bit mask
+
+	public static final int ROLE_ID_ADMIN = 1;
+	public static final int ROLE_ID_VIEWER = 2;
 
 	public RecordRole(Integer id, String name, String description, BitSet permission) {
 		this.id = id;
@@ -38,8 +40,8 @@ public class RecordRole {
 		all.set(0, 1023);
 		BitSet subset = new BitSet(1024);
 		subset.set(0, 127);
-		roles.add(RecordRole.of(TableRoles.ROLE_ID_ADMIN, "Admin", "Administrator of the whole application", all));
-		roles.add(RecordRole.of(TableRoles.ROLE_ID_VIEWER, "Viewer", "Can only view library and files", subset));
+		roles.add(RecordRole.of(ROLE_ID_ADMIN, "Admin", "Administrator of the whole application", all));
+		roles.add(RecordRole.of(ROLE_ID_VIEWER, "Viewer", "Can only view library and files", subset));
 		return roles;
 	}
 

@@ -12,6 +12,7 @@ public class CSS {
 	public final static String HEADER_ITEM = "header-item ";
 	public final static String HEADER_LABEL_TOP = "header-label-top ";
 	public final static String HEADER_MENU_ITEM_ICON = "icon ";
+	public final static String HEADER_MENU_ITEM_ICON_SMALL = "icon-small ";
 	public final static String MENU_LIST = "menu-list ";
 	public final static String MENU_LIST_ITEM_BUTTON = "menu-list-btn ";
 	public final static String HEADER_ITEM_NOTIFICATTION = "header-item-notification ";
@@ -26,9 +27,11 @@ public class CSS {
 	public final static String GROUP = "group ";
 	public final static String GROUP_ATTRIBUTE = "data-header-text";
 	public final static String BACKGROUND_CAUTION = "background-caution ";
+	public final static String BACKGROUND_CAUTION_BEFORE = "background-caution-b ";
 	public final static String BACKGROUND_ACTIVE = "background-active ";
 	public final static String BACKGROUND_GRAY = "background-gray ";
 	public final static String BACKGROUND_ERROR = "background-error ";
+	public final static String BACKGROUND_ERROR_BEFORE = "background-error-b ";
 	public final static String BACKGROUND_GREEN = "background-green ";
 	public final static String FONT_SMALL = "font-small ";
 	public final static String DASHBOARD_CONTAINER = "dashboard-container ";
@@ -37,6 +40,8 @@ public class CSS {
 	public final static String TABLE = "table ";
 
 	public final static String FONT_MONOSPACE = "monospace ";
+
+	public final static String TOOLTIP = "tooltip ";
 
 	public final static String TOAST_ID = "toast"; // TODO match colours with INLINE_MESSAGE
 	public final static String TOAST_ID_MESSAGE = "toast-message";
@@ -82,6 +87,10 @@ public class CSS {
 	public final static String ICON_DIAGRAM_3 = "icon-diagram-3 ";
 	public final static String ICON_SLIDERS = "icon-sliders ";
 	public final static String ICON_ARROW_LEFT = "icon-arrow-left ";
+	public final static String ICON_BUG = "icon-bug ";
+	public final static String ICON_GITHUB = "icon-github ";
+	public final static String ICON_BOOK = "icon-book ";
+	public final static String ICON_RUBBISH = "icon-rubbish ";
 
 	public final static String FV_ID = "id-wtree";
 	public final static String FV_ID_CONTEXT_CONTAINER = "wtree-context-container";

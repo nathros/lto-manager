@@ -109,7 +109,7 @@ public class RolesHandler extends BaseHTTPHandler {
 								parent.div().of(d -> InlineMessage.contentGenericError(d, "Failed to get affected users", e));
 							}
 						} else {
-							parent.div().attrClass(CSS.GAP_BOTTOM).of(d -> InlineMessage.contentGenericError(d, "Failed to delete role: " + deleteIDStr + " with error: " + errorMessage));
+							parent.div().of(d -> InlineMessage.contentGenericError(d, "Failed to delete role: " + deleteIDStr + " with error: " + errorMessage));
 						}
 						parent.__(); // GAP_BOTTOM
 					}

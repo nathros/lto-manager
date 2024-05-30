@@ -14,6 +14,7 @@ form {
 .form-buttons {
 	display: flex;
 	gap: var(--padding);
+	align-items: center;
 }
 .form-buttons > *:first-child {
 	margin-left: auto;

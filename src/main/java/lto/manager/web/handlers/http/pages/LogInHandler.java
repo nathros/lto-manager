@@ -4,10 +4,10 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.UUID;
-import java.util.concurrent.CompletionException;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Supplier;
 
+import org.sqlite.SQLiteException;
 import org.xmlet.htmlapifaster.EnumHttpEquivType;
 import org.xmlet.htmlapifaster.EnumMethodType;
 import org.xmlet.htmlapifaster.EnumTypeButtonType;
@@ -48,10 +48,10 @@ public class LogInHandler extends BaseHTTPHandler {
 				try {
 					final UUID result = Security.loginUser(username, password);
 					loginResult.update(CheckStatusType.OK, null).setObject(result);
-				} catch (CompletionException e) {
-					loginResult.update(CheckStatusType.ERROR, "User is disabled");
-				} catch (Exception | IllegalAccessError e) {
+				} catch (SQLiteException e) {
 					loginResult.update(CheckStatusType.ERROR, "Failed to login");
+				} catch (Throwable e) {
+					loginResult.update(CheckStatusType.ERROR, e.getMessage());
 				}
 
 				if (loginResult.statusOK()) { // If login success redirect to /

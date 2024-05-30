@@ -220,7 +220,7 @@ public class Database {
 		return TableFile.updateVirtualFileIcon(connection, changeFile.getID(), icon);
 	}
 
-	public static RecordUser getUserByName(String username, boolean includePermissions) throws SQLException, IOException {
+	public static RecordUser getUserByName(String username, boolean includePermissions) throws IOException, SQLException {
 		return TableUser.getUserByName(connection, username, includePermissions);
 	}
 

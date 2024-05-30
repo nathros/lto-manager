@@ -36,9 +36,6 @@ public class TableRoles {
 	public static final int COLUMN_INDEX_DESCRIPTION = 2;
 	public static final int COLUMN_INDEX_PERMISSION_MASK  = 3;
 
-	public static final int ROLE_ID_ADMIN = 1;
-	public static final int ROLE_ID_VIEWER = 2;
-
 	static private DbTable getSelf() {
 		DbSchema schema = Database.schema;
 		DbTable table = schema.addTable(TABLE_NAME);
@@ -119,6 +116,9 @@ public class TableRoles {
 	}
 
 	public static boolean deleteRole(Connection con, int id) throws SQLException, IOException {
+		if (RecordRole.ROLE_ID_ADMIN == id) {
+			throw new IllegalArgumentException("Cannot delete default role");
+		}
 		var statment = con.createStatement();
 
 		DeleteQuery dq = new DeleteQuery(table);

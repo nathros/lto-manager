@@ -75,6 +75,17 @@ public class UsersHandler extends BaseHTTPHandler {
 					.div()
 						.attrClass(CSS.FORMS_BUTTONS)
 						.a()
+							.attrClass(CSS.TOOLTIP + CSS.ICON_EDIT)
+							.attrHref(UsersEditHandler.PATH + "?" + UsersEditHandler.QID + "=" + user.getID())
+							.em().text("Edit").__()
+						.__()
+						.a()
+							.attrClass(CSS.BACKGROUND_ERROR_BEFORE + CSS.TOOLTIP + CSS.ICON_RUBBISH)
+							.attrHref(PATH + "?" + QDEL + "=" + user.getID())
+							.attrOnclick(JS.confirmToastA("Are you sure?"))
+							.em().text("Delete").__()
+						.__()
+						/*.a()
 							.attrClass(CSS.BUTTON)
 							.attrHref(UsersEditHandler.PATH + "?" + UsersEditHandler.QID + "=" + user.getID())
 							.text("Edit")
@@ -84,7 +95,7 @@ public class UsersHandler extends BaseHTTPHandler {
 							.attrHref(PATH + "?" + QDEL + "=" + user.getID())
 							.attrOnclick(JS.confirmToastA("Are you sure?"))
 							.text("Delete")
-						.__()
+						.__()*/
 					.__();
 			});
 		}

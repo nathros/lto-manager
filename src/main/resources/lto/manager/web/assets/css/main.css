@@ -22,6 +22,10 @@
 	--border: 1px solid #ccc;
 	--border-ncolour: 1px solid;
 	--border-error: 1px solid red;
+	--colour-error: red;
+	--colour-caution: darkorange;
+	--colour-active: teal;
+	--colour-ok: green;
 }
 * {
 	font-family: 'Open Sans', sans-serif;
@@ -351,6 +355,11 @@ input:disabled {
 	opacity: 0.5;
 	background-size: contain;
 }
+.menu-list a.icon-small:before {
+	width: 1rem;
+	height: 1rem;
+	mask-size: 1rem;
+}
 .menu-list .menu-list-btn {
 	padding: var(--padding) var(--padding) 0 var(--padding);
 	text-align: center;
@@ -476,6 +485,18 @@ input:disabled {
 }
 .icon-arrow-left::before {
 	mask-image: url(/assets/img/arrow-90deg-left.svg);
+}
+.icon-bug::before {
+	mask-image: url(/assets/img/bug-fill.svg);
+}
+.icon-github::before {
+	mask-image: url(/assets/img/company-logo/github-mark.svg);
+}
+.icon-book::before {
+	mask-image: url(/assets/img/book.svg);
+}
+.icon-rubbish::before {
+	mask-image: url(/assets/img/trash3.svg);
 }
 .menu-list {
 	list-style-type: none;
@@ -655,20 +676,20 @@ div > .btn-image-ext-group:first-child {
 	display: inline-block;
 	background-color: black;
 }
-.background-error {
-	background-color: red;
+.background-error, .background-error-b::before {
+	background-color: var(--colour-error) !important;
 }
-.background-caution {
-	background-color: darkorange;
+.background-caution, .background-caution-b::before {
+	background-color: var(--colour-caution);
 }
 .background-active {
-	background-color: teal;
+	background-color: var(--colour-active);
 }
 .background-gray {
 	background-color: gray;
 }
 .background-green {
-	background-color: green;
+	background-color: var(--colour-ok);
 }
 .table {
 	border-collapse: collapse;
@@ -980,4 +1001,53 @@ https://codepen.io/sudeepgumaste/pen/abdrorB
 }
 .system-info > * {
 	flex-basis: 50%;
+}
+.tooltip { /* Similar to Tool-tip in fileview - TODO merge styles */
+	position: relative;
+}
+.tooltip:before {
+	content: "";
+	display: block;
+	width: 1rem;
+	height: 1rem;
+	mask-size: 1rem;
+	background-color: var(--common-background-colour);
+}
+.tooltip:hover:before {
+	box-shadow: var(--common-highlight), var(--common-shadow);
+}
+.tooltip:hover em {
+    opacity: 100%;
+    /* transition-delay: 500ms; */
+}
+.tooltip em {
+    position: absolute;
+    top: -28px;
+	transform: translateX(-50%) translate(0.5rem, 0);
+    width: max-content;
+    background-color: var(--common-background-colour);
+    color: white;
+    height: 20px;
+    display: block;
+    border-radius: var(--menu-border-radius);
+    font-size: smaller;
+    opacity: 0;
+    user-select: none;
+    text-align: center;
+    pointer-events: none;
+    transition: 0s opacity;
+    padding: 0px 8px;
+}
+.tooltip em:after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: black transparent transparent transparent;
+}
+.tooltip:last-child {
+	margin-right: 5px;
 }

@@ -101,6 +101,7 @@ public class UsersEditHandler extends BaseHTTPHandler {
 			view.div().attrClass(CSS.GAP_BOTTOM).div().of(div -> InlineMessage.contentGenericError(div, "Cannot find user with ID: " + query[IID])).__();
 			return null;
 		}
+		final boolean isNewUser = user.getID() == Database.NEW_RECORD_ID;
 		final ValidatorStatus passwordStatus = passwordValidator.validatePassword(query[IPassword], query[IPasswordConfirm], false);
 		final ValidatorStatus userNameStatus = userNameValidator.validate(query[IName] == null ? user.getUsername() : query[IName], true);
 		final boolean validateOK = passwordStatus.statusOK() && userNameStatus.statusOK();
@@ -155,9 +156,9 @@ public class UsersEditHandler extends BaseHTTPHandler {
 			.form()
 				.attrMethod(EnumMethodType.POST)
 				.div().attrClass(CSS.FORMS_CONTAINER)
-					.b().text("User ID:").__()
+					.of(d -> { if (!isNewUser) d.b().text("User ID:").__(); })
 					.input()
-						.attrType(EnumTypeInputType.TEXT)
+						.attrType(isNewUser ? EnumTypeInputType.HIDDEN : EnumTypeInputType.TEXT)
 						.attrName(QID)
 						.attrValue(query[IID])
 						.attrReadonly(true)
@@ -234,7 +235,7 @@ public class UsersEditHandler extends BaseHTTPHandler {
 					.__()
 					.button()
 						.attrClass(CSS.BUTTON + CSS.ICON_SAVE + CSS.BUTTON_IMAGE_W_TEXT + CSS.BUTTON_IMAGE)
-						.text("Update")
+						.text(isNewUser ? "Add" : "Update")
 					.__()
 				.__() // div FORMS_BUTTONS
 

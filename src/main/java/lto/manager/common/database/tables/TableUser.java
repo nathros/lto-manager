@@ -9,6 +9,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.sqlite.SQLiteErrorCode;
+import org.sqlite.SQLiteException;
+
 import com.healthmarketscience.sqlbuilder.BinaryCondition;
 import com.healthmarketscience.sqlbuilder.CreateTableQuery;
 import com.healthmarketscience.sqlbuilder.DeleteQuery;
@@ -180,11 +183,11 @@ public class TableUser {
 		statment.execute(sql);
 		var results = statment.getResultSet();
 		if (!results.next()) {
-			throw new SQLException("User not found: [" + username + "]");
+			throw new SQLiteException("User not found: [" + username + "]", SQLiteErrorCode.SQLITE_NOTFOUND);
 		}
 		RecordUser user = fromResultSet(results, includePermissions);
 		if (results.next()) {
-			throw new SQLException("Multiple users have same name: [" + username + "]");
+			throw new SQLiteException("Multiple users have same name: [" + username + "]", SQLiteErrorCode.SQLITE_CONSTRAINT_UNIQUE);
 		}
 		return user;
 	}
@@ -205,7 +208,7 @@ public class TableUser {
 		statment.execute(sql);
 		var results = statment.getResultSet();
 		if (!results.next()) {
-			throw new SQLException("User not found: ID[" + id + "]");
+			throw new SQLiteException("User not found: ID[" + id + "]", SQLiteErrorCode.SQLITE_NOTFOUND);
 		}
 		RecordUser user = fromResultSet(results, includePermissions);
 		return user;
