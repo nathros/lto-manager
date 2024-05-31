@@ -38,6 +38,8 @@ public class CSS {
 	public final static String DASHBOARD_ITEM = "dashboard-item ";
 
 	public final static String TABLE = "table ";
+	public final static String TABLE_ACTIONS = "table-actions ";
+	public final static String TABLE_SORT = "table-sort ";
 
 	public final static String FONT_MONOSPACE = "monospace ";
 
@@ -91,6 +93,7 @@ public class CSS {
 	public final static String ICON_GITHUB = "icon-github ";
 	public final static String ICON_BOOK = "icon-book ";
 	public final static String ICON_RUBBISH = "icon-rubbish ";
+	public final static String ICON_EYE = "icon-eye ";
 
 	public final static String FV_ID = "id-wtree";
 	public final static String FV_ID_CONTEXT_CONTAINER = "wtree-context-container";

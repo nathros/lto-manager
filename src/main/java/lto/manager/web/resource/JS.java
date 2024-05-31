@@ -16,10 +16,16 @@ public class JS {
 
 	public static final String INPUT_UPPERCASE = "this.value=this.value.toUpperCase()";
 
+	public static String tableSort() { return "tableSort(this)"; }
+	public static String tableSort(String id) { return "tableSort(this, '" + id + "')"; }
+	public static String tableFilterShow(String id) { return "tableFilterShow('" + id + "');"; }
+	public static String tableFilter(String id) { return "tableFilterInput(this,'" + id + "');"; }
+
 	public static String commonHideToast() { return "hideToast();"; }
 	public static String confirmToast(String url) { return "toastConfirm('" + url + "')"; }
 
 	public static String generateLTOLabel(final String path) { return "generateBarcode('" + path + "')"; }
 
 	public static String confirmToastA(final String message) { return "return confirmToast(this.href, '" + message + "')"; }
+
 }

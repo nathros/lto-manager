@@ -160,3 +160,80 @@ function getUUID() { // Not cryptographic
 function shutdownConfirm() {
 	return confirmToast("/shutdown/", 'Are you sure?<br>This will shutdown service');
 }
+
+function ascSort(a, b) {
+	let x = parseInt(a);
+	let y = parseInt(b);
+	if (isNaN(x) || isNaN(y)) {
+		return a < b ? -1 : 1;
+	}
+	return x > y ? -1 : 1;
+}
+
+function ascDec(a, b) {
+	return ascSort(a, b) * -1;
+}
+
+function tableSort(sender, tableID) {
+	let selfIndex = -1;
+	let sortFunction;
+	const table = tableID === undefined ?
+		sender.parentElement.parentElement.parentElement.parentElement :
+		document.getElementById(tableID).children[0];
+	const arrows = table.getElementsByTagName("span");
+	for (let i = 0; i < arrows.length; i++) {
+		if (arrows[i] != sender) {
+			arrows[i].classList.remove("down", "up");
+		} else {
+			selfIndex = i;
+		}
+	}
+	if (sender.classList.length == 1 || sender.classList.contains("up")) {
+		sender.classList.add("down");
+		sender.classList.remove("up");
+		sortFunction = ascSort;
+	} else {
+		sender.classList.add("up");
+		sender.classList.remove("down");
+		sortFunction = ascDec;
+	}
+	const tableAsArray = Array.from(table.children);
+	tableAsArray.shift(); // Remove header
+	tableAsArray
+		.sort((a, b) => {
+			return sortFunction(a.children[selfIndex].innerText, b.children[selfIndex].innerText);
+		})
+		.forEach(row => table.appendChild(row));
+}
+
+function tableFilterInput(sender, tableID) { // TODO multiple filters are possible but conflict with eachother
+	const searchText = sender.value.toLowerCase();
+	const table = tableID === undefined ?
+		sender.parentElement.parentElement.parentElement :
+		document.getElementById(tableID).children[0];
+	let cellIndex;
+
+	const firstTR = table.children[0].children;
+	for (let i = 0; i < firstTR.length; i++) { // Find column to filter
+		if (sender == firstTR[i].children[1]) {
+			cellIndex = i;
+			break;
+		}
+	}
+
+	for (let i = 1; i < table.children.length; i++) {
+		const found = table.children[i].children[cellIndex].innerText.toLowerCase().search(searchText);
+		table.children[i].style.display = found == -1 ? "none" : "table-row";
+	}
+}
+
+function tableFilterShow(tableID) {
+	const table = document.getElementById(tableID);
+	const th = table.getElementsByTagName("th");
+	for (let i = 0; i < th.length; i++) {
+		try {
+			const ele = th[i].children[1];
+			ele.style.display = ele.style.display == "block" ? "none" : "block";
+		} catch (e) {}
+	}
+}

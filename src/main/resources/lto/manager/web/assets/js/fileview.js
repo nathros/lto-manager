@@ -21,19 +21,6 @@ function getIDPostFix(virtual) {
 	return (virtual === true ? "-v" : "-p")
 }
 
-function ascSort(a, b) {
-	let x = parseInt(a);
-	let y = parseInt(b);
-	if (isNaN(x) || isNaN(y)) {
-		return a < b ? -1 : 1;
-	}
-	return x > y ? -1 : 1;
-}
-
-function ascDec(a, b) {
-	return ascSort(a, b) * -1;
-}
-
 function sort(sender, type) {
 	let add, sortFunction;
 	if (sender.classList.contains("down")) {

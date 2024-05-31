@@ -65,7 +65,7 @@ public class RecordTape {
 	}
 
 	public enum RecordTapeFormatType {
-		LTFS, TAR;
+		LTFS, STFS, TAR;
 
 		public static RecordTapeFormatType fromInteger(int index) {
 			if (index > RecordTapeFormatType.values().length)
