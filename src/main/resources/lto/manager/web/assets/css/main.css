@@ -27,6 +27,9 @@
 	--colour-active: teal;
 	--colour-ok: green;
 }
+::backdrop {
+	background: rgba(0, 0, 0, 0.2);
+}
 * {
 	font-family: 'Open Sans', sans-serif;
 	-webkit-tap-highlight-color: transparent;
@@ -413,6 +416,9 @@ input:disabled {
 }
 .icon-box-arrow-right:before {
 	mask-image: url('/assets/img/box-arrow-right.svg');
+}
+.icon-pass:before {
+	mask-image: url('/assets/img/pass-fill.svg');
 }
 .icon-printer:before {
 	mask-image: url('/assets/img/printer-fill.svg');

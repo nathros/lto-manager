@@ -14,6 +14,7 @@ import lto.manager.web.handlers.http.ajax.labelgenerator.AJAXGenerateLTOLabelHTM
 import lto.manager.web.handlers.http.ajax.labelgenerator.AJAXGenerateLTOLabelPDF;
 import lto.manager.web.handlers.http.ajax.labelgenerator.AJAXGenerateLTOLabelSVG;
 import lto.manager.web.handlers.http.api.API404;
+import lto.manager.web.handlers.http.api.APILTOLabelPreset;
 import lto.manager.web.handlers.http.api.APISystemInfo;
 import lto.manager.web.handlers.http.api.APIVirtualDir;
 import lto.manager.web.handlers.http.pages.AssetHandler;
@@ -132,6 +133,7 @@ public class Handlers {
 		ret.put(API404.PATH, new API404());
 		ret.put(APIVirtualDir.PATH, new APIVirtualDir());
 		ret.put(APISystemInfo.PATH, new APISystemInfo());
+		ret.put(APILTOLabelPreset.PATH, new APILTOLabelPreset());
 
 		if (Main.DEBUG_MODE) {
 			ret.put(InternalErrorTesterHandler.PATH, new InternalErrorTesterHandler());

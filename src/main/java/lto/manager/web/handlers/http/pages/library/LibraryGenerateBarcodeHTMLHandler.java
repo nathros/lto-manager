@@ -37,7 +37,7 @@ public class LibraryGenerateBarcodeHTMLHandler extends BaseHTTPHandler {
 				.div()
 					.attrClass(CSS.COMMON_CONTAINER + CSS.COMMON_CONTAINER_CENTRE + CSS.COMMON_PADDING_FULL)
 					.p()
-						.text("Note: set print scaling to 100% for correct size barcode")
+						.text("Note: set print scaling to 100% for correct barcode size")
 					.__()
 					.button()
 						.attrClass(CSS.BUTTON + CSS.BUTTON_IMAGE + CSS.BUTTON_IMAGE_W_TEXT + CSS.ICON_PRINTER)

@@ -10,10 +10,10 @@ import lto.manager.web.resource.CSS;
 public class DashboardContainer {
 	public static void content(Element<?, ?> parent, Consumer<Div<?>> consumer) {
 		new Div<>(parent)
-				.attrClass(CSS.DASHBOARD_CONTAINER)
-				.of(div -> {
-					consumer.accept(div);
-				})
-			.__();
+			.attrClass(CSS.DASHBOARD_CONTAINER)
+			.of(div -> {
+				consumer.accept(div);
+			})
+		.__();
 	}
 }

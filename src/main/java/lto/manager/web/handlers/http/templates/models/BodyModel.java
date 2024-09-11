@@ -15,6 +15,9 @@ import java.util.UUID;
 import com.sun.net.httpserver.HttpExchange;
 
 import lto.manager.common.Util;
+import lto.manager.common.database.Options;
+import lto.manager.common.database.tables.records.RecordOptions.OptionsSetting;
+import lto.manager.common.database.tables.records.RecordUser;
 import lto.manager.common.security.LoginSession;
 import lto.manager.common.state.State;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
@@ -36,7 +39,7 @@ public class BodyModel {
 		private String name;
 
 		public RequestBody(final byte[] body, String contentType) throws IOException {
-			//printBody(body);
+			// printBody(body);
 			this.contentType = contentType;
 			queriesBody = new HashMap<String, Object>();
 
@@ -82,7 +85,7 @@ public class BodyModel {
 					int index = boundarLines[1].indexOf(':');
 					if (index > 0) {
 						String[] fields = boundarLines[1].substring(index + 2).split(";");
-						for (String f: fields) {
+						for (String f : fields) {
 							String[] keyValue = f.split("=");
 							if (keyValue[0].trim().equals("filename")) {
 								filename = keyValue[1].substring(1, keyValue[1].length() - 1);
@@ -114,24 +117,19 @@ public class BodyModel {
 			return filename;
 		}
 
-		public  Map<String, Object> getQueries() {
+		public Map<String, Object> getQueries() {
 			return queriesBody;
 		}
 	}
 
-	/*private void printBody(final byte[] body) {
-		ByteArrayInputStream stream = new ByteArrayInputStream(body);
-		InputStreamReader streamReader = new InputStreamReader(stream, StandardCharsets.UTF_8);
-		BufferedReader bufferedReader = new BufferedReader(streamReader);
-		String line;
-		try {
-			while ((line = bufferedReader.readLine()) != null) {
-			    System.out.println(line);
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}*/
+	/*
+	 * private void printBody(final byte[] body) { ByteArrayInputStream stream = new
+	 * ByteArrayInputStream(body); InputStreamReader streamReader = new
+	 * InputStreamReader(stream, StandardCharsets.UTF_8); BufferedReader
+	 * bufferedReader = new BufferedReader(streamReader); String line; try { while
+	 * ((line = bufferedReader.readLine()) != null) { System.out.println(line); } }
+	 * catch (IOException e) { e.printStackTrace(); } }
+	 */
 
 	private BodyModel(HttpExchange he, Object model) throws IOException {
 		this.he = he;
@@ -163,9 +161,17 @@ public class BodyModel {
 		return new BodyModel(he, model);
 	}
 
-	public HttpExchange getHttpExchange() { return he; }
-	public Object getModel() { return model; }
-	public String getUrl() { return he.getRequestURI().getPath(); }
+	public HttpExchange getHttpExchange() {
+		return he;
+	}
+
+	public Object getModel() {
+		return model;
+	}
+
+	public String getUrl() {
+		return he.getRequestURI().getPath();
+	}
 
 	@SuppressWarnings("unchecked")
 	public String getQuery(String key) {
@@ -174,15 +180,17 @@ public class BodyModel {
 		if (result instanceof String) {
 			return (String) result;
 		} else if (result != null) {
-			return ((List<String>)result).get(0);
+			return ((List<String>) result).get(0);
 		}
 		return null;
 	}
 
 	public String getQueryNoNull(String key) {
 		String query = getQuery(key);
-		if (query == null) return "";
-		else return Util.decodeUrl(query);
+		if (query == null)
+			return "";
+		else
+			return Util.decodeUrl(query);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -247,7 +255,26 @@ public class BodyModel {
 				return loginSession.user().getUsername();
 			}
 		}
-		return null;
+		if (Options.getData(OptionsSetting.ENABLE_LOGIN) == Boolean.FALSE) {
+			return RecordUser.getAnonymousUser().getUsername();
+		} else {
+			return null;
+		}
+	}
+
+	public int getUserIDViaSession() {
+		final UUID uuid = getSession();
+		if (uuid != null) {
+			final LoginSession loginSession = State.getLoginSession(uuid);
+			if (loginSession != null) {
+				return loginSession.user().getID();
+			}
+		}
+		if (Options.getData(OptionsSetting.ENABLE_LOGIN) == Boolean.FALSE) {
+			return RecordUser.ANONYMOUS_ID;
+		} else {
+			return 0;
+		}
 	}
 
 	public void setNewSession(UUID uuid) {

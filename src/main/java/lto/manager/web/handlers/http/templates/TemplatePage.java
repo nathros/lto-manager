@@ -121,7 +121,7 @@ public class TemplatePage {
 							.ul().attrClass(CSS.MENU_LIST)
 								.<TemplatePageModel>dynamic((ul, model) -> {
 									final String user = model.getBodyModel().getUserNameViaSession();
-									final String userShow = user == null ? "Anonymous User" : user;
+									final String userShow = user == null ? "Unknown User" : user;
 									ul.li()
 										.attrClass(CSS.HEADER_LABEL_TOP)
 										.text(userShow)

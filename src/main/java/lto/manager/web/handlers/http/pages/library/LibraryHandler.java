@@ -269,7 +269,7 @@ public class LibraryHandler extends BaseHTTPHandler {
 						.a()
 							.attrStyle("user-select:none")
 							.attrOnclick(JS.tableFilterShow(TABLE_ID))
-							.text("Toggle")
+							.text("Show")
 						.__()
 					.__()
 				.__()

@@ -19,6 +19,7 @@ public class RecordUser {
 	private String avatar;
 
 	public static int DEFAULT_ID = 1;
+	public static int ANONYMOUS_ID = 2;
 	public static DecimalFormat df = new DecimalFormat("000"); // Faster than String.format("%03d", x);
 
 	public RecordUser(int id, String username, String password, boolean enabled, LocalDateTime dateAdded, int language,
@@ -59,6 +60,11 @@ public class RecordUser {
 
 	public static RecordUser getDefaultUser() {
 		return new RecordUser(DEFAULT_ID, "root", "root", true, LocalDateTime.now(), 0, "default.svg")
+				.setRole(RecordRole.getDefaultRoles().get(RecordRole.ROLE_ID_ADMIN - 1));
+	}
+
+	public static RecordUser getAnonymousUser() {
+		return new RecordUser(ANONYMOUS_ID, "anonymous", "anonymous", true, LocalDateTime.now(), 0, "default.svg")
 				.setRole(RecordRole.getDefaultRoles().get(RecordRole.ROLE_ID_ADMIN - 1));
 	}
 

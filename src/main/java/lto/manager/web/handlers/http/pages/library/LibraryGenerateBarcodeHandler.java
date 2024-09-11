@@ -14,6 +14,7 @@ import com.sun.net.httpserver.HttpExchange;
 
 import lto.manager.common.database.Database;
 import lto.manager.common.database.tables.TableTape;
+import lto.manager.common.database.tables.records.RecordLabelPreset;
 import lto.manager.common.database.tables.records.RecordTapeType;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.ajax.labelgenerator.AJAXGenerateLTOLabelPDF;
@@ -23,6 +24,8 @@ import lto.manager.web.handlers.http.ajax.labelgenerator.LTOLabelEnum;
 import lto.manager.web.handlers.http.ajax.labelgenerator.LTOLabelEnum.LTOLabelColourSettings;
 import lto.manager.web.handlers.http.ajax.labelgenerator.LTOLabelEnum.LTOLabelTypeSettings;
 import lto.manager.web.handlers.http.ajax.labelgenerator.LTOLabelOptions;
+import lto.manager.web.handlers.http.partial.modal.Modal;
+import lto.manager.web.handlers.http.partial.modal.ModalOptions;
 import lto.manager.web.handlers.http.templates.TemplatePage.BreadCrumbs;
 import lto.manager.web.handlers.http.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.http.templates.TemplatePage.TemplatePageModel;
@@ -37,12 +40,15 @@ public class LibraryGenerateBarcodeHandler extends BaseHTTPHandler {
 	public static final String PATH = "/library/generate/";
 	public static final String NAME = "Generate New Label";
 
+	private static final String MODAL_ID = "modal-preset";
+
 	static Void body(Div<?> view, BodyModel model) {
 		final List<RecordTapeType> tapeTypes = new ArrayList<RecordTapeType>();
 		final LTOColourThemeMap colourTheme = LTOColourThemeMap.of();
 		try {
 			tapeTypes.addAll(Database.getAllTapeTypes());
 		} catch (Exception e) {}
+
 		// FIXME enter a bad value in input - click show details which will refresh AJAX
 		view.div().attrClass(CSS.COMMON_CONTAINER_NO_ALIGN)
 			.form()
@@ -237,13 +243,90 @@ public class LibraryGenerateBarcodeHandler extends BaseHTTPHandler {
 		return null;
 	}
 
+	private static List<RecordLabelPreset> getUserPresents(BodyModel model) {
+		try {
+			return Database.getUserLabelPresets(model.getUserIDViaSession());
+		} catch (SQLException | IOException e) {
+			return new ArrayList<RecordLabelPreset>();
+		}
+	}
+
+	static Void header(Div<?> view, BodyModel model) {
+		final List<RecordLabelPreset> presets = getUserPresents(model);
+
+		view
+			// Start of modal dialog
+			.of(parent -> Modal.content(parent, ModalOptions.of(MODAL_ID, false), innerDiv -> {
+				innerDiv
+					.div()
+						.attrClass(CSS.FORMS_CONTAINER)
+						.b().text("Name:").__()
+						.input()
+							.attrType(EnumTypeInputType.TEXT)
+						.__()
+					.__()
+					.div()
+						.attrClass("button-container")
+						.button()
+							.attrClass(CSS.BUTTON + CSS.ICON_PLUS_SQUARE + CSS.BUTTON_IMAGE_W_TEXT + CSS.BUTTON_IMAGE)
+							.attrType(EnumTypeButtonType.BUTTON)
+							.attrOnclick("addPreset()")
+							.text("Add")
+						.__()
+						.button()
+							.attrClass(CSS.BUTTON + CSS.ICON_CROSS + CSS.BUTTON_IMAGE_W_TEXT + CSS.BUTTON_IMAGE)
+							.attrType(EnumTypeButtonType.BUTTON)
+							.attrOnclick("hidePresetModal()")
+							.text("Cancel")
+						.__()
+					.__()
+				.__();
+			}))
+			// End of modal dialog
+			.div()
+				.attrClass(CSS.HEADER_ITEM + CSS.ICON_PASS)
+				.ul().attrClass(CSS.MENU_LIST)
+					.li()
+						.attrClass(CSS.HEADER_LABEL_TOP)
+						.text("Presets")
+					.__()
+					.of(ul -> {
+						if (presets.size() == 0) {
+							ul.li()
+								.a()
+									.attrStyle("cursor:default;justify-content:center;")
+									.text("Empty")
+								.__()
+							.__();
+						} else {
+							for (RecordLabelPreset preset : presets)
+							{
+								ul.li()
+									.a()
+										.text(preset.getName())
+									.__()
+								.__();
+							}
+						}
+					})
+					.li()
+						.a()
+							.attrOnclick("showPresetModal()")
+							.text("Add New")
+						.__()
+					.__() // li
+				.__() // ul
+			.__(); // div
+		return null;
+	}
+
 	@Override
 	public void requestHandle(HttpExchange he) throws IOException, SQLException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of(NAME);
 		thm.addCSS(Asset.CSS_FORMS).addCSS(Asset.CSS_LIBRARY);
 		thm.addScriptDefer(Asset.JS_LTO_LABEL_GENERATOR);
 		BreadCrumbs crumbs = new BreadCrumbs().add(LibraryHandler.NAME, LibraryHandler.PATH).add(NAME, PATH);
-		TemplatePageModel tpm = TemplatePageModel.of(LibraryGenerateBarcodeHandler::body, null, thm, SelectedPage.Library, BodyModel.of(he, null), crumbs);
+		TemplatePageModel tpm = TemplatePageModel.of(LibraryGenerateBarcodeHandler::body, LibraryGenerateBarcodeHandler::header, thm, SelectedPage.Library, BodyModel.of(he, null), crumbs);
 		requestHandleCompletePage(he, tpm);
 	}
 }

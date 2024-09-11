@@ -95,7 +95,10 @@ public class TableUser {
 
 		var statment = con.createStatement();
 		if (!statment.execute(q)) {
-			return addNewUser(con, RecordUser.getDefaultUser());
+			if (addNewUser(con, RecordUser.getDefaultUser()))
+			{
+				return addNewUser(con, RecordUser.getAnonymousUser());
+			}
 		}
 
 		return false;
@@ -128,6 +131,9 @@ public class TableUser {
 			throws SQLException, IOException {
 		if (RecordUser.DEFAULT_ID == id) {
 			throw new IllegalArgumentException("Cannot delete default user");
+		}
+		if (RecordUser.ANONYMOUS_ID == id) {
+			throw new IllegalArgumentException("Cannot delete Anonymous user");
 		}
 		var statment = con.createStatement();
 

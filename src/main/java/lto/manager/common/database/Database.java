@@ -17,6 +17,7 @@ import lto.manager.common.database.jobs.JobBase;
 import lto.manager.common.database.tables.TableFile;
 import lto.manager.common.database.tables.TableJobs;
 import lto.manager.common.database.tables.TableJobsMetadata;
+import lto.manager.common.database.tables.TableLabelPreset;
 import lto.manager.common.database.tables.TableManufacturer;
 import lto.manager.common.database.tables.TableOptions;
 import lto.manager.common.database.tables.TableRoles;
@@ -25,6 +26,7 @@ import lto.manager.common.database.tables.TableTapeType;
 import lto.manager.common.database.tables.TableUser;
 import lto.manager.common.database.tables.TableVersion;
 import lto.manager.common.database.tables.records.RecordFile;
+import lto.manager.common.database.tables.records.RecordLabelPreset;
 import lto.manager.common.database.tables.records.RecordManufacturer;
 import lto.manager.common.database.tables.records.RecordOptions;
 import lto.manager.common.database.tables.records.RecordOptions.OptionsSetting;
@@ -53,6 +55,7 @@ public class Database {
 			op = (op && TableJobsMetadata.createTable(connection));
 			op = (op && TableRoles.createTable(connection));
 			op = (op && TableUser.createTable(connection));
+			op = (op && TableLabelPreset.createTable(connection));
 			Options.refreshCache(); // Cache is created but is empty
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -254,5 +257,9 @@ public class Database {
 
 	public static boolean deleteRole(int id) throws SQLException, IOException {
 		return TableRoles.deleteRole(Database.connection, id);
+	}
+
+	public static List<RecordLabelPreset> getUserLabelPresets(int id) throws SQLException, IOException {
+		return TableLabelPreset.getAllForUser(Database.connection, id, true);
 	}
 }

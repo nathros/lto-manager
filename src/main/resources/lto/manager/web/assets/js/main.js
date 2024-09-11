@@ -227,13 +227,16 @@ function tableFilterInput(sender, tableID) { // TODO multiple filters are possib
 	}
 }
 
-function tableFilterShow(tableID) {
+function tableFilterShow(tableID, sender) {
 	const table = document.getElementById(tableID);
 	const th = table.getElementsByTagName("th");
+	let show = false;
 	for (let i = 0; i < th.length; i++) {
 		try {
 			const ele = th[i].children[1];
-			ele.style.display = ele.style.display == "block" ? "none" : "block";
+			show = ele.style.display == "block";
+			ele.style.display = show ? "none" : "block";
 		} catch (e) {}
 	}
+	sender.innerText = show ? "Show" : "Hide";
 }

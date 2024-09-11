@@ -3,6 +3,8 @@ const barcodePreview = document.getElementById("barcode-preview");
 const inputs = barcodeForm.getElementsByTagName("input");
 const selects = barcodeForm.getElementsByTagName("select");
 
+const presetModal = document.getElementById('modal-preset')
+
 function getBarcodeFormParams(preview) {
 	const formData = new FormData(barcodeForm);
 	const params = new URLSearchParams(formData);
@@ -61,3 +63,44 @@ if ((barcodePreview != null) && (barcodeForm != null)) {
 	}
 	onBarcodeInputChange();
 }
+
+function showPresetModal() {
+	presetModal.getElementsByTagName("input")[0].value = "";
+	presetModal.showModal();
+	presetModal.getElementsByTagName("input")[0].focus();
+}
+
+function hidePresetModal() {
+	presetModal.close();
+}
+
+function addPreset() {
+	console.log("aaa")
+}
+
+/*function getPreset() {
+	fetch(`/api/generate/lto/label/html/?` + params.toString(),
+	{
+		method: "GET",
+		signal: AbortSignal.timeout(3000)
+	}).then((response) => {
+		return {"text": response.text(), "status" : response.status};
+	}).then((response) => {
+		if (response.status == 500) {
+			document.activeElement.classList.add("error");
+		} else {
+			for (let index = 0; index < inputs.length; index++) {
+				inputs[index].classList.remove("error");
+			}
+		}
+		return response.text;
+	}).then((text) => {
+		barcodePreview.innerHTML = text;
+	}).catch((error) => {
+		showToast(Toast.Error, `Failed to update preview: ${error}`, -1, undefined, false);
+	});
+}
+
+function applyPreset() {
+
+}*/
