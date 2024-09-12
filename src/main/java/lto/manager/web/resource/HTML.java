@@ -6,6 +6,7 @@ import org.xmlet.htmlapifaster.Textarea;
 
 public class HTML {
 	public static final String TARGET_BLANK = "_blank";
+	public static final String DISABLE_AUTOCOMPLETE = "new-password";
 
 	public static Input<?> check(Input<?> input, boolean checked) {
 		// input.attrChecked(true) sets checked="true"

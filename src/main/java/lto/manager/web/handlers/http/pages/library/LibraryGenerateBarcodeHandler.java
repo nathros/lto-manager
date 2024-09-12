@@ -265,7 +265,9 @@ public class LibraryGenerateBarcodeHandler extends BaseHTTPHandler {
 							.b().text("Name:").__()
 							.input()
 								.attrId("preset-name")
-								.attrType(EnumTypeInputType.TEXT)
+								.attrOnautocomplete(HTML.DISABLE_AUTOCOMPLETE)
+								.attrOnkeypress("presetNameInputChange(event)")
+								.attrType(EnumTypeInputType.SEARCH)
 							.__()
 						.__()
 						.div()
@@ -297,24 +299,23 @@ public class LibraryGenerateBarcodeHandler extends BaseHTTPHandler {
 							.text("Presets")
 						.__()
 						.of(ul -> {
-							if (presets.size() == 0) {
+							for (RecordLabelPreset preset : presets) {
 								ul.li()
 									.a()
-										.attrStyle("cursor:default;justify-content:center;")
-										.text("Empty")
+										.attrClass("preset-del")
+										.attrOnclick("setPreset('" + preset.getName() + "')")
+										.text(preset.getName())
+										.button()
+											.attrOnclick("deletePreset(event,'" + preset.getName() + "');return false;")
+											.text("x")
+										.__()
 									.__()
 								.__();
-							} else {
-								for (RecordLabelPreset preset : presets)
-								{
-									ul.li()
-										.a()
-											.text(preset.getName())
-										.__()
-									.__();
-								}
 							}
 						})
+						.li()
+							.hr().__()
+						.__() // li
 						.li()
 							.a()
 								.attrOnclick("showPresetModal()")

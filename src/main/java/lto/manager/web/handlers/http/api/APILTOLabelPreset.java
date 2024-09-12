@@ -16,7 +16,6 @@ import lto.manager.web.handlers.http.templates.models.BodyModel;
 import lto.manager.web.resource.Asset;
 import lto.manager.web.resource.JSON;
 import lto.manager.web.resource.JSON.APIStatus;
-import lto.manager.web.resource.JSON.JSONMap;
 
 public class APILTOLabelPreset extends BaseHTTPHandler {
 	public static final String PATH = Asset.PATH_API_BASE + "ltolabelpreset/";
@@ -33,28 +32,40 @@ public class APILTOLabelPreset extends BaseHTTPHandler {
 			final String operation = bm.getQueryNoNull("op");
 			final int userId = bm.getUserIDViaSession();
 
-			JSONMap json = new JSONMap();
+			String message = "";
 
-			if (operation.equals("add")) { // FIXME finish
+			if (operation.equals("add")) {
 				final String name = nameValidator.validateThrow(bm.getQueryNoNull("name"), true);
 				if (Database.getUserLabelPreset(userId, name) != null) {
 					throw new Exception("[" + name + "] already exists");
 				}
 				final String config = configValidator.validateThrow(bm.getQueryNoNull("config"), true);
 				Database.addUserLabelPreset(RecordLabelPreset.of(userId, name, config));
-			} else if (operation.equals("update")) {
 
 			} else if (operation.equals("delete")) {
+				final String name = nameValidator.validateThrow(bm.getQueryNoNull("name"), true);
+				if (!Database.deleteUserLabelPreset(userId, name)) {
+					throw new Exception("[" + name + "] does not exist");
+				}
+
+			} else if (operation.equals("get")) {
+				final String name = nameValidator.validateThrow(bm.getQueryNoNull("name"), true);
+				RecordLabelPreset preset = Database.getUserLabelPreset(userId, name);
+				if (preset == null) {
+					throw new Exception("[" + name + "] does not exist");
+				}
+				message = preset.getConfig();
 
 			} else {
 				throw new Exception("Unknown operation: " + operation);
 			}
 
-			requestHandleCompleteAPIText(he, JSON.populateAPIResponse(APIStatus.ok, json), CONTENT_TYPE_JSON);
+			requestHandleCompleteAPIText(he, JSON.populateAPIResponse(APIStatus.ok, message), CONTENT_TYPE_JSON);
 
 		} catch (ValidatorStatus e) {
 			requestHandleCompleteAPITextError(he,
-					JSON.populateAPIResponse(APIStatus.error, e.getUserMessage().replaceAll("\"", "'")), CONTENT_TYPE_JSON);
+					JSON.populateAPIResponse(APIStatus.error, e.getUserMessage().replaceAll("\"", "'")),
+					CONTENT_TYPE_JSON);
 		} catch (Exception e) {
 			requestHandleCompleteAPITextError(he,
 					JSON.populateAPIResponse(APIStatus.error, e.getMessage().replaceAll("\"", "'")), CONTENT_TYPE_JSON);

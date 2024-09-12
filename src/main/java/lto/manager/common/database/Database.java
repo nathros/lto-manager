@@ -267,6 +267,10 @@ public class Database {
 		return TableLabelPreset.addPreset(Database.connection, newPreset);
 	}
 
+	public static boolean deleteUserLabelPreset(int userID, String name) throws SQLException, IOException {
+		return TableLabelPreset.deletePreset(Database.connection, userID, name);
+	}
+
 	public static RecordLabelPreset getUserLabelPreset(int userID, String name) throws SQLException, IOException {
 		return TableLabelPreset.getPreset(Database.connection, userID, name, true);
 	}

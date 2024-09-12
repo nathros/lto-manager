@@ -99,11 +99,20 @@ public class TableLabelPreset {
 
 		String sql = dq.validate().toString();
 		statment.execute(sql);
-		if (!statment.execute(sql)) {
-			return true;
-		}
+		return statment.getUpdateCount() > 0;
+	}
 
-		return true;
+	public static boolean deletePreset(Connection con, int userID, String name)
+			throws SQLException, IOException {
+		var statment = con.createStatement();
+
+		DeleteQuery dq = new DeleteQuery(table);
+		dq.addCondition(BinaryCondition.equalTo(table.getColumns().get(COLUMN_INDEX_USER), userID));
+		dq.addCondition(BinaryCondition.equalTo(table.getColumns().get(COLUMN_INDEX_NAME), name));
+
+		String sql = dq.validate().toString();
+		statment.execute(sql);
+		return statment.getUpdateCount() > 0;
 	}
 
 	public static boolean updatePreset(Connection con, RecordLabelPreset newPreset)
