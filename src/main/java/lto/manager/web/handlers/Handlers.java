@@ -8,6 +8,7 @@ import lto.manager.common.Main;
 import lto.manager.web.handlers.http.ajax.AJAX404Fetcher;
 import lto.manager.web.handlers.http.ajax.AJAXGetAttachedDrivesFetcher;
 import lto.manager.web.handlers.http.ajax.AJAXGetOnloadError;
+import lto.manager.web.handlers.http.ajax.AJAXLTOLabelPreset;
 import lto.manager.web.handlers.http.ajax.filelist.AJAXFilesListFetcher;
 import lto.manager.web.handlers.http.ajax.filelist.AJAXIconListFetcher;
 import lto.manager.web.handlers.http.ajax.labelgenerator.AJAXGenerateLTOLabelHTML;
@@ -129,6 +130,7 @@ public class Handlers {
 		ret.put(AJAXGenerateLTOLabelHTML.PATH, new AJAXGenerateLTOLabelHTML());
 		ret.put(AJAXGenerateLTOLabelPDF.PATH, new AJAXGenerateLTOLabelPDF());
 		ret.put(AJAXGenerateLTOLabelSVG.PATH, new AJAXGenerateLTOLabelSVG());
+		ret.put(AJAXLTOLabelPreset.PATH, new AJAXLTOLabelPreset());
 
 		ret.put(API404.PATH, new API404());
 		ret.put(APIVirtualDir.PATH, new APIVirtualDir());

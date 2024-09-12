@@ -1,21 +1,27 @@
 package lto.manager.common.database.tables.records;
 
+import lto.manager.common.database.Database;
+
 public class RecordLabelPreset {
 	private int id;
 	private RecordUser user;
 	private String name;
-	private String json;
+	private String config;
 
 
-	public RecordLabelPreset(int id, RecordUser user, String name, String json) {
+	public RecordLabelPreset(int id, RecordUser user, String name, String config) {
 		this.id = id;
 		this.user = user;
 		this.name = name;
-		this.json = json;
+		this.config = config;
 	}
 
-	public static RecordLabelPreset of(int id, RecordUser user, String name, String json) {
-		return new RecordLabelPreset(id, user, name, json);
+	public static RecordLabelPreset of(int id, RecordUser user, String name, String config) {
+		return new RecordLabelPreset(id, user, name, config);
+	}
+
+	public static RecordLabelPreset of(int userId, String name, String config) {
+		return new RecordLabelPreset(Database.NEW_RECORD_ID, RecordUser.of(userId), name, config);
 	}
 
 	public int getID() {
@@ -42,12 +48,12 @@ public class RecordLabelPreset {
 		this.name = name;
 	}
 
-	public String getJSON() {
-		return json;
+	public String getConfig() {
+		return config;
 	}
 
-	public void setJSON(String json) {
-		this.json = json;
+	public void setConfig(String config) {
+		this.config = config;
 	}
 
 }

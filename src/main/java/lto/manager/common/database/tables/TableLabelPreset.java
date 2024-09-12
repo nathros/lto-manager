@@ -30,12 +30,12 @@ public class TableLabelPreset {
 	public static final String COLUMN_NAME_ID = "id_label_preset";
 	public static final String COLUMN_NAME_USER = "id_user";
 	public static final String COLUMN_NAME_NAME = "name";
-	public static final String COLUMN_NAME_JSON = "json";
+	public static final String COLUMN_NAME_CONFIG = "config";
 
 	public static final int COLUMN_INDEX_ID = 0;
 	public static final int COLUMN_INDEX_USER = 1;
 	public static final int COLUMN_INDEX_NAME = 2;
-	public static final int COLUMN_INDEX_JSON = 3;
+	public static final int COLUMN_INDEX_CONFIG = 3;
 
 	static DbTable getSelf() {
 		DbSchema schema = Database.schema;
@@ -54,7 +54,7 @@ public class TableLabelPreset {
 		table.foreignKey(TableUser.COLUMN_NAME_ID, columns, tableUser, columnsRef);
 
 		table.addColumn(COLUMN_NAME_NAME, Types.VARCHAR, null);
-		table.addColumn(COLUMN_NAME_JSON, Types.VARCHAR, null);
+		table.addColumn(COLUMN_NAME_CONFIG, Types.VARCHAR, null);
 
 		return table;
 	}
@@ -80,7 +80,8 @@ public class TableLabelPreset {
 			iq.addColumn(table.getColumns().get(COLUMN_INDEX_ID), newPreset.getID());
 		}
 		iq.addColumn(table.getColumns().get(COLUMN_INDEX_USER), newPreset.getUser().getID());
-		iq.addColumn(table.getColumns().get(COLUMN_INDEX_JSON), newPreset.getJSON());
+		iq.addColumn(table.getColumns().get(COLUMN_INDEX_NAME), newPreset.getName());
+		iq.addColumn(table.getColumns().get(COLUMN_INDEX_CONFIG), newPreset.getConfig());
 
 		String sql = iq.validate().toString();
 		if (!statment.execute(sql)) {
@@ -112,7 +113,7 @@ public class TableLabelPreset {
 		UpdateQuery uq = new UpdateQuery(table);
 		uq.addCondition(BinaryCondition.equalTo(table.getColumns().get(COLUMN_INDEX_ID), newPreset.getID()));
 		uq.addSetClause(table.getColumns().get(COLUMN_INDEX_USER), newPreset.getUser().getID());
-		uq.addSetClause(table.getColumns().get(COLUMN_INDEX_JSON), newPreset.getJSON());
+		uq.addSetClause(table.getColumns().get(COLUMN_INDEX_CONFIG), newPreset.getConfig());
 
 		String sql = uq.validate().toString();
 		statment.execute(sql);
@@ -121,6 +122,24 @@ public class TableLabelPreset {
 		}
 
 		return true;
+	}
+
+	public static RecordLabelPreset getPreset(Connection con, int userID, String name, boolean lazyUserDetails)
+			throws SQLException, IOException {
+		var statment = con.createStatement();
+
+		SelectQuery sq = new SelectQuery();
+		sq.addAllTableColumns(table);
+		sq.addCondition(BinaryCondition.equalTo(table.getColumns().get(COLUMN_INDEX_USER), userID));
+		sq.addCondition(BinaryCondition.equalTo(table.getColumns().get(COLUMN_INDEX_NAME), name));
+
+		String sql = sq.validate().toString();
+		statment.execute(sql);
+		var results = statment.getResultSet();
+		while (results.next()) {
+			return fromResultSet(results, lazyUserDetails);
+		}
+		return null;
 	}
 
 	public static List<RecordLabelPreset> getAllForUser(Connection con, int userID, boolean lazyUserDetails)
@@ -146,10 +165,10 @@ public class TableLabelPreset {
 		final int id = result.getInt(COLUMN_NAME_ID);
 		final int UserId = result.getInt(COLUMN_NAME_USER);
 		final String name = result.getString(COLUMN_NAME_NAME);
-		final String jsonStr = result.getString(COLUMN_NAME_JSON);
+		final String configStr = result.getString(COLUMN_NAME_CONFIG);
 		RecordUser user = RecordUser.getBlank();
 		user.setID(UserId);
-		return RecordLabelPreset.of(id, user, name, jsonStr);
+		return RecordLabelPreset.of(id, user, name, configStr);
 	}
 
 }

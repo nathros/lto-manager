@@ -240,3 +240,7 @@ function tableFilterShow(tableID, sender) {
 	}
 	sender.innerText = show ? "Show" : "Hide";
 }
+
+function inlineMessageUpdateMessage(element, message) {
+	element.children[1].innerText = message;
+}

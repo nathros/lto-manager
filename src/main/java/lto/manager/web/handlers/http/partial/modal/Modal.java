@@ -26,7 +26,7 @@ public class Modal {
 				}
 				consumer.accept(div);
 			})
-		.__();
+		.__(); // Dialog
 	}
 
 }

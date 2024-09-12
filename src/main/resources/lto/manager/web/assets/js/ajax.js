@@ -12,6 +12,25 @@ function updateElementInner(element, html, removeParent = false) {
 	element.innerHTML = html;
 }
 
+function ajaxFetch(url, element, removeParent = false, callback = () => {}) {
+	fetch(url,
+	{
+		method: "get",
+		signal: AbortSignal.timeout(3000),
+		headers: {
+			"Content-Type": "application/x-www-form-urlencoded"
+	}
+	}).then((response) => {
+		return response.text();
+	}).then((div) => {
+		updateElement(element, div, removeParent);
+		callback();
+	}).catch((error) => {
+		onLoadInlineError(element, "Failed to complete", error);
+		console.log(error);
+	})
+}
+
 // Go through all elements that have dynamic/async contents
 function onLoadAJAX() {
 	const AJAX_ATT = "data-ajax";
@@ -19,21 +38,7 @@ function onLoadAJAX() {
 	elements.forEach(element => {
 		const url = element.getAttribute(AJAX_ATT);
 		console.debug(`onLoadAJAX: ${url}`);
-		fetch(url,
-		{
-			method: "get",
-			signal: AbortSignal.timeout(3000),
-			headers: {
-				"Content-Type": "application/x-www-form-urlencoded"
-	  		}
-		}).then((response) => {
-			return response.text();
-		}).then((div) => {
-			updateElement(element, div);
-		}).catch((error) => {
-			onLoadInlineError(element, "Failed to complete", error);
-			console.log(error);
-		})
+		ajaxFetch(url, element);
 	});
 }
 

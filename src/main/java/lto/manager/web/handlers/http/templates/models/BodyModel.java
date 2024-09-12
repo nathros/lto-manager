@@ -214,6 +214,12 @@ public class BodyModel {
 		return queries;
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<String> getQueryKeys() {
+		Map<String, Object> queries = isGETMethod() ? queriesURL : body.getQueries();
+		return (List<String>) queries.keySet();
+	}
+
 	public String getCookie(String key) {
 		String result = cookiesRequest.get(key);
 		return result;
@@ -317,6 +323,13 @@ public class BodyModel {
 	public byte[] getRawPOSTData() {
 		if (isPOSTMethod()) {
 			return body.getPayload();
+		}
+		return null;
+	}
+
+	public String getPOSTDataAsString() {
+		if (isPOSTMethod()) {
+			return new String(body.getPayload(), StandardCharsets.UTF_8);
 		}
 		return null;
 	}

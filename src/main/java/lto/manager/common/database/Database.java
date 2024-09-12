@@ -262,4 +262,12 @@ public class Database {
 	public static List<RecordLabelPreset> getUserLabelPresets(int id) throws SQLException, IOException {
 		return TableLabelPreset.getAllForUser(Database.connection, id, true);
 	}
+
+	public static boolean addUserLabelPreset(RecordLabelPreset newPreset) throws SQLException, IOException {
+		return TableLabelPreset.addPreset(Database.connection, newPreset);
+	}
+
+	public static RecordLabelPreset getUserLabelPreset(int userID, String name) throws SQLException, IOException {
+		return TableLabelPreset.getPreset(Database.connection, userID, name, true);
+	}
 }

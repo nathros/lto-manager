@@ -203,6 +203,15 @@ public abstract class BaseHTTPHandler implements HttpHandler {
 		os.close();
 	}
 
+	protected void requestHandleCompleteAPITextError(HttpExchange he, final String text, final String contentType)
+			throws IOException, InterruptedException, ExecutionException {
+		he.getResponseHeaders().set("Content-Type", contentType);
+		he.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, text.length());
+		OutputStream os = he.getResponseBody();
+		os.write(text.getBytes());
+		os.close();
+	}
+
 	protected void requestHandleCompleteAPIBinary(HttpExchange he, ByteArrayOutputStream bin, final String contentType)
 			throws IOException, InterruptedException, ExecutionException {
 		he.getResponseHeaders().set("Content-Type", contentType);

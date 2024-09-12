@@ -17,6 +17,11 @@ public class JSON {
 		return json;
 	}
 
+	public static String populateAPIResponse(APIStatus status) {
+		final String json = "{\"" + STATUS + "\":\"" + status + "\",\"" + MESSAGE + "\":\"" + status.toString() + "\"}";
+		return json;
+	}
+
 	public static String populateAPIResponse(APIStatus status, JSONMap content) throws Exception {
 		final String json = "{\"" + STATUS + "\":\"" + status + "\",\"" + MESSAGE + "\":{" + content.serializeToString()
 				+ "}}";
@@ -25,6 +30,17 @@ public class JSON {
 
 	public static class JSONMap {
 		HashMap<String, Object> map = new HashMap<String, Object>();
+
+		public JSONMap() {
+		}
+
+		public JSONMap(final String jsonStr) {
+			parse(jsonStr, 0);
+		}
+
+		private void parse(final String jsonStr, int level) {
+			// FIXME implement
+		}
 
 		public String serializeToString() throws Exception {
 			return mapToJSONStr(map);

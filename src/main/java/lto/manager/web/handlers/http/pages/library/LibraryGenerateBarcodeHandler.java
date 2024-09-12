@@ -24,6 +24,7 @@ import lto.manager.web.handlers.http.ajax.labelgenerator.LTOLabelEnum;
 import lto.manager.web.handlers.http.ajax.labelgenerator.LTOLabelEnum.LTOLabelColourSettings;
 import lto.manager.web.handlers.http.ajax.labelgenerator.LTOLabelEnum.LTOLabelTypeSettings;
 import lto.manager.web.handlers.http.ajax.labelgenerator.LTOLabelOptions;
+import lto.manager.web.handlers.http.partial.inlinemessage.InlineMessage;
 import lto.manager.web.handlers.http.partial.modal.Modal;
 import lto.manager.web.handlers.http.partial.modal.ModalOptions;
 import lto.manager.web.handlers.http.templates.TemplatePage.BreadCrumbs;
@@ -106,7 +107,7 @@ public class LibraryGenerateBarcodeHandler extends BaseHTTPHandler {
 						.attrName(LTOLabelOptions.QUERY_QUANTITY)
 						.attrStep("1")
 						.attrMin(String.valueOf(LTOLabelOptions.QUANTITY_MIN))
-						.attrMin(String.valueOf(LTOLabelOptions.QUANTITY_MAX))
+						.attrMax(String.valueOf(LTOLabelOptions.QUANTITY_MAX))
 						.attrValue(String.valueOf(LTOLabelOptions.QUANTITY_DEFAULT))
 					.__()
 
@@ -251,72 +252,78 @@ public class LibraryGenerateBarcodeHandler extends BaseHTTPHandler {
 		}
 	}
 
-	static Void header(Div<?> view, BodyModel model) {
+	public static Void header(Div<?> view, BodyModel model) {
 		final List<RecordLabelPreset> presets = getUserPresents(model);
 
 		view
-			// Start of modal dialog
-			.of(parent -> Modal.content(parent, ModalOptions.of(MODAL_ID, false), innerDiv -> {
-				innerDiv
-					.div()
-						.attrClass(CSS.FORMS_CONTAINER)
-						.b().text("Name:").__()
-						.input()
-							.attrType(EnumTypeInputType.TEXT)
-						.__()
-					.__()
-					.div()
-						.attrClass("button-container")
-						.button()
-							.attrClass(CSS.BUTTON + CSS.ICON_PLUS_SQUARE + CSS.BUTTON_IMAGE_W_TEXT + CSS.BUTTON_IMAGE)
-							.attrType(EnumTypeButtonType.BUTTON)
-							.attrOnclick("addPreset()")
-							.text("Add")
-						.__()
-						.button()
-							.attrClass(CSS.BUTTON + CSS.ICON_CROSS + CSS.BUTTON_IMAGE_W_TEXT + CSS.BUTTON_IMAGE)
-							.attrType(EnumTypeButtonType.BUTTON)
-							.attrOnclick("hidePresetModal()")
-							.text("Cancel")
-						.__()
-					.__()
-				.__();
-			}))
-			// End of modal dialog
 			.div()
-				.attrClass(CSS.HEADER_ITEM + CSS.ICON_PASS)
-				.ul().attrClass(CSS.MENU_LIST)
-					.li()
-						.attrClass(CSS.HEADER_LABEL_TOP)
-						.text("Presets")
-					.__()
-					.of(ul -> {
-						if (presets.size() == 0) {
-							ul.li()
-								.a()
-									.attrStyle("cursor:default;justify-content:center;")
-									.text("Empty")
-								.__()
-							.__();
-						} else {
-							for (RecordLabelPreset preset : presets)
-							{
+				// Start of modal dialog
+				.of(parent -> Modal.content(parent, ModalOptions.of(MODAL_ID, false), innerDiv -> {
+					innerDiv
+						.div()
+							.attrClass(CSS.FORMS_CONTAINER)
+							.b().text("Name:").__()
+							.input()
+								.attrId("preset-name")
+								.attrType(EnumTypeInputType.TEXT)
+							.__()
+						.__()
+						.div()
+							.attrId("preset-error")
+							.attrStyle("display:none;margin-bottom:var(--padding-full)")
+							.of(innerParent -> InlineMessage.contentGenericError(innerParent, "Message")) // Self closing __()
+						.div()
+							.attrClass("button-container")
+							.button()
+								.attrClass(CSS.BUTTON + CSS.ICON_PLUS_SQUARE + CSS.BUTTON_IMAGE_W_TEXT + CSS.BUTTON_IMAGE)
+								.attrType(EnumTypeButtonType.BUTTON)
+								.attrOnclick("addPreset()")
+								.text("Add")
+							.__()
+							.button()
+								.attrClass(CSS.BUTTON + CSS.ICON_CROSS + CSS.BUTTON_IMAGE_W_TEXT + CSS.BUTTON_IMAGE)
+								.attrType(EnumTypeButtonType.BUTTON)
+								.attrOnclick("hidePresetModal()")
+								.text("Cancel")
+							.__()
+						.__();
+				}))
+				// End of modal dialog
+				.div()
+					.attrClass(CSS.HEADER_ITEM + CSS.ICON_PASS)
+					.ul().attrClass(CSS.MENU_LIST)
+						.li()
+							.attrClass(CSS.HEADER_LABEL_TOP)
+							.text("Presets")
+						.__()
+						.of(ul -> {
+							if (presets.size() == 0) {
 								ul.li()
 									.a()
-										.text(preset.getName())
+										.attrStyle("cursor:default;justify-content:center;")
+										.text("Empty")
 									.__()
 								.__();
+							} else {
+								for (RecordLabelPreset preset : presets)
+								{
+									ul.li()
+										.a()
+											.text(preset.getName())
+										.__()
+									.__();
+								}
 							}
-						}
-					})
-					.li()
-						.a()
-							.attrOnclick("showPresetModal()")
-							.text("Add New")
-						.__()
-					.__() // li
-				.__() // ul
-			.__(); // div
+						})
+						.li()
+							.a()
+								.attrOnclick("showPresetModal()")
+								.text("Add New")
+							.__()
+						.__() // li
+					.__() // ul
+				.__() // div
+			.__(); // wraper div
 		return null;
 	}
 
@@ -324,6 +331,7 @@ public class LibraryGenerateBarcodeHandler extends BaseHTTPHandler {
 	public void requestHandle(HttpExchange he) throws IOException, SQLException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of(NAME);
 		thm.addCSS(Asset.CSS_FORMS).addCSS(Asset.CSS_LIBRARY);
+		thm.addScript(Asset.JS_AJAX);
 		thm.addScriptDefer(Asset.JS_LTO_LABEL_GENERATOR);
 		BreadCrumbs crumbs = new BreadCrumbs().add(LibraryHandler.NAME, LibraryHandler.PATH).add(NAME, PATH);
 		TemplatePageModel tpm = TemplatePageModel.of(LibraryGenerateBarcodeHandler::body, LibraryGenerateBarcodeHandler::header, thm, SelectedPage.Library, BodyModel.of(he, null), crumbs);

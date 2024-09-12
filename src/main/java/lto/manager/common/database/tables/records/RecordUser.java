@@ -46,6 +46,10 @@ public class RecordUser {
 		this.avatar = avatar;
 	}
 
+	public RecordUser(int id) {
+		this.id = id;
+	}
+
 	public static RecordUser of(int id, String username, String hash, String salt, boolean enabled,
 			LocalDateTime dateAdded, int language, String avatar) {
 		return new RecordUser(id, username, hash, salt, enabled, dateAdded, language, avatar);
@@ -56,6 +60,10 @@ public class RecordUser {
 		var user = new RecordUser(id, username, hash, salt, enabled, dateAdded, language, avatar);
 		user.setRole(role);
 		return user;
+	}
+
+	public static RecordUser of(int id) {
+		return new RecordUser(id); // For lazy loading
 	}
 
 	public static RecordUser getDefaultUser() {

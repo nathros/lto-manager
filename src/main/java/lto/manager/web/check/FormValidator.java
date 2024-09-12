@@ -9,7 +9,8 @@ public class FormValidator {
 		INPUT_TEXT, INPUT_CHECKBOX, INPUT_PASSWORD
 	}
 
-	public static class ValidatorStatus {
+	public static class ValidatorStatus extends Exception {
+		private static final long serialVersionUID = 1L;
 		private CheckStatusType status;
 		private String userMessage;
 
@@ -124,6 +125,29 @@ public class FormValidator {
 			}
 		}
 		return new ValidatorStatus(CheckStatusType.OK, null);
+	}
+
+	public String validateThrow(String value, boolean enabled) throws ValidatorStatus {
+		if (enabled) {
+			try {
+				switch (type) {
+				case INPUT_TEXT:
+					validateText(value);
+					break;
+				case INPUT_CHECKBOX: {
+					break;
+				}
+				case INPUT_PASSWORD: {
+					break;
+				}
+				default:
+					throw new IllegalArgumentException("Unexpected value: " + type);
+				}
+			} catch (Exception e) {
+				 throw new ValidatorStatus(CheckStatusType.ERROR, message + e.getMessage());
+			}
+		}
+		return value;
 	}
 
 	public ValidatorStatus validatePassword(final String password, final String passwordConfirm, boolean enabled) {

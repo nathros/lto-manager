@@ -3,7 +3,7 @@ const barcodePreview = document.getElementById("barcode-preview");
 const inputs = barcodeForm.getElementsByTagName("input");
 const selects = barcodeForm.getElementsByTagName("select");
 
-const presetModal = document.getElementById('modal-preset')
+let presetModal = document.getElementById('modal-preset'); // Can be updated
 
 function getBarcodeFormParams(preview) {
 	const formData = new FormData(barcodeForm);
@@ -20,7 +20,7 @@ function getBarcodeFormParams(preview) {
 function onBarcodeInputChange(event) {
 	console.log(event)
 	const params = getBarcodeFormParams(true);
-	fetch(`/ajax/generate/lto/label/html/?` + params.toString(),
+	fetch(`/ajax/generate/lto/label/html/?${params.toString()}`,
 	{
 		method: "GET",
 		signal: AbortSignal.timeout(3000)
@@ -72,10 +72,33 @@ function showPresetModal() {
 
 function hidePresetModal() {
 	presetModal.close();
+	document.getElementById("preset-error").style.display = "none";
 }
 
 function addPreset() {
-	console.log("aaa")
+	const config = getBarcodeFormParams(false);
+	const setName = document.getElementById("preset-name").value;
+	let status = 0;
+	fetch(`/api/ltolabelpreset/?op=add&name=${setName}&config=${encodeURIComponent(config.toString())}`,
+	{
+		method: "GET",
+		signal: AbortSignal.timeout(3000)
+	}).then((response) => {
+		status = response.status;
+		return response.json();
+	}).then((json) => {
+		if (status != 200) {
+			throw json["message"];
+		}
+		("/ajax/ltolabelpreset/", presetModal.parentElement, true, () => {
+			presetModal = document.getElementById('modal-preset'); // Original has been replaced by ajaxFetch()
+		});
+		hidePresetModal();
+	}).catch((error) => {
+		const e = document.getElementById("preset-error");
+		e.style.display = "";
+		inlineMessageUpdateMessage(e, error);
+	});
 }
 
 /*function getPreset() {
