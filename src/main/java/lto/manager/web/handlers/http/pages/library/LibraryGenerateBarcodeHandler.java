@@ -152,7 +152,7 @@ public class LibraryGenerateBarcodeHandler extends BaseHTTPHandler {
 						.attrValue(String.valueOf(LTOLabelOptions.BORDER_RADIUS_LABEL_DEFAULT))
 					.__()
 
-					.b().text("Label Border Stroke:").__()
+					.b().text("Label Border Width:").__()
 					.input()
 						.attrType(EnumTypeInputType.NUMBER)
 						.attrName(LTOLabelOptions.QUERY_BORDER_STROKE_LABEL)
@@ -172,7 +172,7 @@ public class LibraryGenerateBarcodeHandler extends BaseHTTPHandler {
 						.attrValue(String.valueOf(LTOLabelOptions.BORDER_RADIUS_INNER_DEFAULT))
 					.__()
 
-					.b().text("Inner Border Stroke:").__()
+					.b().text("Inner Border Width:").__()
 					.input()
 						.attrType(EnumTypeInputType.NUMBER)
 						.attrName(LTOLabelOptions.QUERY_BORDER_STROKE_INNER)

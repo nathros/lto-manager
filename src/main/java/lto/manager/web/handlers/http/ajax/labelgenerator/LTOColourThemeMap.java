@@ -2,6 +2,7 @@ package lto.manager.web.handlers.http.ajax.labelgenerator;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Set;
 
 import lto.manager.common.IniFileProcessor;
@@ -11,7 +12,7 @@ import lto.manager.web.resource.Asset;
 public record LTOColourThemeMap(HashMap<String, HashMap<String, String>> themeMapContainer) {
 	public static LTOColourThemeMap of() {
 		final String themeFile = Asset.IMG_LTO_LABEL + "theme.ini";
-		HashMap<String, HashMap<String, String>> themeMapContainer = new HashMap<String, HashMap<String, String>>();
+		LinkedHashMap<String, HashMap<String, String>> themeMapContainer = new LinkedHashMap<String, HashMap<String, String>>();
 		try {
 			themeMapContainer = IniFileProcessor.asMultiMap(themeFile);
 		} catch (IOException e) {

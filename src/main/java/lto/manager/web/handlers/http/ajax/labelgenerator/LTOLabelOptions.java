@@ -85,13 +85,13 @@ public record LTOLabelOptions(String mediaID, String prefix, String postfix, Str
 		checkFloat(borderRadiusLabelStr, BORDER_RADIUS_LABEL_MIN, BORDER_RADIUS_LABEL_MAX, "Label border radius");
 
 		final String borderStrokeLabelStr = model.getQueryNoNull(QUERY_BORDER_STROKE_LABEL);
-		checkFloat(borderStrokeLabelStr, BORDER_STROKE_LABEL_MIN, BORDER_STROKE_LABEL_MAX, "Label border stroke");
+		checkFloat(borderStrokeLabelStr, BORDER_STROKE_LABEL_MIN, BORDER_STROKE_LABEL_MAX, "Label border width");
 
 		final String borderRadiusInnerStr = model.getQueryNoNull(QUERY_BORDER_RADIUS_INNER);
 		checkFloat(borderRadiusInnerStr, BORDER_RADIUS_LABEL_MIN, BORDER_RADIUS_LABEL_MAX, "Inner border radius");
 
 		final String borderStrokeInnerStr = model.getQueryNoNull(QUERY_BORDER_STROKE_INNER);
-		checkFloat(borderStrokeInnerStr, BORDER_STROKE_LABEL_MIN, BORDER_STROKE_LABEL_MAX, "Inner border stroke");
+		checkFloat(borderStrokeInnerStr, BORDER_STROKE_LABEL_MIN, BORDER_STROKE_LABEL_MAX, "Inner border width");
 
 		final String colourSettingsStr = model.getQueryNoNull(QUERY_COLOURS);
 		LTOLabelColourSettings colourSetting = null;

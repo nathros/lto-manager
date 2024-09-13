@@ -45,10 +45,12 @@ public class FileListItem {
 							.__();
 						}
 					})
+					.text(" ")
 					.img().attrClass(CSS.FV_FILE_ICON).attrSrc(getFileTypeIcon(fileTree.getTree())).attrAlt("").__()
+					.text(" ")
 					.a()
 						.attrOnclick(JS.fnFileViewListChangeDir(ABS_PATH, fileTree.getOptions().isVirtual()))
-						.text(" " + fileTree.getTree().getName())
+						.text(fileTree.getTree().getName())
 					.__()
 					.of(con -> {
 						boolean show = fileTree.getOptions().isVirtual();
@@ -92,6 +94,7 @@ public class FileListItem {
 						}
 					})
 					.img().attrClass(CSS.FV_FILE_ICON).attrSrc(getFileTypeIcon(fileTree.getTree())).attrAlt("").__()
+					.text(" ")
 					//.a()
 						//.attrHref(LINK + Util.encodeUrl(ABS_PATH))
 						.text(fileTree.getTree().getName())

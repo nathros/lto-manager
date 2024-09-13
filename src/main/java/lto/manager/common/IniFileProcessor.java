@@ -2,14 +2,15 @@ package lto.manager.common;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import lto.manager.web.handlers.http.pages.AssetHandler;
 
 public class IniFileProcessor {
 
-	public static HashMap<String, HashMap<String, String>> asMultiMap(final String path) throws IOException {
+	public static LinkedHashMap<String, HashMap<String, String>> asMultiMap(final String path) throws IOException {
 		final String ini = AssetHandler.getResourceAsString(path);
-		HashMap<String, HashMap<String, String>> multiMap = new HashMap<String, HashMap<String, String>>();
+		LinkedHashMap<String, HashMap<String, String>> multiMap = new LinkedHashMap<String, HashMap<String, String>>();
 		final String[] lines = ini.split("\n");
 		HashMap<String, String> themeMap = null;
 		for (final String line : lines) {

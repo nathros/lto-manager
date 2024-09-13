@@ -64,7 +64,6 @@ public class JobsHandler extends BaseHTTPHandler {
 							d.p().text(delRes ? "success" : "failure").__();
 						}
 					})
-					.a().attrClass(CSS.BUTTON).attrHref(JobsTypeHandler.PATH).text("Add new job").__()
 					.table().attrClass(CSS.TABLE)
 						.tr()
 							.th().text("ID").__()
@@ -111,11 +110,31 @@ public class JobsHandler extends BaseHTTPHandler {
 		return null;
 	}
 
+	static Void header(Div<?> view, BodyModel model) {
+		view
+			.div()
+				.attrClass(CSS.HEADER_ITEM + CSS.ICON_PLUS_SQUARE)
+				.ul().attrClass(CSS.MENU_LIST)
+					.li()
+						.attrClass(CSS.HEADER_LABEL_TOP)
+						.text("New")
+					.__()
+					.li()
+						.a()
+							.attrHref(JobsTypeHandler.PATH)
+							.text("Add New Job")
+						.__()
+					.__()
+				.__() // ul
+			.__(); // div
+		return null;
+	}
+
 	@Override
 	public void requestHandle(HttpExchange he) throws IOException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of(NAME);
 		BreadCrumbs crumbs = new BreadCrumbs().add(NAME, PATH);
-		TemplatePageModel tpm = TemplatePageModel.of(JobsHandler::content, null, thm, SelectedPage.Jobs, BodyModel.of(he, null), crumbs);
+		TemplatePageModel tpm = TemplatePageModel.of(JobsHandler::content, JobsHandler::header, thm, SelectedPage.Jobs, BodyModel.of(he, null), crumbs);
 		requestHandleCompletePage(he, tpm);
 	}
 
