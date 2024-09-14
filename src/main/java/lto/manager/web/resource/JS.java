@@ -19,6 +19,7 @@ public class JS {
 	public static String tableSort() { return "tableSort(this)"; }
 	public static String tableSort(String id) { return "tableSort(this, '" + id + "')"; }
 	public static String tableFilterShow(String id) { return "tableFilterShow('" + id + "',this);"; }
+	public static String tableFilter() { return "tableFilterInput(this);"; }
 	public static String tableFilter(String id) { return "tableFilterInput(this,'" + id + "');"; }
 
 	public static String commonHideToast() { return "hideToast();"; }
