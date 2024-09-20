@@ -7,6 +7,7 @@ import org.xmlet.htmlapifaster.Div;
 
 import com.sun.net.httpserver.HttpExchange;
 
+import lto.manager.common.database.tables.records.RecordRole.Permission;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.partial.dashboard.DashboardCPU;
 import lto.manager.web.handlers.http.partial.dashboard.DashboardContainer;
@@ -34,11 +35,17 @@ public class DashboardHandler extends BaseHTTPHandler {
 	}
 
 	@Override
-	public void requestHandle(HttpExchange he) throws IOException, InterruptedException, ExecutionException {
+	public void requestHandle(HttpExchange he, BodyModel bm) throws IOException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of(NAME);
 		thm.addCSS(Asset.CSS_PIE);
 		thm.addScriptDefer(Asset.JS_DASHBOARD);
-		TemplatePageModel tpm = TemplatePageModel.of(DashboardHandler::content, null, thm, SelectedPage.Dashboard, BodyModel.of(he, null), null);
+		TemplatePageModel tpm = TemplatePageModel.of(DashboardHandler::content, null, thm, SelectedPage.Dashboard, bm, null);
 		requestHandleCompletePage(he, tpm);
+	}
+
+	@Override
+	public Permission getHandlePermission() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

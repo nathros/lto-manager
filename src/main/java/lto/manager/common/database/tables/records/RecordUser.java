@@ -7,6 +7,7 @@ import java.time.format.DateTimeFormatter;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import lto.manager.common.database.Database;
+import lto.manager.common.database.tables.records.RecordRole.Permission;
 
 public class RecordUser {
 	private int id;
@@ -208,5 +209,13 @@ public class RecordUser {
 	public RecordUser setAvatar(String avatar) {
 		this.avatar = avatar;
 		return this;
+	}
+
+	public boolean hasAccess(Permission permission) {
+		if (role == null) {
+			return false; // This has not been set
+		} else {
+			return role.hasPermission(permission);
+		}
 	}
 }

@@ -14,6 +14,7 @@ import org.xmlet.htmlapifaster.EnumTypeInputType;
 import com.sun.net.httpserver.HttpExchange;
 
 import lto.manager.common.database.Database;
+import lto.manager.common.database.tables.records.RecordRole.Permission;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.templates.TemplatePage.BreadCrumbs;
 import lto.manager.web.handlers.http.templates.TemplatePage.SelectedPage;
@@ -67,10 +68,16 @@ public class FilesHandler extends BaseHTTPHandler {
 	}
 
 	@Override
-	public void requestHandle(HttpExchange he) throws IOException, InterruptedException, ExecutionException {
+	public void requestHandle(HttpExchange he, BodyModel bm) throws IOException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of(NAME);
 		BreadCrumbs crumbs = new BreadCrumbs().add(NAME, PATH);
-		TemplatePageModel tpm = TemplatePageModel.of(FilesHandler::content, null, thm, SelectedPage.Files, BodyModel.of(he, null), crumbs);
+		TemplatePageModel tpm = TemplatePageModel.of(FilesHandler::content, null, thm, SelectedPage.Files, bm, crumbs);
 		requestHandleCompletePage(he, tpm);
+	}
+
+	@Override
+	public Permission getHandlePermission() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

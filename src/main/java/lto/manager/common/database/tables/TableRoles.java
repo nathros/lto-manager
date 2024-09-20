@@ -22,6 +22,7 @@ import com.healthmarketscience.sqlbuilder.dbspec.basic.DbTable;
 
 import lto.manager.common.database.Database;
 import lto.manager.common.database.tables.records.RecordRole;
+import lto.manager.common.database.tables.records.RecordRole.Permission;
 
 public class TableRoles {
 	public static final DbTable table = getSelf();
@@ -156,8 +157,9 @@ public class TableRoles {
 		final int id = result.getInt(COLUMN_NAME_ID);
 		final String name = result.getString(COLUMN_NAME_NAME);
 		final String description = result.getString(COLUMN_NAME_DESCRIPTION);
-		final String permissionStr = result.getString(COLUMN_NAME_PERMISSION_MASK);
+		String permissionStr = result.getString(COLUMN_NAME_PERMISSION_MASK);
 		final BitSet permission = BitSet.valueOf(Hex.decodeHex(permissionStr));
+		permission.set(Permission.MAX.getValue(), true); // If permissionStr is all 0 then BitSet will be empty
 		return RecordRole.of(id, name, description, permission);
 	}
 

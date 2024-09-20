@@ -14,7 +14,7 @@ import lto.manager.common.state.State;
 public class Security {
 	public static UUID loginUser(final String username, final String password) throws AssertionError, SQLException, IOException {
 		try {
-			final RecordUser user = Database.getUserByName(username, false);
+			final RecordUser user = Database.getUserByName(username, true);
 			final String calculatedHash = user.getHashedPassword(password);
 			final String hash = user.getHash();
 			if (calculatedHash.equals(hash)) {

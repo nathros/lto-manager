@@ -5,6 +5,7 @@ import org.xmlet.htmlapifaster.EnumTypeInputType;
 
 import com.sun.net.httpserver.HttpExchange;
 
+import lto.manager.common.database.tables.records.RecordRole.Permission;
 import lto.manager.web.handlers.Handlers;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.templates.TemplatePage.BreadCrumbs;
@@ -96,12 +97,18 @@ public class WebsocketTestHandler extends BaseHTTPHandler {
 	}
 
 	@Override
-	public void requestHandle(HttpExchange he) throws Exception {
+	public void requestHandle(HttpExchange he, BodyModel bm) throws Exception {
 		HeadModel thm = HeadModel.of(NAME);
 		thm.addScript(Asset.JS_WEBSOCKET).addScript(Asset.JS_TEST_WEBSOCKET);
 		BreadCrumbs crumbs = new BreadCrumbs().add(SandpitHandler.NAME, SandpitHandler.PATH).add(NAME, PATH);
-		TemplatePageModel tpm = TemplatePageModel.of(WebsocketTestHandler::content, null, thm, SelectedPage.Sandpit, BodyModel.of(he, null), crumbs);
+		TemplatePageModel tpm = TemplatePageModel.of(WebsocketTestHandler::content, null, thm, SelectedPage.Sandpit, bm, crumbs);
 		requestHandleCompletePage(he, tpm);
+	}
+
+	@Override
+	public Permission getHandlePermission() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

@@ -6,6 +6,7 @@ import java.util.concurrent.ExecutionException;
 import com.sun.net.httpserver.HttpExchange;
 
 import lto.manager.common.database.Database;
+import lto.manager.common.database.tables.records.RecordRole.Permission;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.templates.models.BodyModel;
 import lto.manager.web.resource.Asset;
@@ -16,8 +17,7 @@ public class APIVirtualDir extends BaseHTTPHandler {
 	public static final String PATH = Asset.PATH_API_BASE + "virtualdir/";
 
 	@Override
-	public void requestHandle(HttpExchange he) throws IOException, InterruptedException, ExecutionException {
-		final BodyModel bm = BodyModel.of(he, null);
+	public void requestHandle(HttpExchange he, BodyModel bm) throws IOException, InterruptedException, ExecutionException {
 		final String operation = bm.getQueryNoNull("op");
 
 		final String newDirName = bm.getQueryNoNull("name");
@@ -72,5 +72,11 @@ public class APIVirtualDir extends BaseHTTPHandler {
 			}
 		}
 
+	}
+
+	@Override
+	public Permission getHandlePermission() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

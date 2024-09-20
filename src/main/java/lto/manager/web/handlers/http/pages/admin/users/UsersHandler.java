@@ -12,6 +12,7 @@ import com.sun.net.httpserver.HttpExchange;
 
 import lto.manager.common.Util;
 import lto.manager.common.database.Database;
+import lto.manager.common.database.tables.records.RecordRole.Permission;
 import lto.manager.common.database.tables.records.RecordUser;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.pages.admin.AdminHandler;
@@ -28,6 +29,7 @@ import lto.manager.web.resource.JS;
 
 public class UsersHandler extends BaseHTTPHandler {
 	public static final String PATH = "/admin/users/";
+	public static final Permission PERMISSION = Permission.SYSTEM_USERS_READ;
 	public static final String NAME = "Users";
 
 	public static final String QDEL = "del";
@@ -136,12 +138,12 @@ public class UsersHandler extends BaseHTTPHandler {
 	}
 
 	@Override
-	public void requestHandle(HttpExchange he) throws IOException, InterruptedException, ExecutionException {
+	public void requestHandle(HttpExchange he, BodyModel bm) throws IOException, InterruptedException, ExecutionException, UserNotAuthorisedException {
 		HeadModel thm = HeadModel.of(NAME);
 		thm.addCSS(Asset.CSS_LIST).addCSS(Asset.CSS_FORMS);
 		thm.addScript(Asset.JS_LIST);
 		BreadCrumbs crumbs = new BreadCrumbs().add(AdminHandler.NAME, AdminHandler.PATH).add(NAME, PATH);
-		TemplatePageModel tpm = TemplatePageModel.of(UsersHandler::content, UsersHandler::header, thm, SelectedPage.Admin, BodyModel.of(he, null), crumbs);
+		TemplatePageModel tpm = TemplatePageModel.of(UsersHandler::content, UsersHandler::header, thm, SelectedPage.Admin, bm, crumbs);
 		requestHandleCompletePage(he, tpm);
 	}
 
@@ -164,6 +166,11 @@ public class UsersHandler extends BaseHTTPHandler {
 				.__() // ul
 			.__(); // div
 		return null;
+	}
+
+	@Override
+	public Permission getHandlePermission() {
+		return PERMISSION;
 	}
 
 }

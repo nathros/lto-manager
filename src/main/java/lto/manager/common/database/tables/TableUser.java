@@ -160,7 +160,7 @@ public class TableUser {
 	}
 
 	public static boolean updateUser(Connection con, RecordUser user)
-			throws SQLException, IOException {
+			throws SQLException, IOException { // FIXME should also update sessions
 		var statment = con.createStatement();
 
 		UpdateQuery uq = new UpdateQuery(table);

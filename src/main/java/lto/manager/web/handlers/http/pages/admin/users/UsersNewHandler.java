@@ -6,6 +6,7 @@ import java.util.concurrent.ExecutionException;
 import com.sun.net.httpserver.HttpExchange;
 
 import lto.manager.common.database.Database;
+import lto.manager.common.database.tables.records.RecordRole.Permission;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.pages.admin.AdminHandler;
 import lto.manager.web.handlers.http.templates.TemplatePage.BreadCrumbs;
@@ -21,12 +22,18 @@ public class UsersNewHandler extends BaseHTTPHandler {
 	public static final String NAME = "New User";
 
 	@Override
-	public void requestHandle(HttpExchange he) throws IOException, InterruptedException, ExecutionException {
+	public void requestHandle(HttpExchange he, BodyModel bm) throws IOException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of(NAME);
 		thm.addCSS(Asset.CSS_FORMS);
 		BreadCrumbs crumbs = new BreadCrumbs().add(AdminHandler.NAME, AdminHandler.PATH).add(UsersHandler.NAME, UsersHandler.PATH).add("New", PATH_NEW);
-		TemplatePageModel tpm = TemplatePageModel.of(UsersEditHandler::content, null, thm, SelectedPage.Admin, BodyModel.of(he, null), crumbs);
+		TemplatePageModel tpm = TemplatePageModel.of(UsersEditHandler::content, null, thm, SelectedPage.Admin, bm, crumbs);
 		requestHandleCompletePage(he, tpm);
+	}
+
+	@Override
+	public Permission getHandlePermission() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

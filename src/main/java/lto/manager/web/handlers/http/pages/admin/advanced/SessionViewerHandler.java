@@ -9,6 +9,7 @@ import org.xmlet.htmlapifaster.EnumBorderType;
 
 import com.sun.net.httpserver.HttpExchange;
 
+import lto.manager.common.database.tables.records.RecordRole.Permission;
 import lto.manager.common.state.State;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.pages.admin.AdminHandler;
@@ -21,6 +22,7 @@ import lto.manager.web.resource.CSS;
 
 public class SessionViewerHandler extends BaseHTTPHandler {
 	public static final String PATH = "/admin/session/";
+	public static final Permission PERMISSION = Permission.ADVANCED_SESSION_READ;
 	public static final String NAME = "Login Sessions";
 
 	private static final String DEL = "del";
@@ -71,11 +73,16 @@ public class SessionViewerHandler extends BaseHTTPHandler {
 	}
 
 	@Override
-	public void requestHandle(HttpExchange he) throws IOException, InterruptedException, ExecutionException {
+	public void requestHandle(HttpExchange he, BodyModel bm) throws IOException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of(NAME);
 		BreadCrumbs crumbs = new BreadCrumbs().add(AdminHandler.NAME, AdminHandler.PATH).add(NAME, PATH);
-		TemplatePageModel tpm = TemplatePageModel.of(SessionViewerHandler::content, null, thm, SelectedPage.Admin, BodyModel.of(he, null), crumbs);
+		TemplatePageModel tpm = TemplatePageModel.of(SessionViewerHandler::content, null, thm, SelectedPage.Admin, bm, crumbs);
 		requestHandleCompletePage(he, tpm);
+	}
+
+	@Override
+	public Permission getHandlePermission() {
+		return PERMISSION;
 	}
 
 }

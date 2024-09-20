@@ -8,6 +8,7 @@ import org.xmlet.htmlapifaster.Div;
 
 import com.sun.net.httpserver.HttpExchange;
 
+import lto.manager.common.database.tables.records.RecordRole.Permission;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.partial.filelist.FileList;
 import lto.manager.web.handlers.http.partial.filelist.FileListModel;
@@ -36,8 +37,12 @@ public class AJAXFilesListFetcher extends BaseHTTPHandler {
 	}
 
 	@Override
-	public void requestHandle(HttpExchange he) throws IOException, InterruptedException, ExecutionException {
-		BodyModel bm = BodyModel.of(he, null);
+	public void requestHandle(HttpExchange he, BodyModel bm) throws IOException, InterruptedException, ExecutionException {
 		requestHandleCompleteFetcher(he, new TemplateFetcherModel(AJAXFilesListFetcher::content, bm));
+	}
+
+	@Override
+	public Permission getHandlePermission() {
+		return null;
 	}
 }

@@ -11,6 +11,7 @@ import org.xmlet.htmlapifaster.EnumTypeButtonType;
 import com.sun.net.httpserver.HttpExchange;
 
 import lto.manager.common.database.Database;
+import lto.manager.common.database.tables.records.RecordRole.Permission;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.pages.admin.AdminHandler;
 import lto.manager.web.handlers.http.templates.TemplatePage.BreadCrumbs;
@@ -22,6 +23,7 @@ import lto.manager.web.resource.CSS;
 
 public class DatabaseHandler extends BaseHTTPHandler {
 	public static final String PATH = AdminHandler.PATH + "database/";
+	public static final Permission PERMISSION = Permission.ADVANCED_EXECUTE_SQL;
 	public static final String NAME = "Database";
 
 	public static final String QSQL = "sql";
@@ -103,10 +105,15 @@ public class DatabaseHandler extends BaseHTTPHandler {
 	}
 
 	@Override
-	public void requestHandle(HttpExchange he) throws Exception {
+	public void requestHandle(HttpExchange he, BodyModel bm) throws Exception {
 		HeadModel thm = HeadModel.of(NAME);
 		BreadCrumbs crumbs = new BreadCrumbs().add(AdminHandler.NAME, AdminHandler.PATH).add(NAME, PATH);
-		TemplatePageModel tpm = TemplatePageModel.of(DatabaseHandler::content, null, thm, SelectedPage.Admin, BodyModel.of(he, null), crumbs);
+		TemplatePageModel tpm = TemplatePageModel.of(DatabaseHandler::content, null, thm, SelectedPage.Admin, bm, crumbs);
 		requestHandleCompletePage(he, tpm);
+	}
+
+	@Override
+	public Permission getHandlePermission() {
+		return PERMISSION;
 	}
 }

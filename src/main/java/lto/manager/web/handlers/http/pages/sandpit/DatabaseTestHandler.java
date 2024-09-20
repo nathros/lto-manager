@@ -11,6 +11,7 @@ import org.xmlet.htmlapifaster.EnumTypeButtonType;
 import com.sun.net.httpserver.HttpExchange;
 
 import lto.manager.common.database.Database;
+import lto.manager.common.database.tables.records.RecordRole.Permission;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.templates.TemplatePage.BreadCrumbs;
 import lto.manager.web.handlers.http.templates.TemplatePage.SelectedPage;
@@ -102,10 +103,16 @@ public class DatabaseTestHandler extends BaseHTTPHandler {
 	}
 
 	@Override
-	public void requestHandle(HttpExchange he) throws Exception {
+	public void requestHandle(HttpExchange he, BodyModel bm) throws Exception {
 		HeadModel thm = HeadModel.of(NAME);
 		BreadCrumbs crumbs = new BreadCrumbs().add(SandpitHandler.NAME, SandpitHandler.PATH).add(NAME, PATH);
-		TemplatePageModel tpm = TemplatePageModel.of(DatabaseTestHandler::content, null, thm, SelectedPage.Sandpit, BodyModel.of(he, null), crumbs);
+		TemplatePageModel tpm = TemplatePageModel.of(DatabaseTestHandler::content, null, thm, SelectedPage.Sandpit, bm, crumbs);
 		requestHandleCompletePage(he, tpm);
+	}
+
+	@Override
+	public Permission getHandlePermission() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

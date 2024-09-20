@@ -6,7 +6,9 @@ import java.util.concurrent.ExecutionException;
 import com.sun.net.httpserver.HttpExchange;
 
 import lto.manager.common.Util;
+import lto.manager.common.database.tables.records.RecordRole.Permission;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
+import lto.manager.web.handlers.http.templates.models.BodyModel;
 import lto.manager.web.resource.Asset;
 import lto.manager.web.resource.JSON;
 import lto.manager.web.resource.JSON.APIStatus;
@@ -18,7 +20,7 @@ public class APISystemInfo extends BaseHTTPHandler {
 	public static final Long startTime = System.currentTimeMillis(); // Program start time
 
 	@Override
-	public void requestHandle(HttpExchange he) throws IOException, InterruptedException, ExecutionException {
+	public void requestHandle(HttpExchange he, BodyModel bm) throws IOException, InterruptedException, ExecutionException {
 		try {
 			JSONMap json = new JSONMap();
 			json.set(startTime, "startTime");
@@ -33,5 +35,11 @@ public class APISystemInfo extends BaseHTTPHandler {
 			requestHandleCompleteAPIText(he,
 					JSON.populateAPIResponse(APIStatus.error, e.getMessage().replaceAll("\"", "'")), CONTENT_TYPE_JSON);
 		}
+	}
+
+	@Override
+	public Permission getHandlePermission() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

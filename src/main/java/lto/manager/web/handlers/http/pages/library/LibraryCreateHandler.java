@@ -14,6 +14,7 @@ import com.sun.net.httpserver.HttpExchange;
 import lto.manager.common.database.Database;
 import lto.manager.common.database.tables.TableTape;
 import lto.manager.common.database.tables.records.RecordManufacturer;
+import lto.manager.common.database.tables.records.RecordRole.Permission;
 import lto.manager.common.database.tables.records.RecordTape;
 import lto.manager.common.database.tables.records.RecordTape.RecordTapeFormatType;
 import lto.manager.common.database.tables.records.RecordTapeType;
@@ -202,11 +203,17 @@ public class LibraryCreateHandler extends BaseHTTPHandler {
 	}
 
 	@Override
-	public void requestHandle(HttpExchange he) throws IOException, SQLException, InterruptedException, ExecutionException {
+	public void requestHandle(HttpExchange he, BodyModel bm) throws IOException, SQLException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of(NAME);
 		thm.addScript(Asset.JS_ADD_TAPE);
 		BreadCrumbs crumbs = new BreadCrumbs().add(LibraryHandler.NAME, LibraryHandler.PATH).add(NAME, PATH);
-		TemplatePageModel tpm = TemplatePageModel.of(LibraryCreateHandler::body, null, thm, SelectedPage.Library, BodyModel.of(he, null), crumbs);
+		TemplatePageModel tpm = TemplatePageModel.of(LibraryCreateHandler::body, null, thm, SelectedPage.Library, bm, crumbs);
 		requestHandleCompletePage(he, tpm);
+	}
+
+	@Override
+	public Permission getHandlePermission() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

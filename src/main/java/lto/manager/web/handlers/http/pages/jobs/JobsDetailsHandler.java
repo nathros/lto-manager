@@ -12,6 +12,7 @@ import lto.manager.common.database.Database;
 import lto.manager.common.database.jobs.BackupJob;
 import lto.manager.common.database.jobs.JobBase;
 import lto.manager.common.database.tables.records.RecordJobMetadata;
+import lto.manager.common.database.tables.records.RecordRole.Permission;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.http.templates.TemplatePage.TemplatePageModel;
@@ -71,10 +72,16 @@ public class JobsDetailsHandler extends BaseHTTPHandler {
 	}
 
 	@Override
-	public void requestHandle(HttpExchange he) throws IOException, InterruptedException, ExecutionException {
+	public void requestHandle(HttpExchange he, BodyModel bm) throws IOException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of("Jobs");
-		TemplatePageModel tpm = TemplatePageModel.of(JobsDetailsHandler::content, null, thm, SelectedPage.Jobs, BodyModel.of(he, null), null);
+		TemplatePageModel tpm = TemplatePageModel.of(JobsDetailsHandler::content, null, thm, SelectedPage.Jobs, bm, null);
 		requestHandleCompletePage(he, tpm);
+	}
+
+	@Override
+	public Permission getHandlePermission() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

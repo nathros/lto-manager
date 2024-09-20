@@ -2,6 +2,7 @@ package lto.manager.web.handlers.http.partial.components;
 
 import org.xmlet.htmlapifaster.Div;
 
+import lto.manager.common.database.tables.records.RecordRole.Permission;
 import lto.manager.web.resource.CSS;
 
 public class ButtonExtended {
@@ -25,11 +26,12 @@ public class ButtonExtended {
 	public static class ButtonExtendedOptions {
 		private String title;
 		private String subText;
+		private Permission permission;
 		private String href;
 		private String iconClass;
 
-		public static ButtonExtendedOptions of(final String text, final String subText, final String href, final String iconClass) {
-			return new ButtonExtendedOptions().setTitle(text).setSubText(subText).setHref(href).setIconClass(iconClass);
+		public static ButtonExtendedOptions of(final String text, final String subText, final Permission permission, final String href, final String iconClass) {
+			return new ButtonExtendedOptions().setTitle(text).setSubText(subText).setPermission(permission).setHref(href).setIconClass(iconClass);
 		}
 
 		public ButtonExtendedOptions setTitle(final String title) {
@@ -39,6 +41,15 @@ public class ButtonExtended {
 
 		public String getTitle() {
 			return title;
+		}
+
+		public ButtonExtendedOptions setPermission(final Permission permission) {
+			this.permission = permission;
+			return this;
+		}
+
+		public Permission getPermission() {
+			return permission;
 		}
 
 		public ButtonExtendedOptions setSubText(final String subText) {

@@ -23,6 +23,7 @@ import com.lowagie.text.pdf.PdfTemplate;
 import com.lowagie.text.pdf.PdfWriter;
 import com.sun.net.httpserver.HttpExchange;
 
+import lto.manager.common.database.tables.records.RecordRole.Permission;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.templates.models.BodyModel;
 import lto.manager.web.resource.Asset;
@@ -31,8 +32,8 @@ public class AJAXGenerateLTOLabelPDF extends BaseHTTPHandler {
 	public static final String PATH = Asset.PATH_AJAX_BASE + "generate/lto/label/pdf/";
 
 	@Override
-	public void requestHandle(HttpExchange he) throws Exception { // FIXME finish PDF scale is wrong
-		List<String> labelsSVGs = GenerateLTOLabelSVG.generate(LTOLabelOptions.of(BodyModel.of(he, null)));
+	public void requestHandle(HttpExchange he, BodyModel bm) throws Exception { // FIXME finish PDF scale is wrong
+		List<String> labelsSVGs = GenerateLTOLabelSVG.generate(LTOLabelOptions.of(bm));
 
 		Document document = new Document();
 		var stream = new ByteArrayOutputStream();
@@ -79,5 +80,10 @@ public class AJAXGenerateLTOLabelPDF extends BaseHTTPHandler {
 		document.close();
 
 		requestHandleCompleteAPIBinary(he, stream, BaseHTTPHandler.CONTENT_TYPE_PDF);
+	}
+
+	@Override
+	public Permission getHandlePermission() {
+		return null;
 	}
 }

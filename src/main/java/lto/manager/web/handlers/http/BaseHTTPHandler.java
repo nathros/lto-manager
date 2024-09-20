@@ -15,10 +15,12 @@ import com.sun.net.httpserver.HttpHandler;
 import htmlflow.HtmlView;
 import lto.manager.common.database.Options;
 import lto.manager.common.database.tables.records.RecordOptions.OptionsSetting;
+import lto.manager.common.database.tables.records.RecordRole.Permission;
 import lto.manager.common.log.Log;
 import lto.manager.common.state.State;
 import lto.manager.web.handlers.http.pages.AssetHandler;
 import lto.manager.web.handlers.http.pages.LogInHandler;
+import lto.manager.web.handlers.http.pages.Page403Handler;
 import lto.manager.web.handlers.http.templates.TemplateAJAX;
 import lto.manager.web.handlers.http.templates.TemplateAJAX.TemplateFetcherModel;
 import lto.manager.web.handlers.http.templates.TemplateInternalErrorAJAX;
@@ -27,6 +29,7 @@ import lto.manager.web.handlers.http.templates.TemplateInternalErrorPage;
 import lto.manager.web.handlers.http.templates.TemplateInternalErrorPage.TemplateInternalErrorModelPage;
 import lto.manager.web.handlers.http.templates.TemplatePage;
 import lto.manager.web.handlers.http.templates.TemplatePage.TemplatePageModel;
+import lto.manager.web.handlers.http.templates.models.BodyModel;
 import lto.manager.web.resource.Asset;
 
 public abstract class BaseHTTPHandler implements HttpHandler {
@@ -80,8 +83,19 @@ public abstract class BaseHTTPHandler implements HttpHandler {
 
 		count++;
 		try {
-			handler.requestHandle(he);
-		} catch (Exception e) {
+			handler.requestHandle(he, BodyModel.of(he, null, handler.getHandlePermission()));
+		} catch (UserNotAuthorisedException e) {
+			if (he.getRequestURI().getPath().indexOf(Asset.PATH_AJAX_BASE) == 0) {
+				errorHandleAJAX(he, e);
+			} else {
+				try {
+					handler = new Page403Handler();
+					handler.requestHandle(he, BodyModel.of(he, null, null));
+				} catch (Exception e1) {
+					errorHandlePage(he, e1);
+				}
+			}
+		}  catch (Exception e) {
 			if (Options.getData(OptionsSetting.LOG_EXCEPTION_STACKTRACE) == Boolean.TRUE) {
 				e.printStackTrace();
 			}
@@ -102,7 +116,8 @@ public abstract class BaseHTTPHandler implements HttpHandler {
 		}
 	}
 
-	public abstract void requestHandle(HttpExchange he) throws Exception;
+	public abstract void requestHandle(HttpExchange he, BodyModel bm) throws Exception;
+	public abstract Permission getHandlePermission();
 
 	protected void addResponseCookies(HttpExchange he, List<String> cookies) {
 		he.getResponseHeaders().putIfAbsent("Set-Cookie", cookies);
@@ -131,6 +146,16 @@ public abstract class BaseHTTPHandler implements HttpHandler {
 		addResponseCookies(he, tpm);
 		he.getResponseHeaders().set("Content-Type", CONTENT_TYPE_HTML);
 		he.sendResponseHeaders(HttpURLConnection.HTTP_NOT_FOUND, response.length());
+		OutputStream os = he.getResponseBody();
+		os.write(response.getBytes());
+		os.close();
+	}
+
+	protected void requestHandleCompletePage403(HttpExchange he, TemplatePageModel tpm)
+			throws IOException, InterruptedException, ExecutionException {
+		final String response = TemplatePage.view.render(tpm);
+		he.getResponseHeaders().set("Content-Type", CONTENT_TYPE_HTML);
+		he.sendResponseHeaders(HttpURLConnection.HTTP_FORBIDDEN, response.length());
 		OutputStream os = he.getResponseBody();
 		os.write(response.getBytes());
 		os.close();
@@ -276,5 +301,13 @@ public abstract class BaseHTTPHandler implements HttpHandler {
 			}
 		}
 		return map;
+	}
+
+	public static class UserNotAuthorisedException extends Exception {
+		private static final long serialVersionUID = -8885055163438995768L;
+
+		public UserNotAuthorisedException(final String errorMessage) {
+			super(errorMessage);
+		}
 	}
 }

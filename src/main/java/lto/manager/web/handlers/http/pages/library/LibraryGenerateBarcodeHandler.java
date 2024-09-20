@@ -15,6 +15,7 @@ import com.sun.net.httpserver.HttpExchange;
 import lto.manager.common.database.Database;
 import lto.manager.common.database.tables.TableTape;
 import lto.manager.common.database.tables.records.RecordLabelPreset;
+import lto.manager.common.database.tables.records.RecordRole.Permission;
 import lto.manager.common.database.tables.records.RecordTapeType;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.ajax.labelgenerator.AJAXGenerateLTOLabelPDF;
@@ -329,13 +330,19 @@ public class LibraryGenerateBarcodeHandler extends BaseHTTPHandler {
 	}
 
 	@Override
-	public void requestHandle(HttpExchange he) throws IOException, SQLException, InterruptedException, ExecutionException {
+	public void requestHandle(HttpExchange he, BodyModel bm) throws IOException, SQLException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of(NAME);
 		thm.addCSS(Asset.CSS_FORMS).addCSS(Asset.CSS_LIBRARY);
 		thm.addScript(Asset.JS_AJAX);
 		thm.addScriptDefer(Asset.JS_LTO_LABEL_GENERATOR);
 		BreadCrumbs crumbs = new BreadCrumbs().add(LibraryHandler.NAME, LibraryHandler.PATH).add(NAME, PATH);
-		TemplatePageModel tpm = TemplatePageModel.of(LibraryGenerateBarcodeHandler::body, LibraryGenerateBarcodeHandler::header, thm, SelectedPage.Library, BodyModel.of(he, null), crumbs);
+		TemplatePageModel tpm = TemplatePageModel.of(LibraryGenerateBarcodeHandler::body, LibraryGenerateBarcodeHandler::header, thm, SelectedPage.Library, bm, crumbs);
 		requestHandleCompletePage(he, tpm);
+	}
+
+	@Override
+	public Permission getHandlePermission() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

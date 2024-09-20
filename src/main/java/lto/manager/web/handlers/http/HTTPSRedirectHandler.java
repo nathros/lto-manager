@@ -6,12 +6,14 @@ import java.net.HttpURLConnection;
 
 import com.sun.net.httpserver.HttpExchange;
 
+import lto.manager.common.database.tables.records.RecordRole.Permission;
 import lto.manager.web.MainWeb;
+import lto.manager.web.handlers.http.templates.models.BodyModel;
 
 public class HTTPSRedirectHandler extends BaseHTTPHandler {
 
 	@Override
-	public void requestHandle(HttpExchange he) throws IOException {
+	public void requestHandle(HttpExchange he, BodyModel bm) throws IOException {
 		String originalHost = he.getRequestHeaders().getFirst("Host");
 		String newHost = null;
 		String response = "";
@@ -42,6 +44,11 @@ public class HTTPSRedirectHandler extends BaseHTTPHandler {
 		OutputStream os = he.getResponseBody();
 		os.write(response.getBytes());
 		os.close();
+	}
+
+	@Override
+	public Permission getHandlePermission() {
+		return null;
 	}
 
 }

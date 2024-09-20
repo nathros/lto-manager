@@ -14,6 +14,7 @@ import com.sun.net.httpserver.HttpExchange;
 import htmlflow.HtmlFlow;
 import htmlflow.HtmlPage;
 import htmlflow.HtmlView;
+import lto.manager.common.database.tables.records.RecordRole.Permission;
 import lto.manager.common.log.Log;
 import lto.manager.web.MainWeb;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
@@ -27,6 +28,7 @@ public class ShutdownHandler extends BaseHTTPHandler {
 	private static HtmlView<TemplatePageModel> v = HtmlFlow.view(ShutdownHandler::content);
 	public static HtmlView<TemplatePageModel> view = v.threadSafe().setIndented(false);
 	public static final String PATH = "/shutdown/";
+	public static final Permission PERMISSION = Permission.CAN_SHUTDOWN_APP;
 
 	public static void content(HtmlPage view) {
 		view
@@ -97,15 +99,20 @@ public class ShutdownHandler extends BaseHTTPHandler {
 	}
 
 	@Override
-	public void requestHandle(HttpExchange he) throws IOException, InterruptedException, ExecutionException {
+	public void requestHandle(HttpExchange he, BodyModel bm) throws IOException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of("Shutdown");
-		TemplatePageModel tpm = TemplatePageModel.of(null, null, thm, SelectedPage.Missing, BodyModel.of(he, null), null);
+		TemplatePageModel tpm = TemplatePageModel.of(null, null, thm, SelectedPage.Missing, bm, null);
 		requestHandleCompleteView(he, view, tpm);
 		try {
 			MainWeb.exitWait.put(MainWeb.ExitReason.NORMAL);
 		} catch (InterruptedException e) {
 			Log.log(Level.SEVERE, "Failed to initiate shutdown", e);
 		}
+	}
+
+	@Override
+	public Permission getHandlePermission() {
+		return PERMISSION;
 	}
 
 }

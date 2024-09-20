@@ -10,6 +10,7 @@ import org.xmlet.htmlapifaster.Div;
 
 import com.sun.net.httpserver.HttpExchange;
 
+import lto.manager.common.database.tables.records.RecordRole.Permission;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.templates.TemplatePage.BreadCrumbs;
 import lto.manager.web.handlers.http.templates.TemplatePage.SelectedPage;
@@ -19,6 +20,7 @@ import lto.manager.web.handlers.http.templates.models.HeadModel;
 
 public class AppUpdateHandler extends BaseHTTPHandler {
 	public static final String PATH = "/admin/update/";
+	public static final Permission PERMISSION = Permission.SYSTEM_SETTINGS_UPDATE;
 	public static final String NAME = "Update";
 
 	static Void content(Div<?> view, BodyModel model) {
@@ -39,12 +41,16 @@ public class AppUpdateHandler extends BaseHTTPHandler {
 	}
 
 	@Override
-	public void requestHandle(HttpExchange he) throws IOException, InterruptedException, ExecutionException {
+	public void requestHandle(HttpExchange he, BodyModel bm) throws IOException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of(NAME);
 		BreadCrumbs crumbs = new BreadCrumbs().add(AdminHandler.NAME, AdminHandler.PATH).add(NAME, PATH);
-		TemplatePageModel tpm = TemplatePageModel.of(AppUpdateHandler::content, null, thm, SelectedPage.Admin,
-				BodyModel.of(he, null), crumbs);
+		TemplatePageModel tpm = TemplatePageModel.of(AppUpdateHandler::content, null, thm, SelectedPage.Admin, bm, crumbs);
 		requestHandleCompletePage(he, tpm);
+	}
+
+	@Override
+	public Permission getHandlePermission() {
+		return PERMISSION;
 	}
 
 }

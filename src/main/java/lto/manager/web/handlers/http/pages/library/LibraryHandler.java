@@ -10,6 +10,7 @@ import org.xmlet.htmlapifaster.Div;
 import com.sun.net.httpserver.HttpExchange;
 
 import lto.manager.common.database.Database;
+import lto.manager.common.database.tables.records.RecordRole.Permission;
 import lto.manager.common.database.tables.records.RecordTape;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.pages.files.FilesHandler;
@@ -91,10 +92,10 @@ public class LibraryHandler extends BaseHTTPHandler {
 	}
 
 	@Override
-	public void requestHandle(HttpExchange he) throws IOException, InterruptedException, ExecutionException {
+	public void requestHandle(HttpExchange he, BodyModel bm) throws IOException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of(NAME);
 		BreadCrumbs crumbs = new BreadCrumbs().add(NAME, PATH);
-		TemplatePageModel tpm = TemplatePageModel.of(LibraryHandler::body, LibraryHandler::header, thm, SelectedPage.Library, BodyModel.of(he, null), crumbs);
+		TemplatePageModel tpm = TemplatePageModel.of(LibraryHandler::body, LibraryHandler::header, thm, SelectedPage.Library, bm, crumbs);
 		requestHandleCompletePage(he, tpm);
 	}
 
@@ -131,6 +132,12 @@ public class LibraryHandler extends BaseHTTPHandler {
 					.__()
 				.__() // ul
 			.__(); // div
+		return null;
+	}
+
+	@Override
+	public Permission getHandlePermission() {
+		// TODO Auto-generated method stub
 		return null;
 	}
 }

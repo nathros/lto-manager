@@ -12,6 +12,7 @@ import com.sun.net.httpserver.HttpExchange;
 import lto.manager.common.database.Database;
 import lto.manager.common.database.tables.TableRoles;
 import lto.manager.common.database.tables.records.RecordRole;
+import lto.manager.common.database.tables.records.RecordRole.Permission;
 import lto.manager.web.check.FormValidator;
 import lto.manager.web.check.FormValidator.ValidatorOptions;
 import lto.manager.web.check.FormValidator.ValidatorStatus;
@@ -113,12 +114,18 @@ public class RolesEditHandler extends BaseHTTPHandler {
 	}
 
 	@Override
-	public void requestHandle(HttpExchange he) throws IOException, InterruptedException, ExecutionException {
+	public void requestHandle(HttpExchange he, BodyModel bm) throws IOException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of(NAME);
 		thm.addCSS(Asset.CSS_FORMS);
 		BreadCrumbs crumbs = new BreadCrumbs().add(AdminHandler.NAME, AdminHandler.PATH).add(RolesHandler.NAME, RolesHandler.PATH).add("Edit", PATH);
-		TemplatePageModel tpm = TemplatePageModel.of(RolesEditHandler::content, null, thm, SelectedPage.Admin, BodyModel.of(he, null), crumbs);
+		TemplatePageModel tpm = TemplatePageModel.of(RolesEditHandler::content, null, thm, SelectedPage.Admin, bm, crumbs);
 		requestHandleCompletePage(he, tpm);
+	}
+
+	@Override
+	public Permission getHandlePermission() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

@@ -7,6 +7,7 @@ import com.sun.net.httpserver.HttpExchange;
 
 import lto.manager.common.database.Database;
 import lto.manager.common.database.tables.records.RecordLabelPreset;
+import lto.manager.common.database.tables.records.RecordRole.Permission;
 import lto.manager.web.check.FormValidator;
 import lto.manager.web.check.FormValidator.ValidatorOptions;
 import lto.manager.web.check.FormValidator.ValidatorStatus;
@@ -26,9 +27,8 @@ public class APILTOLabelPreset extends BaseHTTPHandler {
 			ValidatorOptions.of().valueNotEmpty().valueNotNull(), "config");
 
 	@Override
-	public void requestHandle(HttpExchange he) throws IOException, InterruptedException, ExecutionException {
+	public void requestHandle(HttpExchange he, BodyModel bm) throws IOException, InterruptedException, ExecutionException {
 		try {
-			final BodyModel bm = BodyModel.of(he, null);
 			final String operation = bm.getQueryNoNull("op");
 			final int userId = bm.getUserIDViaSession();
 
@@ -71,5 +71,11 @@ public class APILTOLabelPreset extends BaseHTTPHandler {
 					JSON.populateAPIResponse(APIStatus.error, e.getMessage().replaceAll("\"", "'")), CONTENT_TYPE_JSON);
 		}
 
+	}
+
+	@Override
+	public Permission getHandlePermission() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

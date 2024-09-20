@@ -40,10 +40,11 @@ public class RecordRole {
 	public static List<RecordRole> getDefaultRoles() {
 		List<RecordRole> roles = new ArrayList<RecordRole>();
 		BitSet all = new BitSet(TableRoles.PERMISSION_LEN_INDEX);
-		all.set(0, TableRoles.PERMISSION_LEN_INDEX); // Enable all
+		all.set(0, Permission.MAX.getValue()); // Enable all
 		roles.add(RecordRole.of(ROLE_ID_ADMIN, "Admin", "Administrator of the whole application", all));
 
 		BitSet subset = new BitSet(TableRoles.PERMISSION_LEN_INDEX);
+		subset.set(Permission.MAX.getValue());
 		roles.add(RecordRole.of(ROLE_ID_VIEWER, "Viewer", "Can only view library and files", subset));
 		return roles;
 	}
@@ -68,16 +69,54 @@ public class RecordRole {
 	}
 	public void setPermission(BitSet permission) { this.permission = permission; }
 	public boolean hasPermission(Permission index) {
+		if (index == null) {
+			return false; // Do not allow
+		}
 		return permission.get(index.getValue());
 	}
 
 	public enum Permission {
-		ADMIN(0),
+		ANY(-1),
 
-		SYSTEM_USERS_READ(100),
-		SYSTEM_USERS_CREATE(101),
-		SYSTEM_USERS_EDIT(102),
-		SYSTEM_USERS_DELETE(103),
+		CAN_SHUTDOWN_APP(5),
+
+		MAIN_ADMIN(10),
+		MAIN_DASHBOARD(11),
+		MAIN_LIBRARY(12),
+		MAIN_DRIVES(13),
+		MAIN_FILES(14),
+		MAIN_JOBS(15),
+
+		SYSTEM_SETTINGS_UPDATE(100),
+
+		SYSTEM_SETTINGS_GLOBAL_READ(120),
+		SYSTEM_SETTINGS_GLOBAL_CREATE(121),
+		SYSTEM_SETTINGS_GLOBAL_EDIT(122),
+		SYSTEM_SETTINGS_GLOBAL_DELETE(123),
+
+		SYSTEM_SETTINGS_SERVICE_READ(100),
+		SYSTEM_SETTINGS_SERVICE_START_STOP(100),
+
+		SYSTEM_USERS_READ(130),
+		SYSTEM_USERS_CREATE(131),
+		SYSTEM_USERS_EDIT(132),
+		SYSTEM_USERS_DELETE(133),
+
+		SYSTEM_ROLES_READ(140),
+		SYSTEM_ROLES_CREATE(141),
+		SYSTEM_ROLES_EDIT(142),
+		SYSTEM_ROLES_DELETE(143),
+
+		ADVANCED_VIEW_LOGGING(200),
+		ADVANCED_EXECUTE_SQL(201),
+		ADVANCED_EXETERNAL_PROCESS(202),
+		ADVANCED_WEBSOCKET_CONNECTION_VIEWER(203),
+		ADVANCED_WEBSOCKET_TESTER(204),
+
+		ADVANCED_SESSION_READ(220),
+		ADVANCED_SESSION_CREATE(221),
+		ADVANCED_SESSION_EDIT(222),
+		ADVANCED_SESSION_DELETE(223),
 
 		MAX(TableRoles.PERMISSION_LEN_INDEX);
 

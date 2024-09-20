@@ -5,6 +5,7 @@ import org.xmlet.htmlapifaster.EnumTypeInputType;
 
 import com.sun.net.httpserver.HttpExchange;
 
+import lto.manager.common.database.tables.records.RecordRole.Permission;
 import lto.manager.web.handlers.Handlers;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.pages.admin.AdminHandler;
@@ -19,6 +20,7 @@ import lto.manager.web.resource.HTML;
 
 public class WebsocketTestAdminHandler extends BaseHTTPHandler {
 	public static final String PATH = AdminHandler.PATH + "/websocket/";
+	public static final Permission PERMISSION = Permission.ADVANCED_WEBSOCKET_TESTER;
 	public static final String NAME = "Websocket Tester";
 
 	static Void content(Div<?> view, BodyModel model) {
@@ -97,12 +99,17 @@ public class WebsocketTestAdminHandler extends BaseHTTPHandler {
 	}
 
 	@Override
-	public void requestHandle(HttpExchange he) throws Exception {
+	public void requestHandle(HttpExchange he, BodyModel bm) throws Exception {
 		HeadModel thm = HeadModel.of(NAME);
 		thm.addScript(Asset.JS_WEBSOCKET).addScript(Asset.JS_TEST_WEBSOCKET);
 		BreadCrumbs crumbs = new BreadCrumbs().add(AdminHandler.NAME, AdminHandler.PATH).add(NAME, PATH);
-		TemplatePageModel tpm = TemplatePageModel.of(WebsocketTestAdminHandler::content, null, thm, SelectedPage.Admin, BodyModel.of(he, null), crumbs);
+		TemplatePageModel tpm = TemplatePageModel.of(WebsocketTestAdminHandler::content, null, thm, SelectedPage.Admin, bm, crumbs);
 		requestHandleCompletePage(he, tpm);
+	}
+
+	@Override
+	public Permission getHandlePermission() {
+		return PERMISSION;
 	}
 
 }

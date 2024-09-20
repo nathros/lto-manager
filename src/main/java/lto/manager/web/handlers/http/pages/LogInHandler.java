@@ -18,6 +18,7 @@ import com.sun.net.httpserver.HttpExchange;
 import htmlflow.HtmlFlow;
 import htmlflow.HtmlPage;
 import htmlflow.HtmlView;
+import lto.manager.common.database.tables.records.RecordRole.Permission;
 import lto.manager.common.security.Security;
 import lto.manager.web.check.CheckStatusType;
 import lto.manager.web.check.OperationStatus;
@@ -163,10 +164,15 @@ public class LogInHandler extends BaseHTTPHandler {
 	}
 
 	@Override
-	public void requestHandle(HttpExchange he) throws IOException, InterruptedException, ExecutionException {
+	public void requestHandle(HttpExchange he, BodyModel bm) throws IOException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of("Login");
-		TemplatePageModel tpm = TemplatePageModel.of(null, null, thm, SelectedPage.Missing, BodyModel.of(he, null), null);
+		TemplatePageModel tpm = TemplatePageModel.of(null, null, thm, SelectedPage.Missing, bm, null);
 		requestHandleCompleteView(he, view, tpm);
+	}
+
+	@Override
+	public Permission getHandlePermission() {
+		return null;
 	}
 
 }

@@ -7,6 +7,7 @@ import org.xmlet.htmlapifaster.Div;
 
 import com.sun.net.httpserver.HttpExchange;
 
+import lto.manager.common.database.tables.records.RecordRole.Permission;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.ajax.AJAXGetAttachedDrivesFetcher;
 import lto.manager.web.handlers.http.partial.loading.OnLoad;
@@ -32,12 +33,18 @@ public class DrivesHandler extends BaseHTTPHandler {
 	}
 
 	@Override
-	public void requestHandle(HttpExchange he) throws IOException, InterruptedException, ExecutionException {
+	public void requestHandle(HttpExchange he, BodyModel bm) throws IOException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of(NAME);
 		thm.addCSS(Asset.CSS_DRIVES);
 		thm.addScript(Asset.JS_AJAX);
 		BreadCrumbs crumbs = new BreadCrumbs().add(NAME, PATH);
-		TemplatePageModel tpm = TemplatePageModel.of(DrivesHandler::body, null, thm, SelectedPage.Drives, BodyModel.of(he, null), crumbs);
+		TemplatePageModel tpm = TemplatePageModel.of(DrivesHandler::body, null, thm, SelectedPage.Drives, bm, crumbs);
 		requestHandleCompletePage(he, tpm);
+	}
+
+	@Override
+	public Permission getHandlePermission() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

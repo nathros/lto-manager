@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.sun.net.httpserver.HttpExchange;
 
+import lto.manager.common.database.tables.records.RecordRole.Permission;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.templates.models.BodyModel;
 import lto.manager.web.resource.Asset;
@@ -12,8 +13,8 @@ public class AJAXGenerateLTOLabelSVG extends BaseHTTPHandler {
 	public static final String PATH = Asset.PATH_AJAX_BASE + "generate/lto/label/svg/";
 
 	@Override
-	public void requestHandle(HttpExchange he) throws Exception {
-		List<String> labelsSVGs = GenerateLTOLabelSVG.generate(LTOLabelOptions.of(BodyModel.of(he, null)));
+	public void requestHandle(HttpExchange he, BodyModel bm) throws Exception {
+		List<String> labelsSVGs = GenerateLTOLabelSVG.generate(LTOLabelOptions.of(bm));
 		StringBuilder sb = new StringBuilder();
 
 		final String firstSVG = labelsSVGs.get(0);
@@ -48,5 +49,10 @@ public class AJAXGenerateLTOLabelSVG extends BaseHTTPHandler {
 		sb.append("</svg>"); // wrapperSVG
 
 		requestHandleCompleteAPIText(he, sb.toString(), BaseHTTPHandler.CONTENT_TYPE_SVG);
+	}
+
+	@Override
+	public Permission getHandlePermission() {
+		return null;
 	}
 }

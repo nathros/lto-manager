@@ -16,6 +16,7 @@ import com.sun.net.httpserver.HttpExchange;
 import lto.manager.common.database.Database;
 import lto.manager.common.database.tables.TableUser;
 import lto.manager.common.database.tables.records.RecordRole;
+import lto.manager.common.database.tables.records.RecordRole.Permission;
 import lto.manager.common.database.tables.records.RecordUser;
 import lto.manager.web.check.CheckStatusType;
 import lto.manager.web.check.FormValidator;
@@ -264,10 +265,9 @@ public class UsersEditHandler extends BaseHTTPHandler {
 	}
 
 	@Override
-	public void requestHandle(HttpExchange he) throws IOException, InterruptedException, ExecutionException {
+	public void requestHandle(HttpExchange he, BodyModel bm) throws IOException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of(NAME);
 		thm.addCSS(Asset.CSS_FORMS);
-		final BodyModel bm = BodyModel.of(he, null);
 		final String id = bm.getQuery(QID);
 		BreadCrumbs crumbs = new BreadCrumbs()
 				.add(AdminHandler.NAME, AdminHandler.PATH)
@@ -276,6 +276,12 @@ public class UsersEditHandler extends BaseHTTPHandler {
 
 		TemplatePageModel tpm = TemplatePageModel.of(UsersEditHandler::content, null, thm, SelectedPage.Admin, bm, crumbs);
 		requestHandleCompletePage(he, tpm);
+	}
+
+	@Override
+	public Permission getHandlePermission() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

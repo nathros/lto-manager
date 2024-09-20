@@ -11,6 +11,7 @@ import org.xmlet.htmlapifaster.EnumTypeInputType;
 import com.sun.net.httpserver.HttpExchange;
 
 import lto.manager.common.database.Database;
+import lto.manager.common.database.tables.records.RecordRole.Permission;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.http.templates.TemplatePage.TemplatePageModel;
@@ -63,9 +64,15 @@ public class LibraryDeleteHandler extends BaseHTTPHandler {
 	}
 
 	@Override
-	public void requestHandle(HttpExchange he) throws IOException, SQLException, InterruptedException, ExecutionException {
+	public void requestHandle(HttpExchange he, BodyModel bm) throws IOException, SQLException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of("Tape Delete");
-		TemplatePageModel tpm = TemplatePageModel.of(LibraryDeleteHandler::body, null, thm, SelectedPage.Library, BodyModel.of(he, null), null);
+		TemplatePageModel tpm = TemplatePageModel.of(LibraryDeleteHandler::body, null, thm, SelectedPage.Library, bm, null);
 		requestHandleCompletePage(he, tpm);
+	}
+
+	@Override
+	public Permission getHandlePermission() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

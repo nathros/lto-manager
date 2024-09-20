@@ -8,14 +8,16 @@ import java.util.Map;
 
 import com.sun.net.httpserver.HttpExchange;
 
+import lto.manager.common.database.tables.records.RecordRole.Permission;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
+import lto.manager.web.handlers.http.templates.models.BodyModel;
 
 public class EchoPostHandler extends BaseHTTPHandler {
 
 	public static final String PATH = "/echopost";
 
 	@Override
-	public void requestHandle(HttpExchange he) throws IOException {
+	public void requestHandle(HttpExchange he, BodyModel bm) throws IOException {
 		// parse request
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		//InputStreamReader isr = new InputStreamReader(he.getRequestBody(), "utf-8");
@@ -31,6 +33,12 @@ public class EchoPostHandler extends BaseHTTPHandler {
 		os.write(response.toString().getBytes());
 		os.close();
 
+	}
+
+	@Override
+	public Permission getHandlePermission() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

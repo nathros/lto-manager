@@ -14,8 +14,10 @@ import com.sun.net.httpserver.HttpExchange;
 
 import lto.manager.common.database.Options;
 import lto.manager.common.database.tables.records.RecordOptions.OptionsSetting;
+import lto.manager.common.database.tables.records.RecordRole.Permission;
 import lto.manager.common.log.Log;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
+import lto.manager.web.handlers.http.templates.models.BodyModel;
 import lto.manager.web.resource.Asset;
 
 public class AssetHandler extends BaseHTTPHandler {
@@ -24,7 +26,7 @@ public class AssetHandler extends BaseHTTPHandler {
 	private static ClassLoader loader = new Asset().getClass().getClassLoader();
 
 	@Override
-	public void requestHandle(HttpExchange he) throws IOException {
+	public void requestHandle(HttpExchange he, BodyModel bm) throws IOException {
 		final String resource = he.getRequestURI().toString();
 		InputStream is = null;
 		if (!resource.contains("..")) { // Traversal attack check
@@ -112,5 +114,11 @@ public class AssetHandler extends BaseHTTPHandler {
 			e.printStackTrace();
 		}
 		return new HashSet<String>(); // No resources found
+	}
+
+	@Override
+	public Permission getHandlePermission() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

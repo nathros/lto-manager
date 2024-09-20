@@ -4,6 +4,7 @@ import org.xmlet.htmlapifaster.Div;
 
 import com.sun.net.httpserver.HttpExchange;
 
+import lto.manager.common.database.tables.records.RecordRole.Permission;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.templates.TemplateAJAX.TemplateFetcherModel;
 import lto.manager.web.handlers.http.templates.models.BodyModel;
@@ -22,8 +23,13 @@ public class InternalErrorInlineAJAXTesterHandler extends BaseHTTPHandler {
 	}
 
 	@Override
-	public void requestHandle(HttpExchange he) throws Exception {
-		BodyModel bm = BodyModel.of(he, null);
+	public void requestHandle(HttpExchange he, BodyModel bm) throws Exception {
 		requestHandleCompleteFetcher(he, new TemplateFetcherModel(InternalErrorInlineAJAXTesterHandler::content, bm));
+	}
+
+	@Override
+	public Permission getHandlePermission() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

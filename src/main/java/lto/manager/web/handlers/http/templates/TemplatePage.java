@@ -13,6 +13,8 @@ import htmlflow.HtmlFlow;
 import htmlflow.HtmlPage;
 import htmlflow.HtmlView;
 import lto.manager.common.Main;
+import lto.manager.common.database.tables.records.RecordRole.Permission;
+import lto.manager.common.database.tables.records.RecordUser;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.pages.LogOutHandler;
 import lto.manager.web.handlers.http.pages.RootHandler;
@@ -120,6 +122,7 @@ public class TemplatePage {
 						.div().attrClass(CSS.HEADER_ITEM + "header-user")
 							.ul().attrClass(CSS.MENU_LIST)
 								.<TemplatePageModel>dynamic((ul, model) -> {
+									final RecordUser recordUser = model.getBodyModel().getUserViaSession();
 									final String user = model.getBodyModel().getUserNameViaSession();
 									final String userShow = user == null ? "Unknown User" : user;
 									ul.li()
@@ -135,14 +138,16 @@ public class TemplatePage {
 											.__()
 										.__();
 									}
-									ul.li()
-										.a()
-											.attrClass(CSS.ICON_POWER + CSS.HEADER_MENU_ITEM_ICON + CSS.HEADER_MENU_ITEM_ICON_SMALL)
-											//.attrHref(ShutdownHandler.PATH)
-											.attrOnclick("shutdownConfirm();")
-											.text("Shutdown")
-										.__()
-									.__();
+									if (recordUser.hasAccess(Permission.CAN_SHUTDOWN_APP)) {
+										ul.li()
+											.a()
+												.attrClass(CSS.ICON_POWER + CSS.HEADER_MENU_ITEM_ICON + CSS.HEADER_MENU_ITEM_ICON_SMALL)
+												//.attrHref(ShutdownHandler.PATH)
+												.attrOnclick("shutdownConfirm();")
+												.text("Shutdown")
+											.__()
+										.__();
+									}
 								})
 							.__()
 						.__()

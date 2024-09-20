@@ -15,12 +15,15 @@ import java.util.UUID;
 import com.sun.net.httpserver.HttpExchange;
 
 import lto.manager.common.Util;
+import lto.manager.common.database.Database;
 import lto.manager.common.database.Options;
 import lto.manager.common.database.tables.records.RecordOptions.OptionsSetting;
+import lto.manager.common.database.tables.records.RecordRole.Permission;
 import lto.manager.common.database.tables.records.RecordUser;
 import lto.manager.common.security.LoginSession;
 import lto.manager.common.state.State;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
+import lto.manager.web.handlers.http.BaseHTTPHandler.UserNotAuthorisedException;
 
 public class BodyModel {
 	private final HttpExchange he;
@@ -157,8 +160,17 @@ public class BodyModel {
 		body = new RequestBody(post.readAllBytes(), contentType);
 	}
 
-	public static BodyModel of(HttpExchange he, Object model) throws IOException {
-		return new BodyModel(he, model);
+	public static BodyModel of(HttpExchange he, Object model, Permission permission) throws IOException, UserNotAuthorisedException {
+		BodyModel bm = new BodyModel(he, model);
+		if (permission != null) { // null means no restriction
+			RecordUser user = bm.getUserViaSession();
+			if (user != null) {
+				if (!user.hasAccess(permission)) {
+					throw new UserNotAuthorisedException("");
+				}
+			}
+		}
+		return bm;
 	}
 
 	public HttpExchange getHttpExchange() {
@@ -280,6 +292,25 @@ public class BodyModel {
 			return RecordUser.ANONYMOUS_ID;
 		} else {
 			return 0;
+		}
+	}
+
+	public RecordUser getUserViaSession() {
+		final UUID uuid = getSession();
+		if (uuid != null) {
+			final LoginSession loginSession = State.getLoginSession(uuid);
+			if (loginSession != null) {
+				return loginSession.user();
+			}
+		}
+		if (Options.getData(OptionsSetting.ENABLE_LOGIN) == Boolean.FALSE) {
+			try {
+				return Database.getUserByID(RecordUser.ANONYMOUS_ID, false);
+			} catch (Exception e) {
+				return null;
+			}
+		} else {
+			return null;
 		}
 	}
 

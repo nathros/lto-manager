@@ -7,6 +7,7 @@ import org.xmlet.htmlapifaster.Div;
 
 import com.sun.net.httpserver.HttpExchange;
 
+import lto.manager.common.database.tables.records.RecordRole.Permission;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.partial.filelist.FileList;
 import lto.manager.web.handlers.http.partial.filelist.FileListModel;
@@ -33,11 +34,17 @@ public class FilesBrowserHandler2 extends BaseHTTPHandler {
 	}
 
 	@Override
-	public void requestHandle(HttpExchange he) throws IOException, InterruptedException, ExecutionException {
+	public void requestHandle(HttpExchange he, BodyModel bm) throws IOException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of("Files Browser");
 		thm.addCSS(Asset.CSS_FILE_VIEW);
 		thm.addScriptDefer(Asset.JS_AJAX).addScript(Asset.JS_FILE_VIEW);
-		TemplatePageModel tpm = TemplatePageModel.of(FilesBrowserHandler2::content, null, thm, SelectedPage.Files, BodyModel.of(he, null), null);
+		TemplatePageModel tpm = TemplatePageModel.of(FilesBrowserHandler2::content, null, thm, SelectedPage.Files, bm, null);
 		requestHandleCompletePage(he, tpm);
+	}
+
+	@Override
+	public Permission getHandlePermission() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

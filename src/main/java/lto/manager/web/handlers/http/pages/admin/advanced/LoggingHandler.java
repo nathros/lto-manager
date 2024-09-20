@@ -8,6 +8,7 @@ import org.xmlet.htmlapifaster.Div;
 
 import com.sun.net.httpserver.HttpExchange;
 
+import lto.manager.common.database.tables.records.RecordRole.Permission;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.pages.admin.AdminHandler;
 import lto.manager.web.handlers.http.partial.components.CheckBox;
@@ -24,6 +25,7 @@ import lto.manager.web.resource.CSS;
 
 public class LoggingHandler extends BaseHTTPHandler {
 	public static final String PATH = AdminHandler.PATH + "logging/";
+	public static final Permission PERMISSION = Permission.ADVANCED_VIEW_LOGGING;
 	public static final String NAME = "Logging";
 
 	static Void content(Div<?> view, BodyModel model) {
@@ -43,12 +45,12 @@ public class LoggingHandler extends BaseHTTPHandler {
 	}
 
 	@Override
-	public void requestHandle(HttpExchange he) throws IOException, InterruptedException, ExecutionException {
+	public void requestHandle(HttpExchange he, BodyModel bm) throws IOException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of(NAME);
 		thm.addCSS(Asset.CSS_LOGGING);
 		thm.addScript(Asset.JS_WEBSOCKET).addScriptDefer(Asset.JS_LOGGING);
 		BreadCrumbs crumbs = new BreadCrumbs().add(AdminHandler.NAME, AdminHandler.PATH).add(NAME, PATH);
-		TemplatePageModel tpm = TemplatePageModel.of(LoggingHandler::content, LoggingHandler::header, thm, SelectedPage.Admin, BodyModel.of(he, null), crumbs);
+		TemplatePageModel tpm = TemplatePageModel.of(LoggingHandler::content, LoggingHandler::header, thm, SelectedPage.Admin, bm, crumbs);
 		requestHandleCompletePage(he, tpm);
 	}
 
@@ -210,5 +212,10 @@ public class LoggingHandler extends BaseHTTPHandler {
 				.__() // ul
 			.__(); // div
 		return null;
+	}
+
+	@Override
+	public Permission getHandlePermission() {
+		return PERMISSION;
 	}
 }
