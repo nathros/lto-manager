@@ -151,7 +151,7 @@ function setCompact(enabled) {
 	setCookie("log-compact", enabled ? COOKIE_ON : COOKIE_OFF, 365);
 }
 function downloadLogFile() {
-	const tmpWS = openWS("/ws/logging",
+	const tmpWS = openWS("/ws/logging/",
 	(/*event*/) => { /* Open */ },
 	(/*event*/) => { /* Close */ },
 	(error) => { // Error
@@ -161,7 +161,7 @@ function downloadLogFile() {
 		tmpWS.close();
 		let e = document.createElement("a");
 		e.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(event.data));
-		e.setAttribute("download", "logfile.txt");
+		e.setAttribute("download", `${new Date().toISOString().substring(0, 19).replaceAll(/:/g, ".")}-logfile.txt`);
 		e.style.display = "none";
 		document.body.appendChild(e);
 		e.click();

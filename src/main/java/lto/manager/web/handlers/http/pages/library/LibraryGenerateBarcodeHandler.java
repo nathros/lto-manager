@@ -313,10 +313,13 @@ public class LibraryGenerateBarcodeHandler extends BaseHTTPHandler {
 									.__()
 								.__();
 							}
+							if (presets.size() > 0) {
+								ul
+									.li()
+										.hr().__()
+									.__();
+							}
 						})
-						.li()
-							.hr().__()
-						.__() // li
 						.li()
 							.a()
 								.attrOnclick("showPresetModal()")

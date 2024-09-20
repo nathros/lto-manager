@@ -14,6 +14,7 @@ import lto.manager.web.handlers.http.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.http.templates.TemplatePage.TemplatePageModel;
 import lto.manager.web.handlers.http.templates.models.BodyModel;
 import lto.manager.web.handlers.http.templates.models.HeadModel;
+import lto.manager.web.resource.Asset;
 import lto.manager.web.resource.CSS;
 
 public class Page403Handler extends BaseHTTPHandler {
@@ -23,15 +24,20 @@ public class Page403Handler extends BaseHTTPHandler {
 		view
 			.div()
 				.attrStyle("display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%")
-				.h1().text("403 - Forbidden").__()
-				.p().text("The requested URL").__()
+				.h1().text("403").__()
+				.img().attrStyle("width:5rem").attrSrc(Asset.IMG_NO_ACCESS).attrAlt("Forbidden access").__()
+				.h1().text("Forbidden access").__()
+				.p()
+					.text("The requested URL is not allowed for user: ")
+					.b().text(model.getUserNameViaSession()).__()
+				.__()
 				.b().attrClass(CSS.FONT_MONOSPACE).text(model.getUrl()).__()
-				.p().text("is not allowed for: "  + model.getUserNameViaSession()).__()
-				.div()
+				.p().text("").__()
+				.div().attrStyle("display:flex;gap:var(--padding-full)")
 					.a().attrClass(CSS.BUTTON).attrHref(PATH).text("Home").__()
 					.button().attrClass(CSS.BUTTON).attrOnclick("history.back()").text("Back").__()
 				.__()
-			.__(); // div
+		.__(); // div
 		return null;
 	}
 

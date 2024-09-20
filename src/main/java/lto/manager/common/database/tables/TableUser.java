@@ -108,6 +108,7 @@ public class TableUser {
 			if (!addNewUser(con, RecordUser.getGuestUser())) {
 				return false;
 			}
+			return true;
 		}
 
 		return false;

@@ -29,6 +29,8 @@ public class Asset {
 
 	public static final String IMG_FAVICO_SVG = AssetHandler.PATH + "img/favico.svg";
 	public static final String IMG_LOGO = AssetHandler.PATH + "img/logo.svg";
+	public static final String IMG_ROCKET = AssetHandler.PATH + "img/rocket-takeoff.svg";
+	public static final String IMG_NO_ACCESS = AssetHandler.PATH + "img/shield-slash-fill.svg";
 	public static final String IMG_TYPES_PATH = AssetHandler.PATH + "img/types/";
 	public static final String IMG_AVATAR_PATH = AssetHandler.PATH + "img/avatar/";
 	public static final String IMG_COMPANY_LOGOS = AssetHandler.PATH + "img/company-logo/";

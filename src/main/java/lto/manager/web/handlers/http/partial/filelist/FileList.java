@@ -3,6 +3,7 @@ package lto.manager.web.handlers.http.partial.filelist;
 import java.io.File;
 
 import org.xmlet.htmlapifaster.Div;
+import org.xmlet.htmlapifaster.EnumSpellcheckType;
 import org.xmlet.htmlapifaster.EnumTypeButtonType;
 import org.xmlet.htmlapifaster.EnumTypeInputType;
 
@@ -134,6 +135,7 @@ public class FileList {
 								.attrValue(currentPath)
 								.attrOnkeyup(JS.fnFileViewKeyDownEditBox())
 								.attrOnkeydown("return event.key != 'Enter';")
+								.attrSpellcheck(EnumSpellcheckType.FALSE)
 							.__()
 							.button()
 								.attrClass(CSS.BUTTON + CSS.BUTTON_IMAGE + CSS.ICON_CHECK)

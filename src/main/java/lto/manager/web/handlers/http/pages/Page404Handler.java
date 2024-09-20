@@ -14,6 +14,7 @@ import lto.manager.web.handlers.http.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.http.templates.TemplatePage.TemplatePageModel;
 import lto.manager.web.handlers.http.templates.models.BodyModel;
 import lto.manager.web.handlers.http.templates.models.HeadModel;
+import lto.manager.web.resource.Asset;
 import lto.manager.web.resource.CSS;
 
 public class Page404Handler extends BaseHTTPHandler {
@@ -23,11 +24,13 @@ public class Page404Handler extends BaseHTTPHandler {
 		view
 			.div()
 				.attrStyle("display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%")
-				.h1().text("404 - Page not found").__()
-				.p().text("The requested URL").__()
+				.h1().text("404").__()
+				.img().attrStyle("width:5rem").attrSrc(Asset.IMG_ROCKET).attrAlt("Page not found").__()
+				.h1().text("Page not found").__()
+				.p().text("The requested URL was not found").__()
 				.b().attrClass(CSS.FONT_MONOSPACE).text(model.getUrl()).__()
-				.p().text("was not found").__()
-				.div()
+				.p().text("").__()
+				.div().attrStyle("display:flex;gap:var(--padding-full)")
 					.a().attrClass(CSS.BUTTON).attrHref(PATH).text("Home").__()
 					.button().attrClass(CSS.BUTTON).attrOnclick("history.back()").text("Back").__()
 				.__()
