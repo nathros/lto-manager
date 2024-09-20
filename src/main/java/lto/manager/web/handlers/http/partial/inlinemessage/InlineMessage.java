@@ -56,6 +56,7 @@ public class InlineMessage {
 		return null;
 	}
 
+	// Self closing
 	public static Void contentGenericError(Div<?> view, final String title) {
 		view.attrClass(CSS.INLINE_MESSAGE + CSS.ERROR)
 			.span().__()

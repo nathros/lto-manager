@@ -251,6 +251,10 @@ public class Database {
 		return TableUser.getAllUsers(connection, includePermissions);
 	}
 
+	public static RecordRole getRole(int roleID) throws SQLException, IOException {
+		return TableRoles.getRole(connection, roleID);
+	}
+
 	public static List<RecordRole> getAllRoles() throws SQLException, IOException {
 		return TableRoles.getAll(Database.connection);
 	}

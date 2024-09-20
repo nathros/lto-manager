@@ -26,8 +26,8 @@ import lto.manager.common.database.tables.records.RecordOptions.OptionsSetting;
 
 public class TableOptions {
 	public static DbTable table = getSelf();
-
 	public static final String TABLE_NAME = "table_options";
+
 	public static final String COLUMN_NAME_ID = "id_options";
 	public static final String COLUMN_NAME_DATA_TYPE = "options_type";
 	public static final String COLUMN_NAME_VALUE = "options_value";

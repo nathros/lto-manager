@@ -26,6 +26,7 @@ import lto.manager.common.database.tables.records.RecordRole;
 public class TableRoles {
 	public static final DbTable table = getSelf();
 	public static final String TABLE_NAME = "table_roles";
+
 	public static final String COLUMN_NAME_ID = "id_role";
 	public static final String COLUMN_NAME_NAME = "name";
 	public static final String COLUMN_NAME_DESCRIPTION = "description";
@@ -34,7 +35,14 @@ public class TableRoles {
 	public static final int COLUMN_INDEX_ID = 0;
 	public static final int COLUMN_INDEX_NAME = 1;
 	public static final int COLUMN_INDEX_DESCRIPTION = 2;
-	public static final int COLUMN_INDEX_PERMISSION_MASK  = 3;
+	public static final int COLUMN_INDEX_PERMISSION_MASK = 3;
+
+	public static final int PERMISSION_LEN = 256;
+	public static final int PERMISSION_COMB = 16; // 0-F = 16 combinations per index
+	public static final int PERMISSION_LEN_INDEX = PERMISSION_LEN * PERMISSION_COMB;
+
+	public static final int MAX_LENGTH_NAME = 128;
+	public static final int MAX_LENGTH_DESCRIPTION = 256;
 
 	static private DbTable getSelf() {
 		DbSchema schema = Database.schema;
@@ -48,9 +56,9 @@ public class TableRoles {
 		String key[] = new String[] { COLUMN_NAME_ID};
 		table.primaryKey(COLUMN_NAME_ID, key);
 
-		table.addColumn(COLUMN_NAME_NAME, Types.VARCHAR, 128).unique();
-		table.addColumn(COLUMN_NAME_DESCRIPTION, Types.VARCHAR, 256);
-		table.addColumn(COLUMN_NAME_PERMISSION_MASK, Types.VARCHAR, 256); // 1024 bit
+		table.addColumn(COLUMN_NAME_NAME, Types.VARCHAR, MAX_LENGTH_NAME).unique();
+		table.addColumn(COLUMN_NAME_DESCRIPTION, Types.VARCHAR, MAX_LENGTH_DESCRIPTION);
+		table.addColumn(COLUMN_NAME_PERMISSION_MASK, Types.VARCHAR, PERMISSION_LEN); // 1024 bit
 
 		return table;
 	}
@@ -84,13 +92,8 @@ public class TableRoles {
 		iq.addColumn(table.getColumns().get(COLUMN_INDEX_NAME), newRole.getName());
 		iq.addColumn(table.getColumns().get(COLUMN_INDEX_DESCRIPTION), newRole.getDescription());
 
-		final String hexData = Hex.getString(newRole.getPermission().toByteArray());
-		if (hexData.length() < 256) {
-			final String hexDataPadded = "0".repeat(256 - hexData.length()) + hexData;
-			iq.addColumn(table.getColumns().get(COLUMN_INDEX_PERMISSION_MASK), hexDataPadded);
-		} else {
-			iq.addColumn(table.getColumns().get(COLUMN_INDEX_PERMISSION_MASK), hexData);
-		}
+		final String hexData = newRole.getPermissionHexString();
+		iq.addColumn(table.getColumns().get(COLUMN_INDEX_PERMISSION_MASK), hexData);
 
 		String sql = iq.validate().toString();
 		if (!statment.execute(sql)) {
@@ -113,6 +116,22 @@ public class TableRoles {
 		}
 
 		return list;
+	}
+
+	public static RecordRole getRole(Connection con, int id) throws SQLException, IOException {
+		var statment = con.createStatement();
+
+		SelectQuery uq = new SelectQuery();
+		uq.addAllTableColumns(table);
+		uq.addCondition(BinaryCondition.equalTo(table.getColumns().get(COLUMN_INDEX_ID), id));
+		String sql = uq.validate().toString();
+		ResultSet result = statment.executeQuery(sql);
+
+		if (result.next()) {
+			return fromResultSet(result);
+		}
+
+		return null;
 	}
 
 	public static boolean deleteRole(Connection con, int id) throws SQLException, IOException {

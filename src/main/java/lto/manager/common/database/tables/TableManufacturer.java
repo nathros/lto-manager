@@ -21,6 +21,7 @@ import lto.manager.common.database.tables.records.RecordManufacturer;
 public class TableManufacturer {
 	public static final DbTable table = getSelf();
 	public static final String TABLE_NAME = "table_manufacturer";
+
 	public static final String COLUMN_NAME_ID = "id_manufacturer";
 	public static final String COLUMN_NAME_NAME = "name_manufacturer";
 

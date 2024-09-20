@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.List;
 
+import org.apache.pdfbox.util.Hex;
+
 import lto.manager.common.database.Database;
+import lto.manager.common.database.tables.TableRoles;
 
 public class RecordRole {
 	private Integer id;
@@ -36,11 +39,11 @@ public class RecordRole {
 
 	public static List<RecordRole> getDefaultRoles() {
 		List<RecordRole> roles = new ArrayList<RecordRole>();
-		BitSet all = new BitSet(1024);
-		all.set(0, 1023);
-		BitSet subset = new BitSet(1024);
-		subset.set(0, 127);
+		BitSet all = new BitSet(TableRoles.PERMISSION_LEN_INDEX);
+		all.set(0, TableRoles.PERMISSION_LEN_INDEX); // Enable all
 		roles.add(RecordRole.of(ROLE_ID_ADMIN, "Admin", "Administrator of the whole application", all));
+
+		BitSet subset = new BitSet(TableRoles.PERMISSION_LEN_INDEX);
 		roles.add(RecordRole.of(ROLE_ID_VIEWER, "Viewer", "Can only view library and files", subset));
 		return roles;
 	}
@@ -52,5 +55,38 @@ public class RecordRole {
 	public String getDescription() { return description; }
 	public void setDescription(String description) { this.description = description; }
 	public BitSet getPermission() { return permission; }
-	public void setName(BitSet permission) { this.permission = permission; }
+	public String getPermissionHexString() {
+		final byte[] byteArrayData = permission.toByteArray();
+		final String hexData = Hex.getString(byteArrayData);
+		if (hexData.length() < TableRoles.PERMISSION_LEN) {
+			final String hexDataPadded = "0".repeat(TableRoles.PERMISSION_LEN - hexData.length()) + hexData;
+			return hexDataPadded;
+		} else if (hexData.length() < TableRoles.PERMISSION_LEN) {
+			return hexData.substring(0, TableRoles.PERMISSION_LEN);
+		}
+		return hexData;
+	}
+	public void setPermission(BitSet permission) { this.permission = permission; }
+	public boolean hasPermission(Permission index) {
+		return permission.get(index.getValue());
+	}
+
+	public enum Permission {
+		ADMIN(0),
+
+		SYSTEM_USERS_READ(100),
+		SYSTEM_USERS_CREATE(101),
+		SYSTEM_USERS_EDIT(102),
+		SYSTEM_USERS_DELETE(103),
+
+		MAX(TableRoles.PERMISSION_LEN_INDEX);
+
+		private final int value;
+
+		Permission(final int newValue) {
+            value = newValue;
+        }
+
+		public int getValue() { return value; }
+	}
 }

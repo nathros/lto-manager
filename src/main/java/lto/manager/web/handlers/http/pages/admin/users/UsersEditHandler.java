@@ -43,6 +43,7 @@ public class UsersEditHandler extends BaseHTTPHandler {
 
 	public static final String QID = "id";
 	public static final String QName = "name";
+	public static final String QDescription = "description";
 	public static final String QEnabled = "enabled";
 	public static final String QPassword = "pass";
 	public static final String QPasswordConfirm = "passc";
@@ -52,15 +53,18 @@ public class UsersEditHandler extends BaseHTTPHandler {
 
 	private static final int IID = 0;
 	private static final int IName = 1;
-	private static final int IEnabled = 2;
-	private static final int IPassword = 3;
-	private static final int IPasswordConfirm = 4;
-	private static final int ILang = 5;
-	private static final int IAvatar = 6;
-	private static final int IRole = 7;
+	private static final int IDescription = 2;
+	private static final int IEnabled = 3;
+	private static final int IPassword = 4;
+	private static final int IPasswordConfirm = 5;
+	private static final int ILang = 6;
+	private static final int IAvatar = 7;
+	private static final int IRole = 8;
 
 	private static final FormValidator userNameValidator = FormValidator.of(ValidatorType.INPUT_TEXT,
-			ValidatorOptions.of().valueNotEmpty().valueNotNull(), "Username");
+			ValidatorOptions.of().valueNotEmpty().valueNotNull().valueMaxLength(TableUser.MAX_LENGTH_USERNAME), "Username");
+	private static final FormValidator descriptionValidator = FormValidator.of(ValidatorType.INPUT_TEXT,
+			ValidatorOptions.of().valueMaxLength(TableUser.MAX_LENGTH_DESCRIPTION), "Description");
 	private static final FormValidator passwordValidator = FormValidator.of(ValidatorType.INPUT_PASSWORD,
 			ValidatorOptions.of(), "Password");
 
@@ -85,9 +89,9 @@ public class UsersEditHandler extends BaseHTTPHandler {
 	}
 
 	static Void content(Div<?> view, BodyModel model) {
-		String[] query = { model.getQuery(QID), model.getQuery(QName), model.getQuery(QEnabled),
+		String[] query = { model.getQuery(QID), model.getQuery(QName), model.getQuery(QDescription), model.getQuery(QEnabled),
 				model.getQuery(QPassword), model.getQuery(QPasswordConfirm), model.getQuery(QLang),
-				model.getQuery(QAvatar), model.getQuery(QRole) };
+				model.getQuery(QAvatar), model.getQuery(QRole) }; // Index must match for Qxx and Ixx
 
 		final OperationStatus updateUserAction = OperationStatus.undefined();
 
@@ -104,6 +108,7 @@ public class UsersEditHandler extends BaseHTTPHandler {
 		final boolean isNewUser = user.getID() == Database.NEW_RECORD_ID;
 		final ValidatorStatus passwordStatus = passwordValidator.validatePassword(query[IPassword], query[IPasswordConfirm], false);
 		final ValidatorStatus userNameStatus = userNameValidator.validate(query[IName] == null ? user.getUsername() : query[IName], true);
+		final ValidatorStatus descriptionStatus = descriptionValidator.validate(query[IDescription] == null ? user.getDescription() : query[IDescription], true);
 		final boolean validateOK = passwordStatus.statusOK() && userNameStatus.statusOK();
 		final List<RecordRole> roles = getRoles();
 
@@ -112,7 +117,7 @@ public class UsersEditHandler extends BaseHTTPHandler {
 			return null;
 		} else if (query[IName] != null && validateOK) {
 			RecordUser updated = RecordUser.of(Integer.valueOf(query[IID]), RecordRole.of(Integer.valueOf(query[IRole])), query[IName],
-					user.getHash(), user.getSalt(), Query.CHECKED.equals(query[IEnabled]), user.getCreated(),
+					query[IDescription], user.getHash(), user.getSalt(), Query.CHECKED.equals(query[IEnabled]), user.getCreated(),
 					Integer.valueOf(query[ILang]), query[IAvatar]);
 			if (query[IPassword] != null && passwordStatus.statusOK()) {
 				updated.setPassword(query[IPassword]);
@@ -133,7 +138,11 @@ public class UsersEditHandler extends BaseHTTPHandler {
 			} else {
 				try {
 					Database.updateUser(updated);
-					updateUserAction.update(CheckStatusType.OK, "Successfully updated user");
+					if (query[IPassword] == null && query[IPasswordConfirm] == null) {
+						updateUserAction.update(CheckStatusType.OK, "Successfully updated user, password is blank and has not been changed");
+					} else {
+						updateUserAction.update(CheckStatusType.OK, "Successfully updated user");
+					}
 				} catch (SQLException | IOException e) {
 					updateUserAction.update(CheckStatusType.ERROR, "Failed to update user: " + e.getMessage());
 				}
@@ -156,8 +165,9 @@ public class UsersEditHandler extends BaseHTTPHandler {
 			.form()
 				.attrMethod(EnumMethodType.POST)
 				.div().attrClass(CSS.FORMS_CONTAINER)
-					.of(d -> { if (!isNewUser) d.b().text("User ID:").__(); })
+					.of(d -> { if (!isNewUser) d.b().attrStyle("display:none").text("User ID:").__(); })
 					.input()
+						.attrStyle("display:none")
 						.attrType(isNewUser ? EnumTypeInputType.HIDDEN : EnumTypeInputType.TEXT)
 						.attrName(QID)
 						.attrValue(query[IID])
@@ -170,6 +180,14 @@ public class UsersEditHandler extends BaseHTTPHandler {
 						.attrType(EnumTypeInputType.TEXT).attrName(QName)
 						.attrMaxlength((long) TableUser.MAX_LENGTH_USERNAME)
 						.attrValue(query[IName] == null ? user.getUsername() : query[IName])
+					.__()
+
+					.b().text("Description:").__()
+					.input()
+						.attrClass(descriptionStatus.statusOK() ? "" : CSS.ERROR)
+						.attrType(EnumTypeInputType.TEXT).attrName(QDescription)
+						.attrMaxlength((long) TableUser.MAX_LENGTH_DESCRIPTION)
+						.attrValue(query[IDescription] == null ? user.getDescription() : query[IDescription])
 					.__()
 
 					.b().text("Password:").__()

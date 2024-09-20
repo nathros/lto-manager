@@ -54,16 +54,17 @@ public class RolesHandler extends BaseHTTPHandler {
 						.p().text(role.getDescription()).__()
 					.__()
 					.div()
+						.attrClass(CSS.FORMS_BUTTONS)
 						.a()
-							.attrClass(CSS.BUTTON)
-							.attrHref(RolesEditHandler.PATH + "?" + RolesEditHandler.Qid + "=" + role.getID())
-							.text("Edit")
+							.attrClass(CSS.TOOLTIP + CSS.ICON_EDIT)
+							.attrHref(RolesEditHandler.PATH + "?" + RolesEditHandler.QID + "=" + role.getID())
+							.em().text("Edit").__()
 						.__()
 						.a()
-							.attrClass(CSS.BUTTON + CSS.BACKGROUND_CAUTION)
+							.attrClass(CSS.BACKGROUND_ERROR_BEFORE + CSS.TOOLTIP + CSS.ICON_RUBBISH)
 							.attrHref(PATH + "?" + QDEL + "=" + role.getID())
 							.attrOnclick(JS.confirmToastA("Are you sure?"))
-							.text("Delete")
+							.em().text("Delete").__()
 						.__()
 					.__();
 			});
@@ -90,6 +91,8 @@ public class RolesHandler extends BaseHTTPHandler {
 
 		final List<RecordRole> roles = getRoles();
 		final List<Consumer<Div<?>>> body = listItemContents(roles);
+		var a = RecordRole.getDefaultRoles();
+		a.get(0).getPermissionHexString();
 
 		view
 			.div()
@@ -122,7 +125,7 @@ public class RolesHandler extends BaseHTTPHandler {
 	@Override
 	public void requestHandle(HttpExchange he) throws IOException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of(NAME);
-		thm.addCSS(Asset.CSS_LIST);
+		thm.addCSS(Asset.CSS_LIST).addCSS(Asset.CSS_FORMS);
 		thm.addScript(Asset.JS_LIST);
 		BreadCrumbs crumbs = new BreadCrumbs().add(AdminHandler.NAME, AdminHandler.PATH).add(NAME, PATH);
 		TemplatePageModel tpm = TemplatePageModel.of(RolesHandler::content, RolesHandler::header, thm, SelectedPage.Admin, BodyModel.of(he, null), crumbs);

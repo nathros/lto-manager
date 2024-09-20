@@ -59,7 +59,10 @@ public class UsersHandler extends BaseHTTPHandler {
 							.p().text("Role: " + user.getRole().getName()).__()
 						.__()
 						.div()
-							.p().attrStyle("font-size:small").text("Created: " + user.getCreated()).__()
+							.p().attrStyle("font-size:small").text("Created: " + user.getCreatedFormatted() + ",").__()
+						.__()
+						.div()
+							.p().attrStyle("font-size:small").text("Description: " + user.getDescription()).__()
 						.__()
 						.of(inner -> {
 							if (!user.getEnabled()) {

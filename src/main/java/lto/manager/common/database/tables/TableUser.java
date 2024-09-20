@@ -37,6 +37,7 @@ public class TableUser {
 	public static final String COLUMN_NAME_ID = "id_user";
 	public static final String COLUMN_NAME_ROLE = "id_role";
 	public static final String COLUMN_NAME_USERNAME = "username";
+	public static final String COLUMN_NAME_DESCRIPTION = "description";
 	public static final String COLUMN_NAME_HASH = "hash";
 	public static final String COLUMN_NAME_SALT = "salt";
 	public static final String COLUMN_NAME_ENABLED = "enabled";
@@ -47,14 +48,16 @@ public class TableUser {
 	public static final int COLUMN_INDEX_ID = 0;
 	public static final int COLUMN_INDEX_ROLE = 1;
 	public static final int COLUMN_INDEX_USERNAME = 2;
-	public static final int COLUMN_INDEX_HASH = 3;
-	public static final int COLUMN_INDEX_SALT = 4;
-	public static final int COLUMN_INDEX_ENABLED = 5;
-	public static final int COLUMN_INDEX_CREATED = 6;
-	public static final int COLUMN_INDEX_LANGUAGE = 7;
-	public static final int COLUMN_INDEX_AVATAR = 8;
+	public static final int COLUMN_INDEX_DESCRIPTION = 3;
+	public static final int COLUMN_INDEX_HASH = 4;
+	public static final int COLUMN_INDEX_SALT = 5;
+	public static final int COLUMN_INDEX_ENABLED = 6;
+	public static final int COLUMN_INDEX_CREATED = 7;
+	public static final int COLUMN_INDEX_LANGUAGE = 8;
+	public static final int COLUMN_INDEX_AVATAR = 9;
 
 	public static final int MAX_LENGTH_USERNAME = 128;
+	public static final int MAX_LENGTH_DESCRIPTION = 256;
 	public static final int MAX_LENGTH_AVATAR = 128;
 
 	static private DbTable getSelf() {
@@ -77,6 +80,7 @@ public class TableUser {
 		table.foreignKey(TableRoles.COLUMN_NAME_ID, columns, tableRole, columnsRef);
 
 		table.addColumn(COLUMN_NAME_USERNAME, Types.VARCHAR, MAX_LENGTH_USERNAME).unique();
+		table.addColumn(COLUMN_NAME_DESCRIPTION, Types.VARCHAR, MAX_LENGTH_DESCRIPTION);
 		table.addColumn(COLUMN_NAME_HASH, Types.VARCHAR, 128).notNull();
 		table.addColumn(COLUMN_NAME_SALT, Types.VARCHAR, 32).notNull();
 		table.addColumn(COLUMN_NAME_ENABLED, Types.BOOLEAN, null);
@@ -95,9 +99,14 @@ public class TableUser {
 
 		var statment = con.createStatement();
 		if (!statment.execute(q)) {
-			if (addNewUser(con, RecordUser.getDefaultUser()))
-			{
-				return addNewUser(con, RecordUser.getAnonymousUser());
+			if (!addNewUser(con, RecordUser.getDefaultUser())) {
+				return false;
+			}
+			if (!addNewUser(con, RecordUser.getAnonymousUser())) {
+				return false;
+			}
+			if (!addNewUser(con, RecordUser.getGuestUser())) {
+				return false;
 			}
 		}
 
@@ -113,6 +122,7 @@ public class TableUser {
 		}
 		iq.addColumn(table.getColumns().get(COLUMN_INDEX_ROLE), newUser.getRole().getID());
 		iq.addColumn(table.getColumns().get(COLUMN_INDEX_USERNAME), newUser.getUsername());
+		iq.addColumn(table.getColumns().get(COLUMN_INDEX_DESCRIPTION), newUser.getDescription());
 		iq.addColumn(table.getColumns().get(COLUMN_INDEX_HASH), newUser.getHash());
 		iq.addColumn(table.getColumns().get(COLUMN_INDEX_SALT), newUser.getSalt());
 		iq.addColumn(table.getColumns().get(COLUMN_INDEX_ENABLED), newUser.getEnabled());
@@ -157,6 +167,7 @@ public class TableUser {
 		uq.addCondition(BinaryCondition.equalTo(table.getColumns().get(COLUMN_INDEX_ID), user.getID()));
 		uq.addSetClause(table.getColumns().get(COLUMN_INDEX_ROLE), user.getRole().getID());
 		uq.addSetClause(table.getColumns().get(COLUMN_INDEX_USERNAME), user.getUsername());
+		uq.addSetClause(table.getColumns().get(COLUMN_INDEX_DESCRIPTION), user.getDescription());
 		uq.addSetClause(table.getColumns().get(COLUMN_INDEX_HASH), user.getHash());
 		uq.addSetClause(table.getColumns().get(COLUMN_INDEX_SALT), user.getSalt());
 		uq.addSetClause(table.getColumns().get(COLUMN_INDEX_ENABLED), user.getEnabled());
@@ -267,6 +278,7 @@ public class TableUser {
 			throws SQLException, IOException {
 		final int id = result.getInt(COLUMN_NAME_ID);
 		final String username = result.getString(COLUMN_NAME_USERNAME);
+		final String description = result.getString(COLUMN_NAME_DESCRIPTION);
 		final String hash = result.getString(COLUMN_NAME_HASH);
 		final String salt = result.getString(COLUMN_NAME_SALT);
 		final boolean enabled = result.getBoolean(COLUMN_NAME_ENABLED);
@@ -274,7 +286,7 @@ public class TableUser {
 		final LocalDateTime created = LocalDateTime.parse(createdStr);
 		final int language = result.getInt(COLUMN_NAME_LANGUAGE);
 		final String avatar = result.getString(COLUMN_NAME_AVATAR);
-		RecordUser user = RecordUser.of(id, username, hash, salt, enabled, created, language, avatar);
+		RecordUser user = RecordUser.of(id, username, description, hash, salt, enabled, created, language, avatar);
 		if (includePermissions) {
 			RecordRole role = TableRoles.fromResultSet(result);
 			user.setRole(role);

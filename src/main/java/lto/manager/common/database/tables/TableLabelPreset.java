@@ -28,7 +28,7 @@ public class TableLabelPreset {
 	public static final String TABLE_NAME = "table_label_preset";
 
 	public static final String COLUMN_NAME_ID = "id_label_preset";
-	public static final String COLUMN_NAME_USER = "id_user";
+	public static final String COLUMN_NAME_USER = TableUser.COLUMN_NAME_ID;
 	public static final String COLUMN_NAME_NAME = "name";
 	public static final String COLUMN_NAME_CONFIG = "config";
 
