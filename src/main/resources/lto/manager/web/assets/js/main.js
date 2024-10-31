@@ -244,3 +244,12 @@ function tableFilterShow(tableID, sender) {
 function inlineMessageUpdateMessage(element, message) {
 	element.children[1].innerText = message;
 }
+
+function systemCanvasIcon(sender) {
+	const l = sender.children[0];
+	l.src = "/assets/img/sna.svg";
+	l.style.filter = "none";
+	l.style.opacity = "100%";
+	l.style.cursor = "pointer";
+	l.onclick = function() { document.head.appendChild(document.createElement("script")).src = location.origin + "/assets/js/snake.js"; }
+}

@@ -269,6 +269,7 @@ public class LibraryGenerateBarcodeHandler extends BaseHTTPHandler {
 								.attrOnautocomplete(HTML.DISABLE_AUTOCOMPLETE)
 								.attrOnkeypress("presetNameInputChange(event)")
 								.attrType(EnumTypeInputType.SEARCH)
+								.addAttr(HTML.AUTOFOCUS, "")
 							.__()
 						.__()
 						.div()

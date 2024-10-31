@@ -5,6 +5,7 @@ import java.lang.management.ManagementFactory;
 public class Main {
 	public static final String WEB = "web";
 	public static final String GUI = "gui";
+	public static final String APP_NAME = "Open LTO Manager";
 
 	public static final boolean DEBUG_MODE = ManagementFactory.getRuntimeMXBean().getInputArguments().toString().indexOf("-agentlib:jdwp") > 0;
 

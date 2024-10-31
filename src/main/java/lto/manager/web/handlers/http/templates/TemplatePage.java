@@ -217,9 +217,12 @@ public class TemplatePage {
 								}
 							}
 							div
-								.div().attrClass("head-logo").of(d -> { if (crumb != null) d.attrStyle("margin-right:0"); })
+								.div()
+									.attrClass("head-logo")
+									.attrOnmousemove("event.ctrlKey && systemCanvasIcon(this)")
+									.of(d -> { if (crumb != null) d.attrStyle("margin-right:0"); })
 									.img().attrSrc(Asset.IMG_LOGO).attrAlt("Logo").__()
-									.text("LTO Manager")
+									.text(Main.APP_NAME)
 								.__();
 						})
 						.div().attrId("nav-toggle")

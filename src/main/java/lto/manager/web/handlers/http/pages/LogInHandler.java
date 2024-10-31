@@ -18,6 +18,7 @@ import com.sun.net.httpserver.HttpExchange;
 import htmlflow.HtmlFlow;
 import htmlflow.HtmlPage;
 import htmlflow.HtmlView;
+import lto.manager.common.Main;
 import lto.manager.common.database.tables.records.RecordRole.Permission;
 import lto.manager.common.security.Security;
 import lto.manager.web.check.CheckStatusType;
@@ -134,7 +135,7 @@ public class LogInHandler extends BaseHTTPHandler {
 					.div()
 						.div()
 							.form().attrMethod(EnumMethodType.POST)
-								.h3().text("LTO Manager").__()
+								.h3().text(Main.APP_NAME).__()
 								.b().text("Username: *").__()
 								.input()
 									.attrType(EnumTypeInputType.TEXT)

@@ -15,7 +15,6 @@ import org.apache.batik.bridge.UserAgentAdapter;
 import org.apache.batik.gvt.GraphicsNode;
 import org.apache.batik.util.XMLResourceDescriptor;
 
-import com.lowagie.text.Chunk;
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.ImgTemplate;
@@ -30,6 +29,9 @@ import lto.manager.web.resource.Asset;
 
 public class AJAXGenerateLTOLabelPDF extends BaseHTTPHandler {
 	public static final String PATH = Asset.PATH_AJAX_BASE + "generate/lto/label/pdf/";
+	private static final int PAGE_TOP_Y = 760;
+	private static final int X_OFFSET_FIRST = 70;
+	private static final int X_OFFSET_SECOND = 300;
 
 	@Override
 	public void requestHandle(HttpExchange he, BodyModel bm) throws Exception { // FIXME finish PDF scale is wrong
@@ -41,9 +43,10 @@ public class AJAXGenerateLTOLabelPDF extends BaseHTTPHandler {
 			var pdfwriter = PdfWriter.getInstance(document, stream);
 
 			document.open();
-			document.add(new Chunk("Test phase - barcode scale is wrong"));
 
 			SAXSVGDocumentFactory factory = new SAXSVGDocumentFactory(XMLResourceDescriptor.getXMLParserClassName());
+			int position = PAGE_TOP_Y;
+			int count = 0;
 
 			for (final String svg : labelsSVGs) {
 				// final StringReader reader = new StringReader(
@@ -60,17 +63,34 @@ public class AJAXGenerateLTOLabelPDF extends BaseHTTPHandler {
 				GVTBuilder builder = new GVTBuilder();
 				GraphicsNode rootGraphicsNode = builder.build(context, SVGDocument);
 
-				PdfTemplate template = PdfTemplate.createTemplate(pdfwriter, 400, 100);
+				PdfTemplate template = PdfTemplate.createTemplate(pdfwriter, 310, 100);
 
 				Graphics2D g2d = template.createGraphics(template.getWidth(), template.getHeight(), null);
-				var a = new ImgTemplate(template);
-				document.add(a);
+				var newBarcode = new ImgTemplate(template);
+				// Not sure why the size is wrong, the SVG size is correct. width="80.5mm" height="18.5mm"
+				newBarcode.scalePercent(75);
+
+				if (count % 32 == 0 && count != 0) {
+					document.newPage();
+					count = 0;
+					position = PAGE_TOP_Y;
+					newBarcode.setAbsolutePosition(X_OFFSET_FIRST, position);
+				} else if (count % 2 == 0) {
+					newBarcode.setAbsolutePosition(X_OFFSET_FIRST, position);
+				} else {
+					newBarcode.setAbsolutePosition(X_OFFSET_SECOND, position);
+					position -= 50;
+				}
+
+				document.add(newBarcode);
 
 				try {
 					rootGraphicsNode.paint(g2d);
 				} finally {
 					g2d.dispose();
 				}
+
+				count++;
 			}
 
 		} catch (DocumentException | IOException de) {

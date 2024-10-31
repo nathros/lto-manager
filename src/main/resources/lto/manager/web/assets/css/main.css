@@ -224,7 +224,7 @@ input:disabled {
 	height: 100%;
 	color: white;
 	margin-right: auto;
-	gap: 0.5rem;
+	font-size: small;
 }
 .head-logo > img {
 	height: 64%;

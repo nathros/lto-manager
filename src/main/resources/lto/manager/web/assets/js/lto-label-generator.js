@@ -71,9 +71,9 @@ function refreshPresetList() {
 }
 
 function showPresetModal() {
-	presetModal.getElementsByTagName("input")[0].value = "";
+	presetModal.getElementsByTagName("input")[0].value = ""; // Clear input value
 	presetModal.showModal();
-	presetModal.getElementsByTagName("input")[0].focus();
+	// presetModal.getElementsByTagName("input")[0].focus(); // Use autofocus attribute on input
 }
 
 function hidePresetModal() {
