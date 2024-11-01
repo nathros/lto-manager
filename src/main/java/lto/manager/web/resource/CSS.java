@@ -146,4 +146,5 @@ public class CSS {
 	public final static String INLINE_MESSAGE_DETAILS_CONTENT = "inline-details-content ";
 	public final static String ERROR = "error ";
 	public final static String OK = "ok ";
+	public final static String INFO = "info ";
 }

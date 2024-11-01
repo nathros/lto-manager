@@ -12,14 +12,14 @@ repositories {
 
 ext {
 	// These are used in dependencies {} and baked in Version.java on build
-	versionSqlite = '3.46.1.0'
+	versionSqlite = '3.47.0.0'
 	versionHtmlflow = '4.6'
 	versionSqlBuilder = '3.0.2'
 	versionJavaWebSocket = '1.5.7'
-	versionSpringSecurityCrypto = '6.3.0'
+	versionSpringSecurityCrypto = '6.3.4'
 	versionOpenhtmltopdf = '1.0.10'
 	versionOpenPDF = '2.0.3'
-	versionBatik = '1.17'
+	versionBatik = '1.18'
 }
 
 dependencies {
@@ -113,12 +113,9 @@ compileJava.doFirst {
 	new File(versionBackup).eachLine { line ->
 		// Go through each line and replace Strings with real values
 		if (line.contains('VERSION = "UNDEFINED";')) {
-			file << line.replace("UNDEFINED", "Dev") << ln
-
-		} else if (line.contains('TAG = "UNDEFINED\";')) {
 			def tag = gitCommand(new String[]{"git", "tag", "--points-at", "HEAD"})
 			if ("".equals(tag)) tag = "Untagged"
-			project.logger.lifecycle("Tag    : ${tag}")
+			project.logger.lifecycle("Version: ${tag}")
 			file << line.replace("UNDEFINED", tag) << ln
 
 		} else if (line.contains('BRANCH = "UNDEFINED\";')) {

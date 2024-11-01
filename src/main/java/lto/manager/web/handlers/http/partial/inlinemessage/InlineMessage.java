@@ -73,6 +73,30 @@ public class InlineMessage {
 		return null;
 	}
 
+	public static Void contentGenericOK(final String classStr, Div<?> view, final String title) {
+		view.attrClass(CSS.INLINE_MESSAGE + CSS.OK + classStr)
+			.span().__()
+			.b().text(title).__()
+		.__();
+		return null;
+	}
+
+	public static Void contentGenericInfo(Div<?> view, final String title) {
+		view.attrClass(CSS.INLINE_MESSAGE + CSS.INFO)
+			.span().__()
+			.b().text(title).__()
+		.__();
+		return null;
+	}
+
+	public static Void contentGenericInfo(final String classStr, Div<?> view, final String title) {
+		view.attrClass(CSS.INLINE_MESSAGE + CSS.INFO + classStr)
+			.span().__()
+			.b().text(title).__()
+		.__();
+		return null;
+	}
+
 	public static Void contentExternalProcess(Div<?> view, final String uuid) {
 		view.attrClass(CSS.INLINE_MESSAGE + CSS.ERROR)
 			.span().__()

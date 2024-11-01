@@ -971,7 +971,7 @@ https://codepen.io/sudeepgumaste/pen/abdrorB
 	width: 1rem;
 	background-color: var(--common-background-colour);
 	border-radius: 50%;
-	animation: loading-animation 1.5s ease-in-out infinite;
+	animation: loading-animation 1s ease-in-out infinite;
 	transform: scale(0.2);
 	margin: .5rem;
 }

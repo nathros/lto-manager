@@ -1,9 +1,6 @@
 package lto.manager.web.handlers.http.pages.admin;
 
-import java.io.BufferedInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URL;
 import java.util.concurrent.ExecutionException;
 
 import org.xmlet.htmlapifaster.Div;
@@ -12,11 +9,15 @@ import com.sun.net.httpserver.HttpExchange;
 
 import lto.manager.common.database.tables.records.RecordRole.Permission;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
+import lto.manager.web.handlers.http.ajax.admin.AJAXCheckUpdates;
+import lto.manager.web.handlers.http.partial.loading.OnLoad;
+import lto.manager.web.handlers.http.partial.loading.OnLoadOptions;
 import lto.manager.web.handlers.http.templates.TemplatePage.BreadCrumbs;
 import lto.manager.web.handlers.http.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.http.templates.TemplatePage.TemplatePageModel;
 import lto.manager.web.handlers.http.templates.models.BodyModel;
 import lto.manager.web.handlers.http.templates.models.HeadModel;
+import lto.manager.web.resource.Asset;
 
 public class AppUpdateHandler extends BaseHTTPHandler {
 	public static final String PATH = "/admin/update/";
@@ -24,25 +25,16 @@ public class AppUpdateHandler extends BaseHTTPHandler {
 	public static final String NAME = "Update";
 
 	static Void content(Div<?> view, BodyModel model) {
-		String link = "https://raw.githubusercontent.com/nathros/lto-manager/main/start-server.sh";
-		String output = "/tmp/down.file";
-		try (BufferedInputStream in = new BufferedInputStream(new URL(link).openStream());
-				FileOutputStream fileOutputStream = new FileOutputStream(output)) {
-			byte dataBuffer[] = new byte[1024];
-			int bytesRead;
-			while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
-				fileOutputStream.write(dataBuffer, 0, bytesRead);
-			}
-		} catch (IOException e) {
-			// handle exception
-		}
-		view.div().text("Updater WIP").__(); // div
+		view
+			.div()
+				.of(div -> OnLoad.content(div, OnLoadOptions.of(AJAXCheckUpdates.PATH)))
+			.__(); // div
 		return null;
 	}
 
 	@Override
 	public void requestHandle(HttpExchange he, BodyModel bm) throws IOException, InterruptedException, ExecutionException {
-		HeadModel thm = HeadModel.of(NAME);
+		HeadModel thm = HeadModel.of(NAME).addScript(Asset.JS_AJAX);
 		BreadCrumbs crumbs = new BreadCrumbs().add(AdminHandler.NAME, AdminHandler.PATH).add(NAME, PATH);
 		TemplatePageModel tpm = TemplatePageModel.of(AppUpdateHandler::content, null, thm, SelectedPage.Admin, bm, crumbs);
 		requestHandleCompletePage(he, tpm);

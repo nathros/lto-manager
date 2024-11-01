@@ -39,8 +39,6 @@ public class DashboardVersion {
 					.span().text(Version.VERSION).__()
 					.b().text("Build Date: ").__()
 					.span().text(Version.BUILD_DATE).__()
-					.b().text("Tag: ").__()
-					.span().text(Version.TAG).__()
 					.b().text("Branch: ").__()
 					.span().text(Version.BRANCH).__()
 					.b().text("Hostname: ").__()

@@ -29,7 +29,7 @@ import lto.manager.web.resource.Asset;
 
 public class AJAXGenerateLTOLabelPDF extends BaseHTTPHandler {
 	public static final String PATH = Asset.PATH_AJAX_BASE + "generate/lto/label/pdf/";
-	private static final int PAGE_TOP_Y = 760;
+	private static final int PAGE_TOP_Y = 750;
 	private static final int X_OFFSET_FIRST = 70;
 	private static final int X_OFFSET_SECOND = 300;
 
