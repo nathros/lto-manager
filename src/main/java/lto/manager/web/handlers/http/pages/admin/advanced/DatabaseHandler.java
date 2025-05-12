@@ -87,7 +87,7 @@ public class DatabaseHandler extends BaseHTTPHandler {
 											while (results.next()) {
 												var row = resTR.tr();
 												for (int i = 1; i < meta.getColumnCount(); i++) {
-													row.td().text(results.getString(1)).__();
+													row.td().text(results.getString(i)).__();
 												}
 												row.__();
 											}

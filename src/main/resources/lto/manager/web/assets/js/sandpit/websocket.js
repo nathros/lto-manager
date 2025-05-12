@@ -13,11 +13,16 @@ function testWS(sender) {
 		testWS.rx = document.getElementById("ws-rx");
 		testWS.rx.value = "";
 	}
+	const path = document.getElementById("ws-path").value;
+	if (path === "") {
+		alert("Please choose a path as none has been selected");
+		return;
+	}
 	sender.classList.add("background-green");
 	sender.classList.remove("background-error");
 	sender.innerText = "Close";
 
-	testWS.ws = openWS(document.getElementById("ws-path").value,
+	testWS.ws = openWS(path,
 	(event) => { // Open
 		testWS.event.value += `Open new connection path=[${event.target.url}]\n`;
 	},
@@ -32,7 +37,11 @@ function testWS(sender) {
 		testWS.event.scrollTo({top: testWS.event.scrollHeight, behavior: "smooth"});
 	},
 	(event) => { // RX
-		testWS.rx.value += event.data + "\n";
+		if (event.data.endsWith("\n")) {
+			testWS.rx.value += event.data;
+		} else {
+			testWS.rx.value += event.data + "\n";
+		}
 		testWS.rx.scrollTo({top: testWS.rx.scrollHeight, behavior: "smooth"});
 	});
 }

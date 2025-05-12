@@ -12,14 +12,14 @@ repositories {
 
 ext {
 	// These are used in dependencies {} and baked in Version.java on build
-	versionSqlite = '3.47.0.0'
+	versionSqlite = '3.49.1.0'
 	versionHtmlflow = '4.6'
 	versionSqlBuilder = '3.0.2'
-	versionJavaWebSocket = '1.5.7'
-	versionSpringSecurityCrypto = '6.3.4'
-	versionOpenhtmltopdf = '1.0.10'
+	versionJavaWebSocket = '1.6.0'
+	versionSpringSecurityCrypto = '6.4.5'
+	versionOpenhtmltopdf = '1.1.26'
 	versionOpenPDF = '2.0.3'
-	versionBatik = '1.18'
+	versionBatik = '1.19'
 }
 
 dependencies {
@@ -29,9 +29,9 @@ dependencies {
 	implementation group: 'org.java-websocket', name: 'Java-WebSocket', version: versionJavaWebSocket
 	implementation group: 'org.springframework.security', name: 'spring-security-crypto', version: versionSpringSecurityCrypto
 
-	implementation group: 'com.openhtmltopdf', name: 'openhtmltopdf-core', version: versionOpenhtmltopdf
-	implementation group: 'com.openhtmltopdf', name: 'openhtmltopdf-pdfbox', version: versionOpenhtmltopdf
-	implementation group: 'com.openhtmltopdf', name: 'openhtmltopdf-svg-support', version: versionOpenhtmltopdf
+	implementation group: 'io.github.openhtmltopdf', name: 'openhtmltopdf-core', version: versionOpenhtmltopdf
+	implementation group: 'io.github.openhtmltopdf', name: 'openhtmltopdf-pdfbox', version: versionOpenhtmltopdf
+	implementation group: 'io.github.openhtmltopdf', name: 'openhtmltopdf-svg-support', version: versionOpenhtmltopdf
 	implementation group: 'com.github.librepdf', name: 'openpdf', version: versionOpenPDF
 	implementation group: 'org.apache.xmlgraphics', name: 'batik', version: versionBatik
 
@@ -138,7 +138,7 @@ compileJava.doFirst {
 			def html = "\"HtmlFlow\",\"${versionHtmlflow}\",\"https://github.com/xmlet/HtmlFlow\""
 			def websocket = "\"Java-WebSocket\",\"${versionJavaWebSocket}\",\"https://github.com/TooTallNate/Java-WebSocket\""
 			def sec = "\"Spring Security Crypto\",\"${versionSpringSecurityCrypto}\",\"https://github.com/spring-projects/spring-security\""
-			def pdf = "\"Open HTML to PDF\",\"${versionOpenhtmltopdf}\",\"https://github.com/danfickle/openhtmltopdf\""
+			def pdf = "\"Open HTML to PDF\",\"${versionOpenhtmltopdf}\",\"https://github.com/openhtmltopdf/openhtmltopdf\""
 			def pdfo = "\"OpenPDF\",\"${versionOpenPDF}\",\"https://github.com/LibrePDF/OpenPDF\""
 			def batik = "\"Batik\",\"${versionBatik}\",\"https://github.com/apache/xmlgraphics-batik\""
 			def breeze = "\"KDE Breeze Icons\",\"5.80.0\",\"https://github.com/KDE/breeze-icons\""
