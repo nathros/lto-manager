@@ -8,6 +8,7 @@ public class CSS {
 	public final static String GAP_NONE = "gap-none ";
 	public final static String GAP_HALF = "gap-half ";
 	public final static String GAP_BOTTOM = "gap-margin ";
+	public final static String WIDTH_AVAILABLE = "wfill-available ";
 
 	public final static String HEADER_ITEM = "header-item ";
 	public final static String HEADER_LABEL_TOP = "header-label-top ";
@@ -147,4 +148,5 @@ public class CSS {
 	public final static String ERROR = "error ";
 	public final static String OK = "ok ";
 	public final static String INFO = "info ";
+	public final static String WARN = "warning ";
 }

@@ -27,14 +27,14 @@ public class AppUpdateHandler extends BaseHTTPHandler {
 	static Void content(Div<?> view, BodyModel model) {
 		view
 			.div()
-				.of(div -> OnLoad.content(div, OnLoadOptions.of(AJAXCheckUpdates.PATH)))
+				.of(div -> OnLoad.spinner(div, OnLoadOptions.of(AJAXCheckUpdates.PATH, "", "")))
 			.__(); // div
 		return null;
 	}
 
 	@Override
 	public void requestHandle(HttpExchange he, BodyModel bm) throws IOException, InterruptedException, ExecutionException {
-		HeadModel thm = HeadModel.of(NAME).addScript(Asset.JS_AJAX);
+		HeadModel thm = HeadModel.of(NAME).addScript(Asset.JS_AJAX).addScript(Asset.JS_WEBSOCKET).addScriptDefer(Asset.JS_ADMIN_UPDATE);
 		BreadCrumbs crumbs = new BreadCrumbs().add(AdminHandler.NAME, AdminHandler.PATH).add(NAME, PATH);
 		TemplatePageModel tpm = TemplatePageModel.of(AppUpdateHandler::content, null, thm, SelectedPage.Admin, bm, crumbs);
 		requestHandleCompletePage(he, tpm);

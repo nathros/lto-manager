@@ -1,5 +1,6 @@
-#!/bin/bash
-JAR=build/libs/lto-manager-all.jar
+#! /bin/bash
+
+JAR=build/openltom-Dev-Build.jar
 
 HTTP_PORT=9000
 

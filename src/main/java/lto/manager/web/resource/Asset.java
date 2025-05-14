@@ -26,6 +26,7 @@ public class Asset {
 	public static final String JS_DASHBOARD = AssetHandler.PATH + "js/dashboard.js";
 	public static final String JS_LIST = AssetHandler.PATH + "js/list.js";
 	public static final String JS_TEST_WEBSOCKET = AssetHandler.PATH + "js/sandpit/websocket.js";
+	public static final String JS_ADMIN_UPDATE = AssetHandler.PATH + "js/admin/update.js";
 
 	public static final String IMG_FAVICO_SVG = AssetHandler.PATH + "img/favico.svg";
 	public static final String IMG_LOGO = AssetHandler.PATH + "img/logo.svg";
@@ -41,5 +42,5 @@ public class Asset {
 	public static final String PATH_AJAX_BASE = "/ajax/";
 	public static final String PATH_API_BASE = "/api/";
 	public static final String PATH_SANDPIT_BASE = "/sandpit/";
-	public static final String PATH_WEBSOCKET_BASE = "/ws/";//
+	public static final String PATH_WEBSOCKET_BASE = "/ws/";
 }

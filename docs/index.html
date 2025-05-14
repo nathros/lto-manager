@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+@import url('https://fonts.googleapis.com/css?family=IBM+Plex+Mono');
+* {
+	font-family: "Open Sans", sans-serif;
+}
+a {
+	color: #21D4FD;
+	transition: all 0.3s;
+}
+a:hover {
+	color: #B721FF;
+}
+.tabbed {
+	overflow-x: hidden;
+	border-bottom: 1px solid #ccc;
+}
+.tabbed [type="radio"] {
+	display: none;
+}
+.tabs {
+	display: flex;
+	align-items: stretch;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	border-bottom: 2px solid #ccc;
+	overflow-y: clip;
+}
+.tab > label {
+	display: flex;
+	margin-bottom: -1px;
+	padding: 12px 15px;
+  opacity: 50%;
+	background: white;
+	color: #666;
+	font-size: 12px;
+	font-weight: 600;
+	letter-spacing: 1px;
+	cursor: pointer;
+	transition: all 0.3s;
+	filter: grayscale(1);
+	height: 100%;
+}
+.tab:hover label {
+	opacity: 100%;
+	filter: grayscale(0);
+}
+li > label > img {
+	width: 15px;
+	margin-bottom: auto;
+	padding-right: 8px;
+	padding-top: 1px;
+}
+.tab-content {
+	display: none;
+	color: #777;
+	background-color: #eee;
+}
+.tabbed [type="radio"]:nth-of-type(1):checked ~ .tabs .tab:nth-of-type(1) label,
+.tabbed [type="radio"]:nth-of-type(2):checked ~ .tabs .tab:nth-of-type(2) label,
+.tabbed [type="radio"]:nth-of-type(3):checked ~ .tabs .tab:nth-of-type(3) label,
+.tabbed [type="radio"]:nth-of-type(4):checked ~ .tabs .tab:nth-of-type(4) label,
+.tabbed [type="radio"]:nth-of-type(5):checked ~ .tabs .tab:nth-of-type(5) label {
+	background: #eee;
+	color: #222;
+	filter: grayscale(0);
+	opacity: 100%;
+}
+.tabbed [type="radio"]:nth-of-type(1):checked ~ .tab-content:nth-of-type(1),
+.tabbed [type="radio"]:nth-of-type(2):checked ~ .tab-content:nth-of-type(2),
+.tabbed [type="radio"]:nth-of-type(3):checked ~ .tab-content:nth-of-type(3),
+.tabbed [type="radio"]:nth-of-type(4):checked ~ .tab-content:nth-of-type(4) {
+	display: block;
+}
+
+.ubuntu-logo {
+	content: url(https://raw.githubusercontent.com/nathros/nathros.github.io/master/images/external/ubuntu.svg);
+}
+
+.void-logo {
+	content: url(https://raw.githubusercontent.com/nathros/nathros.github.io/master/images/external/void-linux.svg);
+}
+
+.windows-logo {
+	content: url(https://raw.githubusercontent.com/nathros/nathros.github.io/master/images/external/windows.svg);
+}
+/*<!-- https://highlight.hohli.com/index.php -->*/
+
+.bash {
+	font-family: "IBM Plex Mono", monospace;
+	font-size: 1rem;
+	margin: 0;
+}
+</style>
+
+</head>
+<body>
+
+<h2>Install Java</h2>
+<div class="tabbed">
+	<input type="radio" id="tab1a" name="css-tabsa" checked>
+	<input type="radio" id="tab2a" name="css-tabsa">
+	<input type="radio" id="tab3a" name="css-tabsa">
+	<input type="radio" id="tab4a" name="css-tabsa">
+
+	<ul class="tabs">
+		<li class="tab"><label for="tab1a"><img class="ubuntu-logo"/>Ubuntu 18.04</label></li>
+		<li class="tab"><label for="tab2a"><img class="ubuntu-logo"/>Ubuntu 20.04</label></li>
+		<li class="tab"><label for="tab3a"><img class="void-logo"/>Void Linux</label></li>
+		<li class="tab"><label for="tab4a"><img class="windows-logo"/>Windows</label></li>
+	</ul>
+
+	<div class="tab-content">
+<pre class="bash" style="font-family:monospace;"><span style="color: #c20cb9; font-weight: bold;">sudo</span> add-apt-repository ppa:linuxuprising<span style="color: #000000; font-weight: bold;">/</span><span style="color: #c20cb9; font-weight: bold;">java</span> 
+<span style="color: #c20cb9; font-weight: bold;">sudo</span> apt update 
+<span style="color: #c20cb9; font-weight: bold;">sudo</span> apt <span style="color: #c20cb9; font-weight: bold;">install</span> oracle-java17-installer
+<span style="color: #c20cb9; font-weight: bold;">sudo</span> apt <span style="color: #c20cb9; font-weight: bold;">install</span> oracle-java17-set-default</pre>
+	</div>
+  
+	<div class="tab-content">
+<pre class="bash" style="font-family:monospace;"><span style="color: #c20cb9; font-weight: bold;">sudo</span> apt update
+<span style="color: #c20cb9; font-weight: bold;">sudo</span> apt <span style="color: #c20cb9; font-weight: bold;">install</span> openjdk-<span style="color: #000000;">17</span>-jdk openjdk-<span style="color: #000000;">17</span>-jre</pre>
+	</div>
+
+	<div class="tab-content">
+<pre class="bash" style="font-family:monospace;"><span style="color: #c20cb9; font-weight: bold;">sudo</span> xbps-install <span style="color: #660033;">-Su</span>
+<span style="color: #c20cb9; font-weight: bold;">sudo</span> xbps-install openjdk17 openjdk17-jre</pre>
+	</div>
+
+	<div class="tab-content">
+Download and install: <a href="https://download.oracle.com/java/17/archive/jdk-17.0.4_windows-x64_bin.exe">https://download.oracle.com/java/17/archive/jdk-17.0.4_windows-x64_bin.exe</a>
+<br>
+Run Command Prompt as Admin:
+<pre class="bash" style="font-family:monospace;">setx <span style="color: #000000; font-weight: bold;">/</span>M PATH <span style="color: #ff0000;">&quot;%PATH%;C:\Program Files\Java\jdk-17.0_4\bin&quot;</span></pre>
+	</div>
+</div>
+
+<h2>Install Gradle</h2>
+
+<div class="tabbed">
+	<input type="radio" id="tab1b" name="css-tabsb" checked>
+	<input type="radio" id="tab2b" name="css-tabsb">
+	<input type="radio" id="tab3b" name="css-tabsb">
+	<ul class="tabs">
+		<li class="tab"><label for="tab1b"><img class="ubuntu-logo"/>Ubuntu 18.04 / 20.04</label></li>
+		<li class="tab"><label for="tab2b"><img class="void-logo"/>Void Linux</label></li>
+		<li class="tab"><label for="tab3b"><img class="windows-logo"/>Windows</label></li>
+	</ul>
+
+	<div class="tab-content">
+<pre class="bash" style="font-family:monospace;"><span style="color: #7a0874; font-weight: bold;">export</span> <span style="color: #007800;">VER</span>=<span style="color: #000000;">7.2</span>
+<span style="color: #c20cb9; font-weight: bold;">sudo</span> <span style="color: #c20cb9; font-weight: bold;">mkdir</span> <span style="color: #000000; font-weight: bold;">/</span>opt<span style="color: #000000; font-weight: bold;">/</span>gradle
+<span style="color: #c20cb9; font-weight: bold;">sudo</span> <span style="color: #c20cb9; font-weight: bold;">chown</span> $<span style="color: #7a0874; font-weight: bold;">&#40;</span><span style="color: #c20cb9; font-weight: bold;">whoami</span><span style="color: #7a0874; font-weight: bold;">&#41;</span> <span style="color: #000000; font-weight: bold;">/</span>opt<span style="color: #000000; font-weight: bold;">/</span>gradle
+<span style="color: #c20cb9; font-weight: bold;">mkdir</span> <span style="color: #000000; font-weight: bold;">/</span>opt<span style="color: #000000; font-weight: bold;">/</span>gradle<span style="color: #000000; font-weight: bold;">/</span>gradle-<span style="color: #007800;">$VER</span><span style="color: #000000; font-weight: bold;">/</span>
+<span style="color: #7a0874; font-weight: bold;">cd</span> <span style="color: #000000; font-weight: bold;">/</span>opt<span style="color: #000000; font-weight: bold;">/</span>gradle<span style="color: #000000; font-weight: bold;">/</span>gradle-<span style="color: #007800;">$VER</span><span style="color: #000000; font-weight: bold;">/</span>
+<span style="color: #c20cb9; font-weight: bold;">wget</span> https:<span style="color: #000000; font-weight: bold;">//</span>services.gradle.org<span style="color: #000000; font-weight: bold;">/</span>distributions<span style="color: #000000; font-weight: bold;">/</span>gradle-<span style="color: #007800;">$VER</span>-bin.zip
+<span style="color: #c20cb9; font-weight: bold;">unzip</span> gradle-<span style="color: #007800;">$VER</span>-bin.zip
+<span style="color: #c20cb9; font-weight: bold;">rm</span> gradle-<span style="color: #007800;">$VER</span>-bin.zip
+<span style="color: #7a0874; font-weight: bold;">export</span> <span style="color: #007800;">PATH</span>=<span style="color: #007800;">$PATH</span>:<span style="color: #000000; font-weight: bold;">/</span>opt<span style="color: #000000; font-weight: bold;">/</span>gradle<span style="color: #000000; font-weight: bold;">/</span>gradle-<span style="color: #007800;">$VER</span><span style="color: #000000; font-weight: bold;">/</span>bin
+<span style="color: #7a0874; font-weight: bold;">echo</span> <span style="color: #7a0874; font-weight: bold;">export</span> <span style="color: #007800;">PATH</span>=<span style="color: #007800;">$PATH</span>:<span style="color: #000000; font-weight: bold;">/</span>opt<span style="color: #000000; font-weight: bold;">/</span>gradle<span style="color: #000000; font-weight: bold;">/</span>gradle-<span style="color: #007800;">$VER</span><span style="color: #000000; font-weight: bold;">/</span>bin <span style="color: #000000; font-weight: bold;">&gt;&gt;</span> ~<span style="color: #000000; font-weight: bold;">/</span>.bashrc</pre>
+	</div>
+
+	<div class="tab-content">
+<pre class="bash" style="font-family:monospace;"><span style="color: #c20cb9; font-weight: bold;">sudo</span> xbps-install gradle</pre>
+	</div>
+  
+	<div class="tab-content">
+Download: <a href="https://services.gradle.org/distributions/gradle-7.2-bin.zip">https://services.gradle.org/distributions/gradle-7.2-bin.zip</a>
+Extract to: `C:\Gradle`
+<br>
+Run Command Prompt as Admin:
+<pre class="bash" style="font-family:monospace;">setx <span style="color: #000000; font-weight: bold;">/</span>M PATH <span style="color: #ff0000;">&quot;%PATH%;C:\Gradle\bin&quot;</span></pre>
+	</div>
+</div>
+
+<h2>Install LTFS</h2>
+Make sure your tape drive is visible, if this returns nothing then check cables / system configuration
+```sh
+ls /dev/ | grep nst
+```
+Compile and install: https://github.com/LinearTapeFileSystem/ltfs
+<div class="tabbed">
+  <input type="radio" id="tab1c" name="css-tabsc" checked>
+  <input type="radio" id="tab2c" name="css-tabsc">
+  <input type="radio" id="tab3c" name="css-tabsc">
+  
+  <ul class="tabs">
+    <li class="tab"><label for="tab1c"><img class="ubuntu-logo"/>Ubuntu 18.04 / 20.04</label></li>
+    <li class="tab"><label for="tab2c"><img class="void-logo"/>Void Linux</label></li>
+    <li class="tab"><label for="tab3c"><img class="windows-logo"/>Windows</label></li>
+  </ul>
+  
+  <div class="tab-content">
+	  <!-- ubuntu add users to tape and disk, create mount dir-->
+sudo apt-get update
+sudo apt-get install -y libicu-dev libfuse-dev libxml2-dev uuid-dev libperl-dev libsnmp-perl
+sudo apt-get install -y snapd - -wrong
+sudo snap install -y net-snmp
+
+sudo mkdir /opt/ltfs
+sudo chown $(whoami) /opt/ltfs
+cd /opt/ltfs
+git clone https://github.com/LinearTapeFileSystem/ltfs
+mv ltfs/{.[!.],}* /opt/ltfs/
+
+./autogen.sh
+./configure
+make
+sudo make install
+
+#if you run ltfs now it will complain that libraries are missing - the fix
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/ltfs/src/libltfs/.libs/
+echo export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/ltfs/src/libltfs/.libs/ >> ~/.bashrc
+
+ltfs # test command
+
+sudo wget https://raw.githubusercontent.com/LinearTapeFileSystem/Debian10-Build/master/icu-config -P /usr/bin/
+sudo chmod +x /usr/bin/icu-config
+// https://github.com/LinearTapeFileSystem/ltfs/issues/153#issuecomment-572861771
+// https://github.com/LinearTapeFileSystem/ltfs/issues/237
+  </div>
+  
+  <div class="tab-content">
+    sudo xbps-install -Su<br>
+    sudo xbps-install openjdk17 openjdk17-jre
+  </div>
+  
+  <div class="tab-content">
+    <p>Our conversations with other pilgrims have led to an awakening of pseudo-astral consciousness. Who are we? Where on the great myth will we be re-energized? We are at a crossroads of complexity and stagnation.</p>
+  </div>
+</div>
+
+</body>
+</html>

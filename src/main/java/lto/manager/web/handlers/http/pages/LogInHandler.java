@@ -59,6 +59,9 @@ public class LogInHandler extends BaseHTTPHandler {
 				if (loginResult.statusOK()) { // If login success redirect to /
 					model.getBodyModel().setNewSession((UUID)loginResult.getObject());
 					model.getBodyModel().clearAssetCache();
+					try {
+						Thread.sleep(255);
+					} catch (InterruptedException ignored) {}
 					root
 						.head()
 							.meta()

@@ -16,6 +16,8 @@ import org.xmlet.htmlapifaster.Div;
 import com.sun.net.httpserver.HttpExchange;
 
 import lto.manager.Version;
+import lto.manager.common.Util;
+import lto.manager.common.Util.ContainerType;
 import lto.manager.common.database.tables.records.RecordRole.Permission;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.partial.inlinemessage.InlineMessage;
@@ -23,17 +25,19 @@ import lto.manager.web.handlers.http.templates.TemplateAJAX.TemplateFetcherModel
 import lto.manager.web.handlers.http.templates.models.BodyModel;
 import lto.manager.web.resource.Asset;
 import lto.manager.web.resource.CSS;
+import lto.manager.web.resource.Link;
 
 public class AJAXCheckUpdates extends BaseHTTPHandler {
 	public static final String PATH = Asset.PATH_AJAX_BASE + "admin/update";
 	public static final Permission PERMISSION = Permission.SYSTEM_SETTINGS_UPDATE;
-	private static final String CHANGELOG_URL = "https://github.com/nathros/release-test/releases/latest/download/Changelog";
 
 	static Void content(Div<?> view, BodyModel model) {
 		final String changeLogFile = "/tmp/" + UUID.randomUUID().toString();
 
+		//f.getAbsolutePath()
+
 		// Download changelog to temp file
-		try (BufferedInputStream in = new BufferedInputStream(new URL(CHANGELOG_URL).openStream());
+		try (BufferedInputStream in = new BufferedInputStream(new URL(Link.LINK_GITHUB_CHANGELOG).openStream());
 				FileOutputStream fileOutputStream = new FileOutputStream(changeLogFile)) {
 			byte dataBuffer[] = new byte[1024];
 			int bytesRead;
@@ -43,6 +47,7 @@ public class AJAXCheckUpdates extends BaseHTTPHandler {
 
 			final String changeLogContent = Files.readString(Path.of(changeLogFile), Charset.defaultCharset());
 			final String latestVersion = changeLogContent.substring(changeLogContent.indexOf('[') + 1, changeLogContent.indexOf(']'));
+			final ContainerType containerType = Util.runningInContainer();
 			final boolean canUpdate = Arrays.asList(Version.VERSION, latestVersion).stream().sorted().findFirst().get().equals(Version.VERSION);
 			view
 				.div()
@@ -57,10 +62,31 @@ public class AJAXCheckUpdates extends BaseHTTPHandler {
 					.__()
 				.__()
 				.of(o -> {
-					if (Version.VERSION.equals("UNDEFINED")) {
+					if (containerType != ContainerType.None) {
+						o.div().of(innerD -> InlineMessage.contentGenericWarning(CSS.GROUP, innerD, "Update unavailable when running in " + containerType)).__();
+					} else if (Version.VERSION.equals("UNDEFINED")) {
 						o.div().of(innerD -> InlineMessage.contentGenericInfo(CSS.GROUP, innerD, "Cannot update development version")).__();
 					} else if (canUpdate) {
-						o.div().of(innerD -> InlineMessage.contentGenericOK(CSS.GROUP, innerD, "Update available")).__();
+						o.div().attrId("progress-inline").of(innerD -> InlineMessage.contentGenericOK(CSS.GROUP, innerD, "Update available")).__();
+						o.div()
+							.attrStyle("display:flex;gap:var(--padding)")
+							.div()
+								.attrClass(CSS.GROUP).attrStyle("flex:1").addAttr(CSS.GROUP_ATTRIBUTE, "Upgrade" )
+								.button()
+									.attrClass(CSS.BUTTON)
+									.attrOnclick("startUpdate()")
+									.text("Upgrade to " + latestVersion)
+								.__()
+								.textarea()
+									.attrId("progress")
+									.attrStyle("display:none")
+									.attrClass(CSS.WIDTH_AVAILABLE)
+									.attrStyle("height:10rem")
+									.attrReadonly(true)
+								.__()
+							.__()
+						.__();
+
 					} else if (Version.VERSION.equals(latestVersion)) {
 						o.div().of(innerD -> InlineMessage.contentGenericInfo(CSS.GROUP, innerD, "Already using latest version")).__();
 					} else {
@@ -70,13 +96,14 @@ public class AJAXCheckUpdates extends BaseHTTPHandler {
 				.div()
 					.attrClass(CSS.GROUP).addAttr(CSS.GROUP_ATTRIBUTE, "Change Log")
 					.textarea()
-						.attrStyle("width:calc(100% - var(--padding) * 2);height:20rem;resize:vertical;")
+						.attrClass(CSS.WIDTH_AVAILABLE)
+						.attrStyle("height:20rem")
 						.attrReadonly(true)
 						.text(changeLogContent)
 					.__()
 				.__();
 		} catch (IOException e) {
-			view.of(div -> InlineMessage.contentGenericError(div, "Unable to fetch updates", e.toString()));
+			view.of(div -> InlineMessage.contentGenericError(div, "Failure in fetching updates", e.toString()));
 		}
 
 		try { // Cleanup

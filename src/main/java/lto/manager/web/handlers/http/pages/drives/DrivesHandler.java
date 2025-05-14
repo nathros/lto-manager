@@ -27,7 +27,7 @@ public class DrivesHandler extends BaseHTTPHandler {
 	static Void body(Div<?> view, BodyModel model) {
 		view
 			.div()
-				.of(div -> OnLoad.content(div, OnLoadOptions.of(AJAXGetAttachedDrivesFetcher.PATH)))
+				.of(div -> OnLoad.spinner(div, OnLoadOptions.of(AJAXGetAttachedDrivesFetcher.PATH, "", "")))
 			.__(); // div
 		return null;
 	}

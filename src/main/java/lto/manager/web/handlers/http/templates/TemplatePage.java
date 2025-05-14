@@ -33,6 +33,7 @@ import lto.manager.web.resource.Asset;
 import lto.manager.web.resource.CSS;
 import lto.manager.web.resource.HTML;
 import lto.manager.web.resource.JS;
+import lto.manager.web.resource.Link;
 
 public class TemplatePage {
 	public static enum SelectedPage {
@@ -161,7 +162,7 @@ public class TemplatePage {
 								.li()
 									.a()
 										.attrClass(CSS.ICON_GITHUB + CSS.HEADER_MENU_ITEM_ICON + CSS.HEADER_MENU_ITEM_ICON_SMALL)
-										.attrHref("https://github.com/nathros/lto-manager")
+										.attrHref(Link.LINK_GITHUB)
 										.attrTarget(HTML.TARGET_BLANK)
 										.text("GitHub")
 									.__()

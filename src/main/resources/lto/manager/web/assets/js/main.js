@@ -122,14 +122,18 @@ function toastButtonPromise(url) {
 
 function toastButtonPromiseCallBack(callBack) {
 	return new Promise((resolve/*, reject*/) => {
-		let ok = document.getElementById("toast-ok");
-		let cancel = document.getElementById("toast-cancel");
-		let okFn = () => {
+		const ok = document.getElementById("toast-ok");
+		const cancel = document.getElementById("toast-cancel");
+		const okFn = () => {
+			cancel.removeEventListener('click', cancelFn);
 			resolve(ToastResponse.Ok);
 			hideToast();
 			callBack();
 		};
-		let cancelFn = () => {
+		const cancelFn = () => {
+			// Remove other listener as if you press cancel multiple
+			// times it will trigger ok same number of times on click ok
+			ok.removeEventListener('click', okFn);
 			resolve(ToastResponse.Cancel);
 			hideToast();
 		};

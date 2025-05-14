@@ -1,5 +1,6 @@
 function openWS(path, open, close, error, message) {
-	const host = `ws://${location.hostname}:8887${path}`;
+	const protocol = document.location.protocol.includes("s") ? "wss" : "ws";
+	const host = `${protocol}://${location.hostname}:8887${path}`;
 	const ws = new WebSocket(host);
 	ws.onopen = open;
 	ws.onclose = close;

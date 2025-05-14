@@ -1105,3 +1105,10 @@ https://codepen.io/sudeepgumaste/pen/abdrorB
 .tooltip:last-child {
 	margin-right: 5px;
 }
+
+.wfill-available {
+	width: calc(100% - var(--padding) * 2);
+}
+textarea.wfill-available {
+	resize: vertical;
+}

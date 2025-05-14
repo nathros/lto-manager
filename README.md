@@ -200,7 +200,8 @@ Add `C:\Gradle\bin` to `Environmental Variables`
 </details>-->
 
 
-3. Compiled Jar will be named `lto-manager-all.jar` in `build/libs`
+3. Compiled Jar will be named `openltom-VERSION.jar` in directory `build`
+   Note: VERSION will be `Dev-Build` for untagged commit
 
 ## Usage
 

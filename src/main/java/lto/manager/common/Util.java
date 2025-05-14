@@ -5,8 +5,11 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.jar.Attributes;
 import java.util.jar.JarInputStream;
 import java.util.jar.Manifest;
@@ -96,5 +99,32 @@ public class Util {
 		// Calling Log.severe() will show incorrect caller, need parent of caller
 		Log.customStackIndexSevere(exception.getMessage(), Log.STACK_INDEX_PARENT);
 		throwException(exception);
+	}
+
+	public static ContainerType runningInContainer() {
+		if (new File("/.dockerenv").exists() == true) {
+			return ContainerType.Docker;
+		} else {
+			try {
+				List<String> list = Files.readAllLines(new File("/proc/1/cgroup").toPath(), Charset.defaultCharset());
+				for (int index = list.size() - 1; index >= 0; index--) {
+					final String line = list.get(index);
+					if (line.startsWith("0:")) {
+						if (line.contains("/docker")) {
+							return ContainerType.Docker;
+						} else if (line.equals("0::/")) {
+							return ContainerType.LXC;
+						}
+					}
+				}
+			} catch (IOException e) {
+				Log.severe("Failed to check if running in container: " + e.getMessage());
+			}
+		}
+		return ContainerType.None;
+	}
+
+	public enum ContainerType {
+		None, Docker, LXC
 	}
 }

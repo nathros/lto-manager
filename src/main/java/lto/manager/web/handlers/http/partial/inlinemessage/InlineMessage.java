@@ -56,6 +56,19 @@ public class InlineMessage {
 		return null;
 	}
 
+	public static Void contentGenericError(final String classStr, Div<?> view, final String title, final String message) {
+		view.attrClass(CSS.INLINE_MESSAGE + CSS.ERROR + classStr)
+			.span().__()
+			.b().text(title).__()
+			.a().attrClass(CSS.INLINE_MESSAGE_DETAILS_LINK).attrTabIndex(1).text("Show Details").__()
+			.div()
+				.attrClass(CSS.INLINE_MESSAGE_DETAILS_CONTENT + CSS.FONT_MONOSPACE + CSS.FONT_SMALL).attrTabIndex(2)
+				.text(message)
+			.__()
+		.__();
+		return null;
+	}
+
 	// Self closing
 	public static Void contentGenericError(Div<?> view, final String title) {
 		view.attrClass(CSS.INLINE_MESSAGE + CSS.ERROR)
@@ -75,6 +88,22 @@ public class InlineMessage {
 
 	public static Void contentGenericOK(final String classStr, Div<?> view, final String title) {
 		view.attrClass(CSS.INLINE_MESSAGE + CSS.OK + classStr)
+			.span().__()
+			.b().text(title).__()
+		.__();
+		return null;
+	}
+
+	public static Void contentGenericWarning(Div<?> view, final String title) {
+		view.attrClass(CSS.INLINE_MESSAGE + CSS.WARN)
+			.span().__()
+			.b().text(title).__()
+		.__();
+		return null;
+	}
+
+	public static Void contentGenericWarning(final String classStr, Div<?> view, final String title) {
+		view.attrClass(CSS.INLINE_MESSAGE + CSS.WARN + classStr)
 			.span().__()
 			.b().text(title).__()
 		.__();

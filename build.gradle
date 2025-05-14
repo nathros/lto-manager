@@ -1,4 +1,5 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import java.security.MessageDigest
 
 plugins {
 	id 'java'
@@ -70,7 +71,7 @@ def gitCommand = { String[] cmd ->
 def getVersionNumber = { ->
 	final versionTag = gitCommand(new String[]{"git", "tag", "--points-at", "HEAD"})
 	if (versionTag.equals("")) {
-		return "Dev Build"
+		return "Dev-Build"
 	} else {
 		return versionTag;
 	}
@@ -155,4 +156,31 @@ compileJava.doFirst {
 compileJava.doLast {
 	new File(version).bytes = new File(versionBackup).bytes
 	delete(versionBackup)
+}
+
+shadowJar {
+	def jarName = "openltom-${getVersionNumber()}"
+	def gradleMajorVersion = project.getGradle().getGradleVersion().substring(0, 1);
+
+	// minimize()
+	archiveBaseName = jarName
+	if (gradleMajorVersion == "7") {
+		classifier = null // Gradle 7
+	} else {
+		archiveClassifier = null // Gradle 8
+	}
+	archiveVersion = null
+
+	doLast {
+		copy { // Move jar file to root of build dir
+			from "build/libs/${jarName}.jar"
+			into "build/"
+		}
+		delete("build/libs/${jarName}.jar")
+
+		// Calculate checksum
+		def builtJar = project.projectDir.toString() + "/build/${jarName}.jar"
+		def checksum = MessageDigest.getInstance("SHA256").digest(new File(builtJar).bytes).encodeHex().toString()
+		new File("${builtJar}.sha256").text = "${checksum} ${jarName}.jar"
+	}
 }
