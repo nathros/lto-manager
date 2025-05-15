@@ -3,7 +3,7 @@ package lto.manager.web.handlers.http.ajax.admin;
 import java.io.BufferedInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URL;
+import java.net.URI;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -37,7 +37,8 @@ public class AJAXCheckUpdates extends BaseHTTPHandler {
 		//f.getAbsolutePath()
 
 		// Download changelog to temp file
-		try (BufferedInputStream in = new BufferedInputStream(new URL(Link.LINK_GITHUB_CHANGELOG).openStream());
+
+		try (BufferedInputStream in = new BufferedInputStream(URI.create(Link.LINK_GITHUB_CHANGELOG).toURL().openStream());
 				FileOutputStream fileOutputStream = new FileOutputStream(changeLogFile)) {
 			byte dataBuffer[] = new byte[1024];
 			int bytesRead;

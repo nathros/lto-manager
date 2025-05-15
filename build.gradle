@@ -5,6 +5,7 @@ plugins {
 	id 'java'
 	id 'application'
 	id 'com.github.johnrengelman.shadow' version '7.1.2'
+	id 'org.graalvm.buildtools.native' version '0.10.6'
 }
 
 repositories {
@@ -88,8 +89,8 @@ jar {
 }
 
 java {
-	sourceCompatibility = JavaVersion.VERSION_17
-	targetCompatibility = JavaVersion.VERSION_17
+	sourceCompatibility = JavaVersion.VERSION_21
+	targetCompatibility = JavaVersion.VERSION_21
 }
 
 def version = project.projectDir.toString() + "/src/main/java/lto/manager/Version.java"

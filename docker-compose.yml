@@ -1,0 +1,10 @@
+
+services:
+  dev:
+    image: open-lto-manager-dev:latest
+    build:
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./:/app
+    # tty: true
+    # command: bash

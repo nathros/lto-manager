@@ -21,7 +21,7 @@ public class AJAXGetInlineMessage extends BaseHTTPHandler {
 	static Void content(Div<?> view, BodyModel model) {
 		final String title = model.getQuery("title");
 		final String message = model.getQuery("message");
-		final String extraPadding = null;//model.getQuery("p");
+		final String extraPadding = model.getQuery("p");
 		final InlineMessageType type = InlineMessageType.valueOf(model.getQuery("type"));
 		if (type == InlineMessageType.good) {
 			if (extraPadding != null) {

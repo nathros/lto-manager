@@ -1,0 +1,37 @@
+FROM debian:12.10
+
+ENV CONTAINER docker
+
+RUN mkdir /tmp/oltom
+COPY script/ /tmp/oltom/script
+
+# Gobal packages
+RUN apt update && apt install -y unzip wget git vim
+# Java via package manager
+# RUN apt install -y openjdk-21-jdk
+
+# Java JRE manual install 
+# RUN apt install -y curl jq
+# RUN /tmp/oltom/script/install-java.sh 21
+
+# Packages for Graalvm
+RUN apt install -y gcc zlib1g-dev
+RUN /tmp/oltom/script/install-graalvm.sh 21
+
+# Install Gradle - use from from Graalvm
+RUN /tmp/oltom/script/install-gradle.sh
+RUN export GRADLE_OPTS=-Dorg.gradle.project.buildDir=/app/build-docker >> ~/.bashrc
+
+# Mount source here
+RUN mkdir /app
+# Allows git to access repo
+RUN git config --global --add safe.directory /app
+WORKDIR /app
+
+# HTTP
+EXPOSE 9000
+# Websocket
+EXPOSE 8997
+
+# Keep image running
+CMD tail -f /dev/null

@@ -61,7 +61,7 @@ This tool is intended for managing a single tape drive.
 
 ### Built With
 
-* [![Java][java-17]][java-17-url]
+* [![Java][java-21]][java-21-url]
 * [![Java][gradle]][gradle-url]
 
 ## Java Libraries
@@ -74,7 +74,7 @@ This is an example of how you may give instructions on setting up your project l
 To get a local copy up and running follow these simple example steps.
 
 ### Prerequisites
-* Java 17 LTS recommended (should build with 21)
+* Java 21 LTS recommended (should build with 21)
 * Gradle 7.x (8.x builds successfully with warnings)
 * LTFS
 
@@ -86,7 +86,7 @@ To get a local copy up and running follow these simple example steps.
 These commands apply to Debian and derivatives such as Ubuntu, your own system maybe different
 ```sh
 sudo apt-get update
-sudo apt-get install openjdk-17-jdk openjdk-17-jre
+sudo apt-get install openjdk-21-jdk openjdk-21-jre
 ```
 
 ### Install LTFS
@@ -145,18 +145,18 @@ This will install the latest release from version 7
 <summary><u><b>Expand</b></u></summary>
 
 ### Install Java
-Download and install: https://download.oracle.com/java/17/archive/jdk-17.0.4_windows-x64_bin.exe
+Download and install: https://download.oracle.com/java/21/archive/jdk-21.0.4_windows-x64_bin.exe
 
 Run CMD as Admin
 ```sh
-setx /M PATH "%PATH%;C:\Program Files\Java\jdk-17.0_4\bin"
+setx /M PATH "%PATH%;C:\Program Files\Java\jdk-21.0_4\bin"
  ```
 
 or
 
 In <b>File Explorer</b> right-click on the `This PC` (or `Computer`) icon, then click `Properties` -> `Advanced System Settings` -> `Environmental Variables`.
 
-Under `System Variables` select Path, then click Edit. Add an entry for `C:\Program Files\Java\jdk-17.0_4\bin`. Click OK to save.
+Under `System Variables` select Path, then click Edit. Add an entry for `C:\Program Files\Java\jdk-21.0_4\bin`. Click OK to save.
 
 ### Install LTFS
 Download and install: https://www.quantum.com/en/service-support/downloads-and-firmware/ltfs/
@@ -357,7 +357,7 @@ Open new issue at: [https://github.com/nathros/lto-manager/issues](https://githu
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[java-17]: https://img.shields.io/badge/Java-17-orange?style=for-the-badge&logo=java
-[java-17-url]: https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html
+[java-21]: https://img.shields.io/badge/Java-21-orange?style=for-the-badge&logo=java
+[java-21-url]: https://www.oracle.com/java/technologies/javase/jdk21-archive-downloads.html
 [gradle]: https://img.shields.io/badge/Gradle-7-%2302303a?style=for-the-badge&logo=gradle
 [gradle-url]: https://gradle.org/
