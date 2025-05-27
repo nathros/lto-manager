@@ -36,7 +36,7 @@ public abstract class ExternalProcess {
 	private LocalDateTime exitDateTime = null;
 
 	public boolean start(Semaphore completedSemaphore, String uuid, String... commands)
-			throws IOException, InterruptedException, IllegalArgumentException {
+			throws InterruptedException, IllegalArgumentException {
 		if (inProgress.get())
 			return false;
 		this.uuid = this.getClass().getSimpleName() + "-" + uuid;
@@ -54,7 +54,13 @@ public abstract class ExternalProcess {
 		stderr.clear();
 		exitCode = null;
 		ProcessBuilder builder = new ProcessBuilder(commands);
-		process = builder.start();
+		try {
+			process = builder.start();
+		} catch (IOException e) {
+			stderr.add(e.getMessage());
+			stop();
+			return false;
+		}
 		service = Executors.newFixedThreadPool(2);
 		BufferedReader stdOutBuffer = new BufferedReader(new InputStreamReader(process.getInputStream()));
 		BufferedReader stdErrBuffer = new BufferedReader(new InputStreamReader(process.getErrorStream()));

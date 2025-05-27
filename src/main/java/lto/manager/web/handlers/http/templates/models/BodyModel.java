@@ -17,6 +17,7 @@ import com.sun.net.httpserver.HttpExchange;
 import lto.manager.common.Util;
 import lto.manager.common.database.Database;
 import lto.manager.common.database.Options;
+import lto.manager.common.database.tables.records.RecordNotification;
 import lto.manager.common.database.tables.records.RecordOptions.OptionsSetting;
 import lto.manager.common.database.tables.records.RecordRole.Permission;
 import lto.manager.common.database.tables.records.RecordUser;
@@ -320,6 +321,17 @@ public class BodyModel {
 
 	public void removeSession(UUID uuid) {
 		addResponseCookie(BaseHTTPHandler.COOKIE_SESSION, uuid.toString(), -1);
+	}
+
+	public List<RecordNotification> getUserNotifications() {
+		try {
+			return Database.getNotificationForUser(getUserViaSession());
+		} catch (Exception e) {
+			e.printStackTrace();
+			List<RecordNotification> ret = new ArrayList<RecordNotification>();
+			ret.add(RecordNotification.newFailureFetch());
+			return ret;
+		}
 	}
 
 	public void clearAssetCache() {

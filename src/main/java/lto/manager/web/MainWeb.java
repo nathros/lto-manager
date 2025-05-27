@@ -12,6 +12,7 @@ import lto.manager.common.Main;
 import lto.manager.common.database.Database;
 import lto.manager.common.log.Log;
 import lto.manager.common.state.State;
+import lto.manager.common.system.SystemState;
 
 public class MainWeb {
 	public static int portHTTP = 9000;
@@ -34,6 +35,10 @@ public class MainWeb {
 
 	public static void main(String[] args) throws InterruptedException {
 		if (processArgs(args)) {
+			Database.openDatabase(dbPath);
+			State.startBackgroundCleanup();
+			SystemState.checkSystem();
+
 			SimpleHttpServer httpServer = new SimpleHttpServer();
 			SimpleHttpsServer httpsServer = null;
 			httpServer.start(portHTTP, portHTTPS > 0);
@@ -42,8 +47,6 @@ public class MainWeb {
 				httpsServer = new SimpleHttpsServer();
 				httpsServer.start(portHTTPS, keyStoreFile, storePass.toCharArray(), keyPass.toCharArray());
 			}
-			Database.openDatabase(dbPath);
-			State.startBackgroundCleanup();
 			SimpleWebSocketServer.main(null);
 
 			ExitReason exit = exitWait.take();

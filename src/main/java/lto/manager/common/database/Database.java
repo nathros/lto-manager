@@ -19,6 +19,7 @@ import lto.manager.common.database.tables.TableJobs;
 import lto.manager.common.database.tables.TableJobsMetadata;
 import lto.manager.common.database.tables.TableLabelPreset;
 import lto.manager.common.database.tables.TableManufacturer;
+import lto.manager.common.database.tables.TableNotification;
 import lto.manager.common.database.tables.TableOptions;
 import lto.manager.common.database.tables.TableRoles;
 import lto.manager.common.database.tables.TableTape;
@@ -28,6 +29,8 @@ import lto.manager.common.database.tables.TableVersion;
 import lto.manager.common.database.tables.records.RecordFile;
 import lto.manager.common.database.tables.records.RecordLabelPreset;
 import lto.manager.common.database.tables.records.RecordManufacturer;
+import lto.manager.common.database.tables.records.RecordNotification;
+import lto.manager.common.database.tables.records.RecordNotification.RecordNotificationType;
 import lto.manager.common.database.tables.records.RecordOptions;
 import lto.manager.common.database.tables.records.RecordOptions.OptionsSetting;
 import lto.manager.common.database.tables.records.RecordRole;
@@ -55,6 +58,7 @@ public class Database {
 			op = (op && TableJobsMetadata.createTable(connection));
 			op = (op && TableRoles.createTable(connection));
 			op = (op && TableUser.createTable(connection));
+			op = (op && TableNotification.createTable(connection));
 			op = (op && TableLabelPreset.createTable(connection));
 			Options.refreshCache(); // Cache is created but is empty
 		} catch (SQLException e) {
@@ -277,5 +281,21 @@ public class Database {
 
 	public static RecordLabelPreset getUserLabelPreset(int userID, String name) throws SQLException, IOException {
 		return TableLabelPreset.getPreset(Database.connection, userID, name, true);
+	}
+
+	public static boolean addNotification(RecordNotification notification) throws SQLException, IOException {
+		return TableNotification.addNewNotification(Database.connection, notification);
+	}
+
+	public static boolean addSingletonNotification(RecordNotification notification) throws SQLException, IOException {
+		return TableNotification.addSingletonNotification(Database.connection, notification);
+	}
+
+	public static boolean removeNotificationByType(RecordNotificationType type) throws SQLException, IOException {
+		return TableNotification.removeNotificationByType(Database.connection, type);
+	}
+
+	public static List<RecordNotification> getNotificationForUser(RecordUser user) throws SQLException, IOException {
+		return TableNotification.getNotificationForUser(Database.connection, user);
 	}
 }

@@ -13,6 +13,7 @@ import htmlflow.HtmlFlow;
 import htmlflow.HtmlPage;
 import htmlflow.HtmlView;
 import lto.manager.common.Main;
+import lto.manager.common.database.tables.records.RecordNotification;
 import lto.manager.common.database.tables.records.RecordRole.Permission;
 import lto.manager.common.database.tables.records.RecordUser;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
@@ -187,19 +188,36 @@ public class TemplatePage {
 						.__() // div
 						.div()
 							.attrClass(CSS.HEADER_ITEM + CSS.ICON_BELL)
-							//.span().attrClass(CSS.HEADER_ITEM_NOTIFICATTION).text(5).__()
-							.ul().attrClass(CSS.MENU_LIST)
-								.li()
-									.attrClass(CSS.HEADER_LABEL_TOP)
-									.text("Notifications")
-								.__()
-								.li()
-									.a()
-										.attrStyle("cursor:default")
-										.text("Empty")
-									.__()
-								.__()
-							.__() // ul
+							.<TemplatePageModel>dynamic((div, model) -> {
+								final List<RecordNotification> notifications = model.getBodyModel().getUserNotifications();
+								final long unseen = notifications.stream().filter(n -> !n.getCleared()).count();
+								if (unseen > 0) {
+									div.span().attrClass(CSS.HEADER_ITEM_NOTIFICATTION).text(unseen).__();
+								}
+								var ul = div.ul().attrClass(CSS.MENU_LIST)
+									.li()
+										.attrClass(CSS.HEADER_LABEL_TOP)
+										.text("Notifications")
+									.__();
+								if (notifications.size() == 0) {
+									ul.li()
+										.a()
+											.attrStyle("cursor:default")
+											.text("Empty")
+										.__()
+									.__();
+								} else {
+									for (final RecordNotification n : notifications) {
+										ul.li()
+											.a()
+												.attrStyle("cursor:default")
+												.text(n.getLabel())
+											.__()
+										.__();
+									}
+								}
+								ul.__();
+							})
 						.__() // div
 						.div().attrStyle("color:white;opacity:50%;user-select:none;").text("|").__()
 						.<TemplatePageModel>dynamic((div, model) -> {

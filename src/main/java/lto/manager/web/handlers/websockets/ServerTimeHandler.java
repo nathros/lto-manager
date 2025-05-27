@@ -1,6 +1,5 @@
 package lto.manager.web.handlers.websockets;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 
 import org.java_websocket.WebSocket;
@@ -26,7 +25,7 @@ public class ServerTimeHandler extends BaseWebsocketHandler {
 
 		try {
 			ep.start(null, "repeat.sh");
-		} catch (IOException | InterruptedException e) {
+		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 		return false;
