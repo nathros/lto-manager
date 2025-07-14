@@ -18,35 +18,40 @@ import org.apache.batik.util.XMLResourceDescriptor;
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.ImgTemplate;
+import com.lowagie.text.RectangleReadOnly;
 import com.lowagie.text.pdf.PdfTemplate;
 import com.lowagie.text.pdf.PdfWriter;
 import com.sun.net.httpserver.HttpExchange;
 
 import lto.manager.common.database.tables.records.RecordRole.Permission;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
+import lto.manager.web.handlers.http.ajax.labelgenerator.LTOPaperTypeMap.LTOPageType;
 import lto.manager.web.handlers.http.templates.models.BodyModel;
 import lto.manager.web.resource.Asset;
 
 public class AJAXGenerateLTOLabelPDF extends BaseHTTPHandler {
 	public static final String PATH = Asset.PATH_AJAX_BASE + "generate/lto/label/pdf/";
-	private static final int PAGE_TOP_Y = 750;
-	private static final int X_OFFSET_FIRST = 70;
-	private static final int X_OFFSET_SECOND = 300;
+	private static final float L_WIDTH = (float) 222.52; // Label width in PT
+	private static final float L_HEIGHT = (float) 46.77; // Label height in PT
 
 	@Override
-	public void requestHandle(HttpExchange he, BodyModel bm) throws Exception { // FIXME finish PDF scale is wrong
+	public void requestHandle(HttpExchange he, BodyModel bm) throws Exception {
 		List<String> labelsSVGs = GenerateLTOLabelSVG.generate(LTOLabelOptions.of(bm));
+		final String paperKey = bm.getQueryNoNull(LTOLabelOptions.QUERY_PAPER);
+		LTOPageType paperType = LTOPaperTypeMap.getPaperType(paperKey);
+		if (paperType == null) {
+			paperType = LTOPaperTypeMap.getDefaultPaperType();
+		}
 
-		Document document = new Document();
+		Document document = new Document(new RectangleReadOnly(paperType.pageWidthPT(), paperType.pageHeightPT()));
 		var stream = new ByteArrayOutputStream();
 		try {
 			var pdfwriter = PdfWriter.getInstance(document, stream);
-
 			document.open();
-
 			SAXSVGDocumentFactory factory = new SAXSVGDocumentFactory(XMLResourceDescriptor.getXMLParserClassName());
-			int position = PAGE_TOP_Y;
 			int count = 0;
+			float xPos = paperType.xStart();
+			float yPos = paperType.yStart(); // y is flipped
 
 			for (final String svg : labelsSVGs) {
 				// final StringReader reader = new StringReader(
@@ -67,19 +72,26 @@ public class AJAXGenerateLTOLabelPDF extends BaseHTTPHandler {
 
 				Graphics2D g2d = template.createGraphics(template.getWidth(), template.getHeight(), null);
 				var newBarcode = new ImgTemplate(template);
-				// Not sure why the size is wrong, the SVG size is correct. width="80.5mm" height="18.5mm"
+				// Not sure why the size is wrong, the SVG size is correct
+				// width="80.5mm" height="18.5mm"
 				newBarcode.scalePercent(75);
 
-				if (count % 32 == 0 && count != 0) {
+				if (count % paperType.labelsPerPage() == 0) {
+					// Filled this page, create new
 					document.newPage();
 					count = 0;
-					position = PAGE_TOP_Y;
-					newBarcode.setAbsolutePosition(X_OFFSET_FIRST, position);
-				} else if (count % 2 == 0) {
-					newBarcode.setAbsolutePosition(X_OFFSET_FIRST, position);
+					xPos = paperType.xStart();
+					yPos = paperType.yStart();
+					newBarcode.setAbsolutePosition(xPos, yPos);
+				} else if (count % paperType.columnCount() == 0) {
+					// Filled row move to next
+					xPos = paperType.xStart();
+					yPos = yPos - L_HEIGHT - paperType.yOffset();
+					newBarcode.setAbsolutePosition(xPos, yPos);
 				} else {
-					newBarcode.setAbsolutePosition(X_OFFSET_SECOND, position);
-					position -= 50;
+					// Move to next column
+					xPos = xPos + L_WIDTH + paperType.xOffset();
+					newBarcode.setAbsolutePosition(xPos, yPos);
 				}
 
 				document.add(newBarcode);

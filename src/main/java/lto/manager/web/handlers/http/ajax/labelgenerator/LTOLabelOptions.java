@@ -8,7 +8,8 @@ import lto.manager.web.handlers.http.templates.models.BodyModel;
 
 public record LTOLabelOptions(String mediaID, String prefix, String postfix, String borderRadiusLabel,
 		String borderStrokeLabel, String borderRadiusInner, String borderStrokeInner, String themeName,
-		LTOLabelColourSettings colourSetting, int startIndex, int quantity, String previewScale, int previewCount) {
+		LTOLabelColourSettings colourSetting, int startIndex, int quantity, String previewScale, int previewCount,
+		String paperType) {
 
 	public static final String QUERY_PREFIX = "prefix";
 	public static final String QUERY_POSTFIX = "postfix";
@@ -18,17 +19,19 @@ public record LTOLabelOptions(String mediaID, String prefix, String postfix, Str
 	public static final String QUERY_BORDER_RADIUS_INNER = "border-rad-in";
 	public static final float BORDER_RADIUS_LABEL_MAX = 8;
 	public static final float BORDER_RADIUS_LABEL_MIN = 0;
-	public static final float BORDER_RADIUS_LABEL_DEFAULT = 1;
+	public static final float BORDER_RADIUS_LABEL_DEFAULT = 0;
 	public static final float BORDER_RADIUS_INNER_DEFAULT = 0;
 
 	public static final String QUERY_BORDER_STROKE_LABEL = "border-stroke-lab";
 	public static final String QUERY_BORDER_STROKE_INNER = "border-stroke-in";
 	public static final float BORDER_STROKE_LABEL_MAX = 2;
 	public static final float BORDER_STROKE_LABEL_MIN = 0;
-	public static final float BORDER_STROKE_LABEL_DEFAULT = (float) 0.1;
+	public static final float BORDER_STROKE_LABEL_DEFAULT = (float) 0.0;
+	public static final float BORDER_STROKE_INNER_DEFAULT = (float) 0.1;
 
 	public static final String QUERY_THEME = "theme";
 	public static final String QUERY_COLOURS = "colours";
+	public static final String QUERY_PAPER = "paper";
 
 	public static final String QUERY_START_INDEX = "start-index";
 	public static final int START_INDEX_MIN = 0;
@@ -110,7 +113,7 @@ public record LTOLabelOptions(String mediaID, String prefix, String postfix, Str
 		} else {
 			checkFloat(previewScaleStr, PREVIEW_SCALE_MIN, PREVIEW_SCALE_MAX, "Preview scale");
 		}
-		String previewCountStr = model.getQueryNoNull(QUERY_PREVIEW_COUNT); // // Can be missing
+		String previewCountStr = model.getQueryNoNull(QUERY_PREVIEW_COUNT); // Can be missing
 		int previewInt;
 		if (previewCountStr.equals("")) {
 			previewInt = PREVIEW_COUNT_MIN;
@@ -127,9 +130,11 @@ public record LTOLabelOptions(String mediaID, String prefix, String postfix, Str
 			Util.logAndException(new Exception("Invalid tape type label: " + colourSetting));
 		}
 
+		String paperTypeStr = model.getQueryNoNull(QUERY_PAPER);
+
 		return new LTOLabelOptions(media, prefixStr, postfixStr, borderRadiusLabelStr, borderStrokeLabelStr,
 				borderRadiusInnerStr, borderStrokeInnerStr, themeNameStr, colourSetting, startIndex, quantity,
-				previewScaleStr, previewInt);
+				previewScaleStr, previewInt, paperTypeStr);
 	}
 
 	private static void checkFloat(final String queryStr, final float minValue, final float maxValue,

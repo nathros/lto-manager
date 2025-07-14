@@ -123,7 +123,7 @@ public class Log {
 	}
 
 	// This is used to send log messages to clients connected to the correct
-	// websocket handler
+	// WebSocket handler
 	public static class WebSocketHandler extends StreamHandler {
 		private final LoggingWebsocketHandler wsLogger = (LoggingWebsocketHandler) Handlers.websocketHandlers
 				.get(LoggingWebsocketHandler.PATH);

@@ -14,6 +14,9 @@ public class IniFileProcessor {
 		final String[] lines = ini.split("\n");
 		HashMap<String, String> themeMap = null;
 		for (final String line : lines) {
+			if (line.isBlank() || line.charAt(0) == ';') {
+				continue; // Empty line or comment
+			}
 			if (line.charAt(0) == '[') { // Start of ini field
 				themeMap = new HashMap<String, String>();
 				final String name = line.replace("[", "").replace("]", "");

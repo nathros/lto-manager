@@ -25,6 +25,7 @@ import lto.manager.web.handlers.http.ajax.labelgenerator.LTOLabelEnum;
 import lto.manager.web.handlers.http.ajax.labelgenerator.LTOLabelEnum.LTOLabelColourSettings;
 import lto.manager.web.handlers.http.ajax.labelgenerator.LTOLabelEnum.LTOLabelTypeSettings;
 import lto.manager.web.handlers.http.ajax.labelgenerator.LTOLabelOptions;
+import lto.manager.web.handlers.http.ajax.labelgenerator.LTOPaperTypeMap;
 import lto.manager.web.handlers.http.partial.inlinemessage.InlineMessage;
 import lto.manager.web.handlers.http.partial.modal.Modal;
 import lto.manager.web.handlers.http.partial.modal.ModalOptions;
@@ -180,7 +181,7 @@ public class LibraryGenerateBarcodeHandler extends BaseHTTPHandler {
 						.attrStep("0.1")
 						.attrMin(String.valueOf(LTOLabelOptions.BORDER_STROKE_LABEL_MIN))
 						.attrMax(String.valueOf(LTOLabelOptions.BORDER_STROKE_LABEL_MAX))
-						.attrValue(String.valueOf(LTOLabelOptions.BORDER_STROKE_LABEL_DEFAULT))
+						.attrValue(String.valueOf(LTOLabelOptions.BORDER_STROKE_INNER_DEFAULT))
 					.__()
 
 					.b().text("Preview Size:").__()
@@ -202,6 +203,21 @@ public class LibraryGenerateBarcodeHandler extends BaseHTTPHandler {
 						.attrMax(String.valueOf(LTOLabelOptions.PREVIEW_COUNT_MAX))
 						.attrValue(String.valueOf(LTOLabelOptions.PREVIEW_COUNT_DEFAULT))
 					.__()
+
+					.b().text("Paper Type (PDF):").__()
+					.select()
+						.attrName(LTOLabelOptions.QUERY_PAPER)
+						.of(select -> {
+							final var keys = LTOPaperTypeMap.getPaperTypeNames();
+							for (final var paper : keys) {
+								select.option()
+									.attrValue(paper)
+									//.of(s -> HTML.option(s, type == LTOLabelTypeSettings.Gen5))
+									.text(paper)
+								.__();
+							}
+						})
+					.__()
 				.__()
 
 				.div().attrClass("button-container")
@@ -213,7 +229,7 @@ public class LibraryGenerateBarcodeHandler extends BaseHTTPHandler {
 					.a()
 						.attrClass(CSS.BUTTON + CSS.ICON_PDF + CSS.BUTTON_IMAGE_W_TEXT + CSS.BUTTON_IMAGE)
 						.attrOnclick(JS.generateLTOLabel(AJAXGenerateLTOLabelPDF.PATH))
-						.text("PDF")
+						.text("PDF") // TODO spinner for this button
 					.__()
 					.a()
 						.attrClass(CSS.BUTTON + CSS.ICON_SVG + CSS.BUTTON_IMAGE_W_TEXT + CSS.BUTTON_IMAGE)

@@ -16,6 +16,7 @@ import com.healthmarketscience.sqlbuilder.CreateTableQuery;
 import com.healthmarketscience.sqlbuilder.DeleteQuery;
 import com.healthmarketscience.sqlbuilder.InsertQuery;
 import com.healthmarketscience.sqlbuilder.SelectQuery;
+import com.healthmarketscience.sqlbuilder.UnaryCondition;
 import com.healthmarketscience.sqlbuilder.UpdateQuery;
 import com.healthmarketscience.sqlbuilder.dbspec.basic.DbColumn;
 import com.healthmarketscience.sqlbuilder.dbspec.basic.DbSchema;
@@ -217,7 +218,7 @@ public class TableNotification {
 		if (user == null) {
 			sq.addCondition(BinaryCondition.equalTo(table.getColumns().get(COLUMN_INDEX_USER_ID), null));
 		} else {
-			final var c1 = new BinaryCondition(" IS ", table.getColumns().get(COLUMN_INDEX_USER_ID), null);
+			final var c1 = UnaryCondition.isNull(table.getColumns().get(COLUMN_INDEX_USER_ID));
 			final var c2 = BinaryCondition.equalTo(table.getColumns().get(COLUMN_INDEX_USER_ID), user.getID());
 			sq.addCondition(ComboCondition.or(c1, c2));
 		}
