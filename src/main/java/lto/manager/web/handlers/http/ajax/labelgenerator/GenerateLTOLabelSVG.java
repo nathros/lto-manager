@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 import lto.manager.common.Util;
 import lto.manager.common.database.tables.TableTape;
 import lto.manager.web.handlers.http.ajax.labelgenerator.LTOLabelEnum.LTOLabelColourSettings;
+import lto.manager.web.handlers.http.ajax.labelgenerator.LTOLabelEnum.LTOLabelTextOrientationSettings;
 import lto.manager.web.handlers.http.pages.AssetHandler;
 import lto.manager.web.resource.Asset;
 
@@ -49,6 +50,8 @@ public class GenerateLTOLabelSVG {
 		// if options.previewCount() is set then use this
 		int barcodeQuantity = options.previewCount() != LTOLabelOptions.PREVIEW_COUNT_MIN ? options.previewCount()
 				: options.quantity();
+		final boolean isReversed = options.orientationSettings().ordinal() > LTOLabelTextOrientationSettings.Norm270
+				.ordinal();
 
 		while (barcodeQuantity > 0) {
 			StringBuilder sb = new StringBuilder();
@@ -57,7 +60,7 @@ public class GenerateLTOLabelSVG {
 			int i = 0;
 
 			while (i < labelSVGLines.length) {
-				final String line = labelSVGLines[i];
+				final String line = labelSVGLines[i] + "\n";
 				SVGID elementID = SVGID.of(line);
 				if (elementID != null) {
 					switch (elementID.name) {
@@ -80,10 +83,15 @@ public class GenerateLTOLabelSVG {
 						sb.append(line);
 						i++;
 						String tLine = labelSVGLines[i];
-						String labelCharacter = String.valueOf(barcodeStr.charAt(elementID.index));
-						if (elementID.index == 7) {
+						final int indexCharIndex = isReversed ? 8 - elementID.index : elementID.index;
+						String labelCharacter = String.valueOf(barcodeStr.charAt(indexCharIndex));
+
+						final int tapeTypeIndex = isReversed ? 1 : 7;
+						final boolean isTapeTypeIndex = elementID.index == tapeTypeIndex;
+
+						if (isTapeTypeIndex) {
 							labelCharacter = labelCharacter // Last section has 2 characters for tape type eg: L7
-									.concat(String.valueOf(barcodeStr.charAt(elementID.index + 1)));
+									.concat(String.valueOf(barcodeStr.charAt(indexCharIndex + 1)));
 						} else {
 							if (options.colourSetting() == LTOLabelColourSettings.All) {
 								tLine = replaceAttributeValue(tLine, "fill", theme.get(labelCharacter));
@@ -101,6 +109,45 @@ public class GenerateLTOLabelSVG {
 						tLine = labelSVGLines[i];
 						// Matcher needed for $ character
 						tLine = tLine.replaceFirst("#", Matcher.quoteReplacement(labelCharacter));
+						tLine = replaceAttributeValue(tLine, "font-size", isTapeTypeIndex ? "4" : "5");
+						tLine = replaceAttributeValue(tLine, "font-family", options.fontSettings().toString().toLowerCase());
+						switch (options.orientationSettings()) {
+						case Norm0:
+							// Do nothing
+							break;
+						case Norm90:
+							tLine = addAttributeValue(tLine, "transform", "rotate(90)");
+							tLine = replaceAttributeValue(tLine, "x", "3");
+							tLine = replaceAttributeValue(tLine, "y", "-3");
+							break;
+						case Norm180:
+							tLine = addAttributeValue(tLine, "transform", "rotate(180)");
+							tLine = replaceAttributeValue(tLine, "x", "-5");
+							tLine = replaceAttributeValue(tLine, "y", "-1");
+							break;
+						case Norm270:
+							tLine = addAttributeValue(tLine, "transform", "rotate(270)");
+							tLine = replaceAttributeValue(tLine, "x", "-3");
+							tLine = replaceAttributeValue(tLine, "y", "7");
+							break;
+						case Rev0:
+							break;
+						case Rev90:
+							tLine = addAttributeValue(tLine, "transform", "rotate(90)");
+							tLine = replaceAttributeValue(tLine, "x", "3");
+							tLine = replaceAttributeValue(tLine, "y", "-3");
+							break;
+						case Rev180:
+							tLine = addAttributeValue(tLine, "transform", "rotate(180)");
+							tLine = replaceAttributeValue(tLine, "x", "-5");
+							tLine = replaceAttributeValue(tLine, "y", "-1");
+							break;
+						case Rev270:
+							tLine = addAttributeValue(tLine, "transform", "rotate(270)");
+							tLine = replaceAttributeValue(tLine, "x", "-3");
+							tLine = replaceAttributeValue(tLine, "y", "7");
+							break;
+						}
 						sb.append(tLine);
 						i++;
 						tLine = labelSVGLines[i];
@@ -162,6 +209,13 @@ public class GenerateLTOLabelSVG {
 			final String newAttributeValue) {
 		final String search = " " + attributeKey + "=\"(.*?)\"";
 		final String replace = " " + attributeKey + "=\"" + newAttributeValue + "\"";
+		return input.replaceFirst(search, replace);
+	}
+
+	public static String addAttributeValue(final String input, final String attributeKey,
+			final String newAttributeValue) {
+		final String search = "\\>";
+		final String replace = " " + attributeKey + "=\"" + newAttributeValue + "\"" + search;
 		return input.replaceFirst(search, replace);
 	}
 

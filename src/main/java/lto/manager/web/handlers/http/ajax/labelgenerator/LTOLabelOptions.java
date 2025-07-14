@@ -3,11 +3,14 @@ package lto.manager.web.handlers.http.ajax.labelgenerator;
 import lto.manager.common.Util;
 import lto.manager.common.database.tables.TableTape;
 import lto.manager.web.handlers.http.ajax.labelgenerator.LTOLabelEnum.LTOLabelColourSettings;
+import lto.manager.web.handlers.http.ajax.labelgenerator.LTOLabelEnum.LTOLabelFontFamilySettings;
+import lto.manager.web.handlers.http.ajax.labelgenerator.LTOLabelEnum.LTOLabelTextOrientationSettings;
 import lto.manager.web.handlers.http.ajax.labelgenerator.LTOLabelEnum.LTOLabelTypeSettings;
 import lto.manager.web.handlers.http.templates.models.BodyModel;
 
 public record LTOLabelOptions(String mediaID, String prefix, String postfix, String borderRadiusLabel,
 		String borderStrokeLabel, String borderRadiusInner, String borderStrokeInner, String themeName,
+		LTOLabelFontFamilySettings fontSettings, LTOLabelTextOrientationSettings orientationSettings,
 		LTOLabelColourSettings colourSetting, int startIndex, int quantity, String previewScale, int previewCount,
 		String paperType) {
 
@@ -29,6 +32,8 @@ public record LTOLabelOptions(String mediaID, String prefix, String postfix, Str
 	public static final float BORDER_STROKE_LABEL_DEFAULT = (float) 0.0;
 	public static final float BORDER_STROKE_INNER_DEFAULT = (float) 0.1;
 
+	public static final String QUERY_FONT = "font";
+	public static final String QUERY_ORIENTATION = "ori";
 	public static final String QUERY_THEME = "theme";
 	public static final String QUERY_COLOURS = "colours";
 	public static final String QUERY_PAPER = "paper";
@@ -96,12 +101,28 @@ public record LTOLabelOptions(String mediaID, String prefix, String postfix, Str
 		final String borderStrokeInnerStr = model.getQueryNoNull(QUERY_BORDER_STROKE_INNER);
 		checkFloat(borderStrokeInnerStr, BORDER_STROKE_LABEL_MIN, BORDER_STROKE_LABEL_MAX, "Inner border width");
 
+		final String fontSettingsStr = model.getQueryNoNull(QUERY_FONT);
+		LTOLabelFontFamilySettings fontSetting = null;
+		try {
+			fontSetting = LTOLabelFontFamilySettings.valueOf(fontSettingsStr);
+		} catch (Exception e) {
+			Util.logAndException(new Exception("Invalid font family setting: " + fontSettingsStr));
+		}
+
+		final String orientationSettingsStr = model.getQueryNoNull(QUERY_ORIENTATION);
+		LTOLabelTextOrientationSettings orientationSetting = null;
+		try {
+			orientationSetting = LTOLabelTextOrientationSettings.valueOf(orientationSettingsStr);
+		} catch (Exception e) {
+			Util.logAndException(new Exception("Invalid text orientation setting: " + orientationSettingsStr));
+		}
+
 		final String colourSettingsStr = model.getQueryNoNull(QUERY_COLOURS);
 		LTOLabelColourSettings colourSetting = null;
 		try {
 			colourSetting = LTOLabelColourSettings.valueOf(colourSettingsStr);
 		} catch (Exception e) {
-			Util.logAndException(new Exception("Invalid colour setting: " + colourSetting));
+			Util.logAndException(new Exception("Invalid colour setting: " + colourSettingsStr));
 		}
 
 		final String themeNameStr = model.getQueryNoNull(QUERY_THEME);
@@ -133,8 +154,8 @@ public record LTOLabelOptions(String mediaID, String prefix, String postfix, Str
 		String paperTypeStr = model.getQueryNoNull(QUERY_PAPER);
 
 		return new LTOLabelOptions(media, prefixStr, postfixStr, borderRadiusLabelStr, borderStrokeLabelStr,
-				borderRadiusInnerStr, borderStrokeInnerStr, themeNameStr, colourSetting, startIndex, quantity,
-				previewScaleStr, previewInt, paperTypeStr);
+				borderRadiusInnerStr, borderStrokeInnerStr, themeNameStr, fontSetting, orientationSetting,
+				colourSetting, startIndex, quantity, previewScaleStr, previewInt, paperTypeStr);
 	}
 
 	private static void checkFloat(final String queryStr, final float minValue, final float maxValue,

@@ -23,6 +23,8 @@ import lto.manager.web.handlers.http.ajax.labelgenerator.AJAXGenerateLTOLabelSVG
 import lto.manager.web.handlers.http.ajax.labelgenerator.LTOColourThemeMap;
 import lto.manager.web.handlers.http.ajax.labelgenerator.LTOLabelEnum;
 import lto.manager.web.handlers.http.ajax.labelgenerator.LTOLabelEnum.LTOLabelColourSettings;
+import lto.manager.web.handlers.http.ajax.labelgenerator.LTOLabelEnum.LTOLabelFontFamilySettings;
+import lto.manager.web.handlers.http.ajax.labelgenerator.LTOLabelEnum.LTOLabelTextOrientationSettings;
 import lto.manager.web.handlers.http.ajax.labelgenerator.LTOLabelEnum.LTOLabelTypeSettings;
 import lto.manager.web.handlers.http.ajax.labelgenerator.LTOLabelOptions;
 import lto.manager.web.handlers.http.ajax.labelgenerator.LTOPaperTypeMap;
@@ -111,6 +113,32 @@ public class LibraryGenerateBarcodeHandler extends BaseHTTPHandler {
 						.attrMin(String.valueOf(LTOLabelOptions.QUANTITY_MIN))
 						.attrMax(String.valueOf(LTOLabelOptions.QUANTITY_MAX))
 						.attrValue(String.valueOf(LTOLabelOptions.QUANTITY_DEFAULT))
+					.__()
+
+					.b().text("Font Family:").__()
+					.select()
+						.attrName(LTOLabelOptions.QUERY_FONT)
+						.of(select -> {
+							for (final var type : LTOLabelFontFamilySettings.values()) {
+								select.option()
+									.attrValue(type.name())
+									.text(type.toString())
+								.__();
+							}
+						})
+					.__()
+
+					.b().text("Text Orientation:").__()
+					.select()
+						.attrName(LTOLabelOptions.QUERY_ORIENTATION)
+						.of(select -> {
+							for (final var type : LTOLabelTextOrientationSettings.values()) {
+								select.option()
+									.attrValue(type.name())
+									.text(type.toString())
+								.__();
+							}
+						})
 					.__()
 
 					.b().text("Colour Settings:").__()
@@ -212,7 +240,6 @@ public class LibraryGenerateBarcodeHandler extends BaseHTTPHandler {
 							for (final var paper : keys) {
 								select.option()
 									.attrValue(paper)
-									//.of(s -> HTML.option(s, type == LTOLabelTypeSettings.Gen5))
 									.text(paper)
 								.__();
 							}

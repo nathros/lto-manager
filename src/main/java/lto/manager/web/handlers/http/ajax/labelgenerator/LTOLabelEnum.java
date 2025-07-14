@@ -5,6 +5,38 @@ public class LTOLabelEnum {
 		All, Numbers, None
 	}
 
+	public static enum LTOLabelFontFamilySettings {
+		SansSerif("Sans-serif"), Serif("Serif"), Monospace("Monospace");
+		// SystemUI("System-UI"), Cursive("Cursive"); // TODO these do not work with PDF
+
+		private final String name;
+
+		private LTOLabelFontFamilySettings(String s) {
+			name = s;
+		}
+
+		@Override
+		public String toString() {
+			return this.name;
+		}
+	}
+
+	public static enum LTOLabelTextOrientationSettings {
+		Norm0("Normal"), Norm90("Normal 90 degrees"), Norm180("Normal 180 degrees"), Norm270("Normal 270 degrees"),
+		Rev0("Reversed"), Rev90("Reversed 90 degrees"), Rev180("Reversed 180 degrees"), Rev270("Reversed 270 degrees");
+
+		private final String name;
+
+		private LTOLabelTextOrientationSettings(String s) {
+			name = s;
+		}
+
+		@Override
+		public String toString() {
+			return this.name;
+		}
+	}
+
 	public static enum LTOLabelTypeSettings {
 		Gen1, Gen2, Gen3, Gen4, Gen5, Gen6, Gen7, Gen7M, Gen8, Gen9, Gen1WORM, Gen2WORM, Gen3WORM, Gen4WORM, Gen5WORM,
 		Gen6WORM, Gen7WORM, Gen8WORM, Gen9WORM, Gen1Clean, Gen2Clean, Gen3Clean, Gen4Clean, Gen5Clean, Gen6Clean,

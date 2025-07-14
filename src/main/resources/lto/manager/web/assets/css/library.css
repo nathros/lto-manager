@@ -35,3 +35,21 @@ form {
 	background-color: rgba(255, 255, 255, 0.1);
 	color: rgba(255, 255, 255, 1);
 }
+/* Generate barcode */
+#barcode-preview {
+	height: 100%;
+}
+#barcode-preview > div {
+	display: flex;
+	flex-wrap: wrap;
+	height: 100%;
+}
+#barcode-preview > div.error {
+	height: unset;
+}
+#barcode-preview > div > svg {
+	flex-grow: 1;
+}
+text {
+	font-family: revert-layer; /* In preview font-family in svg text is being ignored */
+}
