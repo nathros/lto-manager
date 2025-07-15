@@ -14,7 +14,6 @@ import java.util.UUID;
 
 import com.sun.net.httpserver.HttpExchange;
 
-import lto.manager.common.Util;
 import lto.manager.common.database.Database;
 import lto.manager.common.database.Options;
 import lto.manager.common.database.tables.records.RecordNotification;
@@ -199,11 +198,8 @@ public class BodyModel {
 	}
 
 	public String getQueryNoNull(String key) {
-		String query = getQuery(key);
-		if (query == null)
-			return "";
-		else
-			return Util.decodeUrl(query);
+		final String query = getQuery(key);
+		return query == null ? "" : query;
 	}
 
 	@SuppressWarnings("unchecked")
