@@ -14,7 +14,6 @@ import lto.manager.web.handlers.http.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.http.templates.TemplatePage.TemplatePageModel;
 import lto.manager.web.handlers.http.templates.models.BodyModel;
 import lto.manager.web.handlers.http.templates.models.HeadModel;
-import lto.manager.web.resource.Asset;
 
 public class UsersNewHandler extends BaseHTTPHandler {
 	public static final String PATH = "/admin/users/new/";
@@ -24,7 +23,6 @@ public class UsersNewHandler extends BaseHTTPHandler {
 	@Override
 	public void requestHandle(HttpExchange he, BodyModel bm) throws IOException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of(NAME);
-		thm.addCSS(Asset.CSS_FORMS);
 		BreadCrumbs crumbs = new BreadCrumbs().add(AdminHandler.NAME, AdminHandler.PATH).add(UsersHandler.NAME, UsersHandler.PATH).add("New", PATH_NEW);
 		TemplatePageModel tpm = TemplatePageModel.of(UsersEditHandler::content, null, thm, SelectedPage.Admin, bm, crumbs);
 		requestHandleCompletePage(he, tpm);

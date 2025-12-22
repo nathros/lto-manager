@@ -20,6 +20,9 @@ public class EchoGetHandler extends BaseHTTPHandler {
 		// parse request
 		URI requestedUri = he.getRequestURI();
 		String response = requestedUri.getRawQuery();
+		if (response == null) {
+			response = "?query is missing";
+		}
 		he.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length());
 		OutputStream os = he.getResponseBody();
 		os.write(response.toString().getBytes());

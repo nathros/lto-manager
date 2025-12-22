@@ -2,10 +2,13 @@ package lto.manager.common;
 
 import java.lang.management.ManagementFactory;
 
+import lto.manager.web.resource.Localisation;
+import lto.manager.web.resource.Localisation.LOC;
+
 public class Main {
 	public static final String WEB = "web";
 	public static final String GUI = "gui";
-	public static final String APP_NAME = "Open LTO Manager";
+	public static final String APP_NAME = Localisation.get(LOC.APP_NAME);
 
 	public static final boolean DEBUG_MODE = ManagementFactory.getRuntimeMXBean().getInputArguments().toString().indexOf("-agentlib:jdwp") > 0;
 

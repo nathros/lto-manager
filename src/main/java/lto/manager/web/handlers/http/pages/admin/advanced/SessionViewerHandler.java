@@ -28,7 +28,7 @@ public class SessionViewerHandler extends BaseHTTPHandler {
 	private static final String DEL = "del";
 
 	static Void content(Div<?> view, BodyModel model) {
-		final String deleteSession = model.getQuery(DEL);
+		final String deleteSession = model.getQueryModel().getString(DEL);
 		String tmp = null;
 		if (deleteSession != null) {
 			if (State.removeLoginSession(UUID.fromString(deleteSession))) {

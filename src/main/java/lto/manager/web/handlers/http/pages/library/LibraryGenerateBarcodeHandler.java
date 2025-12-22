@@ -16,7 +16,6 @@ import lto.manager.common.database.Database;
 import lto.manager.common.database.tables.TableTape;
 import lto.manager.common.database.tables.records.RecordLabelPreset;
 import lto.manager.common.database.tables.records.RecordRole.Permission;
-import lto.manager.common.database.tables.records.RecordTapeType;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.ajax.labelgenerator.AJAXGenerateLTOLabelPDF;
 import lto.manager.web.handlers.http.ajax.labelgenerator.AJAXGenerateLTOLabelSVG;
@@ -42,19 +41,16 @@ import lto.manager.web.resource.HTML;
 import lto.manager.web.resource.JS;
 
 public class LibraryGenerateBarcodeHandler extends BaseHTTPHandler {
-	public static final String PATH = "/library/generate/";
+	public static final String PATH = LibraryHandler.PATH + "generate/";
 	public static final String NAME = "Generate New Label";
 
 	private static final String MODAL_ID = "modal-preset";
 
 	static Void body(Div<?> view, BodyModel model) {
-		final List<RecordTapeType> tapeTypes = new ArrayList<RecordTapeType>();
 		final LTOColourThemeMap colourTheme = LTOColourThemeMap.of();
-		try {
-			tapeTypes.addAll(Database.getAllTapeTypes());
-		} catch (Exception e) {}
 
 		// FIXME enter a bad value in input - click show details which will refresh AJAX
+		// @formatter:off
 		view.div().attrClass(CSS.COMMON_CONTAINER_NO_ALIGN)
 			.form()
 				.attrId("barcode-form")
@@ -247,7 +243,7 @@ public class LibraryGenerateBarcodeHandler extends BaseHTTPHandler {
 					.__()
 				.__()
 
-				.div().attrClass("button-container")
+				.div().attrClass(CSS.FORMS_MODAL_CONTAINER)
 					.button()
 						.attrClass(CSS.BUTTON + CSS.ICON_HIGHLIGHTS + CSS.BUTTON_IMAGE_W_TEXT + CSS.BUTTON_IMAGE)
 						.attrType(EnumTypeButtonType.SUBMIT)
@@ -285,6 +281,7 @@ public class LibraryGenerateBarcodeHandler extends BaseHTTPHandler {
 				.__()
 			.__()
 		.__(); // sub
+		// @formatter:on
 		return null;
 	}
 
@@ -302,7 +299,7 @@ public class LibraryGenerateBarcodeHandler extends BaseHTTPHandler {
 		view
 			.div()
 				// Start of modal dialog
-				.of(parent -> Modal.content(parent, ModalOptions.of(MODAL_ID, false), innerDiv -> {
+				.of(parent -> Modal.content(parent, ModalOptions.of(MODAL_ID, "Add preset", false), innerDiv -> {
 					innerDiv
 						.div()
 							.attrClass(CSS.FORMS_CONTAINER)
@@ -316,7 +313,7 @@ public class LibraryGenerateBarcodeHandler extends BaseHTTPHandler {
 							.__()
 						.__()
 						.div()
-							.attrId("preset-error")
+							.attrId(MODAL_ID + HTML.MODEL_ERR_POSTIX)
 							.attrStyle("display:none;margin-bottom:var(--padding-full)")
 							.of(innerParent -> InlineMessage.contentGenericError(innerParent, "Message")) // Self closing __()
 						.div()
@@ -330,7 +327,7 @@ public class LibraryGenerateBarcodeHandler extends BaseHTTPHandler {
 							.button()
 								.attrClass(CSS.BUTTON + CSS.ICON_CROSS + CSS.BUTTON_IMAGE_W_TEXT + CSS.BUTTON_IMAGE)
 								.attrType(EnumTypeButtonType.BUTTON)
-								.attrOnclick("hidePresetModal()")
+								.attrOnclick(JS.hideModal(MODAL_ID))
 								.text("Cancel")
 							.__()
 						.__();
@@ -366,7 +363,7 @@ public class LibraryGenerateBarcodeHandler extends BaseHTTPHandler {
 						})
 						.li()
 							.a()
-								.attrOnclick("showPresetModal()")
+								.attrOnclick(JS.showModal(MODAL_ID, true))
 								.text("Add New")
 							.__()
 						.__() // li
@@ -379,8 +376,7 @@ public class LibraryGenerateBarcodeHandler extends BaseHTTPHandler {
 	@Override
 	public void requestHandle(HttpExchange he, BodyModel bm) throws IOException, SQLException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of(NAME);
-		thm.addCSS(Asset.CSS_FORMS).addCSS(Asset.CSS_LIBRARY);
-		thm.addScript(Asset.JS_AJAX);
+		thm.addCSS(Asset.CSS_LIBRARY);
 		thm.addScriptDefer(Asset.JS_LTO_LABEL_GENERATOR);
 		BreadCrumbs crumbs = new BreadCrumbs().add(LibraryHandler.NAME, LibraryHandler.PATH).add(NAME, PATH);
 		TemplatePageModel tpm = TemplatePageModel.of(LibraryGenerateBarcodeHandler::body, LibraryGenerateBarcodeHandler::header, thm, SelectedPage.Library, bm, crumbs);

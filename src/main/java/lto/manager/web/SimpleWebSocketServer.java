@@ -13,6 +13,7 @@ import lto.manager.common.log.Log;
 import lto.manager.common.state.State;
 import lto.manager.web.handlers.Handlers;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
+import lto.manager.web.handlers.http.templates.models.QueryModel;
 
 public class SimpleWebSocketServer extends WebSocketServer {
 	private final static int EVENT_CODE_PATH_NOT_FOUND = 3001;
@@ -40,10 +41,9 @@ public class SimpleWebSocketServer extends WebSocketServer {
 			query = path.substring(index + 1, path.length());
 			path = path.substring(0, index);
 		}
-		System.out.println(query);
 		var handler = Handlers.websocketHandlers.get(path);
 		if (handler != null) {
-			handler.addNewConnection(conn);
+			handler.addNewConnection(conn, new QueryModel(query));
 		} else {
 			conn.close(EVENT_CODE_PATH_NOT_FOUND, "path: " + path + " not found");
 			Log.warning("Refused incoming websocket connection from unknown path: " + path);
@@ -105,7 +105,7 @@ public class SimpleWebSocketServer extends WebSocketServer {
 	}
 
 	private boolean validateSession(ClientHandshake handshake) {
-		if ((boolean) Options.getData(OptionsSetting.ENABLE_LOGIN)) {
+		if (Options.getData(OptionsSetting.ENABLE_LOGIN) == Boolean.TRUE) {
 			final var cookie = handshake.getFieldValue("Cookie");
 			final var cookieMap = BaseHTTPHandler.getCookieKeyPairs(cookie);
 			final String session = cookieMap.get(BaseHTTPHandler.COOKIE_SESSION);

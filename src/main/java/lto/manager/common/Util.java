@@ -55,6 +55,44 @@ public class Util {
 		return Runtime.getRuntime().totalMemory();
 	}
 
+	public static String getJVMVersion() {
+		return Runtime.version().toString();
+	}
+
+	public static String getJVMVendor() {
+		try {
+			final String result = System.getProperty("java.vm.specification.vendor");
+			if (result != null) {
+				return result;
+			}
+		} catch (Exception e) {
+		}
+		return "Unknown vendor";
+	}
+
+	public static int getJVMBitWidth() {
+		try {
+			final String prop = System.getProperty("sun.arch.data.model");
+			if (prop != null) {
+				return Integer.parseInt(prop);
+			}
+		} catch (Exception e) {
+		}
+		try {
+			final String prop = System.getProperty("os.arch");
+			if (prop != null) {
+				if (prop.contains("64")) {
+					return 64;
+				}
+				if (prop.contains("86") || prop.contains("32")) {
+					return 32;
+				}
+			}
+		} catch (Exception e) {
+		}
+		return 0;
+	}
+
 	public static String getVersionNumberFromJar(final String jarPath) throws IOException {
 		JarInputStream jarStream = new JarInputStream(new FileInputStream(jarPath));
 		Manifest manifest = jarStream.getManifest();

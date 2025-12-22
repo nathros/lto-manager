@@ -29,6 +29,7 @@ import lto.manager.web.handlers.http.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.http.templates.TemplatePage.TemplatePageModel;
 import lto.manager.web.handlers.http.templates.models.BodyModel;
 import lto.manager.web.handlers.http.templates.models.HeadModel;
+import lto.manager.web.handlers.http.templates.models.QueryModel;
 import lto.manager.web.resource.Asset;
 import lto.manager.web.resource.CSS;
 import lto.manager.web.resource.HTML;
@@ -51,18 +52,19 @@ public class JobsNewBackupHandler extends BaseHTTPHandler {
 	static Void content(Div<?> view, BodyModel model) {
 		final int depth = 1;
 		final int db = FileListOptions.showAll;
-		final String name = model.getQueryNoNull(QNAME);
-		final String comment = model.getQueryNoNull(COMMENT).replaceAll("\t", "");
-		final String start = model.getQueryNoNull(START);
-		final String immediate = model.getQueryNoNull(IMMEDIATE);
+		final QueryModel qm = model.getQueryModel();
+		final String name = qm.getStringNotNull(QNAME);
+		final String comment = qm.getStringNotNull(COMMENT).replaceAll("\t", "");
+		final String start = qm.getStringNotNull(START);
+		final String immediate = qm.getStringNotNull(IMMEDIATE);
 		final String fileTree = Util.getWorkingDir().getAbsolutePath() + "/testdir";
 		final String fileTreeVirtual = "/";
-		final String tapeID = model.getQueryNoNull(TAPE_ID);
+		final String tapeID = qm.getStringNotNull(TAPE_ID);
 
 		if (model.isPOSTMethod()) {
-			final List<String> sourceFiles = model.getQueryArrayNotNull(FileListModel.FILE_SELECTED);
-			final String destDir = model.getQueryNoNull(FileListModel.BREADCRUMBS_LAST + FileListModel.getIDPostFix(true));
-			final String sourceDir = model.getQueryNoNull(FileListModel.BREADCRUMBS_LAST + FileListModel.getIDPostFix(false));
+			final List<String> sourceFiles = qm.getArrayNotNull(FileListModel.FILE_SELECTED);
+			final String destDir = qm.getStringNotNull(FileListModel.BREADCRUMBS_LAST + FileListModel.getIDPostFix(true));
+			final String sourceDir = qm.getStringNotNull(FileListModel.BREADCRUMBS_LAST + FileListModel.getIDPostFix(false));
 			LocalDateTime startDateTime = immediate.equals(Query.CHECKED) || start.equals("") ? null : LocalDateTime.parse(start);
 			RecordJob job = RecordJob.of(name, RecordJobType.BACKUP, startDateTime, comment);
 			try {
@@ -159,8 +161,8 @@ public class JobsNewBackupHandler extends BaseHTTPHandler {
 	@Override
 	public void requestHandle(HttpExchange he, BodyModel bm) throws IOException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of(NAME);
-		thm.addCSS(Asset.CSS_TABS).addCSS(Asset.CSS_FILE_VIEW).addCSS(Asset.CSS_FORMS);
-		thm.addScriptDefer(Asset.JS_AJAX).addScript(Asset.JS_ADD_JOB).addScript(Asset.JS_FILE_VIEW);
+		thm.addCSS(Asset.CSS_TABS).addCSS(Asset.CSS_FILE_VIEW);
+		thm.addScript(Asset.JS_ADD_JOB).addScript(Asset.JS_FILE_VIEW);
 		BreadCrumbs crumbs = new BreadCrumbs().add(JobsHandler.NAME, JobsHandler.PATH).add(JobsTypeHandler.NAME + " [Backup]", JobsTypeHandler.PATH).add(NAME, PATH);
 		TemplatePageModel tpm = TemplatePageModel.of(JobsNewBackupHandler::content, null, thm, SelectedPage.Jobs, bm, crumbs);
 		requestHandleCompletePage(he, tpm);

@@ -37,7 +37,7 @@ public class AJAXGenerateLTOLabelPDF extends BaseHTTPHandler {
 	@Override
 	public void requestHandle(HttpExchange he, BodyModel bm) throws Exception {
 		List<String> labelsSVGs = GenerateLTOLabelSVG.generate(LTOLabelOptions.of(bm));
-		final String paperKey = bm.getQueryNoNull(LTOLabelOptions.QUERY_PAPER);
+		final String paperKey = bm.getQueryModel().getStringNotNull(LTOLabelOptions.QUERY_PAPER);
 		LTOPageType paperType = LTOPaperTypeMap.getPaperType(paperKey);
 		if (paperType == null) {
 			paperType = LTOPaperTypeMap.getDefaultPaperType();

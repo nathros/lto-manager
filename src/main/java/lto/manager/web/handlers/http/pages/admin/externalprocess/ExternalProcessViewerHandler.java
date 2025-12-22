@@ -16,6 +16,7 @@ import lto.manager.web.handlers.http.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.http.templates.TemplatePage.TemplatePageModel;
 import lto.manager.web.handlers.http.templates.models.BodyModel;
 import lto.manager.web.handlers.http.templates.models.HeadModel;
+import lto.manager.web.handlers.http.templates.models.QueryModel;
 import lto.manager.web.resource.CSS;
 
 public class ExternalProcessViewerHandler extends BaseHTTPHandler {
@@ -37,12 +38,13 @@ public class ExternalProcessViewerHandler extends BaseHTTPHandler {
 	};
 
 	static Void content(Div<?> view, BodyModel model) {
-		final String id = model.getQueryNoNull(ID);
+		final QueryModel qm = model.getQueryModel();
+		final String id = qm.getStringNotNull(ID);
 
 		view
 			.div()
 				.of(div -> {
-					final ExternalProcess pro = getExternalProcess(model.getQueryNoNull(TYPE), id);
+					final ExternalProcess pro = getExternalProcess(qm.getStringNotNull(TYPE), id);
 					if (pro != null) {
 						div
 							.b().text("Command: ").__()

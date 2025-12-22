@@ -18,10 +18,10 @@ import lto.manager.common.database.tables.records.RecordRole.Permission;
 import lto.manager.common.database.tables.records.RecordTape;
 import lto.manager.common.database.tables.records.RecordTape.RecordTapeFormatType;
 import lto.manager.common.database.tables.records.RecordTapeType;
-import lto.manager.web.check.FormValidator;
-import lto.manager.web.check.FormValidator.ValidatorOptions;
-import lto.manager.web.check.FormValidator.ValidatorStatus;
-import lto.manager.web.check.FormValidator.ValidatorType;
+import lto.manager.web.check.FormValidatorOld;
+import lto.manager.web.check.FormValidatorOld.FormElementTypeOld;
+import lto.manager.web.check.FormValidatorOld.ValidatorOptions;
+import lto.manager.web.check.FormValidatorOld.ValidatorStatus;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.partial.LTOTapeTypeSelect;
 import lto.manager.web.handlers.http.templates.TemplatePage.BreadCrumbs;
@@ -29,13 +29,14 @@ import lto.manager.web.handlers.http.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.http.templates.TemplatePage.TemplatePageModel;
 import lto.manager.web.handlers.http.templates.models.BodyModel;
 import lto.manager.web.handlers.http.templates.models.HeadModel;
+import lto.manager.web.handlers.http.templates.models.QueryModel;
 import lto.manager.web.resource.Asset;
 import lto.manager.web.resource.CSS;
 import lto.manager.web.resource.HTML;
 import lto.manager.web.resource.Query;
 
 public class LibraryCreateHandler extends BaseHTTPHandler {
-	public static final String PATH = "/library/new/";
+	public static final String PATH = LibraryHandler.PATH + "new/";
 	public static final String NAME = "New Tape";
 	private static final String SERIAL = "serial";
 	private static final String TAPETYPE = "type";
@@ -45,7 +46,8 @@ public class LibraryCreateHandler extends BaseHTTPHandler {
 	private static final String FORMAT = "format";
 	private static final String ENCRYPTED = "enc";
 	private static final String COMPRESSION = "comp";
-	private static final FormValidator barcodeValidator = FormValidator.of(ValidatorType.INPUT_TEXT,
+
+	private static final FormValidatorOld barcodeValidator = FormValidatorOld.of(FormElementTypeOld.INPUT_TEXT,
 			ValidatorOptions.of().valueExpectedLength(TableTape.MAX_LEN_BARCODE_FORM).valueNotEmpty(), "Bardcode");
 
 	static Void body(Div<?> view, BodyModel model) {
@@ -54,15 +56,16 @@ public class LibraryCreateHandler extends BaseHTTPHandler {
 		String er = null;
 		boolean s = false;
 
-		final String barcode = model.getQueryNoNull(BARCODE);
-		final ValidatorStatus barcodeStatus = barcodeValidator.validate(model.getQueryNoNull(BARCODE), model.hasQuery());
-		final String serial = model.getQueryNoNull(SERIAL);
-		final String manu = model.getQueryNoNull(MANU);
-		final String type = model.getQueryNoNull(TAPETYPE);
-		final String worm = model.getQueryNoNull(WORM);
-		final String format = model.getQueryNoNull(FORMAT);
-		final String encrypted = model.getQueryNoNull(ENCRYPTED);
-		final String compression = model.getQueryNoNull(COMPRESSION);
+		final QueryModel qm = model.getQueryModel();
+		final String barcode = qm.getStringNotNull(BARCODE);
+		final ValidatorStatus barcodeStatus = barcodeValidator.validate(qm.getStringNotNull(BARCODE), model.hasQuery());
+		final String serial = qm.getStringNotNull(SERIAL);
+		final String manu = qm.getStringNotNull(MANU);
+		final String type = qm.getStringNotNull(TAPETYPE);
+		final String worm = qm.getStringNotNull(WORM);
+		final String format = qm.getStringNotNull(FORMAT);
+		final String encrypted = qm.getStringNotNull(ENCRYPTED);
+		final String compression = qm.getStringNotNull(COMPRESSION);
 
 		final boolean isWORM = worm.equals(Query.CHECKED);
 		final boolean isEncrypted = encrypted.equals(Query.CHECKED);
@@ -96,6 +99,7 @@ public class LibraryCreateHandler extends BaseHTTPHandler {
 		final String errorMessage = er;
 		final boolean addedTapeSuccess = s;
 
+		// @formatter:off
 		view
 			.div()
 				.form()
@@ -199,6 +203,12 @@ public class LibraryCreateHandler extends BaseHTTPHandler {
 					}).__()
 				.__()
 			.__(); // div
+		// @formatter:on
+		return null;
+	}
+
+	@Override
+	public Permission getHandlePermission() {
 		return null;
 	}
 
@@ -209,11 +219,5 @@ public class LibraryCreateHandler extends BaseHTTPHandler {
 		BreadCrumbs crumbs = new BreadCrumbs().add(LibraryHandler.NAME, LibraryHandler.PATH).add(NAME, PATH);
 		TemplatePageModel tpm = TemplatePageModel.of(LibraryCreateHandler::body, null, thm, SelectedPage.Library, bm, crumbs);
 		requestHandleCompletePage(he, tpm);
-	}
-
-	@Override
-	public Permission getHandlePermission() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 }

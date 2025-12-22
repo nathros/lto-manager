@@ -17,6 +17,7 @@ import lto.manager.web.handlers.http.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.http.templates.TemplatePage.TemplatePageModel;
 import lto.manager.web.handlers.http.templates.models.BodyModel;
 import lto.manager.web.handlers.http.templates.models.HeadModel;
+import lto.manager.web.handlers.http.templates.models.QueryModel;
 import lto.manager.web.resource.Asset;
 import lto.manager.web.resource.CSS;
 
@@ -29,9 +30,10 @@ public class ClearCacheHandler extends BaseHTTPHandler {
 	public static final String QSTORAGE = "storage";
 
 	static Void content(Div<?> view, BodyModel model) {
-		final String cacheStr = model.getQuery(QCACHE);
-		final String cookieStr = model.getQuery(QCOOKIE);
-		final String storageStr = model.getQuery(QSTORAGE);
+		final QueryModel qm = model.getQueryModel();
+		final String cacheStr = qm.getString(QCACHE);
+		final String cookieStr = qm.getString(QCOOKIE);
+		final String storageStr = qm.getString(QSTORAGE);
 
 		final var cacheOpt = CheckBoxOptions.of().setID(QCACHE).setChecked(cacheStr != null);
 		final var cookieOpt = CheckBoxOptions.of().setID(QCOOKIE).setChecked(cookieStr != null);
@@ -101,7 +103,6 @@ public class ClearCacheHandler extends BaseHTTPHandler {
 	@Override
 	public void requestHandle(HttpExchange he, BodyModel bm) throws Exception {
 		HeadModel thm = HeadModel.of(NAME);
-		thm.addCSS(Asset.CSS_FORMS);
 		BreadCrumbs crumbs = new BreadCrumbs().add(SandpitHandler.NAME, SandpitHandler.PATH).add(NAME, PATH);
 		TemplatePageModel tpm = TemplatePageModel.of(ClearCacheHandler::content, null, thm, SelectedPage.Sandpit, bm, crumbs);
 		requestHandleCompletePage(he, tpm);

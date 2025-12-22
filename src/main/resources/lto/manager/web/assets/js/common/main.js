@@ -20,6 +20,9 @@ function getCookie(name) {
 function eraseCookie(name) { document.cookie = name + '=; Max-Age=-1; path=/'; }
 const COOKIE_ON = "on";
 const COOKIE_OFF = "off";
+function urlParams() { return new URLSearchParams(window.location.search); }
+function buildFormQuery(form) { return new URLSearchParams(new FormData(form)).toString(); }
+function buildFormURL(url, form) { return `${url}?${buildFormQuery(form)}`; }
 
 const APIStatus = {
 	Ok: "ok",
@@ -255,5 +258,22 @@ function systemCanvasIcon(sender) {
 	l.style.filter = "none";
 	l.style.opacity = "100%";
 	l.style.cursor = "pointer";
-	l.onclick = function() { document.head.appendChild(document.createElement("script")).src = location.origin + "/assets/js/snake.js"; }
+	l.onclick = function() { document.head.appendChild(document.createElement("script")).src = location.origin + "/assets/js/common/snake.js"; }
+}
+
+function showModal(id, clearContents = false) {
+	const modal = document.getElementById(id);
+	if (clearContents) {
+		modal.getElementsByTagName("input")[0].value = ""; // Clear input value
+	}
+	modal.showModal();
+}
+
+function hideModal(id) {
+	const modal = document.getElementById(id);
+	modal.close();
+	const errorMsg = document.getElementById(`${id}-error`);
+	if (errorMsg) {
+		errorMsg.style.display = "none";
+	}
 }

@@ -2,7 +2,6 @@ package lto.manager.web.handlers.http.templates.models;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,7 +27,7 @@ import lto.manager.web.handlers.http.BaseHTTPHandler.UserNotAuthorisedException;
 public class BodyModel {
 	private final HttpExchange he;
 	private final Object model;
-	private final Map<String, Object> queriesURL;
+	private final QueryModel queriesURL;
 	private final Map<String, String> cookiesRequest;
 	private final List<String> cookiesResponse;
 	private final String method;
@@ -36,7 +35,7 @@ public class BodyModel {
 
 	public class RequestBody {
 		private final String contentType;
-		private final Map<String, Object> queriesBody;
+		private final QueryModel queriesBody;
 		private final byte[] payload;
 		private String filename;
 		private String name;
@@ -44,14 +43,15 @@ public class BodyModel {
 		public RequestBody(final byte[] body, String contentType) throws IOException {
 			// printBody(body);
 			this.contentType = contentType;
-			queriesBody = new HashMap<String, Object>();
+			//queriesBody = new HashMap<String, Object>();
 
 			if (contentType.contains("application/x-www-form-urlencoded")) { // TODO JS FormData
 				String bodyStr = new String(body, StandardCharsets.UTF_8);
-				parseQuery(bodyStr, queriesBody);
+				queriesBody = new QueryModel(bodyStr);
 				this.payload = null;
 				this.filename = null;
 			} else {
+				queriesBody = new QueryModel(null);
 				int payloadStartIndex = 0;
 				int payloadEndIndex = 0;
 
@@ -120,7 +120,7 @@ public class BodyModel {
 			return filename;
 		}
 
-		public Map<String, Object> getQueries() {
+		public QueryModel getQueries() {
 			return queriesBody;
 		}
 	}
@@ -137,11 +137,10 @@ public class BodyModel {
 	private BodyModel(HttpExchange he, Object model) throws IOException {
 		this.he = he;
 		this.model = model;
-		queriesURL = new HashMap<String, Object>();
 		cookiesRequest = new HashMap<String, String>();
 		cookiesResponse = new ArrayList<String>();
 		String query = he.getRequestURI().getRawQuery();
-		parseQuery(query, queriesURL);
+		queriesURL = new QueryModel(query);
 		method = he.getRequestMethod();
 		InputStream post = he.getRequestBody();
 
@@ -185,48 +184,8 @@ public class BodyModel {
 		return he.getRequestURI().getPath();
 	}
 
-	@SuppressWarnings("unchecked")
-	public String getQuery(String key) {
-		Map<String, Object> queries = isGETMethod() ? queriesURL : body.getQueries();
-		var result = queries.get(key);
-		if (result instanceof String) {
-			return (String) result;
-		} else if (result != null) {
-			return ((List<String>) result).get(0);
-		}
-		return null;
-	}
-
-	public String getQueryNoNull(String key) {
-		final String query = getQuery(key);
-		return query == null ? "" : query;
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<String> getQueryArray(String key) {
-		Map<String, Object> queries = isGETMethod() ? queriesURL : body.getQueries();
-		Object o = queries.get(key);
-		if (o instanceof String) {
-			var list = new ArrayList<String>();
-			list.add((String) o);
-			return list;
-		} else {
-			return (List<String>) o;
-		}
-	}
-
-	public List<String> getQueryArrayNotNull(String key) {
-		List<String> queries = getQueryArray(key);
-		if (queries == null) {
-			return new ArrayList<String>();
-		}
-		return queries;
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<String> getQueryKeys() {
-		Map<String, Object> queries = isGETMethod() ? queriesURL : body.getQueries();
-		return (List<String>) queries.keySet();
+	public QueryModel getQueryModel() {
+		return isGETMethod() ? queriesURL : body.getQueries();
 	}
 
 	public String getCookie(String key) {
@@ -380,39 +339,6 @@ public class BodyModel {
 		return null;
 	}
 
-	private void parseQuery(String query, Map<String, Object> parameters) {
-		if (query != null) {
-			String pairs[] = query.split("[&]");
-
-			for (String pair : pairs) {
-				String param[] = pair.split("[=]");
-
-				String key = null;
-				String value = null;
-				if (param.length > 1) {
-					key = URLDecoder.decode(param[0], StandardCharsets.UTF_8);
-					value = URLDecoder.decode(param[1], StandardCharsets.UTF_8);
-				}
-
-				if (!parameters.containsKey(key)) {
-					parameters.put(key, value);
-				} else if (key != null) {
-					Object o = parameters.get(key);
-					if (o instanceof String) {
-						List<String> list = new ArrayList<String>();
-						list.add((String) o);
-						list.add(value);
-						parameters.put(key, list);
-					} else {
-						@SuppressWarnings("unchecked")
-						List<String> list = (List<String>) o;
-						list.add(value);
-					}
-				}
-			}
-		}
-	}
-
 	private void parseCookies(List<String> cookies, Map<String, String> parameters) {
 		for (String header : cookies) {
 			String[] cookieKeyValue = header.split(";");
@@ -426,4 +352,5 @@ public class BodyModel {
 			}
 		}
 	}
+
 }

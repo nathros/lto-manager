@@ -13,13 +13,17 @@ import lto.manager.common.database.Database;
 import lto.manager.common.database.tables.records.RecordRole.Permission;
 import lto.manager.common.database.tables.records.RecordTape;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
+import lto.manager.web.handlers.http.ajax.pages.library.AJAXLibraryCreateTapeForm;
 import lto.manager.web.handlers.http.pages.files.FilesHandler;
 import lto.manager.web.handlers.http.partial.components.TableTrFilter;
+import lto.manager.web.handlers.http.partial.modal.Modal;
+import lto.manager.web.handlers.http.partial.modal.ModalOptions;
 import lto.manager.web.handlers.http.templates.TemplatePage.BreadCrumbs;
 import lto.manager.web.handlers.http.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.http.templates.TemplatePage.TemplatePageModel;
 import lto.manager.web.handlers.http.templates.models.BodyModel;
 import lto.manager.web.handlers.http.templates.models.HeadModel;
+import lto.manager.web.resource.Asset;
 import lto.manager.web.resource.CSS;
 import lto.manager.web.resource.JS;
 
@@ -28,6 +32,7 @@ public class LibraryHandler extends BaseHTTPHandler {
 	public static final String NAME = "Library";
 
 	private static final String TABLE_ID = "tab";
+	public static final String MODAL_ID = "modal-add-new-tape";
 
 	static Void body(Div<?> view, BodyModel model) {
 		List<RecordTape> tmp = null;
@@ -39,8 +44,15 @@ public class LibraryHandler extends BaseHTTPHandler {
 
 		final List<RecordTape> tapes = tmp;
 
+		// @formatter:off
 		view
 			.div()
+				// Start of modal dialog
+				.of(parent -> Modal.content(parent, ModalOptions.of(MODAL_ID, "Add New Tape", true), innerDiv -> {
+					AJAXLibraryCreateTapeForm.content(parent, model);
+				}))
+				// End of modal dialog
+
 				.table().attrId(TABLE_ID).attrClass(CSS.TABLE).of(table -> {
 					table.tr()
 						.th().of(tr -> TableTrFilter.content(tr, "ID")).__()
@@ -88,18 +100,21 @@ public class LibraryHandler extends BaseHTTPHandler {
 					}
 				}).__()
 			.__(); // div
+		// @formatter:on
 		return null;
 	}
 
 	@Override
 	public void requestHandle(HttpExchange he, BodyModel bm) throws IOException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of(NAME);
+		thm.addScript(Asset.JS_ADD_TAPE);
 		BreadCrumbs crumbs = new BreadCrumbs().add(NAME, PATH);
 		TemplatePageModel tpm = TemplatePageModel.of(LibraryHandler::body, LibraryHandler::header, thm, SelectedPage.Library, bm, crumbs);
 		requestHandleCompletePage(he, tpm);
 	}
 
 	static Void header(Div<?> view, BodyModel model) {
+		// @formatter:off
 		view
 			.div()
 				.attrClass(CSS.HEADER_ITEM + CSS.ICON_PRINTER)
@@ -130,8 +145,15 @@ public class LibraryHandler extends BaseHTTPHandler {
 							.text("Add New Tape")
 						.__()
 					.__()
+					.li()
+					.a()
+						.attrOnclick(JS.showModal(MODAL_ID))
+						.text("Add New Tape v2")
+					.__()
+				.__()
 				.__() // ul
 			.__(); // div
+		// @formatter:on
 		return null;
 	}
 

@@ -25,7 +25,7 @@ public class JobsDetailsHandler extends BaseHTTPHandler {
 	public final static String ID = "id";
 
 	static Void content(Div<?> view, BodyModel model) {
-		final String id = model.getQuery(ID);
+		final String id = model.getQueryModel().getString(ID);
 		JobBase result = null;
 		try {
 			int number = Integer.parseInt(id);

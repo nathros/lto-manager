@@ -10,6 +10,9 @@ import java.util.logging.Level;
 import org.java_websocket.WebSocket;
 
 import lto.manager.common.log.Log;
+import lto.manager.common.log.Log.LogFile;
+import lto.manager.web.handlers.http.pages.admin.advanced.LoggingHandler;
+import lto.manager.web.handlers.http.templates.models.QueryModel;
 import lto.manager.web.handlers.websockets.BaseWebsocketHandler;
 import lto.manager.web.resource.Asset;
 
@@ -22,8 +25,8 @@ public class LoggingWebsocketHandler extends BaseWebsocketHandler {
 	}
 
 	@Override
-	public void onNewConnection(WebSocket conn) {
-		final String logPath = Log.getLogFilePath() + ".0";
+	public void onNewConnection(WebSocket conn, QueryModel queryModel) {
+		final String logPath = Log.getLogFilePath(queryModel.getEnumOrdinal(LoggingHandler.QUERY_FILE, LogFile.Main)) + ".0";
 		File file = new File(logPath);
 		if (!file.exists()) {
 			conn.send(Log.generateLogMessageAsString(Level.SEVERE, "Cannot find log file: " + logPath));
@@ -33,7 +36,7 @@ public class LoggingWebsocketHandler extends BaseWebsocketHandler {
 			return;
 		}
 		try {
-			String content = Files.readString(Paths.get(logPath));
+			final String content = Files.readString(Paths.get(logPath));
 			conn.send(content);
 		} catch (IOException e) {
 			conn.send(Log.generateLogMessageAsString(Level.SEVERE,
@@ -51,10 +54,16 @@ public class LoggingWebsocketHandler extends BaseWebsocketHandler {
 		Log.warning("No message expected - message discarded");
 	}
 
-	public void publishNewMessage(final String message) {
+	public void publishNewMessage(final String message, final LogFile file) {
 		for (final var client : conn) {
 			if (client.isOpen()) {
-				client.send(message);
+				var query = queryMap.get(client.hashCode());
+				if (query != null) {
+					LogFile current = query.getEnumOrdinal(LoggingHandler.QUERY_FILE, LogFile.Main);
+					if (file == current) {
+						client.send(message);
+					}
+				}
 			}
 		}
 	}

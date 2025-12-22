@@ -87,7 +87,7 @@ public class Handlers {
 			e.printStackTrace(); // Should not fail
 		}
 		if (urlConnection instanceof JarURLConnection) {
-			// Program is run in as Jar
+			// Program is running in as Jar
 			try (JarFile file = ((JarURLConnection) urlConnection).getJarFile()) {
 				final String packageNamePath = packageName.replace('.', File.separatorChar);
 				Enumeration<JarEntry> entriesJar = file.entries();
@@ -108,7 +108,7 @@ public class Handlers {
 				}
 			} catch (Exception e) {}
 		} else {
-			// Program is run in IDE
+			// Program is running in IDE
 			URL handlerURL = urlConnection.getURL();
 			File handlerFile = new File(handlerURL.getPath());
 			File baseFile = handlerFile.getParentFile();

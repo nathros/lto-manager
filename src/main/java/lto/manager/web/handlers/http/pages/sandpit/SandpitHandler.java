@@ -10,6 +10,8 @@ import com.sun.net.httpserver.HttpExchange;
 import lto.manager.common.database.tables.records.RecordRole.Permission;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.pages.sandpit.frontend.CheckBoxTestHandler;
+import lto.manager.web.handlers.http.pages.sandpit.frontend.InlineMessageTestHandler;
+import lto.manager.web.handlers.http.pages.sandpit.frontend.ModalTestHandler;
 import lto.manager.web.handlers.http.pages.sandpit.frontend.SwitchTestHandler;
 import lto.manager.web.handlers.http.pages.sandpit.frontend.ToastTestHandler;
 import lto.manager.web.handlers.http.templates.TemplatePage.BreadCrumbs;
@@ -30,6 +32,7 @@ public class SandpitHandler extends BaseHTTPHandler {
 				.a().attrClass(CSS.BUTTON).attrHref(EchoHeaderHandler.PATH).text("Echo Request Header").__()
 				.a().attrClass(CSS.BUTTON).attrHref(EchoGetHandler.PATH).text("Echo GET").__()
 				.a().attrClass(CSS.BUTTON).attrHref(EchoPostHandler.PATH).text("Echo POST").__()
+				.a().attrClass(CSS.BUTTON).attrHref(ShowAllHandlersHandler.PATH).text(ShowAllHandlersHandler.NAME).__()
 				.a().attrClass(CSS.BUTTON).attrHref(LogTestHandler.PATH).text(LogTestHandler.NAME).__()
 				.a().attrClass(CSS.BUTTON).attrHref(ClearCacheHandler.PATH).text(ClearCacheHandler.NAME).__()
 				.a().attrClass(CSS.BUTTON).attrHref(DatabaseTestHandler.PATH).text(DatabaseTestHandler.NAME).__()
@@ -38,6 +41,12 @@ public class SandpitHandler extends BaseHTTPHandler {
 				.a().attrClass(CSS.BUTTON).attrHref(ToastTestHandler.PATH).text(ToastTestHandler.NAME).__()
 				.a().attrClass(CSS.BUTTON).attrHref(CheckBoxTestHandler.PATH).text(CheckBoxTestHandler.NAME).__()
 				.a().attrClass(CSS.BUTTON).attrHref(SwitchTestHandler.PATH).text(SwitchTestHandler.NAME).__()
+				.a().attrClass(CSS.BUTTON).attrHref(InlineMessageTestHandler.PATH).text(InlineMessageTestHandler.NAME).__()
+				.a().attrClass(CSS.BUTTON).attrHref(ModalTestHandler.PATH).text(ModalTestHandler.NAME).__()
+			.__()
+			.div().attrClass(CSS.GROUP).addAttr(CSS.GROUP_ATTRIBUTE, "Async")
+				.a().attrClass(CSS.BUTTON).attrHref(ToastTestHandler.PATH).text("TODO lazy loading: Onload.java").__()
+				.a().attrClass(CSS.BUTTON).attrHref(CheckBoxTestHandler.PATH).text("TODO form AJAX validation").__()
 			.__()
 			.div().attrClass(CSS.GROUP).addAttr(CSS.GROUP_ATTRIBUTE, "Networking")
 				.a().attrClass(CSS.BUTTON).attrHref(WebsocketTestHandler.PATH).text(WebsocketTestHandler.NAME).__()

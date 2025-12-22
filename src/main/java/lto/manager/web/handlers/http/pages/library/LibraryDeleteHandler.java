@@ -19,11 +19,11 @@ import lto.manager.web.handlers.http.templates.models.BodyModel;
 import lto.manager.web.handlers.http.templates.models.HeadModel;
 
 public class LibraryDeleteHandler extends BaseHTTPHandler {
-	public static final String PATH = "/library/delete/";
+	public static final String PATH = LibraryHandler.PATH + "delete/";
 	public static final String ID = "id";
 
 	static Void body(Div<?> view, BodyModel model) {
-		final String idQuery = model.getQueryNoNull(ID);
+		final String idQuery = model.getQueryModel().getStringNotNull(ID);
 		boolean s = false;
 		String er = null;
 

@@ -35,7 +35,7 @@ function ajaxFetch(url, element, callbackSuccess, callbackError, removeParent = 
 		signal: AbortSignal.timeout(3000),
 		headers: {
 			"Content-Type": "application/x-www-form-urlencoded"
-	}
+		}
 	}).then((response) => {
 		return response.text();
 	}).then((div) => {

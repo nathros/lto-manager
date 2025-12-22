@@ -7,6 +7,7 @@ import java.util.function.Supplier;
 import org.xmlet.htmlapifaster.Div;
 
 import lto.manager.Version;
+import lto.manager.common.Util;
 import lto.manager.web.handlers.http.api.APISystemInfo;
 import lto.manager.web.resource.CSS;
 
@@ -43,6 +44,12 @@ public class DashboardVersion {
 					.span().text(Version.BRANCH).__()
 					.b().text("Hostname: ").__()
 					.span().text(hostname).__()
+					.b().text("Java Vendor: ").__()
+					.span().text(Util.getJVMVendor()).__()
+					.b().text("Java Version: ").__()
+					.span().text(Util.getJVMVersion()).__()
+					.b().text("System: ").__()
+					.span().text(Util.getJVMBitWidth() + "bit").__()
 					.b().text("Uptime: ").__()
 					.span().attrId("uptime").text(uptimeStr).__()
 				.__()

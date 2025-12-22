@@ -19,10 +19,10 @@ import lto.manager.common.database.tables.records.RecordRole;
 import lto.manager.common.database.tables.records.RecordRole.Permission;
 import lto.manager.common.database.tables.records.RecordUser;
 import lto.manager.web.check.CheckStatusType;
-import lto.manager.web.check.FormValidator;
-import lto.manager.web.check.FormValidator.ValidatorOptions;
-import lto.manager.web.check.FormValidator.ValidatorStatus;
-import lto.manager.web.check.FormValidator.ValidatorType;
+import lto.manager.web.check.FormValidatorOld;
+import lto.manager.web.check.FormValidatorOld.FormElementTypeOld;
+import lto.manager.web.check.FormValidatorOld.ValidatorOptions;
+import lto.manager.web.check.FormValidatorOld.ValidatorStatus;
 import lto.manager.web.check.OperationStatus;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.pages.admin.AdminHandler;
@@ -32,7 +32,7 @@ import lto.manager.web.handlers.http.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.http.templates.TemplatePage.TemplatePageModel;
 import lto.manager.web.handlers.http.templates.models.BodyModel;
 import lto.manager.web.handlers.http.templates.models.HeadModel;
-import lto.manager.web.resource.Asset;
+import lto.manager.web.handlers.http.templates.models.QueryModel;
 import lto.manager.web.resource.CSS;
 import lto.manager.web.resource.HTML;
 import lto.manager.web.resource.Localisation;
@@ -62,11 +62,11 @@ public class UsersEditHandler extends BaseHTTPHandler {
 	private static final int IAvatar = 7;
 	private static final int IRole = 8;
 
-	private static final FormValidator userNameValidator = FormValidator.of(ValidatorType.INPUT_TEXT,
+	private static final FormValidatorOld userNameValidator = FormValidatorOld.of(FormElementTypeOld.INPUT_TEXT,
 			ValidatorOptions.of().valueNotEmpty().valueNotNull().valueMaxLength(TableUser.MAX_LENGTH_USERNAME), "Username");
-	private static final FormValidator descriptionValidator = FormValidator.of(ValidatorType.INPUT_TEXT,
+	private static final FormValidatorOld descriptionValidator = FormValidatorOld.of(FormElementTypeOld.INPUT_TEXT,
 			ValidatorOptions.of().valueMaxLength(TableUser.MAX_LENGTH_DESCRIPTION), "Description");
-	private static final FormValidator passwordValidator = FormValidator.of(ValidatorType.INPUT_PASSWORD,
+	private static final FormValidatorOld passwordValidator = FormValidatorOld.of(FormElementTypeOld.INPUT_PASSWORD,
 			ValidatorOptions.of(), "Password");
 
 	static private RecordUser getUser(String idStr) {
@@ -90,9 +90,10 @@ public class UsersEditHandler extends BaseHTTPHandler {
 	}
 
 	static Void content(Div<?> view, BodyModel model) {
-		String[] query = { model.getQuery(QID), model.getQuery(QName), model.getQuery(QDescription), model.getQuery(QEnabled),
-				model.getQuery(QPassword), model.getQuery(QPasswordConfirm), model.getQuery(QLang),
-				model.getQuery(QAvatar), model.getQuery(QRole) }; // Index must match for Qxx and Ixx
+		final QueryModel qm = model.getQueryModel();
+		String[] query = { qm.getString(QID), qm.getString(QName), qm.getString(QDescription), qm.getString(QEnabled),
+				qm.getString(QPassword), qm.getString(QPasswordConfirm), qm.getString(QLang),
+				qm.getString(QAvatar), qm.getString(QRole) }; // Index must match for Qxx and Ixx
 
 		final OperationStatus updateUserAction = OperationStatus.undefined();
 
@@ -267,8 +268,7 @@ public class UsersEditHandler extends BaseHTTPHandler {
 	@Override
 	public void requestHandle(HttpExchange he, BodyModel bm) throws IOException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of(NAME);
-		thm.addCSS(Asset.CSS_FORMS);
-		final String id = bm.getQuery(QID);
+		final String id = bm.getQueryModel().getString(QID);
 		BreadCrumbs crumbs = new BreadCrumbs()
 				.add(AdminHandler.NAME, AdminHandler.PATH)
 				.add(UsersHandler.NAME, UsersHandler.PATH)

@@ -69,7 +69,6 @@ public class ToastTestHandler extends BaseHTTPHandler {
 	@Override
 	public void requestHandle(HttpExchange he, BodyModel bm) throws Exception {
 		HeadModel thm = HeadModel.of(NAME);
-		thm.addCSS(Asset.CSS_FORMS);
 		BreadCrumbs crumbs = new BreadCrumbs().add(SandpitHandler.NAME, SandpitHandler.PATH).add(NAME, PATH);
 		TemplatePageModel tpm = TemplatePageModel.of(ToastTestHandler::content, null, thm, SelectedPage.Sandpit, bm, crumbs);
 		requestHandleCompletePage(he, tpm);

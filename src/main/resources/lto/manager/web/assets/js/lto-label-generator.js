@@ -55,7 +55,7 @@ function generateBarcode(href) {
 if ((barcodePreview != null) && (barcodeForm != null)) {
 	for (let index = 0; index < inputs.length; index++) {
 		const input = inputs[index];
-		input.onchange = (event) => { onBarcodeInputChange(event); }; // TODO incorrectly triggered on leave
+		input.onchange = (event) => { console.log(event); onBarcodeInputChange(event); }; // TODO incorrectly triggered on leave
 		input.onkeyup = (event) => { onBarcodeInputChange(event); }
 	}
 	for (let index = 0; index < selects.length; index++) {
@@ -68,17 +68,6 @@ function refreshPresetList() {
 	ajaxFetch("/ajax/ltolabelpreset/", presetModal.parentElement, true, () => {
 		presetModal = document.getElementById('modal-preset'); // Original has been replaced by ajaxFetch()
 	});
-}
-
-function showPresetModal() {
-	presetModal.getElementsByTagName("input")[0].value = ""; // Clear input value
-	presetModal.showModal();
-	// presetModal.getElementsByTagName("input")[0].focus(); // Use autofocus attribute on input
-}
-
-function hidePresetModal() {
-	presetModal.close();
-	document.getElementById("preset-error").style.display = "none";
 }
 
 function presetNameInputChange(event) {
@@ -179,4 +168,3 @@ function setPreset(name) {
 		showToast(Toast.Error, `Failed to set preset: ${error}`, -1, undefined, false);
 	});
 }
-

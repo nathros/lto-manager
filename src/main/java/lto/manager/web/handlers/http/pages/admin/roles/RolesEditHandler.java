@@ -13,10 +13,10 @@ import lto.manager.common.database.Database;
 import lto.manager.common.database.tables.TableRoles;
 import lto.manager.common.database.tables.records.RecordRole;
 import lto.manager.common.database.tables.records.RecordRole.Permission;
-import lto.manager.web.check.FormValidator;
-import lto.manager.web.check.FormValidator.ValidatorOptions;
-import lto.manager.web.check.FormValidator.ValidatorStatus;
-import lto.manager.web.check.FormValidator.ValidatorType;
+import lto.manager.web.check.FormValidatorOld;
+import lto.manager.web.check.FormValidatorOld.FormElementTypeOld;
+import lto.manager.web.check.FormValidatorOld.ValidatorOptions;
+import lto.manager.web.check.FormValidatorOld.ValidatorStatus;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.pages.admin.AdminHandler;
 import lto.manager.web.handlers.http.partial.inlinemessage.InlineMessage;
@@ -25,7 +25,7 @@ import lto.manager.web.handlers.http.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.http.templates.TemplatePage.TemplatePageModel;
 import lto.manager.web.handlers.http.templates.models.BodyModel;
 import lto.manager.web.handlers.http.templates.models.HeadModel;
-import lto.manager.web.resource.Asset;
+import lto.manager.web.handlers.http.templates.models.QueryModel;
 import lto.manager.web.resource.CSS;
 
 public class RolesEditHandler extends BaseHTTPHandler {
@@ -40,9 +40,9 @@ public class RolesEditHandler extends BaseHTTPHandler {
 	private static final int IName = 1;
 	private static final int IDescription = 2;
 
-	private static final FormValidator roleNameValidator = FormValidator.of(ValidatorType.INPUT_TEXT,
+	private static final FormValidatorOld roleNameValidator = FormValidatorOld.of(FormElementTypeOld.INPUT_TEXT,
 			ValidatorOptions.of().valueNotEmpty().valueNotNull().valueMaxLength(TableRoles.MAX_LENGTH_NAME), QRoleName);
-	private static final FormValidator roleDescriptionValidator = FormValidator.of(ValidatorType.INPUT_TEXT,
+	private static final FormValidatorOld roleDescriptionValidator = FormValidatorOld.of(FormElementTypeOld.INPUT_TEXT,
 			ValidatorOptions.of().valueMaxLength(TableRoles.MAX_LENGTH_DESCRIPTION), QRoleDescription);
 
 	static private RecordRole getRoles(String id) {
@@ -54,7 +54,8 @@ public class RolesEditHandler extends BaseHTTPHandler {
 	}
 
 	static Void content(Div<?> view, BodyModel model) {
-		String[] query = { model.getQuery(QID), model.getQuery(QRoleName), model.getQuery(QRoleDescription) };
+		final QueryModel qm = model.getQueryModel();
+		String[] query = { qm.getString(QID), qm.getString(QRoleName), qm.getString(QRoleDescription) };
 
 		if (query[IID] == null) {
 			view.div().of(d -> InlineMessage.contentGenericError(d, "Role id is missing"));
@@ -116,7 +117,6 @@ public class RolesEditHandler extends BaseHTTPHandler {
 	@Override
 	public void requestHandle(HttpExchange he, BodyModel bm) throws IOException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of(NAME);
-		thm.addCSS(Asset.CSS_FORMS);
 		BreadCrumbs crumbs = new BreadCrumbs().add(AdminHandler.NAME, AdminHandler.PATH).add(RolesHandler.NAME, RolesHandler.PATH).add("Edit", PATH);
 		TemplatePageModel tpm = TemplatePageModel.of(RolesEditHandler::content, null, thm, SelectedPage.Admin, bm, crumbs);
 		requestHandleCompletePage(he, tpm);

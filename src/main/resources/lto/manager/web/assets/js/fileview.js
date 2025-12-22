@@ -21,6 +21,10 @@ function getIDPostFix(virtual) {
 	return (virtual === true ? "-v" : "-p")
 }
 
+function getContainer(virtual) {
+	return document.getElementById(HOST_FILEVIEW_CONEXT_CONTAINER_ID + getIDPostFix(virtual));
+}
+
 function sort(sender, type) {
 	let add, sortFunction;
 	if (sender.classList.contains("down")) {
@@ -240,7 +244,7 @@ function contextMenu(sender, virtual, event) {
 	renameBtn.onclick = function() { renameVirtualDir(path, renameBtn.previousElementSibling.value); };
 	renameBtn.previousElementSibling.value = name;
 
-	const container = document.getElementById(HOST_FILEVIEW_CONEXT_CONTAINER_ID + getIDPostFix(virtual));
+	const container = getContainer(virtual);
 	container.setAttribute(ATTR_PATH, path); // Used for set icons
 	const menu = container.children[0];
 	container.style.display = "block";
@@ -379,4 +383,9 @@ function setDirIcon(sender) {
 	}).catch((error) => {
 		showToast(Toast.Error, `Failed to change icon: ${error}`, -1, undefined, false);
 	});
+}
+
+function newVirtualDirDialog() {
+	const container = getContainer();
+	const currentPath = container.getAttribute(ATTR_PATH);
 }

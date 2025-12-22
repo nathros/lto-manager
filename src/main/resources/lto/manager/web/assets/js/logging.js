@@ -151,7 +151,7 @@ function setCompact(enabled) {
 	setCookie("log-compact", enabled ? COOKIE_ON : COOKIE_OFF, 365);
 }
 function downloadLogFile() {
-	const tmpWS = openWS("/ws/logging/",
+	const tmpWS = openWS(`/ws/logging/?f=${urlParams().get("f")}`,
 	(/*event*/) => { /* Open */ },
 	(/*event*/) => { /* Close */ },
 	(error) => { // Error
@@ -168,7 +168,7 @@ function downloadLogFile() {
 		document.body.removeChild(e);
 	});
 }
-const tableWS = openWS("/ws/logging/",
+const tableWS = openWS(`/ws/logging/?f=${urlParams().get("f")}`,
 (/*event*/) => { /* Open */ },
 (event) => { // Close
 	alert("closed");

@@ -32,8 +32,8 @@ public class JobsHandler extends BaseHTTPHandler {
 	private static final String TABLE_ID = "tab";
 
 	static Void content(Div<?> view, BodyModel model) {
-		final String del = model.getQueryNoNull(DELETE_ID);
-		final String start = model.getQueryNoNull(START_ID);
+		final String del = model.getQueryModel().getStringNotNull(DELETE_ID);
+		final String start = model.getQueryModel().getStringNotNull(START_ID);
 		boolean delResult = false;
 		if (!del.equals("")) {
 			final int deleteID = Integer.parseInt(del);

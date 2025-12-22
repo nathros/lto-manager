@@ -12,6 +12,7 @@ import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.partial.inlinemessage.InlineMessage;
 import lto.manager.web.handlers.http.templates.TemplateAJAX.TemplateFetcherModel;
 import lto.manager.web.handlers.http.templates.models.BodyModel;
+import lto.manager.web.handlers.http.templates.models.QueryModel;
 import lto.manager.web.resource.Asset;
 import lto.manager.web.resource.CSS;
 
@@ -19,10 +20,12 @@ public class AJAXGetInlineMessage extends BaseHTTPHandler {
 	public static final String PATH = Asset.PATH_AJAX_BASE + "inlinemessage/";
 
 	static Void content(Div<?> view, BodyModel model) {
-		final String title = model.getQuery("title");
-		final String message = model.getQuery("message");
-		final String extraPadding = model.getQuery("p");
-		final InlineMessageType type = InlineMessageType.valueOf(model.getQuery("type"));
+		final QueryModel qm = model.getQueryModel();
+		final String title = qm.getString("title");
+		final String message = qm.getString("message");
+		final String extraPadding = qm.getString("p");
+		final InlineMessageType type = qm.getEnum("type", InlineMessageType.error);
+
 		if (type == InlineMessageType.good) {
 			if (extraPadding != null) {
 				view.of(div -> InlineMessage.contentGenericOK(CSS.GROUP, div, title));
@@ -46,7 +49,8 @@ public class AJAXGetInlineMessage extends BaseHTTPHandler {
 	}
 
 	@Override
-	public void requestHandle(HttpExchange he, BodyModel bm) throws IOException, InterruptedException, ExecutionException {
+	public void requestHandle(HttpExchange he, BodyModel bm)
+			throws IOException, InterruptedException, ExecutionException {
 		requestHandleCompleteFetcher(he, new TemplateFetcherModel(AJAXGetInlineMessage::content, bm));
 	}
 
@@ -58,6 +62,6 @@ public class AJAXGetInlineMessage extends BaseHTTPHandler {
 
 	private enum InlineMessageType {
 		good, error, warning, info;
-    }
+	}
 
 }

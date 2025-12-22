@@ -28,6 +28,9 @@ public class APISystemInfo extends BaseHTTPHandler {
 			json.set(Util.getJVMMaxMemory(), "jvmMaxMemory");
 			json.set(Util.getJVMAllocatedMemory(), "jvmAllocatedMemory");
 			json.set(Util.getUsedMemory(), "jvmUsedMemory");
+			json.set(Util.getJVMVersion(), "jvmVersion");
+			json.set(Util.getJVMVendor(), "jvmVendor");
+			json.set(Util.getJVMBitWidth(), "jvmBitWidth");
 
 			requestHandleCompleteAPIText(he, JSON.populateAPIResponse(APIStatus.ok, json), CONTENT_TYPE_JSON);
 

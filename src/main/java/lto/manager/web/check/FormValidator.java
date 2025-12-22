@@ -1,13 +1,10 @@
 package lto.manager.web.check;
 
+import lto.manager.web.check.element.FormElement.FormElementType;
+
 public class FormValidator {
-	private final ValidatorType type;
 	private final String message;
 	private final ValidatorOptions options;
-
-	public static enum ValidatorType {
-		INPUT_TEXT, INPUT_CHECKBOX, INPUT_PASSWORD
-	}
 
 	public static class ValidatorStatus extends Exception {
 		private static final long serialVersionUID = 1L;
@@ -94,17 +91,16 @@ public class FormValidator {
 		}
 	}
 
-	public static FormValidator of(ValidatorType type, ValidatorOptions options, String message) {
-		return new FormValidator(type, options, message);
+	public static FormValidator of(ValidatorOptions options, String message) {
+		return new FormValidator(options, message);
 	}
 
-	public FormValidator(ValidatorType type, ValidatorOptions options, String message) {
-		this.type = type;
+	public FormValidator(ValidatorOptions options, String message) {
 		this.options = options;
 		this.message = message;
 	}
 
-	public ValidatorStatus validate(String value, boolean enabled) {
+	public ValidatorStatus validate(FormElementType type, String value, boolean enabled) {
 		if (enabled) {
 			try {
 				switch (type) {
@@ -127,7 +123,7 @@ public class FormValidator {
 		return new ValidatorStatus(CheckStatusType.OK, null);
 	}
 
-	public String validateThrow(String value, boolean enabled) throws ValidatorStatus {
+	public String validateThrow(FormElementType type, String value, boolean enabled) throws ValidatorStatus {
 		if (enabled) {
 			try {
 				switch (type) {
@@ -150,16 +146,16 @@ public class FormValidator {
 		return value;
 	}
 
-	public ValidatorStatus validatePassword(final String password, final String passwordConfirm, boolean enabled) {
+	public ValidatorStatus validatePassword(FormElementType type, final String password, final String passwordConfirm, boolean enabled) {
 		if (password != null) {
 			if (password.equals(passwordConfirm)) {
-				return validate(password, enabled);
+				return validate(type, password, enabled);
 			} else {
 				return new ValidatorStatus(CheckStatusType.ERROR, "Passwords do no match");
 			}
 		} else if (passwordConfirm != null) {
 			if (passwordConfirm.equals(password)) {
-				return validate(passwordConfirm, enabled);
+				return validate(type, passwordConfirm, enabled);
 			} else {
 				return new ValidatorStatus(CheckStatusType.ERROR, "Passwords do not match");
 			}
@@ -168,8 +164,7 @@ public class FormValidator {
 		return new ValidatorStatus(CheckStatusType.OK, null); // Password empty ignore
 	}
 
-	public FormValidator(ValidatorType type, String name, String message, ValidatorOptions options) {
-		this.type = type;
+	public FormValidator(String name, String message, ValidatorOptions options) {
 		this.message = message;
 		this.options = options;
 	}

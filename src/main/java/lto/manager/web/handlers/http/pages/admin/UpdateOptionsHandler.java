@@ -23,6 +23,7 @@ import lto.manager.web.handlers.http.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.http.templates.TemplatePage.TemplatePageModel;
 import lto.manager.web.handlers.http.templates.models.BodyModel;
 import lto.manager.web.handlers.http.templates.models.HeadModel;
+import lto.manager.web.handlers.http.templates.models.QueryModel;
 import lto.manager.web.resource.CSS;
 import lto.manager.web.resource.HTML;
 
@@ -43,11 +44,12 @@ public class UpdateOptionsHandler extends BaseHTTPHandler {
 	}
 
 	static Void content(Div<?> view, BodyModel model) {
-		final boolean reset = model.getQuery(OPTIONS_RESET) != null;
+		final QueryModel qm = model.getQueryModel();
+		final boolean reset = qm.getString(OPTIONS_RESET) != null;
 		if (reset) {
 			Options.resetToDefault();
 		}
-		final List<String> queryList = reset ? new ArrayList<String>() : model.getQueryArrayNotNull(OPTIONS_INDEX);
+		final List<String> queryList = reset ? new ArrayList<String>() : qm.getArrayNotNull(OPTIONS_INDEX);
 		if (queryList.size() > 0) {
 			List<RecordOptions> updated = RecordOptions.ofBatch(queryList);
 			Options.setBatch(updated);

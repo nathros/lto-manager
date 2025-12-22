@@ -28,7 +28,7 @@ public class DatabaseTestHandler extends BaseHTTPHandler {
 	public static final String QSQL = "sql";
 
 	static Void content(Div<?> view, BodyModel model) {
-		final String query = model.getQuery(QSQL);
+		final String query = model.getQueryModel().getString(QSQL);
 		String errorStr = null;
 		ResultSet tmpResults = null;
 		if (query != null) {

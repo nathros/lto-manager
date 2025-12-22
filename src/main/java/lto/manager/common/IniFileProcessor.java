@@ -40,6 +40,9 @@ public class IniFileProcessor {
 		final String search = "[" + sectionName + "]";
 		boolean found = false;
 		for (final String line : lines) {
+			if (line.isBlank() || line.charAt(0) == ';') {
+				continue; // Empty line or comment
+			}
 			if (found == true) {
 				if (line.charAt(0) == '[') {
 					break;

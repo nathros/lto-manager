@@ -9,6 +9,7 @@ import org.xmlet.htmlapifaster.Div;
 import com.sun.net.httpserver.HttpExchange;
 
 import lto.manager.common.database.tables.records.RecordRole.Permission;
+import lto.manager.common.log.Log.LogFile;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.pages.admin.AdminHandler;
 import lto.manager.web.handlers.http.partial.components.CheckBox;
@@ -27,6 +28,8 @@ public class LoggingHandler extends BaseHTTPHandler {
 	public static final String PATH = AdminHandler.PATH + "logging/";
 	public static final Permission PERMISSION = Permission.ADVANCED_VIEW_LOGGING;
 	public static final String NAME = "Logging";
+
+	public static final String QUERY_FILE = "f";
 
 	static Void content(Div<?> view, BodyModel model) {
 		view
@@ -48,13 +51,15 @@ public class LoggingHandler extends BaseHTTPHandler {
 	public void requestHandle(HttpExchange he, BodyModel bm) throws IOException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of(NAME);
 		thm.addCSS(Asset.CSS_LOGGING);
-		thm.addScript(Asset.JS_WEBSOCKET).addScriptDefer(Asset.JS_LOGGING);
+		thm.addScriptDefer(Asset.JS_LOGGING);
 		BreadCrumbs crumbs = new BreadCrumbs().add(AdminHandler.NAME, AdminHandler.PATH).add(NAME, PATH);
 		TemplatePageModel tpm = TemplatePageModel.of(LoggingHandler::content, LoggingHandler::header, thm, SelectedPage.Admin, bm, crumbs);
 		requestHandleCompletePage(he, tpm);
 	}
 
 	static Void header(Div<?> view, BodyModel model) {
+		final LogFile qFile = model.getQueryModel().getEnumOrdinal(QUERY_FILE, LogFile.Main);
+		// @formatter:off
 		view
 			.div()
 				.attrClass(CSS.HEADER_ITEM + CSS.ICON_DOWNLOAD)
@@ -210,7 +215,41 @@ public class LoggingHandler extends BaseHTTPHandler {
 						.__()
 					.__() // li
 				.__() // ul
+			.__() // div
+			.div()
+				.attrClass(CSS.HEADER_ITEM + CSS.ICON_SLIDERS)
+				.ul().attrClass(CSS.MENU_LIST)
+					.li()
+						.attrClass(CSS.HEADER_LABEL_TOP)
+						.text("Current File")
+					.__()
+					/*.li()
+						.a()
+							.attrStyle("cursor:default")
+							.text(currentLogFile)
+						.__()
+					.__()*/
+					.li()
+						.attrClass(CSS.MENU_LIST_ITEM_BUTTON)
+						.button()
+							.attrStyle("border:var(--border);" + (qFile == LogFile.Main ? "font-weight:bold" : ""))
+							.attrClass(CSS.BUTTON + CSS.BUTTON_MENU_LIST)
+							.attrOnclick("window.location='" + PATH + "?" + QUERY_FILE + "=" + LogFile.Main.ordinal() + "'")
+							.text(LogFile.Main.name())
+						.__()
+					.__() //li
+					.li()
+						.attrClass(CSS.MENU_LIST_ITEM_BUTTON)
+						.button()
+							.attrStyle("border:var(--border);" + (qFile == LogFile.Requests ? "font-weight:bold" : ""))
+							.attrClass(CSS.BUTTON + CSS.BUTTON_MENU_LIST)
+							.attrOnclick("window.location='" + PATH + "?" + QUERY_FILE + "=" + LogFile.Requests.ordinal() + "'")
+							.text(LogFile.Requests.name())
+						.__()
+					.__() //li
+				.__() // ul
 			.__(); // div
+		// @formatter:on
 		return null;
 	}
 

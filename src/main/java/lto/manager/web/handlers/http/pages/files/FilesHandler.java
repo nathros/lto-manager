@@ -30,7 +30,7 @@ public class FilesHandler extends BaseHTTPHandler {
 	public static final String TAPE_ID = "tape_id";
 
 	static Void content(Div<?> view, BodyModel model) {
-		final String tapeId = model.getQueryNoNull(TAPE_ID);
+		final String tapeId = model.getQueryModel().getStringNotNull(TAPE_ID);
 
 		final List<File> files = new ArrayList<File>();
 		if (!tapeId.equals("")) {

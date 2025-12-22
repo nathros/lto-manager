@@ -10,8 +10,8 @@ import com.sun.net.httpserver.HttpExchange;
 import lto.manager.common.database.tables.records.RecordRole.Permission;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.ajax.admin.AJAXCheckUpdates;
-import lto.manager.web.handlers.http.partial.loading.OnLoad;
-import lto.manager.web.handlers.http.partial.loading.OnLoadOptions;
+import lto.manager.web.handlers.http.partial.loading.LazyLoad;
+import lto.manager.web.handlers.http.partial.loading.LazyLoadOptions;
 import lto.manager.web.handlers.http.templates.TemplatePage.BreadCrumbs;
 import lto.manager.web.handlers.http.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.http.templates.TemplatePage.TemplatePageModel;
@@ -27,14 +27,14 @@ public class AppUpdateHandler extends BaseHTTPHandler {
 	static Void content(Div<?> view, BodyModel model) {
 		view
 			.div()
-				.of(div -> OnLoad.spinner(div, OnLoadOptions.of(AJAXCheckUpdates.PATH, "", "")))
+				.of(div -> LazyLoad.spinner(div, LazyLoadOptions.of(AJAXCheckUpdates.PATH, "", "")))
 			.__(); // div
 		return null;
 	}
 
 	@Override
 	public void requestHandle(HttpExchange he, BodyModel bm) throws IOException, InterruptedException, ExecutionException {
-		HeadModel thm = HeadModel.of(NAME).addScript(Asset.JS_AJAX).addScript(Asset.JS_WEBSOCKET).addScriptDefer(Asset.JS_ADMIN_UPDATE);
+		HeadModel thm = HeadModel.of(NAME).addScriptDefer(Asset.JS_ADMIN_UPDATE);
 		BreadCrumbs crumbs = new BreadCrumbs().add(AdminHandler.NAME, AdminHandler.PATH).add(NAME, PATH);
 		TemplatePageModel tpm = TemplatePageModel.of(AppUpdateHandler::content, null, thm, SelectedPage.Admin, bm, crumbs);
 		requestHandleCompletePage(he, tpm);

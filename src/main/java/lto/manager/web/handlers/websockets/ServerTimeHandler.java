@@ -5,6 +5,7 @@ import java.nio.ByteBuffer;
 import org.java_websocket.WebSocket;
 
 import lto.manager.common.ExternalProcess;
+import lto.manager.web.handlers.http.templates.models.QueryModel;
 
 public class ServerTimeHandler extends BaseWebsocketHandler {
 	public static final String PATH = "/time/";
@@ -42,7 +43,7 @@ public class ServerTimeHandler extends BaseWebsocketHandler {
 	}
 
 	@Override
-	public void onNewConnection(WebSocket conn) {
+	public void onNewConnection(WebSocket conn, QueryModel queryModel) {
 		// TODO Auto-generated method stub
 
 	}

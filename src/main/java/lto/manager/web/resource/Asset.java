@@ -3,24 +3,26 @@ package lto.manager.web.resource;
 import lto.manager.web.handlers.http.pages.AssetHandler;
 
 public class Asset {
-	public static final String CSS_MAIN = AssetHandler.PATH + "css/main.css";
-	public static final String CSS_MOBILE = AssetHandler.PATH + "css/mobile.css";
+	public static final String CSS_MAIN = AssetHandler.PATH + "css/common/main.css";
+	public static final String CSS_MOBILE = AssetHandler.PATH + "css/common/mobile.css";
+	public static final String CSS_FORMS = AssetHandler.PATH + "css/common/forms.css";
 	public static final String CSS_PIE = AssetHandler.PATH + "css/pie.css";
 	public static final String CSS_FILE_VIEW = AssetHandler.PATH + "css/fileview.css";
 	public static final String CSS_TABS = AssetHandler.PATH + "css/tabs.css";
 	public static final String CSS_DRIVES = AssetHandler.PATH + "css/drives.css";
-	public static final String CSS_FORMS = AssetHandler.PATH + "css/forms.css";
 	public static final String CSS_LOGIN = AssetHandler.PATH + "css/login.css";
 	public static final String CSS_LIBRARY = AssetHandler.PATH + "css/library.css";
 	public static final String CSS_LOGGING = AssetHandler.PATH + "css/logging.css";
 	public static final String CSS_LIST = AssetHandler.PATH + "css/list.css";
 
-	public static final String JS_MAIN = AssetHandler.PATH + "js/main.js";
+	public static final String JS_MAIN = AssetHandler.PATH + "js/common/main.js";
+	public static final String JS_FORMS = AssetHandler.PATH + "js/common/forms.js";
+	public static final String JS_AJAX = AssetHandler.PATH + "js/common/ajax.js";
+	public static final String JS_WEBSOCKET = AssetHandler.PATH + "js/common/websocket.js";
 	public static final String JS_FILE_VIEW = AssetHandler.PATH + "js/fileview.js";
 	public static final String JS_ADD_TAPE = AssetHandler.PATH + "js/add_tape.js";
 	public static final String JS_ADD_JOB = AssetHandler.PATH + "js/add_job.js";
-	public static final String JS_WEBSOCKET = AssetHandler.PATH + "js/websocket.js";
-	public static final String JS_AJAX = AssetHandler.PATH + "js/ajax.js";
+
 	public static final String JS_LTO_LABEL_GENERATOR = AssetHandler.PATH + "js/lto-label-generator.js";
 	public static final String JS_LOGGING = AssetHandler.PATH + "js/logging.js";
 	public static final String JS_DASHBOARD = AssetHandler.PATH + "js/dashboard.js";

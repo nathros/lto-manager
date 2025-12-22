@@ -99,7 +99,7 @@ public class WebsocketTestHandler extends BaseHTTPHandler {
 	@Override
 	public void requestHandle(HttpExchange he, BodyModel bm) throws Exception {
 		HeadModel thm = HeadModel.of(NAME);
-		thm.addScript(Asset.JS_WEBSOCKET).addScript(Asset.JS_TEST_WEBSOCKET);
+		thm.addScript(Asset.JS_TEST_WEBSOCKET);
 		BreadCrumbs crumbs = new BreadCrumbs().add(SandpitHandler.NAME, SandpitHandler.PATH).add(NAME, PATH);
 		TemplatePageModel tpm = TemplatePageModel.of(WebsocketTestHandler::content, null, thm, SelectedPage.Sandpit, bm, crumbs);
 		requestHandleCompletePage(he, tpm);

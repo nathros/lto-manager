@@ -11,6 +11,7 @@ public class JS {
 	public static String fnFileContextMenuHide(boolean isVirtual) { return "contextMenuHide(" + isVirtual + ");"; }
 	public static String fnFileNewVirtualDir(String path) { return "newVirtualDir('" + path + "',this.previousElementSibling.value);"; }
 	public static String fnFileCheckBoxChange() { return "recalculateSelectedFileSize();"; }
+	public static String fnNewDirDialog() { return "newVirtualDirDialog();"; }
 	public static String fnGetDirIcons() { return "getDirIcons(this);"; }
 	public static String fnSetDirIcon() { return "setDirIcon(this);"; }
 
@@ -24,6 +25,10 @@ public class JS {
 
 	public static String commonHideToast() { return "hideToast();"; }
 	public static String confirmToast(String url) { return "toastConfirm('" + url + "')"; }
+
+	public static String showModal(final String id) { return "showModal('" + id + "')"; }
+	public static String showModal(final String id, boolean clearForm) { return "showModal('" + id + "'," + clearForm + ")"; }
+	public static String hideModal(final String id) { return "hideModal('" + id + "')"; }
 
 	public static String generateLTOLabel(final String path) { return "generateBarcode('" + path + "')"; }
 

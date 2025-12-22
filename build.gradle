@@ -14,13 +14,13 @@ repositories {
 
 ext {
 	// These are used in dependencies {} and baked in Version.java on build
-	versionSqlite = '3.49.1.0'
+	versionSqlite = '3.51.1.0'
 	versionHtmlflow = '4.6'
 	versionSqlBuilder = '3.0.2'
 	versionJavaWebSocket = '1.6.0'
-	versionSpringSecurityCrypto = '6.4.5'
-	versionOpenhtmltopdf = '1.1.26'
-	versionOpenPDF = '2.0.3'
+	versionSpringSecurityCrypto = '7.0.2'
+	versionOpenhtmltopdf = '1.1.35'
+	versionOpenPDF = '2.2.4' // 3.0.0 has a lot of breaking changes
 	versionBatik = '1.19'
 }
 
@@ -37,7 +37,7 @@ dependencies {
 	implementation group: 'com.github.librepdf', name: 'openpdf', version: versionOpenPDF
 	implementation group: 'org.apache.xmlgraphics', name: 'batik', version: versionBatik
 
-	implementation group: 'org.slf4j', name: 'slf4j-nop', version: '2.0.13' // htmlflow uses slf4j
+	implementation group: 'org.slf4j', name: 'slf4j-nop', version: '2.0.17' // htmlflow uses slf4j
 }
 
 /*javafx {
@@ -120,7 +120,7 @@ compileJava.doFirst {
 			project.logger.lifecycle("Version: ${tag}")
 			file << line.replace("UNDEFINED", tag) << ln
 
-		} else if (line.contains('BRANCH = "UNDEFINED\";')) {
+		} else if (line.contains('BRANCH = "UNDEFINED";')) {
 			def branch = gitCommand(new String[]{"git", "branch"}).replace("* ", "")
 			project.logger.lifecycle("Branch : ${branch}")
 			file << line.replace("UNDEFINED", branch) << ln

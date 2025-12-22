@@ -6,6 +6,7 @@ import org.java_websocket.WebSocket;
 
 import lto.manager.common.log.Log;
 import lto.manager.common.system.SystemUpdate;
+import lto.manager.web.handlers.http.templates.models.QueryModel;
 import lto.manager.web.handlers.websockets.BaseWebsocketHandler;
 import lto.manager.web.resource.Asset;
 
@@ -19,7 +20,7 @@ public class SystemUpdateWebsocketHandler extends BaseWebsocketHandler {
 	}
 
 	@Override
-	public void onNewConnection(WebSocket conn) {
+	public void onNewConnection(WebSocket conn, QueryModel queryModel) {
 	}
 
 	@Override

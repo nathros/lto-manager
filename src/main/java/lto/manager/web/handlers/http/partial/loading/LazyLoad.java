@@ -2,14 +2,12 @@ package lto.manager.web.handlers.http.partial.loading;
 
 import org.xmlet.htmlapifaster.Div;
 
+import lto.manager.web.resource.Attribute;
 import lto.manager.web.resource.CSS;
 
-public class OnLoad {
-	public static final String DATA_AJAX = "data-ajax";
-	public static final String SUCCESS_CALLBACK_AJAX = "data-ajax-scb";
-	public static final String ERROR_CALLBACK_AJAX = "data-ajax-ecb";
+public class LazyLoad {
 
-	public static Void spinner(Div<?> view, OnLoadOptions settings) {
+	public static Void spinner(Div<?> view, LazyLoadOptions settings) {
 		view
 			.div()
 				.attrClass(CSS.LOADING_CONTAINER)
@@ -36,11 +34,11 @@ public class OnLoad {
 		return null;
 	}
 
-	public static Void trigger(Div<?> view, OnLoadOptions settings) {
+	private static Void trigger(Div<?> view, LazyLoadOptions settings) {
 		view
-			.addAttr(DATA_AJAX, settings.pathAJAX())
-			.addAttr(SUCCESS_CALLBACK_AJAX, settings.successCallJS())
-			.addAttr(ERROR_CALLBACK_AJAX, settings.errorCallJS());
+			.addAttr(Attribute.AJAX_DATA, settings.pathAJAX())
+			.addAttr(Attribute.AJAX_SUCCESS_CALLBACK, settings.successCallJS())
+			.addAttr(Attribute.AJAX_ERROR_CALLBACK, settings.errorCallJS());
 		return null;
 	}
 }

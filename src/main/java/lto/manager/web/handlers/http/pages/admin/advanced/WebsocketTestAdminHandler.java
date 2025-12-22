@@ -101,7 +101,7 @@ public class WebsocketTestAdminHandler extends BaseHTTPHandler {
 	@Override
 	public void requestHandle(HttpExchange he, BodyModel bm) throws Exception {
 		HeadModel thm = HeadModel.of(NAME);
-		thm.addScript(Asset.JS_WEBSOCKET).addScript(Asset.JS_TEST_WEBSOCKET);
+		thm.addScript(Asset.JS_TEST_WEBSOCKET);
 		BreadCrumbs crumbs = new BreadCrumbs().add(AdminHandler.NAME, AdminHandler.PATH).add(NAME, PATH);
 		TemplatePageModel tpm = TemplatePageModel.of(WebsocketTestAdminHandler::content, null, thm, SelectedPage.Admin, bm, crumbs);
 		requestHandleCompletePage(he, tpm);

@@ -1,33 +1,33 @@
-var snake = new function() { // Isolates this code from other JavaScript
+let snake = new function() { // Isolates this code from other JavaScript
 
-var showGrid = false; // Debug, toggle with � Tilde key.
-var frameTime;
+let showGrid = false; // Debug, toggle with � Tilde key.
+let frameTime;
 
-var speedIncrease = 2; // Frame time decrease amount when snake gets bigger.
-var frameTimeStart = 100; // How long a frame lasts in milliseconds, adjust game speed.
-var frameTimeMin = 20; // Minimum frame time.
+let speedIncrease = 2; // Frame time decrease amount when snake gets bigger.
+let frameTimeStart = 100; // How long a frame lasts in milliseconds, adjust game speed.
+let frameTimeMin = 20; // Minimum frame time.
 
-var direction = {
+let direction = {
 	"LEFT": "LEFT",
 	"UP": "UP",
 	"RIGHT": "RIGHT",
 	"DOWN": "DOWN"
 };
-var snakeDirection;
-var snake = [];
-var cellsXNum = 36;
-var cellsYNum = 24;
-var food;
-var gameActive = false;
-var gameEnd = false;
-var showSplash = true;
-var acceptInput = true;
-var score = 0;
+let snakeDirection;
+let snake = [];
+let cellsXNum = 36;
+let cellsYNum = 24;
+let food;
+let gameActive = false;
+let gameEnd = false;
+let showSplash = true;
+let acceptInput = true;
+let score = 0;
 
-var canvas;
-var ctx;
-var drawInterval;
-var bodyOverflowOriginal;
+let canvas;
+let ctx;
+let drawInterval;
+let bodyOverflowOriginal;
 
 createSnakeGame();
 
@@ -75,9 +75,9 @@ function init() {
 }
 
 function mouse(e) { // Change mouse on cross top right corner.
-	var yPos = e.pageY - window.pageYOffset;
-	var xPos = e.pageX - window.pageXOffset;
-	var cellSize = getCellSize();
+	let yPos = e.pageY - window.pageYOffset;
+	let xPos = e.pageX - window.pageXOffset;
+	let cellSize = getCellSize();
 	cellSize = cellSize > 24 ? cellSize : 24;
 	cellSize = (cellSize * 1.5) * 1.25;
 	if ((xPos > (window.innerWidth - cellSize)) && ((yPos - (cellSize / 4)) < cellSize))
@@ -87,17 +87,17 @@ function mouse(e) { // Change mouse on cross top right corner.
 }
 
 function click(e) { // Click cross to close snake.
-	var yPos = e.pageY - window.pageYOffset;
-	var xPos = e.pageX - window.pageXOffset;
-	var cellSize = getCellSize();
+	let yPos = e.pageY - window.pageYOffset;
+	let xPos = e.pageX - window.pageXOffset;
+	let cellSize = getCellSize();
 	cellSize = cellSize > 24 ? cellSize : 24;
 	cellSize = (cellSize * 1.5) * 1.25;
 	if ((xPos > (window.innerWidth - cellSize)) && ((yPos - (cellSize / 4)) < cellSize)) destroySnake();
 }
 
 function newFood() { // TODO It is possible for new food to spawn on last snake segment.
-	var xf = Math.floor(Math.random() * cellsXNum);
-	var yf = Math.floor(Math.random() * cellsYNum);
+	let xf = Math.floor(Math.random() * cellsXNum);
+	let yf = Math.floor(Math.random() * cellsYNum);
 
 	while (collision(xf, yf)) {
 		xf++;
@@ -120,7 +120,7 @@ function newFood() { // TODO It is possible for new food to spawn on last snake 
 }
 
 function destroySnake() {
-	var c = document.getElementById("snake-canvas");
+	let c = document.getElementById("snake-canvas");
 	if (c != null) c.parentElement.removeChild(c); // Better: c.remove(); But IE strikes again.
 	window.removeEventListener("keydown", snakeKeyDown);
 	window.removeEventListener("resize", draw);
@@ -144,14 +144,14 @@ function drawSplash() {
 	ctx.save();
 	ctx.shadowColor = "white";
 	ctx.shadowBlur = 3;
-	var cellSize = getCellSize();
+	let cellSize = getCellSize();
 	ctx.font = "bold " + cellSize + "px Lucida Sans Unicode";
-	var yPos = Math.floor(window.innerHeight / 2);
+	let yPos = Math.floor(window.innerHeight / 2);
 	
-	var t1 = "You have stumbled upon...";
-	var t1w = ctx.measureText(t1).width;	
-	var t2 = "...a hidden game of snake";
-	var t2w = ctx.measureText(t2).width;
+	let t1 = "You have stumbled upon...";
+	let t1w = ctx.measureText(t1).width;
+	let t2 = "...a hidden game of snake";
+	let t2w = ctx.measureText(t2).width;
 	
 	ctx.fillText(t1, Math.floor((window.innerWidth - t1w) / 2), yPos - (cellSize * 2));
 	ctx.fillText(t1, Math.floor((window.innerWidth - t1w) / 2), yPos - (cellSize * 2));
@@ -159,14 +159,14 @@ function drawSplash() {
 	ctx.fillText(t2, Math.floor((window.innerWidth - t2w) / 2), yPos - cellSize + 5);
 	
 	ctx.font = cellSize + "px Lucida Sans Unicode";
-	var t3 = "Press [Space] to start";
-	var t3w = ctx.measureText(t3).width;
+	let t3 = "Press [Space] to start";
+	let t3w = ctx.measureText(t3).width;
 	ctx.fillText(t3, Math.floor((window.innerWidth - t3w) / 2), yPos + (cellSize * 2));
 	ctx.fillText(t3, Math.floor((window.innerWidth - t3w) / 2), yPos + (cellSize * 2));
 	
-	var t4 = "Controls: Arrow keys [\u2190][\u2192][\u2191][\u2193] or [W][A][S][D]";
-	var t4w = ctx.measureText(t4).width;
-	var y = Math.floor(((window.innerHeight - (cellsYNum * cellSize)) / 2) + (cellSize * cellsYNum) - (cellSize / 2));
+	let t4 = "Controls: Arrow keys [\u2190][\u2192][\u2191][\u2193] or [W][A][S][D]";
+	let t4w = ctx.measureText(t4).width;
+	let y = Math.floor(((window.innerHeight - (cellsYNum * cellSize)) / 2) + (cellSize * cellsYNum) - (cellSize / 2));
 	ctx.fillText(t4, Math.floor((window.innerWidth - t4w) / 2), y);
 	ctx.fillText(t4, Math.floor((window.innerWidth - t4w) / 2), y);
 	ctx.restore(); 
@@ -179,26 +179,26 @@ function gameOver() {
 	ctx.save();
 	ctx.shadowColor = "white";
 	ctx.shadowBlur = 3;
-	var cellSize = getCellSize();
+	let cellSize = getCellSize();
 	ctx.font = "bold " + cellSize + "px Lucida Sans Unicode";
-	var yPos = Math.floor(window.innerHeight / 2);
+	let yPos = Math.floor(window.innerHeight / 2);
  
-	var t2 = "GAME OVER";
-	var t2w = ctx.measureText(t2).width;
+	let t2 = "GAME OVER";
+	let t2w = ctx.measureText(t2).width;
 	ctx.fillText(t2, Math.floor((window.innerWidth - t2w) / 2), yPos - cellSize + 5);
 	ctx.fillText(t2, Math.floor((window.innerWidth - t2w) / 2), yPos - cellSize + 5);
 	ctx.beginPath();
 	
 	ctx.font = cellSize + "px Lucida Sans Unicode";
-	var t3 = "[Space] restart, [Esc] exit";
-	var t3w = ctx.measureText(t3).width;
+	let t3 = "[Space] restart, [Esc] exit";
+	let t3w = ctx.measureText(t3).width;
 	ctx.fillText(t3, Math.floor((window.innerWidth - t3w) / 2), yPos + (cellSize * 2));
 	ctx.fillText(t3, Math.floor((window.innerWidth - t3w) / 2), yPos + (cellSize * 2));
 
 	
-	var t4 = "Score: " + score;
-	var t4w = ctx.measureText(t4).width;
-	var y = Math.floor(((window.innerHeight - (cellsYNum * cellSize)) / 2) + (cellSize * cellsYNum) - (cellSize / 2));
+	let t4 = "Score: " + score;
+	let t4w = ctx.measureText(t4).width;
+	let y = Math.floor(((window.innerHeight - (cellsYNum * cellSize)) / 2) + (cellSize * cellsYNum) - (cellSize / 2));
 	ctx.fillText(t4, Math.floor((window.innerWidth - t4w) / 2), y);
 	ctx.fillText(t4, Math.floor((window.innerWidth - t4w) / 2), y);
 	ctx.restore()
@@ -249,14 +249,14 @@ function snakeKeyDown(e) {
 }
 
 function getCellSize() {
-	var xCellSize = Math.floor(window.innerWidth / (cellsXNum + 2));
-	var yCellSize = Math.floor(window.innerHeight / (cellsYNum + 2));
+	let xCellSize = Math.floor(window.innerWidth / (cellsXNum + 2));
+	let yCellSize = Math.floor(window.innerHeight / (cellsYNum + 2));
 	return xCellSize <= yCellSize ? xCellSize : yCellSize;;
 }
 
 function collision(x, y) {
 	if ((x < 0) || (x > (cellsXNum - 1)) || (y < 0) || (y > cellsYNum - 1)) return true; // Edge of area.
-	var i;
+	let i;
 	for (i = 0; i < snake.length - 1; i++) { // Snake with it self, not last segment as this will move.
 		if ((snake[i].x == x) && (snake[i].y == y)) return true;		
 	}
@@ -264,7 +264,7 @@ function collision(x, y) {
 }
 
 function updateGameState() {
-	var head = {
+	let head = {
 		x: 0,
 		y: 0
 	};
@@ -336,10 +336,10 @@ function draw(advanceGameState) {
 		canvas.height = window.innerHeight;
 	}
 
-	var cellSize = getCellSize();
+	let cellSize = getCellSize();
 
-	var xStart = Math.floor((window.innerWidth - (cellsXNum * cellSize)) / 2);
-	var yStart = Math.floor((window.innerHeight - (cellsYNum * cellSize)) / 2);
+	let xStart = Math.floor((window.innerWidth - (cellsXNum * cellSize)) / 2);
+	let yStart = Math.floor((window.innerHeight - (cellsYNum * cellSize)) / 2);
 
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -362,7 +362,7 @@ function draw(advanceGameState) {
 	ctx.restore();
 
 	// Draw exit cross
-	var crossSize = cellSize > 24 ? cellSize : 24;
+	let crossSize = cellSize > 24 ? cellSize : 24;
 	crossSize = crossSize * 1.5;
 	ctx.save();
 	ctx.lineCap = "square"; 
@@ -387,7 +387,7 @@ function draw(advanceGameState) {
 	} else {
 		// Draw snake.
 		ctx.save();
-		var i, x, y;
+		let i, x, y;
 		for (i = 0; i < snake.length; i++) {
 			x = xStart + (snake[i].x * cellSize);
 			y = yStart + (snake[i].y * cellSize);
@@ -403,7 +403,7 @@ function draw(advanceGameState) {
 		ctx.fillStyle = "red";
 		//ctx.shadowColor = "yellow";
 		//ctx.shadowBlur = 3;
-		//var grd=ctx.createRadialGradient(75,50,5,90,60,100);
+		//let grd=ctx.createRadialGradient(75,50,5,90,60,100);
 		//grd.addColorStop(0,"red");
 		//grd.addColorStop(1,"black");
 		//ctx.fillStyle=grd;
@@ -420,7 +420,7 @@ function draw(advanceGameState) {
 }
 
 function drawGrid(cellSize, xStart, yStart) {
-	var i;
+	let i;
 	for (i = 0; i <= cellsYNum; i++) {
 		ctx.beginPath();
 		ctx.moveTo(xStart, yStart + 0.5 + (cellSize * i));

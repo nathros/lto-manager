@@ -44,8 +44,8 @@ public class LogInHandler extends BaseHTTPHandler {
 		view
 		.html().attrLang(BaseHTTPHandler.LANG_VALUE)
 		.<TemplatePageModel>dynamic((root, model) -> {
-			final String username = model.getBodyModel().getQueryNoNull(USER);
-			final String password = model.getBodyModel().getQueryNoNull(PASS);
+			final String username = model.getBodyModel().getQueryModel().getStringNotNull(USER);
+			final String password = model.getBodyModel().getQueryModel().getStringNotNull(PASS);
 			if (model.getBodyModel().isPOSTMethod()) {
 				try {
 					final UUID result = Security.loginUser(username, password);

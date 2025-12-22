@@ -25,8 +25,8 @@ public class LogTestHandler extends BaseHTTPHandler {
 	public static final String NAME = "Logging Tester";
 
 	static Void content(Div<?> view, BodyModel model) {
-		final String message = model.getQueryNoNull("message");
-		final String level = model.getQueryNoNull("level");
+		final String message = model.getQueryModel().getStringNotNull("message");
+		final String level = model.getQueryModel().getStringNotNull("level");
 
 		view
 			.form()

@@ -129,6 +129,7 @@ public class CSS {
 
 	public final static String FORMS_CONTAINER = "form-grid ";
 	public final static String FORMS_BUTTONS = "form-buttons ";
+	public final static String FORMS_MODAL_CONTAINER = "modal-container ";
 
 	public final static String PIE_CONTAINER = "pie-container ";
 	public final static String PIE_CIRCLE = "pie ";

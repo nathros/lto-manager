@@ -62,17 +62,17 @@ public abstract class BaseHTTPHandler implements HttpHandler {
 	@Override
 	public void handle(HttpExchange he) throws IOException {
 		if (Options.getData(OptionsSetting.LOG_REQUESTS) == Boolean.TRUE) {
-			String message = "Request (" + String.format("%04d", count) + "): "
+			final String message = "Request (" + String.format("%04d", count) + "): "
 					+ he.getRequestHeaders().getFirst("Host") + he.getRequestURI();
 			if (Options.getData(OptionsSetting.LOG_REQUESTS_ASSETS) == Boolean.TRUE) {
-				Log.info(message);
+				Log.logRequest(message);
 			} else if (!he.getRequestURI().toString().contains(AssetHandler.PATH)) {
-				Log.info(message);
+				Log.logRequest(message);
 			}
 		}
 		BaseHTTPHandler handler = this; // If authentication failed then replace this with login handler
 
-		if ((boolean) Options.getData(OptionsSetting.ENABLE_LOGIN)) {
+		if (Options.getData(OptionsSetting.ENABLE_LOGIN) == Boolean.TRUE) {
 			final String session = getSessionCookie(he);
 			if (!State.isLoginSessionValid(session)) {
 				handler = new LogInHandler(); // Replace hander with login page

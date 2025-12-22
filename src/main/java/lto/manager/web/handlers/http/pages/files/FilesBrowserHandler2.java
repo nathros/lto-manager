@@ -24,7 +24,7 @@ public class FilesBrowserHandler2 extends BaseHTTPHandler {
 	public static final String ONLY_ID = "only-id";
 
 	static Void content(Div<?> view, BodyModel model) {
-		final String idStr = model.getQuery(ONLY_ID) ;
+		final String idStr = model.getQueryModel().getString(ONLY_ID) ;
 		final int id = idStr == null ? FileListOptions.showAll : Integer.parseInt(idStr);
 		view
 			.div().of(div ->
@@ -37,7 +37,7 @@ public class FilesBrowserHandler2 extends BaseHTTPHandler {
 	public void requestHandle(HttpExchange he, BodyModel bm) throws IOException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of("Files Browser");
 		thm.addCSS(Asset.CSS_FILE_VIEW);
-		thm.addScriptDefer(Asset.JS_AJAX).addScript(Asset.JS_FILE_VIEW);
+		thm.addScript(Asset.JS_FILE_VIEW);
 		TemplatePageModel tpm = TemplatePageModel.of(FilesBrowserHandler2::content, null, thm, SelectedPage.Files, bm, null);
 		requestHandleCompletePage(he, tpm);
 	}

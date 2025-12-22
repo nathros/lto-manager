@@ -10,7 +10,6 @@ import lto.manager.common.database.tables.records.RecordTapeType;
 import lto.manager.web.resource.HTML;
 
 public class LTOTapeTypeSelect {
-	public static final String DATA_AJAX = "data-ajax";
 
 	public static Void content(Select<?> view, final String ID, final String name, final int selectedIndex) {
 		final List<RecordTapeType> tapeTypes = new ArrayList<RecordTapeType>();
@@ -23,7 +22,7 @@ public class LTOTapeTypeSelect {
 				select.attrOnchange("onSelectType()")
 					.option().of(o -> HTML.option(o, selectedIndex == -1, true)).text("Select").__();
 				int index = 0;
-				for (RecordTapeType item: tapeTypes) {
+				for (final RecordTapeType item: tapeTypes) {
 					final int indexCopy = index;
 					select.option()
 						.of(sel -> {

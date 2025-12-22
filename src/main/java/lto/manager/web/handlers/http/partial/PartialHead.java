@@ -18,11 +18,15 @@ public class PartialHead {
 				.meta().attrName(BaseHTTPHandler.VIEWPORT_KEY).attrContent(BaseHTTPHandler.VIEWPORT_VALUE).__()
 				.link().attrRel(EnumRelType.STYLESHEET).attrHref(Asset.CSS_MAIN).__()
 				.link().attrRel(EnumRelType.STYLESHEET).attrHref(Asset.CSS_MOBILE).addAttr(BaseHTTPHandler.MEDIA_KEY, BaseHTTPHandler.CSS_MOBILE_MEDIA).__()
+				.link().attrRel(EnumRelType.STYLESHEET).attrHref(Asset.CSS_FORMS).__()
 				.of(extra -> {
 					for (String css: model.getExtraStylesList()) {
 						extra.link().attrRel(EnumRelType.STYLESHEET).attrHref(css).__();
 					}
 					extra.script().attrSrc(Asset.JS_MAIN).__();
+					extra.script().attrSrc(Asset.JS_WEBSOCKET).__();
+					extra.script().attrSrc(Asset.JS_FORMS).__();
+					extra.script().attrSrc(Asset.JS_AJAX).attrDefer(true).__();
 					for (String js: model.getExtraScriptsList()) {
 						extra.script().attrSrc(js).__();
 					}

@@ -108,7 +108,7 @@ public class UsersHandler extends BaseHTTPHandler {
 	}
 
 	static Void content(Div<?> view, BodyModel model) {
-		final String deleteIDStr = model.getQuery(QDEL);
+		final String deleteIDStr = model.getQueryModel().getString(QDEL);
 		String error = null;
 		if (deleteIDStr != null) {
 			try {
@@ -140,7 +140,7 @@ public class UsersHandler extends BaseHTTPHandler {
 	@Override
 	public void requestHandle(HttpExchange he, BodyModel bm) throws IOException, InterruptedException, ExecutionException, UserNotAuthorisedException {
 		HeadModel thm = HeadModel.of(NAME);
-		thm.addCSS(Asset.CSS_LIST).addCSS(Asset.CSS_FORMS);
+		thm.addCSS(Asset.CSS_LIST);
 		thm.addScript(Asset.JS_LIST);
 		BreadCrumbs crumbs = new BreadCrumbs().add(AdminHandler.NAME, AdminHandler.PATH).add(NAME, PATH);
 		TemplatePageModel tpm = TemplatePageModel.of(UsersHandler::content, UsersHandler::header, thm, SelectedPage.Admin, bm, crumbs);

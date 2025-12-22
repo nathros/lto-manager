@@ -7,6 +7,7 @@ import lto.manager.web.handlers.http.ajax.labelgenerator.LTOLabelEnum.LTOLabelFo
 import lto.manager.web.handlers.http.ajax.labelgenerator.LTOLabelEnum.LTOLabelTextOrientationSettings;
 import lto.manager.web.handlers.http.ajax.labelgenerator.LTOLabelEnum.LTOLabelTypeSettings;
 import lto.manager.web.handlers.http.templates.models.BodyModel;
+import lto.manager.web.handlers.http.templates.models.QueryModel;
 
 public record LTOLabelOptions(String mediaID, String prefix, String postfix, String borderRadiusLabel,
 		String borderStrokeLabel, String borderRadiusInner, String borderStrokeInner, String themeName,
@@ -61,8 +62,9 @@ public record LTOLabelOptions(String mediaID, String prefix, String postfix, Str
 	public static final int PREVIEW_COUNT_DEFAULT = 10;
 
 	public static LTOLabelOptions of(final BodyModel model) {
-		final String prefixStr = model.getQueryNoNull(QUERY_PREFIX);
-		final String postfixStr = model.getQueryNoNull(QUERY_POSTFIX);
+		final QueryModel qm = model.getQueryModel();
+		final String prefixStr = qm.getStringNotNull(QUERY_PREFIX);
+		final String postfixStr = qm.getStringNotNull(QUERY_POSTFIX);
 		final int fixLenCombined = prefixStr.length() + postfixStr.length();
 		if (fixLenCombined > TableTape.MAX_LEN_BARCODE_FORM) {
 			Util.logAndException(new Exception(
@@ -83,25 +85,25 @@ public record LTOLabelOptions(String mediaID, String prefix, String postfix, Str
 			}
 		}
 
-		final String startIndexStr = model.getQueryNoNull(QUERY_START_INDEX);
+		final String startIndexStr = qm.getStringNotNull(QUERY_START_INDEX);
 		int startIndex = checkInt(startIndexStr, START_INDEX_MIN, START_INDEX_MAX, "Start index");
 
-		final String quantityStr = model.getQueryNoNull(QUERY_QUANTITY);
+		final String quantityStr = qm.getStringNotNull(QUERY_QUANTITY);
 		int quantity = checkInt(quantityStr, QUANTITY_MIN, QUANTITY_MAX, "Quantity");
 
-		final String borderRadiusLabelStr = model.getQueryNoNull(QUERY_BORDER_RADIUS_LABEL);
+		final String borderRadiusLabelStr = qm.getStringNotNull(QUERY_BORDER_RADIUS_LABEL);
 		checkFloat(borderRadiusLabelStr, BORDER_RADIUS_LABEL_MIN, BORDER_RADIUS_LABEL_MAX, "Label border radius");
 
-		final String borderStrokeLabelStr = model.getQueryNoNull(QUERY_BORDER_STROKE_LABEL);
+		final String borderStrokeLabelStr = qm.getStringNotNull(QUERY_BORDER_STROKE_LABEL);
 		checkFloat(borderStrokeLabelStr, BORDER_STROKE_LABEL_MIN, BORDER_STROKE_LABEL_MAX, "Label border width");
 
-		final String borderRadiusInnerStr = model.getQueryNoNull(QUERY_BORDER_RADIUS_INNER);
+		final String borderRadiusInnerStr = qm.getStringNotNull(QUERY_BORDER_RADIUS_INNER);
 		checkFloat(borderRadiusInnerStr, BORDER_RADIUS_LABEL_MIN, BORDER_RADIUS_LABEL_MAX, "Inner border radius");
 
-		final String borderStrokeInnerStr = model.getQueryNoNull(QUERY_BORDER_STROKE_INNER);
+		final String borderStrokeInnerStr = qm.getStringNotNull(QUERY_BORDER_STROKE_INNER);
 		checkFloat(borderStrokeInnerStr, BORDER_STROKE_LABEL_MIN, BORDER_STROKE_LABEL_MAX, "Inner border width");
 
-		final String fontSettingsStr = model.getQueryNoNull(QUERY_FONT);
+		final String fontSettingsStr = qm.getStringNotNull(QUERY_FONT);
 		LTOLabelFontFamilySettings fontSetting = null;
 		try {
 			fontSetting = LTOLabelFontFamilySettings.valueOf(fontSettingsStr);
@@ -109,7 +111,7 @@ public record LTOLabelOptions(String mediaID, String prefix, String postfix, Str
 			Util.logAndException(new Exception("Invalid font family setting: " + fontSettingsStr));
 		}
 
-		final String orientationSettingsStr = model.getQueryNoNull(QUERY_ORIENTATION);
+		final String orientationSettingsStr = qm.getStringNotNull(QUERY_ORIENTATION);
 		LTOLabelTextOrientationSettings orientationSetting = null;
 		try {
 			orientationSetting = LTOLabelTextOrientationSettings.valueOf(orientationSettingsStr);
@@ -117,7 +119,7 @@ public record LTOLabelOptions(String mediaID, String prefix, String postfix, Str
 			Util.logAndException(new Exception("Invalid text orientation setting: " + orientationSettingsStr));
 		}
 
-		final String colourSettingsStr = model.getQueryNoNull(QUERY_COLOURS);
+		final String colourSettingsStr = qm.getStringNotNull(QUERY_COLOURS);
 		LTOLabelColourSettings colourSetting = null;
 		try {
 			colourSetting = LTOLabelColourSettings.valueOf(colourSettingsStr);
@@ -125,16 +127,16 @@ public record LTOLabelOptions(String mediaID, String prefix, String postfix, Str
 			Util.logAndException(new Exception("Invalid colour setting: " + colourSettingsStr));
 		}
 
-		final String themeNameStr = model.getQueryNoNull(QUERY_THEME);
+		final String themeNameStr = qm.getStringNotNull(QUERY_THEME);
 
 		// These are for preview only
-		String previewScaleStr = model.getQueryNoNull(QUERY_PREVIEW_SCALE); // Can be missing
+		String previewScaleStr = qm.getStringNotNull(QUERY_PREVIEW_SCALE); // Can be missing
 		if (previewScaleStr.equals("")) {
 			previewScaleStr = PREVIEW_SCALE_EMPTY;
 		} else {
 			checkFloat(previewScaleStr, PREVIEW_SCALE_MIN, PREVIEW_SCALE_MAX, "Preview scale");
 		}
-		String previewCountStr = model.getQueryNoNull(QUERY_PREVIEW_COUNT); // Can be missing
+		String previewCountStr = qm.getStringNotNull(QUERY_PREVIEW_COUNT); // Can be missing
 		int previewInt;
 		if (previewCountStr.equals("")) {
 			previewInt = PREVIEW_COUNT_MIN;
@@ -142,7 +144,7 @@ public record LTOLabelOptions(String mediaID, String prefix, String postfix, Str
 			previewInt = checkInt(previewCountStr, PREVIEW_COUNT_MIN, PREVIEW_COUNT_MAX, "Preview count");
 		}
 
-		final String mediaStr = model.getQueryNoNull(QUERY_MEDIA);
+		final String mediaStr = qm.getStringNotNull(QUERY_MEDIA);
 		String media = null;
 		try {
 			LTOLabelTypeSettings type = LTOLabelTypeSettings.valueOf(mediaStr);
@@ -151,7 +153,7 @@ public record LTOLabelOptions(String mediaID, String prefix, String postfix, Str
 			Util.logAndException(new Exception("Invalid tape type label: " + colourSetting));
 		}
 
-		String paperTypeStr = model.getQueryNoNull(QUERY_PAPER);
+		final String paperTypeStr = qm.getStringNotNull(QUERY_PAPER);
 
 		return new LTOLabelOptions(media, prefixStr, postfixStr, borderRadiusLabelStr, borderStrokeLabelStr,
 				borderRadiusInnerStr, borderStrokeInnerStr, themeNameStr, fontSetting, orientationSetting,

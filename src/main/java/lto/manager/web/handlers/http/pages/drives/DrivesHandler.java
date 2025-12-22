@@ -10,8 +10,8 @@ import com.sun.net.httpserver.HttpExchange;
 import lto.manager.common.database.tables.records.RecordRole.Permission;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.ajax.AJAXGetAttachedDrivesFetcher;
-import lto.manager.web.handlers.http.partial.loading.OnLoad;
-import lto.manager.web.handlers.http.partial.loading.OnLoadOptions;
+import lto.manager.web.handlers.http.partial.loading.LazyLoad;
+import lto.manager.web.handlers.http.partial.loading.LazyLoadOptions;
 import lto.manager.web.handlers.http.templates.TemplatePage.BreadCrumbs;
 import lto.manager.web.handlers.http.templates.TemplatePage.SelectedPage;
 import lto.manager.web.handlers.http.templates.TemplatePage.TemplatePageModel;
@@ -22,12 +22,11 @@ import lto.manager.web.resource.Asset;
 public class DrivesHandler extends BaseHTTPHandler {
 	public static final String PATH = "/drives/";
 	public static final String NAME = "Drives";
-	public static final String DATA_AJAX = "data-ajax";
 
 	static Void body(Div<?> view, BodyModel model) {
 		view
 			.div()
-				.of(div -> OnLoad.spinner(div, OnLoadOptions.of(AJAXGetAttachedDrivesFetcher.PATH, "", "")))
+				.of(div -> LazyLoad.spinner(div, LazyLoadOptions.of(AJAXGetAttachedDrivesFetcher.PATH, "", "")))
 			.__(); // div
 		return null;
 	}
@@ -36,7 +35,6 @@ public class DrivesHandler extends BaseHTTPHandler {
 	public void requestHandle(HttpExchange he, BodyModel bm) throws IOException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of(NAME);
 		thm.addCSS(Asset.CSS_DRIVES);
-		thm.addScript(Asset.JS_AJAX);
 		BreadCrumbs crumbs = new BreadCrumbs().add(NAME, PATH);
 		TemplatePageModel tpm = TemplatePageModel.of(DrivesHandler::body, null, thm, SelectedPage.Drives, bm, crumbs);
 		requestHandleCompletePage(he, tpm);

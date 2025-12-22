@@ -9,6 +9,7 @@ import lto.manager.common.database.Database;
 import lto.manager.common.database.tables.records.RecordRole.Permission;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.templates.models.BodyModel;
+import lto.manager.web.handlers.http.templates.models.QueryModel;
 import lto.manager.web.resource.Asset;
 import lto.manager.web.resource.JSON;
 import lto.manager.web.resource.JSON.APIStatus;
@@ -18,15 +19,16 @@ public class APIVirtualDir extends BaseHTTPHandler {
 
 	@Override
 	public void requestHandle(HttpExchange he, BodyModel bm) throws IOException, InterruptedException, ExecutionException {
-		final String operation = bm.getQueryNoNull("op");
+		final QueryModel qm = bm.getQueryModel();
+		final String operation = qm.getStringNotNull("op");
 
-		final String newDirName = bm.getQueryNoNull("name");
+		final String newDirName = qm.getStringNotNull("name");
 		if ((newDirName == null) || (newDirName.length() == 0)) {
 			requestHandleCompleteAPIText(he, JSON.populateAPIResponse(APIStatus.error, "Directory name empty"),
 					CONTENT_TYPE_JSON);
 			return;
 		} else {
-			final String basePath = bm.getQueryNoNull("path");
+			final String basePath = qm.getStringNotNull("path");
 			if ((basePath == null) || (basePath.length() == 0)) {
 				requestHandleCompleteAPIText(he, JSON.populateAPIResponse(APIStatus.error, "Directory path empty"),
 						CONTENT_TYPE_JSON);
