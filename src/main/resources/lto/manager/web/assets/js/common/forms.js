@@ -32,7 +32,7 @@ async function validateTextInput(input, /*event*/) {
 	if (validateURL == null) {
 		return;
 	}
-	const fetchURL = `${validateURL}?${VALIDATE_SINGLE}&${VALIDATE_SINGLE_KEY}=${input.id}&${input.id}=${input.value}`;
+	const fetchURL = `${validateURL}?${VALIDATE_SINGLE}&${VALIDATE_SINGLE_KEY}=${input.id}&${input.id}=${encodeURIComponent(input.value)}`;
 	const newInputContainer = await ajaxFetchWait(fetchURL, true);
 	const existingInputContainer = input.parentElement;
 	// Cannot just replace container as input will lose focus and caret position

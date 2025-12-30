@@ -16,6 +16,7 @@ public class JS {
 	public static String fnSetDirIcon() { return "setDirIcon(this);"; }
 
 	public static final String INPUT_UPPERCASE = "this.value=this.value.toUpperCase()";
+	public static final String INPUT_LOWERCASE = "this.value=this.value.toLowerCase()";
 
 	public static String tableSort() { return "tableSort(this)"; }
 	public static String tableSort(String id) { return "tableSort(this, '" + id + "')"; }
@@ -36,4 +37,5 @@ public class JS {
 
 	public static String confirmToastA(final String message) { return "return confirmToast(this.href, '" + message + "')"; }
 
+	public static String libraryChangeTapeType() { return "onSelectTapeType()"; } // See add_tape.js
 }

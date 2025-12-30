@@ -1,6 +1,6 @@
-function onSelectType() {
+function onSelectTapeType() {
 	let worm = document.getElementById("worm");
-	let sel = document.getElementById("select-type");
+	let sel = document.getElementById("type");
 	let option = sel.children[sel.selectedIndex];
 	if (option.getAttribute("data-worm") === "") {
 		worm.disabled = true;

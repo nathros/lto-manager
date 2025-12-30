@@ -1,5 +1,9 @@
 package lto.manager.web.check;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.function.Consumer;
+
 import lto.manager.web.check.element.FormElement.FormElementType;
 
 public class FormValidator {
@@ -40,8 +44,13 @@ public class FormValidator {
 
 		public boolean valueNotEmpty;
 		public boolean valueNotNull;
+		public long valueMinLength = UNSET;
 		public long valueMaxLength = UNSET;
 		public int valueExpectedLength = UNSET;
+
+		Pattern pattern;
+
+		Consumer<String> custom;
 
 		public static ValidatorOptions of() {
 			return new ValidatorOptions();
@@ -57,6 +66,11 @@ public class FormValidator {
 			return this;
 		}
 
+		public ValidatorOptions valueMinLength(long valueMinLength) {
+			this.valueMinLength = valueMinLength;
+			return this;
+		}
+
 		public ValidatorOptions valueMaxLength(long valueMaxLength) {
 			this.valueMaxLength = valueMaxLength;
 			return this;
@@ -66,13 +80,29 @@ public class FormValidator {
 			this.valueExpectedLength = valueExtactLength;
 			return this;
 		}
+
+		public ValidatorOptions withPattern(final String regex) {
+			pattern = Pattern.compile(regex);
+			return this;
+		}
+
+		public ValidatorOptions withCustom(final Consumer<String> action) {
+			custom = action;
+			return this;
+		}
 	}
 
 	private String genMgs(String baseMsg) {
-		if (messagePrefix == null) {
+		if (messagePrefix != null) {
 			baseMsg = baseMsg.toLowerCase();
+		} else {
+			messagePrefix = "";
 		}
-		return messagePrefix + baseMsg + messagePostfix;
+		if (messagePostfix == null) {
+			return messagePrefix + baseMsg;
+		} else {
+			return messagePrefix + baseMsg + messagePostfix;
+		}
 	}
 
 	private void validateText(String value) throws Exception {
@@ -88,13 +118,28 @@ public class FormValidator {
 		}
 		if (options.valueMaxLength != ValidatorOptions.UNSET) {
 			if (value.length() > options.valueMaxLength) {
-				throw new Exception(genMgs("value is too long, max length " + options.valueMaxLength));
+				throw new Exception(genMgs("Value is too long, max length " + options.valueMaxLength));
+			}
+		}
+		if (options.valueMinLength != ValidatorOptions.UNSET) {
+			if (value.length() > options.valueMinLength) {
+				throw new Exception(genMgs("Value is too smakk, min length " + options.valueMinLength));
 			}
 		}
 		if (options.valueExpectedLength != ValidatorOptions.UNSET) {
 			if (value.length() != options.valueExpectedLength) {
-				throw new Exception(genMgs("value is too short, length must be " + options.valueExpectedLength + " characters"));
+				throw new Exception(
+						genMgs("Value is too short, length must be " + options.valueExpectedLength + " characters"));
 			}
+		}
+		if (options.pattern != null) {
+			final Matcher matcher = options.pattern.matcher(value);
+			if (matcher.find()) {
+				throw new Exception("Invalid match: " + matcher.group());
+			}
+		}
+		if (options.custom != null) {
+			options.custom.accept(value);
 		}
 	}
 
@@ -147,13 +192,14 @@ public class FormValidator {
 					throw new IllegalArgumentException("Unexpected value: " + type);
 				}
 			} catch (Exception e) {
-				 throw new ValidatorStatus(CheckStatusType.ERROR, e.getMessage());
+				throw new ValidatorStatus(CheckStatusType.ERROR, e.getMessage());
 			}
 		}
 		return value;
 	}
 
-	public ValidatorStatus validatePassword(FormElementType type, final String password, final String passwordConfirm, boolean enabled) {
+	public ValidatorStatus validatePassword(FormElementType type, final String password, final String passwordConfirm,
+			boolean enabled) {
 		if (password != null) {
 			if (password.equals(passwordConfirm)) {
 				return validateText(password, enabled);

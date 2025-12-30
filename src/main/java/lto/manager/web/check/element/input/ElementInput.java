@@ -1,9 +1,13 @@
-package lto.manager.web.check.element;
+package lto.manager.web.check.element.input;
+
+import java.util.function.Consumer;
 
 import org.xmlet.htmlapifaster.Element;
 import org.xmlet.htmlapifaster.Input;
 
 import lto.manager.web.check.FormValidator;
+import lto.manager.web.check.element.FormElement;
+import lto.manager.web.resource.JS;
 
 public abstract class ElementInput extends FormElement {
 
@@ -36,15 +40,35 @@ public abstract class ElementInput extends FormElement {
 			((Input<?>) e).attrMinlength(min);
 		});
 		values.put(FormOperation.MinLen, String.valueOf(min));
+		getFormValidator().getOptions().valueMinLength(min);
 		return this;
 	}
 
 	public ElementInput withMaxLength(final Long max) {
-		/*operations.put(FormOperation.MaxLen, (Element<?, ?> e) -> {
-			((Input<?>) e).attrMinlength(max);
+		operations.put(FormOperation.MaxLen, (Element<?, ?> e) -> {
+			((Input<?>) e).attrMaxlength(max);
 		});
-		values.put(FormOperation.MaxLen, String.valueOf(max));*/
+		values.put(FormOperation.MaxLen, String.valueOf(max));
 		getFormValidator().getOptions().valueMaxLength(max);
+		return this;
+	}
+
+	public ElementInput withUppercase() {
+		operations.put(FormOperation.onInputUpperCase, (Element<?, ?> e) -> {
+			((Input<?>) e).attrOninput(JS.INPUT_UPPERCASE);
+		});
+		return this;
+	}
+
+	public ElementInput withLowercase() {
+		operations.put(FormOperation.onInputLowerCase, (Element<?, ?> e) -> {
+			((Input<?>) e).attrOninput(JS.INPUT_LOWERCASE);
+		});
+		return this;
+	}
+
+	public ElementInput withCustomTextValidator(final Consumer<String> action) {
+		getFormValidator().getOptions().withCustom(action);
 		return this;
 	}
 }

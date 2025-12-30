@@ -1,8 +1,7 @@
-package lto.manager.web.check.element;
+package lto.manager.web.check.element.input;
 
 import org.xmlet.htmlapifaster.Div;
 import org.xmlet.htmlapifaster.EnumTypeInputType;
-
 import lto.manager.web.check.CheckStatusType;
 import lto.manager.web.check.FormValidator;
 import lto.manager.web.check.FormValidator.ValidatorStatus;
@@ -38,7 +37,6 @@ public class ElementInputText extends ElementInput {
 			.div()
 				.attrClass(CSS.TEXT_INPUT_CONTAINER + (status.getStatus() == CheckStatusType.OK ? "" : "error"))
 				.input()
-					//.attrClass(status.getStatus() == CheckStatusType.OK ? "" : "error")
 					.attrType(EnumTypeInputType.TEXT)
 					.of(i -> {
 						for (final var op: getOperations()) {
@@ -49,10 +47,10 @@ public class ElementInputText extends ElementInput {
 				.div()
 					.attrClass(CSS.TEXT_INPUT_MESSAGE)
 					.text(status.getValidatorMessage())
-				.__()
+				.__() // div
 				.div()
 					.attrClass(CSS.TEXT_INPUT_ICON)
-				.__()
+				.__() // div
 			.__(); // div
 		// @formatter:on
 	}

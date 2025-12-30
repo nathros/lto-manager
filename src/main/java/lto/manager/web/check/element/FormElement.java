@@ -19,7 +19,7 @@ public abstract class FormElement {
 	}
 
 	public static enum FormOperation {
-		Id, Class, Label, Value, Name, InputSelected, MinLen, MaxLen, Text, OnClick, OnKeyDown, OnKeyUp
+		Id, Class, Label, Value, Name, InputSelected, MinLen, MaxLen, Text, OnClick, OnKeyDown, OnKeyUp, onChange, onInputUpperCase, onInputLowerCase
 	};
 
 	private final FormElementType type;
@@ -104,6 +104,13 @@ public abstract class FormElement {
 	public FormElement withOnKeyUpJS(String onKeyUp) {
 		operations.put(FormOperation.OnKeyUp, (Element<?, ?> e) -> {
 			((GlobalAttributes<?, ?>) e).attrOnkeyup(onKeyUp);
+		});
+		return this;
+	}
+
+	public FormElement withOnChangeJS(String onChange) {
+		operations.put(FormOperation.onChange, (Element<?, ?> e) -> {
+			((GlobalAttributes<?, ?>) e).attrOnchange(onChange);
 		});
 		return this;
 	}

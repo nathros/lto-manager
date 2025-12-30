@@ -5,7 +5,7 @@ import org.xmlet.htmlapifaster.Div;
 import com.sun.net.httpserver.HttpExchange;
 
 import lto.manager.common.database.tables.records.RecordRole.Permission;
-import lto.manager.web.check.element.ElementInputText;
+import lto.manager.web.check.element.input.ElementInputText;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.pages.sandpit.SandpitHandler;
 import lto.manager.web.handlers.http.templates.TemplatePage.BreadCrumbs;

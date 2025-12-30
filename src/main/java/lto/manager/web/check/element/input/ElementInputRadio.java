@@ -1,4 +1,4 @@
-package lto.manager.web.check.element;
+package lto.manager.web.check.element.input;
 
 import java.util.ArrayList;
 import java.util.List;

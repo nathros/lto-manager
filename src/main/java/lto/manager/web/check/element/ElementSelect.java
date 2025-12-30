@@ -111,7 +111,7 @@ public class ElementSelect extends FormElement {
 
 	public ElementSelect withDisabledDefault(final String currentValue) {
 		if (currentValue == null || "null".equals(currentValue)) {
-			options.add(new ElementSelectOption(null, "Select", true, false));
+			options.add(new ElementSelectOption(null, "Select", true, true));
 		}
 		return this;
 	}
@@ -134,11 +134,12 @@ public class ElementSelect extends FormElement {
 					for (final var op: getOperations()) {
 						op.getValue().accept(s);
 					}
-					for (final var opt : getOptions()) {
+					for (final ElementSelectOption opt : getOptions()) {
 						s.option()
 							.of(o -> opt.getCustomAction().accept(o))
 							.attrValue(opt.getValue())
 							.attrSelected(opt.selected)
+							.attrDisabled(opt.disabled)
 							.text(opt.getText())
 						.__();
 					}

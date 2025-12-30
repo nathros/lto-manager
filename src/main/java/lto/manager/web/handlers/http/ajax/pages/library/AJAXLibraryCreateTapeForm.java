@@ -3,6 +3,7 @@ package lto.manager.web.handlers.http.ajax.pages.library;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
@@ -12,6 +13,7 @@ import org.xmlet.htmlapifaster.Option;
 
 import com.sun.net.httpserver.HttpExchange;
 
+import lto.manager.common.Util;
 import lto.manager.common.database.Database;
 import lto.manager.common.database.tables.TableTape;
 import lto.manager.common.database.tables.records.RecordManufacturer;
@@ -19,11 +21,12 @@ import lto.manager.common.database.tables.records.RecordRole.Permission;
 import lto.manager.common.database.tables.records.RecordTape.RecordTapeFormatType;
 import lto.manager.common.database.tables.records.RecordTapeType;
 import lto.manager.web.check.FormDefinition;
-import lto.manager.web.check.element.ElementInputCheckBox;
-import lto.manager.web.check.element.ElementInputText;
 import lto.manager.web.check.element.ElementSelect;
 import lto.manager.web.check.element.ElementSelect.ElementSelectOption;
 import lto.manager.web.check.element.button.ElementIconButton;
+import lto.manager.web.check.element.input.ElementInputCheckBox;
+import lto.manager.web.check.element.input.ElementInputText;
+import lto.manager.web.check.element.input.ElementInputTextLTOBarcode;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.pages.library.LibraryHandler;
 import lto.manager.web.handlers.http.partial.form.Forms;
@@ -65,6 +68,7 @@ public class AJAXLibraryCreateTapeForm extends BaseHTTPHandler {
 									option.addAttr("data-des", type.getDesignation());
 									option.addAttr("data-worm", type.getDesignationWORM());
 								})).collect(Collectors.toList()));
+				tapeTypesSelect.withOnChangeJS(JS.libraryChangeTapeType());
 				fd.withElement(tapeTypesSelect);
 			}
 			{ // LTO manufacturer <select>
@@ -100,12 +104,27 @@ public class AJAXLibraryCreateTapeForm extends BaseHTTPHandler {
 				fd.withElement(serialInput);
 			}
 			{ // Barcode number <input> text
-				final ElementInputText barcodeInput = ElementInputText.of();
+				final ElementInputTextLTOBarcode barcodeInput = ElementInputTextLTOBarcode.of();
+				barcodeInput.getFormValidator().setMessage("Barcode ", null);
 				final String value = model.getQueryModel().getStringNotNull(NAME_BARCODE);
 				barcodeInput.withLabel("Barcode:");
 				barcodeInput.withName(NAME_BARCODE).withId(NAME_BARCODE);
 				barcodeInput.withValue(value);
 				barcodeInput.withMaxLength(Long.valueOf(TableTape.MAX_LEN_BARCODE_FORM));
+				barcodeInput.withUppercase();
+				barcodeInput.withCustomTextValidator(barcodeValue -> {
+					LinkedHashSet<Character> invalidChars = new LinkedHashSet<Character>();
+					for (final char cc : barcodeValue.toCharArray()) {
+						if (!TableTape.BARCODE_VALID_CHARS.contains(String.valueOf(cc))) {
+							invalidChars.add(cc);
+						}
+					}
+					if (invalidChars.size() > 0) {
+						final String join = invalidChars.stream().map(c -> String.valueOf(c)).collect(Collectors.joining(" "));
+						final String first = "Found invalid character" + (join.length() == 1 ? ": " : "s: ");
+						Util.throwException(new Exception(first + join));
+					}
+				});
 				fd.withElement(barcodeInput);
 			}
 			{ // WORM <input> checkbox
@@ -113,6 +132,7 @@ public class AJAXLibraryCreateTapeForm extends BaseHTTPHandler {
 				final ElementInputCheckBox wormCheckbox = ElementInputCheckBox.of(checked);
 				wormCheckbox.withLabel("WORM:");
 				wormCheckbox.withName(NAME_WORM).withId(NAME_WORM);
+				wormCheckbox.withOnChangeJS(JS.libraryChangeTapeType());
 				fd.withElement(wormCheckbox);
 			}
 			{ // Encrypted <input> checkbox

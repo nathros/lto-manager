@@ -1,4 +1,4 @@
-package lto.manager.web.check.element;
+package lto.manager.web.check.element.input;
 
 import org.xmlet.htmlapifaster.Div;
 import org.xmlet.htmlapifaster.EnumTypeInputType;

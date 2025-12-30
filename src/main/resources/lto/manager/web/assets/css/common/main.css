@@ -39,7 +39,7 @@ body {
 }
 a {
 	color: inherit;
-	*text-decoration: inherit;
+	/*text-decoration: inherit;*/
 }
 hr {
 	border: var(--border);
@@ -70,16 +70,14 @@ input:hover, textarea:hover, select:hover {
 	position: relative;
 }
 .text-input-container.error > .text-input-icon {
-	position: absolute;
-	top: 0;
-	bottom: 0;
-	right: 0;
+	position: relative;
 	background-color: var(--colour-error);
 	mask-image: url('/assets/img/exclamation-triangle-fill.svg');
 	mask-repeat: no-repeat;
 	mask-position: center;
 	mask-size: var(--padding-full);
 	width: calc(var(--padding-full) * 2);
+	margin-left: calc(var(--padding-full) * -2);
 }
 .text-input-container > .text-input-message {
 	display: none;
@@ -111,6 +109,11 @@ input[type=text]:focus + .text-input-message:not(:empty) {
 input.error:focus, textarea.error:focus, select.error:focus {
 	border: var(--border-error);
 	outline: var(--border-error) !important;
+}
+.text-input-container.error > input,
+.text-input-container.error > .text-input-icon,
+input.error {
+	animation: shake 0.1s ease-in-out 0s 2;
 }
 input.error:hover, textarea.error:hover, select.error:hover {
 	outline: var(--border-error) !important;
@@ -390,10 +393,10 @@ dialog > div:first-child > button {
 	text-decoration: none;
 	color: rgba(255, 255, 255, 0.5);
 	transition: 0.3s ease;
-	*display: inline-block;
+	/*display: inline-block;*/
 	display: flex;
 	align-items: center;
-    *width: 100%;
+    /*width: 100%;*/
     width: -webkit-fill-available;
     width: -moz-available;
     width: fill-available; /* Not supported 01/2024 */
@@ -1167,4 +1170,10 @@ https://codepen.io/sudeepgumaste/pen/abdrorB
 }
 textarea.wfill-available {
 	resize: vertical;
+}
+@keyframes shake {
+	0% { transform: translate(0, 0) }
+	25% { transform: translate(1px, 0) }
+	75% { transform: translate(-1px, 0) }
+	1000% { transform: translate(0, 0) }
 }
