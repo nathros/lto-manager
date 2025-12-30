@@ -41,6 +41,6 @@ async function validateTextInput(input, /*event*/) {
 	const existingMessage = existingInputContainer.getElementsByClassName("text-input-message")[0];
 	const newMessage = newInputContainer.getElementsByClassName("text-input-message")[0];
 	if (existingMessage && newMessage) {
-		existingMessage.innerText = newMessage.innerText;
+		existingMessage.innerHTML = newMessage.innerHTML;
 	}
 }

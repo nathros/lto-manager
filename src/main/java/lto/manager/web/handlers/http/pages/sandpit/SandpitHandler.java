@@ -14,6 +14,7 @@ import lto.manager.web.handlers.http.pages.sandpit.frontend.CheckBoxTestHandler;
 import lto.manager.web.handlers.http.pages.sandpit.frontend.InlineMessageTestHandler;
 import lto.manager.web.handlers.http.pages.sandpit.frontend.InputTextTestHandler;
 import lto.manager.web.handlers.http.pages.sandpit.frontend.ModalTestHandler;
+import lto.manager.web.handlers.http.pages.sandpit.frontend.RadioGroupTestHandler;
 import lto.manager.web.handlers.http.pages.sandpit.frontend.SwitchTestHandler;
 import lto.manager.web.handlers.http.pages.sandpit.frontend.ToastTestHandler;
 import lto.manager.web.handlers.http.templates.TemplatePage.BreadCrumbs;
@@ -44,6 +45,7 @@ public class SandpitHandler extends BaseHTTPHandler {
 				.a().attrClass(CSS.BUTTON).attrHref(ToastTestHandler.PATH).text(ToastTestHandler.NAME).__()
 				.a().attrClass(CSS.BUTTON).attrHref(CheckBoxTestHandler.PATH).text(CheckBoxTestHandler.NAME).__()
 				.a().attrClass(CSS.BUTTON).attrHref(SwitchTestHandler.PATH).text(SwitchTestHandler.NAME).__()
+				.a().attrClass(CSS.BUTTON).attrHref(RadioGroupTestHandler.PATH).text(RadioGroupTestHandler.NAME).__()
 				.a().attrClass(CSS.BUTTON).attrHref(InlineMessageTestHandler.PATH).text(InlineMessageTestHandler.NAME).__()
 				.a().attrClass(CSS.BUTTON).attrHref(ModalTestHandler.PATH).text(ModalTestHandler.NAME).__()
 				.a().attrClass(CSS.BUTTON).attrHref(InputTextTestHandler.PATH).text(InputTextTestHandler.NAME).__()

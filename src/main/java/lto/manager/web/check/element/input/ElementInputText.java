@@ -46,7 +46,7 @@ public class ElementInputText extends ElementInput {
 				.__() // input
 				.div()
 					.attrClass(CSS.TEXT_INPUT_MESSAGE)
-					.text(status.getValidatorMessage())
+					.raw(status.getValidatorMessage())
 				.__() // div
 				.div()
 					.attrClass(CSS.TEXT_INPUT_ICON)

@@ -21,12 +21,14 @@ import lto.manager.common.database.tables.records.RecordRole.Permission;
 import lto.manager.common.database.tables.records.RecordTape.RecordTapeFormatType;
 import lto.manager.common.database.tables.records.RecordTapeType;
 import lto.manager.web.check.FormDefinition;
-import lto.manager.web.check.element.ElementSelect;
-import lto.manager.web.check.element.ElementSelect.ElementSelectOption;
 import lto.manager.web.check.element.button.ElementIconButton;
 import lto.manager.web.check.element.input.ElementInputCheckBox;
+import lto.manager.web.check.element.input.ElementInputRadio;
+import lto.manager.web.check.element.input.ElementInputRadio.ElementRadioOption;
 import lto.manager.web.check.element.input.ElementInputText;
 import lto.manager.web.check.element.input.ElementInputTextLTOBarcode;
+import lto.manager.web.check.element.select.ElementSelect;
+import lto.manager.web.check.element.select.ElementSelect.ElementSelectOption;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.pages.library.LibraryHandler;
 import lto.manager.web.handlers.http.partial.form.Forms;
@@ -82,16 +84,16 @@ public class AJAXLibraryCreateTapeForm extends BaseHTTPHandler {
 						.collect(Collectors.toList()));
 				fd.withElement(tapeManuSelect);
 			}
-			{ // Format <select>
-				final ElementSelect tapeFormatSelect = ElementSelect.of();
-				final String selected = model.getQueryModel().getString(NAME_FORMAT);
-				tapeFormatSelect.withLabel("Tape Format:");
-				tapeFormatSelect.withName(NAME_FORMAT).withId(NAME_FORMAT);
-				tapeFormatSelect.withDisabledDefault(selected); // Enable blank option
-				tapeFormatSelect.withOptions(Arrays.stream(RecordTapeFormatType.values())
-						.map(format -> new ElementSelectOption(format.toString(), format.toString(), selected))
+			{ // Format <input> radio
+				final ElementInputRadio tapeFormatRadio = ElementInputRadio.of(NAME_FORMAT);
+				tapeFormatRadio.withLabel("Tape Format:");
+				final String selected = model.getQueryModel().getString(NAME_FORMAT,
+						RecordTapeFormatType.values()[0].toString());
+				tapeFormatRadio.withOptions(Arrays.stream(RecordTapeFormatType.values())
+						.map(format -> new ElementRadioOption(format.toString(), format.toString(),
+								format.toString().equals(selected)))
 						.collect(Collectors.toList()));
-				fd.withElement(tapeFormatSelect);
+				fd.withElement(tapeFormatRadio);
 			}
 			{ // Serial number <input> text
 				final ElementInputText serialInput = ElementInputText.of();
@@ -120,9 +122,11 @@ public class AJAXLibraryCreateTapeForm extends BaseHTTPHandler {
 						}
 					}
 					if (invalidChars.size() > 0) {
-						final String join = invalidChars.stream().map(c -> String.valueOf(c)).collect(Collectors.joining(" "));
+						final String join = invalidChars.stream().map(c -> String.valueOf(c))
+								.collect(Collectors.joining(" "));
 						final String first = "Found invalid character" + (join.length() == 1 ? ": " : "s: ");
-						Util.throwException(new Exception(first + join));
+						Util.throwException(new Exception(
+								first + join + "<br>Code 39 barcode only allows: " + TableTape.BARCODE_VALID_CHARS));
 					}
 				});
 				fd.withElement(barcodeInput);

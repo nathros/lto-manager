@@ -6,35 +6,32 @@ import java.util.List;
 import org.xmlet.htmlapifaster.Div;
 import org.xmlet.htmlapifaster.EnumTypeInputType;
 
-import lto.manager.web.check.FormValidator;
+import lto.manager.web.resource.CSS;
 
 public class ElementInputRadio extends ElementInput {
+	private final String name;
+
 	public static class ElementRadioOption {
 		final String value;
-		final String text;
+		final String label;
+		final boolean selected;
 
-		public ElementRadioOption(final String value, final String text) {
+		public ElementRadioOption(final String value, final String label, final boolean selected) {
 			this.value = value;
-			this.text = text;
+			this.label = label;
+			this.selected = selected;
 		}
 	}
 
 	private final List<ElementRadioOption> options = new ArrayList<ElementRadioOption>();
 
-	public ElementInputRadio() {
+	public ElementInputRadio(final String name) {
 		super(FormElementType.INPUT_RADIO);
+		this.name = name;
 	}
 
-	public ElementInputRadio(FormValidator validator) {
-		super(FormElementType.INPUT_RADIO, validator);
-	}
-
-	public static ElementInputRadio of() {
-		return new ElementInputRadio();
-	}
-
-	public static ElementInputRadio of(FormValidator validator) {
-		return new ElementInputRadio(validator);
+	public static ElementInputRadio of(final String name) {
+		return new ElementInputRadio(name);
 	}
 
 	public ElementInputRadio withOptions(List<ElementRadioOption> options) {
@@ -48,18 +45,28 @@ public class ElementInputRadio extends ElementInput {
 
 	@Override
 	public void render(Div<?> div) {
-		//for (final var opt : eRadio.getOptions()) {}
-
 		// @formatter:off
 		div
-			.input()
-				.attrType(EnumTypeInputType.RADIO)
-				.of(i -> {
-					for (final var op: getOperations()) {
-						op.getValue().accept(i);
+			.div()
+				.attrClass(CSS.RADIO_GROUP_CONTAINER)
+				.of(d -> {
+					int index = 0;
+					for (final ElementRadioOption radio : options) {
+						d.input()
+							.attrType(EnumTypeInputType.RADIO)
+							.attrId(name + index)
+							.attrName(name)
+							.attrValue(radio.value)
+							.attrChecked(radio.selected)
+						.__() // input
+						.label()
+							.attrFor(name + index)
+							.text(radio.label)
+						.__(); // label
+						index++;
 					}
 				})
-			.__(); // input
+			.__(); // div RADIO_GROUP_CONTAINER
 		// @formatter:on
 	}
 

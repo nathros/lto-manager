@@ -63,7 +63,7 @@ public class Forms {
 		final List<FormElement> elements = fd.getElements();
 		for (final FormElement fe : elements) {
 			final String id = fe.getId();
-			if (id.equals(key)) {
+			if (key.equals(id)) {
 				view.of(d -> fe.render(d));
 				return;
 			}

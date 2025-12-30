@@ -32,6 +32,9 @@ public class AllFrontendHandler extends BaseHTTPHandler {
 			.div().attrClass(CSS.GROUP).addAttr(CSS.GROUP_ATTRIBUTE, SwitchTestHandler.NAME)
 				.of(d -> SwitchTestHandler.content(d, model))
 			.__()
+			.div().attrClass(CSS.GROUP).addAttr(CSS.GROUP_ATTRIBUTE, RadioGroupTestHandler.NAME)
+				.of(d -> RadioGroupTestHandler.content(d, model))
+			.__()
 			.div().attrClass(CSS.GROUP).addAttr(CSS.GROUP_ATTRIBUTE, InlineMessageTestHandler.NAME)
 				.of(d -> InlineMessageTestHandler.content(d, model)) // FIXME Has unclosed
 			.__()

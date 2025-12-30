@@ -2,9 +2,9 @@ package lto.manager.web.handlers.http.partial.components.form;
 
 import org.xmlet.htmlapifaster.Form;
 
-import lto.manager.web.check.element.ElementSelect;
-import lto.manager.web.check.element.ElementSelect.ElementSelectOption;
 import lto.manager.web.check.element.FormElement;
+import lto.manager.web.check.element.select.ElementSelect;
+import lto.manager.web.check.element.select.ElementSelect.ElementSelectOption;
 import lto.manager.web.handlers.http.templates.models.BodyModel;
 import lto.manager.web.resource.HTML;
 

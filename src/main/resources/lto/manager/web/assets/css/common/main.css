@@ -125,8 +125,6 @@ input:disabled {
 	display: inline-flex;
 	gap: var(--padding);
 	align-items: center;
-	cursor: pointer;
-	flex: 1;
 }
 .checkbox-container input[type=checkbox] {
 	appearance: none;
@@ -207,6 +205,25 @@ input:disabled {
 .switch-container input:checked + span:before {
 	transform: translateX(1.4em);
 	background-color: #fff;
+}
+.radio-group-container {
+	display: flex;
+}
+.radio-group-container > label {
+	flex: 1;
+	padding: var(--padding);
+	text-align: center;
+}
+.radio-group-container > label:hover {
+	cursor: pointer;
+	background-color: #eee;
+}
+.radio-group-container > input[type=radio] {
+	display: none;
+}
+.radio-group-container > input[type=radio]:checked + label {
+	background-color: var(--common-background-colour);
+	color: white;
 }
 dialog {
 	padding: 0;

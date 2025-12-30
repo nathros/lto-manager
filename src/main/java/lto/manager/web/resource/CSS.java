@@ -127,6 +127,7 @@ public class CSS {
 	public final static String TABS_SOURCE_ICON = "tab-source-icon ";
 	public final static String TABS_DESTINATION_ICON = "tab-dest-icon ";
 
+	public final static String RADIO_GROUP_CONTAINER = "radio-group-container ";
 	public final static String CHECKBOX_CONTAINER = "checkbox-container ";
 	public final static String TEXT_INPUT_CONTAINER = "text-input-container ";
 	public final static String TEXT_INPUT_ICON = "text-input-icon ";

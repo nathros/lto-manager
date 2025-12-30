@@ -1,4 +1,4 @@
-package lto.manager.web.check.element;
+package lto.manager.web.check.element.select;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +8,8 @@ import org.xmlet.htmlapifaster.Div;
 import org.xmlet.htmlapifaster.Element;
 import org.xmlet.htmlapifaster.Option;
 import org.xmlet.htmlapifaster.Select;
+
+import lto.manager.web.check.element.FormElement;
 
 public class ElementSelect extends FormElement {
 	public static class ElementSelectOption {

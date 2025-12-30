@@ -46,14 +46,14 @@ public class ElementInputTextLTOBarcode extends ElementInputText {
 				.__() // input
 				.div()
 					.attrClass(CSS.TEXT_INPUT_MESSAGE)
-					.text(status.getValidatorMessage())
+					.raw(status.getValidatorMessage())
 				.__() // div
 				.div()
 					.attrClass(CSS.TEXT_INPUT_ICON)
 				.__() // div
 				.input()
 					.attrId("des") // See: add_tape.js
-					.attrStyle("width:1.5rem;margin-left:var(--padding);text-align:center")
+					.attrStyle("width:1.5rem;margin-left:var(--padding);text-align:center") // TODO ad to special.css
 					.attrDisabled(true)
 				.__()
 			.__(); // div
