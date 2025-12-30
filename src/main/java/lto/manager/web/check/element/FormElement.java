@@ -19,7 +19,7 @@ public abstract class FormElement {
 	}
 
 	public static enum FormOperation {
-		Id, Class, Label, Value, Name, InputSelected, MinLen, MaxLen, Text, OnClick
+		Id, Class, Label, Value, Name, InputSelected, MinLen, MaxLen, Text, OnClick, OnKeyDown, OnKeyUp
 	};
 
 	private final FormElementType type;
@@ -92,28 +92,21 @@ public abstract class FormElement {
 			((GlobalAttributes<?, ?>) e).attrOnclick(onClick);
 		});
 		return this;
-	 }
+	}
 
-	/*
-	 *
-	 *
-	 * public String getOnClickJS() { return onClick; }
-	 *
-	 * public FormElement withOnInputJS(String onInput) { this.onInput = onInput;
-	 * return this; }
-	 *
-	 * public String getOnInputJS() { return onInput; }
-	 *
-	 * public FormElement withOnKeyDownJS(String onKeyDown) { this.onKeyDown =
-	 * onKeyDown; return this; }
-	 *
-	 * public String getoOKeyDownJS() { return onKeyDown; }
-	 *
-	 * public FormElement withOnKeyUpJS(String onKeyUp) { this.onKeyUp = onKeyUp;
-	 * return this; }
-	 *
-	 * public String getonKeyUpJS() { return onKeyUp; }
-	 */
+	public FormElement withOnKeyDownJS(String onKeyDown) {
+		operations.put(FormOperation.OnClick, (Element<?, ?> e) -> {
+			((GlobalAttributes<?, ?>) e).attrOnkeydown(onKeyDown);
+		});
+		return this;
+	}
+
+	public FormElement withOnKeyUpJS(String onKeyUp) {
+		operations.put(FormOperation.OnKeyUp, (Element<?, ?> e) -> {
+			((GlobalAttributes<?, ?>) e).attrOnkeyup(onKeyUp);
+		});
+		return this;
+	}
 
 	public Set<Entry<FormOperation, Consumer<Element<?, ?>>>> getOperations() {
 		return operations.entrySet();

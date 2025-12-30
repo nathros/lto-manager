@@ -1,6 +1,7 @@
 const AJAX_ATT = "data-ajax";
 const AJAX_SUCCESS = "data-ajax-scb";
 const AJAX_ERROR = "data-ajax-ecb";
+const AJAX_TIMEOUT = 3000;
 const InlineMessage = {
 	Good: "good",
 	Error: "error",
@@ -8,9 +9,13 @@ const InlineMessage = {
 	Info: "info"
 }
 
+function removeAJAXParent(html) {
+	return html.substring(5, html.length - 6); // Remove <div>...</div>
+}
+
 function updateElement(element, html, removeParent = false) {
 	if (removeParent) {
-		html = html.substring(5, html.length - 6); // Remove <div>...</div>
+		html = removeAJAXParent(html);
 	}
 	element.outerHTML = html;
 	onLoadAJAX(element); // Check if new element has any triggers
@@ -18,7 +23,7 @@ function updateElement(element, html, removeParent = false) {
 
 function updateElementInner(element, html, removeParent = false) {
 	if (removeParent) {
-		html = html.substring(5, html.length - 6); // Remove <div>...</div>
+		html = removeAJAXParent(html);
 	}
 	element.innerHTML = html;
 	onLoadAJAX(element); // Check if new element has any triggers
@@ -32,7 +37,7 @@ function ajaxFetch(url, element, callbackSuccess, callbackError, removeParent = 
 	fetch(url,
 	{
 		method: "get",
-		signal: AbortSignal.timeout(3000),
+		signal: AbortSignal.timeout(AJAX_TIMEOUT),
 		headers: {
 			"Content-Type": "application/x-www-form-urlencoded"
 		}
@@ -69,6 +74,30 @@ function ajaxFetch(url, element, callbackSuccess, callbackError, removeParent = 
 				}
 			}
 		}
+	})
+}
+
+async function ajaxFetchWait(url, removeParent = false) {
+	return fetch(url,
+	{
+		method: "get",
+		signal: AbortSignal.timeout(AJAX_TIMEOUT),
+		headers: {
+			"Content-Type": "application/x-www-form-urlencoded"
+		}
+	}).then((response) => {
+		return response.text();
+	}).then((div) => {
+		if (removeParent) {
+			div = removeAJAXParent(div);
+		}
+		const element = document.createElement("div");
+		element.innerHTML = div;
+		return element.childNodes[0];
+	}).catch((error) => {
+		let element = document.createElement("div");
+		element.innerText = error;
+		return element;
 	})
 }
 

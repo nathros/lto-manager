@@ -19,9 +19,11 @@ public class JS {
 
 	public static String tableSort() { return "tableSort(this)"; }
 	public static String tableSort(String id) { return "tableSort(this, '" + id + "')"; }
-	public static String tableFilterShow(String id) { return "tableFilterShow('" + id + "',this);"; }
+	public static String tableFilterShow(String id) { return "tableFilterShow('" + id + "',this)"; }
 	public static String tableFilter() { return "tableFilterInput(this);"; }
-	public static String tableFilter(String id) { return "tableFilterInput(this,'" + id + "');"; }
+	public static String tableFilter(String id) { return "tableFilterInput(this,'" + id + "')"; }
+
+	public static String formValidateTextInput() { return "validateTextInput(this, event)"; }
 
 	public static String commonHideToast() { return "hideToast();"; }
 	public static String confirmToast(String url) { return "toastConfirm('" + url + "')"; }

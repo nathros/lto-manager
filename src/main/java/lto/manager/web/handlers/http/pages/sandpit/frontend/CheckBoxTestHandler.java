@@ -26,6 +26,7 @@ public class CheckBoxTestHandler extends BaseHTTPHandler {
 		final var opt3 = CheckBoxOptions.of("Disabled Unchecked").setDisabled(true);
 		final var opt4 = CheckBoxOptions.of("Disabled Checked").setChecked(true).setDisabled(true);
 		final var opt5 = CheckBoxOptions.of().setChecked(true);
+		// FIXME use type 2, test both
 
 		view.
 			div()

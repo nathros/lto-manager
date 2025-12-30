@@ -59,11 +59,12 @@ public class AJAXLibraryCreateTapeForm extends BaseHTTPHandler {
 				tapeTypesSelect.withLabel("LTO Tape Type:");
 				tapeTypesSelect.withName(NAME_TAPETYPE).withId(NAME_TAPETYPE);
 				tapeTypesSelect.withDisabledDefault(selected); // Enable blank option
-				tapeTypesSelect.withOptions(allDBTapeTypes.stream().map(
-						type -> new ElementSelectOption(type.getID().toString(), type.getType(), selected, (Option<?> option) -> {
-							option.addAttr("data-des", type.getDesignation());
-							option.addAttr("data-worm", type.getDesignationWORM());
-						})).collect(Collectors.toList()));
+				tapeTypesSelect.withOptions(
+						allDBTapeTypes.stream().map(type -> new ElementSelectOption(type.getID().toString(),
+								type.getType(), selected, (Option<?> option) -> {
+									option.addAttr("data-des", type.getDesignation());
+									option.addAttr("data-worm", type.getDesignationWORM());
+								})).collect(Collectors.toList()));
 				fd.withElement(tapeTypesSelect);
 			}
 			{ // LTO manufacturer <select>
@@ -90,11 +91,13 @@ public class AJAXLibraryCreateTapeForm extends BaseHTTPHandler {
 			}
 			{ // Serial number <input> text
 				final ElementInputText serialInput = ElementInputText.of();
+				serialInput.getFormValidator().setMessage("Serial number ", "");
 				final String value = model.getQueryModel().getStringNotNull(NAME_SERIAL);
 				serialInput.withLabel("Serial Number:");
 				serialInput.withName(NAME_SERIAL).withId(NAME_SERIAL);
 				serialInput.withValue(value);
 				serialInput.withMaxLength(Long.valueOf(TableTape.MAX_LEN_SERIAL));
+				serialInput.withMaxLength(Long.valueOf(3));
 				fd.withElement(serialInput);
 			}
 			{ // Barcode number <input> text
@@ -145,12 +148,7 @@ public class AJAXLibraryCreateTapeForm extends BaseHTTPHandler {
 	}
 
 	public static Void content(Div<?> view, BodyModel model) {
-		// @formatter:off
-		view
-			.div()
-				.of(d -> Forms.content(d, formDefinition(model))) // FIXME static formDefinition
-			.__(); // form
-		// @formatter:on
+		view.of(d -> Forms.content(d, formDefinition(model), model)); // FIXME static formDefinition
 		return null;
 	}
 

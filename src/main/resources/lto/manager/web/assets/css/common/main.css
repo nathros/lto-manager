@@ -65,9 +65,49 @@ input[type=checkbox] {
 input:hover, textarea:hover, select:hover {
 	outline: var(--border);
 }
-input.error {
+.text-input-container {
+	display: flex;
+	position: relative;
+}
+.text-input-container.error > .text-input-icon {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	background-color: var(--colour-error);
+	mask-image: url('/assets/img/exclamation-triangle-fill.svg');
+	mask-repeat: no-repeat;
+	mask-position: center;
+	mask-size: var(--padding-full);
+	width: calc(var(--padding-full) * 2);
+}
+.text-input-container > .text-input-message {
+	display: none;
+	position: absolute;
+	top: calc(100% + 1px);
+	left: 0;
+	width: auto;
+	color: var(--colour-error);
+	font-weight: bold;
+	font-size: small;
+	background-color: white;
+	padding: 2px 4px 2px 4px;
+	box-shadow: rgba(0, 0, 0, 0.14) 0px 1px 1px 0px, rgba(0, 0, 0, 0.12) 0px 2px 1px -1px, rgba(0, 0, 0, 0.2) 0px 1px 3px 0px;
+	z-index: 1;
+}
+input[type=text]:focus + .text-input-message:not(:empty) {
+	display: block;
+}
+.text-input-container > input[type=text] {
+	flex: 1;
+}
+.text-input-container.error > input[type=text] {
+	padding-right: calc(var(--padding-full) * 2); /* So text does not conflict with icon */
+}
+.text-input-container.error > input, input.error {
 	border: var(--border-error);
 }
+.text-input-container.error > input:focus,
 input.error:focus, textarea.error:focus, select.error:focus {
 	border: var(--border-error);
 	outline: var(--border-error) !important;

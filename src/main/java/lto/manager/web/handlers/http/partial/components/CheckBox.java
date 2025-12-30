@@ -9,6 +9,7 @@ import lto.manager.web.resource.HTML;
 
 public class CheckBox {
 	public static Void content(Div<?> view, final CheckBoxOptions options) {
+		// FIXME duplicated with ElementInputCheckBox
 		view
 			.label()
 				.attrClass("checkbox-container")

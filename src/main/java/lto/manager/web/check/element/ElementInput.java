@@ -40,10 +40,11 @@ public abstract class ElementInput extends FormElement {
 	}
 
 	public ElementInput withMaxLength(final Long max) {
-		operations.put(FormOperation.MaxLen, (Element<?, ?> e) -> {
+		/*operations.put(FormOperation.MaxLen, (Element<?, ?> e) -> {
 			((Input<?>) e).attrMinlength(max);
 		});
-		values.put(FormOperation.MaxLen, String.valueOf(max));
+		values.put(FormOperation.MaxLen, String.valueOf(max));*/
+		getFormValidator().getOptions().valueMaxLength(max);
 		return this;
 	}
 }

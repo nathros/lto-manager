@@ -6,11 +6,20 @@ import org.xmlet.htmlapifaster.Div;
 
 import lto.manager.web.check.FormDefinition;
 import lto.manager.web.check.element.FormElement;
+import lto.manager.web.handlers.http.templates.models.BodyModel;
 import lto.manager.web.resource.Attribute;
 import lto.manager.web.resource.CSS;
 
 public class Forms {
-	public static void content(Div<?> view, FormDefinition fd) {
+	private static final String VALIDATE_SINGLE = "__single";
+	private static final String VALIDATE_SINGLE_KEY = "__k";
+
+	public static void content(Div<?> view, FormDefinition fd, BodyModel model) {
+		final boolean validateSingleField = model.getQueryModel().getChecked(VALIDATE_SINGLE, false);
+		if (validateSingleField) {
+			contentSingle(view, fd, model);
+			return;
+		}
 		final List<FormElement> elements = fd.getElements();
 		final List<FormElement> buttons = fd.getButtons();
 
@@ -44,5 +53,21 @@ public class Forms {
 			})
 		.__(); // form
 		// @formatter:on
+	}
+
+	private static void contentSingle(Div<?> view, FormDefinition fd, BodyModel model) {
+		final String key = model.getQueryModel().getString(VALIDATE_SINGLE_KEY);
+		if (key == null) {
+			throw new IllegalArgumentException(VALIDATE_SINGLE_KEY + " is missing");
+		}
+		final List<FormElement> elements = fd.getElements();
+		for (final FormElement fe : elements) {
+			final String id = fe.getId();
+			if (id.equals(key)) {
+				view.of(d -> fe.render(d));
+				return;
+			}
+		}
+		throw new IllegalArgumentException("Unable to find" + key);
 	}
 }

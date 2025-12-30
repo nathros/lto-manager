@@ -9,8 +9,10 @@ import com.sun.net.httpserver.HttpExchange;
 
 import lto.manager.common.database.tables.records.RecordRole.Permission;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
+import lto.manager.web.handlers.http.pages.sandpit.frontend.AllFrontendHandler;
 import lto.manager.web.handlers.http.pages.sandpit.frontend.CheckBoxTestHandler;
 import lto.manager.web.handlers.http.pages.sandpit.frontend.InlineMessageTestHandler;
+import lto.manager.web.handlers.http.pages.sandpit.frontend.InputTextTestHandler;
 import lto.manager.web.handlers.http.pages.sandpit.frontend.ModalTestHandler;
 import lto.manager.web.handlers.http.pages.sandpit.frontend.SwitchTestHandler;
 import lto.manager.web.handlers.http.pages.sandpit.frontend.ToastTestHandler;
@@ -38,11 +40,13 @@ public class SandpitHandler extends BaseHTTPHandler {
 				.a().attrClass(CSS.BUTTON).attrHref(DatabaseTestHandler.PATH).text(DatabaseTestHandler.NAME).__()
 			.__()
 			.div().attrClass(CSS.GROUP).addAttr(CSS.GROUP_ATTRIBUTE, "Frontend")
+				.a().attrClass(CSS.BUTTON).attrHref(AllFrontendHandler.PATH).text(AllFrontendHandler.NAME).__()
 				.a().attrClass(CSS.BUTTON).attrHref(ToastTestHandler.PATH).text(ToastTestHandler.NAME).__()
 				.a().attrClass(CSS.BUTTON).attrHref(CheckBoxTestHandler.PATH).text(CheckBoxTestHandler.NAME).__()
 				.a().attrClass(CSS.BUTTON).attrHref(SwitchTestHandler.PATH).text(SwitchTestHandler.NAME).__()
 				.a().attrClass(CSS.BUTTON).attrHref(InlineMessageTestHandler.PATH).text(InlineMessageTestHandler.NAME).__()
 				.a().attrClass(CSS.BUTTON).attrHref(ModalTestHandler.PATH).text(ModalTestHandler.NAME).__()
+				.a().attrClass(CSS.BUTTON).attrHref(InputTextTestHandler.PATH).text(InputTextTestHandler.NAME).__()
 			.__()
 			.div().attrClass(CSS.GROUP).addAttr(CSS.GROUP_ATTRIBUTE, "Async")
 				.a().attrClass(CSS.BUTTON).attrHref(ToastTestHandler.PATH).text("TODO lazy loading: Onload.java").__()

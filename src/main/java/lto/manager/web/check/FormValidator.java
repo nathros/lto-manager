@@ -3,35 +3,35 @@ package lto.manager.web.check;
 import lto.manager.web.check.element.FormElement.FormElementType;
 
 public class FormValidator {
-	private final String message;
 	private final ValidatorOptions options;
+
+	private String messagePrefix;
+	private String messagePostfix;
 
 	public static class ValidatorStatus extends Exception {
 		private static final long serialVersionUID = 1L;
-		private CheckStatusType status;
-		private String userMessage;
+		private final CheckStatusType status;
+		private final String validatorMessage;
 
-		public ValidatorStatus(CheckStatusType status, String userMessage) {
+		public ValidatorStatus(CheckStatusType status, final String generatedMessage) {
 			this.status = status;
-			this.userMessage = userMessage;
+			this.validatorMessage = generatedMessage;
+		}
+
+		public static ValidatorStatus emptyOK() {
+			return new ValidatorStatus(CheckStatusType.OK, "");
 		}
 
 		public boolean statusOK() {
 			return status == CheckStatusType.OK;
 		}
 
-		public ValidatorStatus update(final CheckStatusType status, final String message) {
-			this.status = status;
-			this.userMessage = message;
-			return this;
-		}
-
 		public CheckStatusType getStatus() {
 			return status;
 		}
 
-		public String getUserMessage() {
-			return userMessage;
+		public String getValidatorMessage() {
+			return validatorMessage;
 		}
 	}
 
@@ -40,7 +40,7 @@ public class FormValidator {
 
 		public boolean valueNotEmpty;
 		public boolean valueNotNull;
-		public int valueMaxLength = UNSET;
+		public long valueMaxLength = UNSET;
 		public int valueExpectedLength = UNSET;
 
 		public static ValidatorOptions of() {
@@ -57,7 +57,7 @@ public class FormValidator {
 			return this;
 		}
 
-		public ValidatorOptions valueMaxLength(int valueMaxLength) {
+		public ValidatorOptions valueMaxLength(long valueMaxLength) {
 			this.valueMaxLength = valueMaxLength;
 			return this;
 		}
@@ -68,25 +68,32 @@ public class FormValidator {
 		}
 	}
 
+	private String genMgs(String baseMsg) {
+		if (messagePrefix == null) {
+			baseMsg = baseMsg.toLowerCase();
+		}
+		return messagePrefix + baseMsg + messagePostfix;
+	}
+
 	private void validateText(String value) throws Exception {
 		if (options.valueNotNull && value == null) {
-			throw new Exception(" has null value");
+			throw new Exception(genMgs("Value cannot be null"));
 		}
 		if (options.valueNotEmpty) {
 			if (value == null) {
-				throw new Exception(" has null value");
+				throw new Exception(genMgs("Value cannot be null"));
 			} else if (value.equals("")) {
-				throw new Exception(" has empty value");
+				throw new Exception(genMgs("Value cannot be empty"));
 			}
 		}
 		if (options.valueMaxLength != ValidatorOptions.UNSET) {
 			if (value.length() > options.valueMaxLength) {
-				throw new Exception(" is too long, max length " + options.valueMaxLength);
+				throw new Exception(genMgs("value is too long, max length " + options.valueMaxLength));
 			}
 		}
 		if (options.valueExpectedLength != ValidatorOptions.UNSET) {
 			if (value.length() != options.valueExpectedLength) {
-				throw new Exception(" length must be " + options.valueExpectedLength + " characters");
+				throw new Exception(genMgs("value is too short, length must be " + options.valueExpectedLength + " characters"));
 			}
 		}
 	}
@@ -95,32 +102,32 @@ public class FormValidator {
 		return new FormValidator(options, message);
 	}
 
-	public FormValidator(ValidatorOptions options, String message) {
-		this.options = options;
-		this.message = message;
+	public static FormValidator ofDefault() {
+		return new FormValidator(ValidatorOptions.of(), "");
 	}
 
-	public ValidatorStatus validate(FormElementType type, String value, boolean enabled) {
+	public FormValidator(ValidatorOptions options, String message) {
+		this.options = options;
+	}
+
+	public ValidatorOptions getOptions() {
+		return options;
+	}
+
+	public void setMessage(final String prefix, final String postfix) {
+		this.messagePrefix = prefix;
+		this.messagePostfix = postfix;
+	}
+
+	public ValidatorStatus validateText(final String value, boolean enabled) {
 		if (enabled) {
 			try {
-				switch (type) {
-				case INPUT_TEXT:
-					validateText(value);
-					break;
-				case INPUT_CHECKBOX: {
-					break;
-				}
-				case INPUT_PASSWORD: {
-					break;
-				}
-				default:
-					throw new IllegalArgumentException("Unexpected value: " + type);
-				}
+				validateText(value);
 			} catch (Exception e) {
-				return new ValidatorStatus(CheckStatusType.ERROR, message + e.getMessage());
+				return new ValidatorStatus(CheckStatusType.ERROR, e.getMessage());
 			}
 		}
-		return new ValidatorStatus(CheckStatusType.OK, null);
+		return ValidatorStatus.emptyOK();
 	}
 
 	public String validateThrow(FormElementType type, String value, boolean enabled) throws ValidatorStatus {
@@ -140,7 +147,7 @@ public class FormValidator {
 					throw new IllegalArgumentException("Unexpected value: " + type);
 				}
 			} catch (Exception e) {
-				 throw new ValidatorStatus(CheckStatusType.ERROR, message + e.getMessage());
+				 throw new ValidatorStatus(CheckStatusType.ERROR, e.getMessage());
 			}
 		}
 		return value;
@@ -149,24 +156,19 @@ public class FormValidator {
 	public ValidatorStatus validatePassword(FormElementType type, final String password, final String passwordConfirm, boolean enabled) {
 		if (password != null) {
 			if (password.equals(passwordConfirm)) {
-				return validate(type, password, enabled);
+				return validateText(password, enabled);
 			} else {
 				return new ValidatorStatus(CheckStatusType.ERROR, "Passwords do no match");
 			}
 		} else if (passwordConfirm != null) {
 			if (passwordConfirm.equals(password)) {
-				return validate(type, passwordConfirm, enabled);
+				return validateText(passwordConfirm, enabled);
 			} else {
 				return new ValidatorStatus(CheckStatusType.ERROR, "Passwords do not match");
 			}
 		}
 
-		return new ValidatorStatus(CheckStatusType.OK, null); // Password empty ignore
-	}
-
-	public FormValidator(String name, String message, ValidatorOptions options) {
-		this.message = message;
-		this.options = options;
+		return ValidatorStatus.emptyOK(); // Password empty ignore
 	}
 
 }

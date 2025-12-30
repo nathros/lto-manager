@@ -4,6 +4,7 @@ import org.xmlet.htmlapifaster.Div;
 import org.xmlet.htmlapifaster.EnumTypeInputType;
 
 import lto.manager.web.check.FormValidator;
+import lto.manager.web.resource.CSS;
 
 public class ElementInputCheckBox extends ElementInput {
 	private final boolean checked;
@@ -26,15 +27,18 @@ public class ElementInputCheckBox extends ElementInput {
 	public void render(Div<?> div) {
 		// @formatter:off
 		div
-			.input()
-				.attrType(EnumTypeInputType.CHECKBOX)
-				.of(i -> {
-					for (final var op: getOperations()) {
-						op.getValue().accept(i);
-					}
-				})
-				.attrChecked(checked)
-			.__(); // input
+			.div()
+				.attrClass(CSS.CHECKBOX_CONTAINER)
+				.input()
+					.attrType(EnumTypeInputType.CHECKBOX)
+					.of(i -> {
+						for (final var op: getOperations()) {
+							op.getValue().accept(i);
+						}
+					})
+					.attrChecked(checked)
+				.__() // input
+			.__(); //div
 		// @formatter:on
 	}
 

@@ -22,7 +22,6 @@ const COOKIE_ON = "on";
 const COOKIE_OFF = "off";
 function urlParams() { return new URLSearchParams(window.location.search); }
 function buildFormQuery(form) { return new URLSearchParams(new FormData(form)).toString(); }
-function buildFormURL(url, form) { return `${url}?${buildFormQuery(form)}`; }
 
 const APIStatus = {
 	Ok: "ok",
