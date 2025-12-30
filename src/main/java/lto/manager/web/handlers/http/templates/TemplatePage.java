@@ -1,10 +1,10 @@
 package lto.manager.web.handlers.http.templates;
 
+import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
 
-import org.apache.commons.lang3.tuple.Pair;
 import org.xmlet.htmlapifaster.Div;
 import org.xmlet.htmlapifaster.EnumTypeButtonType;
 import org.xmlet.htmlapifaster.EnumTypeInputType;
@@ -78,13 +78,13 @@ public class TemplatePage {
 	}
 
 	public static class BreadCrumbs {
-		private List<Pair<String, String>> crumbs = new ArrayList<Pair<String, String>>();
+		private List<SimpleEntry<String, String>> crumbs = new ArrayList<SimpleEntry<String, String>>();
 		public BreadCrumbs() { add("", RootHandler.PATH); }
 		public BreadCrumbs add(final String text, final String href) {
-			this.crumbs.add(Pair.of(text, href));
+			this.crumbs.add(new SimpleEntry<String, String>(text, href));
 			return this;
 		}
-		public final List<Pair<String, String>> getItems() { return crumbs; }
+		public final List<SimpleEntry<String, String>> getItems() { return crumbs; }
 	}
 
 	private static HtmlView<TemplatePageModel> v = HtmlFlow.view(TemplatePage::template);
@@ -227,11 +227,11 @@ public class TemplatePage {
 							}
 							final var crumb = model.getBreadCrumbs();
 							if (crumb != null) {
-								final List<Pair<String, String>> items = crumb.getItems();
-								div.a().attrClass("back").attrHref(items.get(items.size() - 2).getRight()).attrTitle("Back").__();
+								final List<SimpleEntry<String, String>> items = crumb.getItems();
+								div.a().attrClass("back").attrHref(items.get(items.size() - 2).getValue()).attrTitle("Back").__();
 								for (int i = items.size() - 1; i >= 0; i--) {
-									final Pair<String, String> item = items.get(i);
-									div.a().attrHref(item.getRight()).text(item.getLeft()).__();
+									final SimpleEntry<String, String> item = items.get(i);
+									div.a().attrHref(item.getValue()).text(item.getKey()).__();
 									if (i != 0) div.span().text("/").__();
 								}
 							}

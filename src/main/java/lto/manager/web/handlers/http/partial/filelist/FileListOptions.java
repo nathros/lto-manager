@@ -3,7 +3,7 @@ package lto.manager.web.handlers.http.partial.filelist;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 public record FileListOptions(
 	boolean showRoot,

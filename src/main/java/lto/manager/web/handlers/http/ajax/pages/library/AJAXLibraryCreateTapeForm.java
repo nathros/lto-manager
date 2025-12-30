@@ -97,7 +97,6 @@ public class AJAXLibraryCreateTapeForm extends BaseHTTPHandler {
 				serialInput.withName(NAME_SERIAL).withId(NAME_SERIAL);
 				serialInput.withValue(value);
 				serialInput.withMaxLength(Long.valueOf(TableTape.MAX_LEN_SERIAL));
-				serialInput.withMaxLength(Long.valueOf(3));
 				fd.withElement(serialInput);
 			}
 			{ // Barcode number <input> text
