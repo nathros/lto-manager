@@ -7,8 +7,8 @@ public class JS {
 	public static String fnFileViewKeyDownEditBox() { return "keydownPathEditBox(this, event)"; }
 	public static String fnFileViewExpandDir(String path, boolean isVirtual) { return "expandDir(this,'" + path + "'," + isVirtual + ")"; }
 	public static String fnFileViewSort(String field) { return "sort(this,'" + field + "')"; }
-	public static String fnFileContextMenu(boolean isVirtual) { return "return contextMenu(this," + isVirtual + ",event);"; }
-	public static String fnFileContextMenuHide(boolean isVirtual) { return "contextMenuHide(" + isVirtual + ");"; }
+	public static String fnFileContextMenu(boolean isVirtual) { return "return contextMenu(this," + isVirtual + ",event)"; }
+	public static String fnFileContextMenuHide(boolean isVirtual) { return "contextMenuHide(" + isVirtual + ")"; }
 	public static String fnFileNewVirtualDir(String path) { return "newVirtualDir('" + path + "',this.previousElementSibling.value);"; }
 	public static String fnFileCheckBoxChange() { return "recalculateSelectedFileSize();"; }
 	public static String fnNewDirDialog() { return "newVirtualDirDialog();"; }
@@ -21,10 +21,11 @@ public class JS {
 	public static String tableSort() { return "tableSort(this)"; }
 	public static String tableSort(String id) { return "tableSort(this, '" + id + "')"; }
 	public static String tableFilterShow(String id) { return "tableFilterShow('" + id + "',this)"; }
-	public static String tableFilter() { return "tableFilterInput(this);"; }
+	public static String tableFilter() { return "tableFilterInput(this)"; }
 	public static String tableFilter(String id) { return "tableFilterInput(this,'" + id + "')"; }
 
-	public static String formValidateTextInput() { return "validateTextInput(this, event)"; }
+	public static String formValidate() { return "validateForm(this, event)"; }
+	public static String formSubmit() { return "return submitForm(this)"; }
 
 	public static String commonHideToast() { return "hideToast();"; }
 	public static String confirmToast(String url) { return "toastConfirm('" + url + "')"; }

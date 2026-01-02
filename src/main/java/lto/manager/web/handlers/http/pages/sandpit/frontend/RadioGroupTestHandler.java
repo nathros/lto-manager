@@ -24,7 +24,8 @@ public class RadioGroupTestHandler extends BaseHTTPHandler {
 
 	static Void content(Div<?> view, BodyModel model) {
 		final var items = Arrays.asList(new ElementRadioOption("First", "First", false),
-				new ElementRadioOption("Second", "Second", true), new ElementRadioOption("Third", "Third", false), new ElementRadioOption("Forth", "Forth", false));
+				new ElementRadioOption("Second", "Second", true), new ElementRadioOption("Third", "Third", false),
+				new ElementRadioOption("Forth", "Forth", false));
 		final var radioG = ElementInputRadio.of("rad").withOptions(items);
 
 		// @formatter:off

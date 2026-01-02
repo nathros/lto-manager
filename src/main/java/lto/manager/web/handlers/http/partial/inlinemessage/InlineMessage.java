@@ -2,7 +2,6 @@ package lto.manager.web.handlers.http.partial.inlinemessage;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-
 import org.xmlet.htmlapifaster.Div;
 
 import lto.manager.common.ExternalProcess;

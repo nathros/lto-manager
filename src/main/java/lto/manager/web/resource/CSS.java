@@ -131,6 +131,7 @@ public class CSS {
 	public final static String CHECKBOX_CONTAINER = "checkbox-container ";
 	public final static String TEXT_INPUT_CONTAINER = "text-input-container ";
 	public final static String TEXT_INPUT_ICON = "text-input-icon ";
+	public final static String TEXT_INPUT_REQUIRED = "text-input-required ";
 	public final static String TEXT_INPUT_MESSAGE = "text-input-message ";
 
 	public final static String FORMS_CONTAINER = "form-grid ";

@@ -6,6 +6,7 @@ import java.util.List;
 import org.xmlet.htmlapifaster.Div;
 import org.xmlet.htmlapifaster.EnumTypeInputType;
 
+import lto.manager.web.check.FormValidator.ValidatorStatus;
 import lto.manager.web.resource.CSS;
 
 public class ElementInputRadio extends ElementInput {
@@ -41,6 +42,11 @@ public class ElementInputRadio extends ElementInput {
 
 	public List<ElementRadioOption> getOptions() {
 		return options;
+	}
+
+	@Override
+	public void validate() {
+		validatorStatus = ValidatorStatus.emptyOK();
 	}
 
 	@Override

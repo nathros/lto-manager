@@ -20,39 +20,40 @@ import lto.manager.web.handlers.websockets.BaseWebsocketHandler;
 import lto.manager.web.resource.CSS;
 
 public class WebsocketListConnectionAdminHandler extends BaseHTTPHandler {
-	public static final String PATH = AdminHandler.PATH + "/websocket-con/";
+	public static final String PATH = AdminHandler.PATH + "websocket-con/";
 	public static final Permission PERMISSION = Permission.ADVANCED_WEBSOCKET_CONNECTION_VIEWER;
 	public static final String NAME = "Websocket Connections";
 
 	static Void content(Div<?> view, BodyModel model) {
+		// @formatter:off
 		view.div()
-		.of(div -> {
-			for (final String path : Handlers.websocketHandlers.keySet()) {
-				final BaseWebsocketHandler ws = Handlers.websocketHandlers.get(path);
-				final List<WebSocket> list = ws.getConnections();
-				div
-					.h3().text(path).__()
-					.of(d -> {
-						for (final var con : list) {
-							final var remote = con.getRemoteSocketAddress();
-							d.span()
-								.attrClass(CSS.FONT_MONOSPACE)
-								.text("Host/IP: " + remote.getAddress().toString() + ", port: " + remote.getPort() + " status: " + con.getReadyState().name())
-							.__()
-							.br().__();
-						}
-						if (list.size() == 0) {
-							d.span()
-								.attrClass(CSS.FONT_MONOSPACE)
-								.text("No active connections")
-							.__();
-						}
-					})
-					.hr().__();
-			}
-		})
-
+			.of(div -> {
+				for (final String path : Handlers.websocketHandlers.keySet()) {
+					final BaseWebsocketHandler ws = Handlers.websocketHandlers.get(path);
+					final List<WebSocket> list = ws.getConnections();
+					div
+						.h3().text(path).__()
+						.of(d -> {
+							for (final var con : list) {
+								final var remote = con.getRemoteSocketAddress();
+								d.span()
+									.attrClass(CSS.FONT_MONOSPACE)
+									.text("Host/IP: " + remote.getAddress().toString() + ", port: " + remote.getPort() + " status: " + con.getReadyState().name())
+								.__()
+								.br().__();
+							}
+							if (list.size() == 0) {
+								d.span()
+									.attrClass(CSS.FONT_MONOSPACE)
+									.text("No active connections")
+								.__();
+							}
+						})
+						.hr().__();
+				}
+			})
 		.__();
+		// @formatter:on
 		return null;
 	}
 

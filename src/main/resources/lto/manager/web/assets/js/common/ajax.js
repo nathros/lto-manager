@@ -1,5 +1,5 @@
 const AJAX_ATT = "data-ajax";
-const AJAX_SUCCESS = "data-ajax-scb";
+const AJAX_SUCCESS = "data-ajax-scb"; // TODO is this still used
 const AJAX_ERROR = "data-ajax-ecb";
 const AJAX_TIMEOUT = 3000;
 const InlineMessage = {
@@ -13,12 +13,20 @@ function removeAJAXParent(html) {
 	return html.substring(5, html.length - 6); // Remove <div>...</div>
 }
 
-function updateElement(element, html, removeParent = false) {
-	if (removeParent) {
-		html = removeAJAXParent(html);
+function updateElement(original, html, removeParent = false) {
+	if (html instanceof HTMLElement) {
+		if (removeParent && html.children.length == 1) {
+			original.replaceWith(html.children[0]);
+		} else {
+			original.replaceWith(html);
+		}
+	} else {
+		if (removeParent) {
+			html = removeAJAXParent(html);
+		}
+		original.innerHTML = html; // With outerHTML new node is not known
 	}
-	element.outerHTML = html;
-	onLoadAJAX(element); // Check if new element has any triggers
+	onLoadAJAX(original); // Check if new element has any triggers
 }
 
 function updateElementInner(element, html, removeParent = false) {
@@ -34,6 +42,7 @@ function ajaxFetch(url, element, callbackSuccess, callbackError, removeParent = 
 		console.error(`ajaxFetch element is empty for url ${url}`);
 		return;
 	}
+	let status = 0;
 	fetch(url,
 	{
 		method: "get",
@@ -42,11 +51,12 @@ function ajaxFetch(url, element, callbackSuccess, callbackError, removeParent = 
 			"Content-Type": "application/x-www-form-urlencoded"
 		}
 	}).then((response) => {
+		status = response.status;
 		return response.text();
 	}).then((div) => {
 		updateElement(element, div, removeParent);
 		if (callbackSuccess) {
-			callbackSuccess();
+			status == 200 ? callbackSuccess() : callbackError();
 		} else {
 			const fn = element.getAttribute(AJAX_SUCCESS);
 			if (fn) {

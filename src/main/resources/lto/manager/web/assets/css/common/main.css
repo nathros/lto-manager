@@ -70,7 +70,6 @@ input:hover, textarea:hover, select:hover {
 	position: relative;
 }
 .text-input-container.error > .text-input-icon {
-	position: relative;
 	background-color: var(--colour-error);
 	mask-image: url('/assets/img/exclamation-triangle-fill.svg');
 	mask-repeat: no-repeat;
@@ -78,6 +77,11 @@ input:hover, textarea:hover, select:hover {
 	mask-size: var(--padding-full);
 	width: calc(var(--padding-full) * 2);
 	margin-left: calc(var(--padding-full) * -2);
+	pointer-events: none;
+}
+.text-input-container.error > select + div + .text-input-icon {
+	width: 4rem;
+	margin-left: -4rem;
 }
 .text-input-container > .text-input-message {
 	display: none;
@@ -93,33 +97,46 @@ input:hover, textarea:hover, select:hover {
 	box-shadow: rgba(0, 0, 0, 0.14) 0px 1px 1px 0px, rgba(0, 0, 0, 0.12) 0px 2px 1px -1px, rgba(0, 0, 0, 0.2) 0px 1px 3px 0px;
 	z-index: 1;
 }
-input[type=text]:focus + .text-input-message:not(:empty) {
-	display: block;
+.text-input-required {
+	display: none;
+	pointer-events: none;
+	align-items: center;
+	font-size: small;
+	font-weight: bold;
+	color: var(--colour-error);
+	margin-left: -6.5rem;
+	width: 6.5rem;
 }
-.text-input-container > input[type=text] {
+.text-input-container.error > .text-input-required,
+input[type=text]:focus + .text-input-message:not(:empty) {
+	display: flex;
+}
+.text-input-container > input[type=text],
+.text-input-container > select {
 	flex: 1;
 }
 .text-input-container.error > input[type=text] {
 	padding-right: calc(var(--padding-full) * 2); /* So text does not conflict with icon */
 }
-.text-input-container.error > input, input.error {
+.text-input-container.error > input, input.error,
+.text-input-container.error > select, select.error {
 	border: var(--border-error);
 }
 .text-input-container.error > input:focus,
+.text-input-container.error > select:focus,
 input.error:focus, textarea.error:focus, select.error:focus {
 	border: var(--border-error);
 	outline: var(--border-error) !important;
 }
 .text-input-container.error > input,
+.text-input-container.error > select,
 .text-input-container.error > .text-input-icon,
+.text-input-container.error > .text-input-required,
 input.error {
 	animation: shake 0.1s ease-in-out 0s 2;
 }
 input.error:hover, textarea.error:hover, select.error:hover {
 	outline: var(--border-error) !important;
-}
-input:disabled {
-	cursor: not-allowed !important;
 }
 .checkbox-container {
 	display: inline-flex;
@@ -159,10 +176,11 @@ input:disabled {
 .checkbox-container input[type=checkbox].keep-boarder:checked {
 	border: var(--border);
 }
+input:disabled, button:disabled,
 .checkbox-container:has(input[type=checkbox]:disabled),
 .switch-container:has(input[type=checkbox]:disabled) {
 	opacity: 50%;
-	cursor: not-allowed;
+	cursor: not-allowed !important;
 }
 .checkbox-container input[type=checkbox]:checked {
 	--r: 43deg;
@@ -227,6 +245,11 @@ input:disabled {
 }
 dialog {
 	padding: 0;
+}
+form {
+	display: flex;
+	flex-direction: column;
+	gap: var(--padding-full);
 }
 dialog form {
 	padding: var(--padding-full);
@@ -1014,6 +1037,9 @@ div > .btn-image-ext-group:first-child {
 }
 .inline-details-content {
 	display: none;
+}
+.inline-details-link {
+	padding-left: var(--padding-full);
 }
 .inline-details-link:focus + .inline-details-content {
 	display: block;

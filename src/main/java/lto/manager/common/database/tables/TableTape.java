@@ -9,6 +9,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.sqlite.core.Codes;
+
 import com.healthmarketscience.sqlbuilder.BinaryCondition;
 import com.healthmarketscience.sqlbuilder.CreateTableQuery;
 import com.healthmarketscience.sqlbuilder.DeleteQuery;
@@ -83,8 +85,8 @@ public class TableTape {
 		DbColumn columnsRef[] = new DbColumn[] { tableTapeType.getColumns().get(TableTapeType.COLUMN_INDEX_ID) };
 		table.foreignKey(TableTapeType.COLUMN_NAME_ID, columns, tableTapeType, columnsRef);
 
-		table.addColumn(COLUMN_NAME_BARCODE, Types.VARCHAR, MAX_LEN_BARCODE);
-		table.addColumn(COLUMN_NAME_SERIAL, Types.VARCHAR, MAX_LEN_SERIAL);
+		table.addColumn(COLUMN_NAME_BARCODE, Types.VARCHAR, MAX_LEN_BARCODE).unique();
+		table.addColumn(COLUMN_NAME_SERIAL, Types.VARCHAR, MAX_LEN_SERIAL).unique();
 
 		tapeTypeForeignColumn = table.addColumn(COLUMN_NAME_MANUFACTURER, Types.INTEGER, null);
 		columns = new DbColumn[] { tapeTypeForeignColumn };
@@ -147,12 +149,9 @@ public class TableTape {
 			} else {
 				return DBStatus.Error(null, "Failed to insert: " + sql);
 			}
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			Log.severe(e.getMessage() + " SQL: " + sql);
-			if (e.getMessage().contains("foreign")) {
-				return DBStatus.Error(e, "Missing tape type or manufacturer");
-			}
-			return DBStatus.Error(e, sql);
+			return DBStatus.Error(e, TableTape::prettyException);
 		}
 	}
 
@@ -264,6 +263,24 @@ public class TableTape {
 		boolean isCompressed = result.getBoolean(COLUMN_NAME_IS_COMPRESSED);
 		var tape = RecordTape.of(i, rm, tt, barcode, serial, left, format, time, isWorm, isEncrypted, isCompressed);
 		return tape;
+	}
+
+	public static String prettyException(final SQLException e) {
+		switch (e.getErrorCode()) {
+		case Codes.SQLITE_CONSTRAINT: {
+			final String eMsg = e.getMessage();
+			final int start = eMsg.lastIndexOf(".");
+			if (start != -1) {
+				final String column = eMsg.substring(start + 1, eMsg.length() - 1);
+				if (COLUMN_NAME_BARCODE.equals(column)) {
+					return "Barcode already exists";
+				} else if (COLUMN_NAME_SERIAL.equals(column)) {
+					return "Serial number already exists";
+				}
+			}
+		}
+		}
+		return e.getMessage();
 	}
 
 }

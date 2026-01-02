@@ -12,6 +12,7 @@ import org.xmlet.htmlapifaster.GlobalAttributes;
 import org.xmlet.htmlapifaster.Label;
 
 import lto.manager.web.check.FormValidator;
+import lto.manager.web.check.FormValidator.ValidatorStatus;
 
 public abstract class FormElement {
 	public static enum FormElementType {
@@ -19,17 +20,21 @@ public abstract class FormElement {
 	}
 
 	public static enum FormOperation {
-		Id, Class, Label, Value, Name, InputSelected, MinLen, MaxLen, Text, OnClick, OnKeyDown, OnKeyUp, onChange, onInputUpperCase, onInputLowerCase
+		Id, Class, Label, Value, Name, InputSelected, MinLen, MaxLen, Text, OnClick, OnKeyDown, OnKeyUp, onChange,
+		onInputUpperCase, onInputLowerCase, Required
 	};
 
 	private final FormElementType type;
 	private final FormValidator validator;
+	protected ValidatorStatus validatorStatus;
+
 	protected Map<FormOperation, Consumer<Element<?, ?>>> preOperations = new LinkedHashMap<FormOperation, Consumer<Element<?, ?>>>();
 	protected Map<FormOperation, Consumer<Element<?, ?>>> operations = new LinkedHashMap<FormOperation, Consumer<Element<?, ?>>>();
 
 	protected Map<FormOperation, String> values = new LinkedHashMap<FormOperation, String>();
 
-	private String text; // Text attributes should always be applied last
+	protected String text; // Text attributes should always be applied last
+	protected boolean required = false;
 
 	public FormElement(FormElementType type) {
 		this.type = type;
@@ -49,6 +54,10 @@ public abstract class FormElement {
 		return validator;
 	}
 
+	public ValidatorStatus getFormValidatorStatus() {
+		return validatorStatus;
+	}
+
 	public FormElement withId(final String id) {
 		operations.put(FormOperation.Id, (Element<?, ?> e) -> {
 			((GlobalAttributes<?, ?>) e).attrId(id);
@@ -62,15 +71,31 @@ public abstract class FormElement {
 	}
 
 	public FormElement withLabel(final String label) {
+		final String setLabel = label + (required ? ": *" : ":");
 		preOperations.put(FormOperation.Label, (Element<?, ?> parent) -> {
 			new Label<>(parent).of(l -> {
 				final String name = values.get(FormOperation.Name);
 				if (name != null) {
 					l.attrFor(name);
 				}
-			}).text(label).__();
+			}).text(setLabel).__();
 		});
-		values.put(FormOperation.Label, label);
+		values.put(FormOperation.Label, setLabel);
+		return this;
+	}
+
+	// withLabel must be called first
+	public FormElement withRequired() {
+		/*
+		 * operations.put(FormOperation.Required, (Element<?, ?> e) -> { ((Input<?>)
+		 * e).attrRequired(true); });
+		 */
+		required = true;
+		return this;
+	}
+
+	public FormElement withNotEmpty() {
+		getFormValidator().getOptions().valueNotEmpty();
 		return this;
 	}
 
@@ -81,10 +106,6 @@ public abstract class FormElement {
 	public FormElement withText(final String text) { // This should be last
 		this.text = text;
 		return this;
-	}
-
-	public String getText() {
-		return text;
 	}
 
 	public FormElement withOnClickJS(String onClick) {
@@ -122,6 +143,8 @@ public abstract class FormElement {
 	public Set<Entry<FormOperation, Consumer<Element<?, ?>>>> getPreOperations() {
 		return preOperations.entrySet();
 	}
+
+	public abstract void validate();
 
 	public abstract void render(Div<?> div);
 

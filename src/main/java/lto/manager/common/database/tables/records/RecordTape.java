@@ -65,7 +65,7 @@ public class RecordTape {
 	}
 
 	public enum RecordTapeFormatType {
-		LTFS, STFS, TAR;
+		LTFS, STFS, TAR; // Do not change order, mapped by ordinal value in database
 
 		public static RecordTapeFormatType fromInteger(int index) {
 			if (index > RecordTapeFormatType.values().length)

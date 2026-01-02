@@ -2,9 +2,11 @@ package lto.manager.web.check;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.List;
 import java.util.function.Consumer;
 
 import lto.manager.web.check.element.FormElement.FormElementType;
+import lto.manager.web.check.element.select.ElementSelect.ElementSelectOption;
 
 public class FormValidator {
 	private final ValidatorOptions options;
@@ -116,14 +118,17 @@ public class FormValidator {
 				throw new Exception(genMgs("Value cannot be empty"));
 			}
 		}
+		if (options.custom != null) {
+			options.custom.accept(value);
+		}
 		if (options.valueMaxLength != ValidatorOptions.UNSET) {
 			if (value.length() > options.valueMaxLength) {
 				throw new Exception(genMgs("Value is too long, max length " + options.valueMaxLength));
 			}
 		}
 		if (options.valueMinLength != ValidatorOptions.UNSET) {
-			if (value.length() > options.valueMinLength) {
-				throw new Exception(genMgs("Value is too smakk, min length " + options.valueMinLength));
+			if (value.length() < options.valueMinLength) {
+				throw new Exception(genMgs("Value is too small, min length " + options.valueMinLength));
 			}
 		}
 		if (options.valueExpectedLength != ValidatorOptions.UNSET) {
@@ -136,6 +141,17 @@ public class FormValidator {
 			final Matcher matcher = options.pattern.matcher(value);
 			if (matcher.find()) {
 				throw new Exception("Invalid match: " + matcher.group());
+			}
+		}
+	}
+
+	private void validateSelect(final String value, final List<ElementSelectOption> selectOptions) throws Exception {
+		if (options.valueNotEmpty) {
+			if (value == null) {
+				throw new Exception(genMgs("Value is missing"));
+			}
+			if (selectOptions.stream().filter(p -> p.getValue().equals(value)).findFirst().isEmpty()) {
+				throw new Exception(genMgs("Invalid option: " + value));
 			}
 		}
 		if (options.custom != null) {
@@ -175,27 +191,16 @@ public class FormValidator {
 		return ValidatorStatus.emptyOK();
 	}
 
-	public String validateThrow(FormElementType type, String value, boolean enabled) throws ValidatorStatus {
+	public ValidatorStatus validateSelect(final String value, final List<ElementSelectOption> options,
+			boolean enabled) {
 		if (enabled) {
 			try {
-				switch (type) {
-				case INPUT_TEXT:
-					validateText(value);
-					break;
-				case INPUT_CHECKBOX: {
-					break;
-				}
-				case INPUT_PASSWORD: {
-					break;
-				}
-				default:
-					throw new IllegalArgumentException("Unexpected value: " + type);
-				}
+				validateSelect(value, options);
 			} catch (Exception e) {
-				throw new ValidatorStatus(CheckStatusType.ERROR, e.getMessage());
+				return new ValidatorStatus(CheckStatusType.ERROR, e.getMessage());
 			}
 		}
-		return value;
+		return ValidatorStatus.emptyOK();
 	}
 
 	public ValidatorStatus validatePassword(FormElementType type, final String password, final String passwordConfirm,

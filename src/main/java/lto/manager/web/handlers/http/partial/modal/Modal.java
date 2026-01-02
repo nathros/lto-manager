@@ -24,7 +24,7 @@ public class Modal {
 				{
 					d
 						.button()
-							.attrClass(CSS.BUTTON)
+							.attrClass(CSS.BUTTON_SMALL)
 							.attrOnclick("document.getElementById('" + options.id() + "').close()")
 							.text("X")
 						.__();
@@ -48,7 +48,7 @@ public class Modal {
 							.div()
 								.attrStyle("text-align:end")
 								.button()
-									.attrClass(CSS.BUTTON)
+									.attrClass(CSS.BUTTON_SMALL)
 									.attrOnclick("document.getElementById('" + options.id() + "').close()")
 									.text("X")
 								.__()

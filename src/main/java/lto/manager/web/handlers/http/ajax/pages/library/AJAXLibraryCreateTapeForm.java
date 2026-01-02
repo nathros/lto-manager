@@ -14,10 +14,12 @@ import org.xmlet.htmlapifaster.Option;
 import com.sun.net.httpserver.HttpExchange;
 
 import lto.manager.common.Util;
+import lto.manager.common.database.DBStatus;
 import lto.manager.common.database.Database;
 import lto.manager.common.database.tables.TableTape;
 import lto.manager.common.database.tables.records.RecordManufacturer;
 import lto.manager.common.database.tables.records.RecordRole.Permission;
+import lto.manager.common.database.tables.records.RecordTape;
 import lto.manager.common.database.tables.records.RecordTape.RecordTapeFormatType;
 import lto.manager.common.database.tables.records.RecordTapeType;
 import lto.manager.web.check.FormDefinition;
@@ -50,8 +52,17 @@ public class AJAXLibraryCreateTapeForm extends BaseHTTPHandler {
 	private static final String NAME_ENCRYPTED = "enc";
 	private static final String NAME_COMPRESSION = "comp";
 
+	private static final String LABEL_TAPETYPE = "LTO Tape Type";
+	private static final String LABEL_MANU = "LTO Manufacturer";
+	private static final String LABEL_FORMAT = "Tape Format";
+	private static final String LABEL_SERIAL = "Serial Number";
+	private static final String LABEL_BARCODE = "Barcode";
+	private static final String LABEL_WORM = "WORM";
+	private static final String LABEL_ENCRYPTED = "Encrypted";
+	private static final String LABEL_COMPRESSION = "Compression Enabled";
+
 	private static FormDefinition formDefinition(BodyModel model) {
-		final FormDefinition fd = new FormDefinition();
+		final FormDefinition fd = new FormDefinition(model, AJAXLibraryCreateTapeForm::submit);
 		fd.withAJAXPath(PATH);
 
 		try {
@@ -61,9 +72,9 @@ public class AJAXLibraryCreateTapeForm extends BaseHTTPHandler {
 			{ // LTO tape type <select>
 				final ElementSelect tapeTypesSelect = ElementSelect.of();
 				final String selected = model.getQueryModel().getString(NAME_TAPETYPE);
-				tapeTypesSelect.withLabel("LTO Tape Type:");
-				tapeTypesSelect.withName(NAME_TAPETYPE).withId(NAME_TAPETYPE);
-				tapeTypesSelect.withDisabledDefault(selected); // Enable blank option
+				tapeTypesSelect.withRequired().withLabel(LABEL_TAPETYPE);
+				tapeTypesSelect.withName(NAME_TAPETYPE).withId(NAME_TAPETYPE).withNotEmpty();
+				tapeTypesSelect.withDisabledDefault(selected).withValue(selected); // Enable blank option
 				tapeTypesSelect.withOptions(
 						allDBTapeTypes.stream().map(type -> new ElementSelectOption(type.getID().toString(),
 								type.getType(), selected, (Option<?> option) -> {
@@ -76,9 +87,9 @@ public class AJAXLibraryCreateTapeForm extends BaseHTTPHandler {
 			{ // LTO manufacturer <select>
 				final ElementSelect tapeManuSelect = ElementSelect.of();
 				final String selected = model.getQueryModel().getString(NAME_MANU);
-				tapeManuSelect.withLabel("LTO Manufacturer:");
+				tapeManuSelect.withRequired().withLabel(LABEL_MANU).withNotEmpty();
 				tapeManuSelect.withName(NAME_MANU).withId(NAME_MANU);
-				tapeManuSelect.withDisabledDefault(selected); // Enable blank option
+				tapeManuSelect.withDisabledDefault(selected).withValue(selected); // Enable blank option
 				tapeManuSelect.withOptions(allDBTapeManufacturers.stream()
 						.map(type -> new ElementSelectOption(type.getID().toString(), type.getManufacturer(), selected))
 						.collect(Collectors.toList()));
@@ -86,10 +97,11 @@ public class AJAXLibraryCreateTapeForm extends BaseHTTPHandler {
 			}
 			{ // Format <input> radio
 				final ElementInputRadio tapeFormatRadio = ElementInputRadio.of(NAME_FORMAT);
-				tapeFormatRadio.withLabel("Tape Format:");
+				tapeFormatRadio.withLabel(LABEL_FORMAT);
 				final String selected = model.getQueryModel().getString(NAME_FORMAT,
 						RecordTapeFormatType.values()[0].toString());
 				tapeFormatRadio.withOptions(Arrays.stream(RecordTapeFormatType.values())
+						.filter(format -> format != RecordTapeFormatType.STFS) // FIXME STFS not yet supported
 						.map(format -> new ElementRadioOption(format.toString(), format.toString(),
 								format.toString().equals(selected)))
 						.collect(Collectors.toList()));
@@ -99,7 +111,7 @@ public class AJAXLibraryCreateTapeForm extends BaseHTTPHandler {
 				final ElementInputText serialInput = ElementInputText.of();
 				serialInput.getFormValidator().setMessage("Serial number ", "");
 				final String value = model.getQueryModel().getStringNotNull(NAME_SERIAL);
-				serialInput.withLabel("Serial Number:");
+				serialInput.withRequired().withLabel(LABEL_SERIAL).withNotEmpty();
 				serialInput.withName(NAME_SERIAL).withId(NAME_SERIAL);
 				serialInput.withValue(value);
 				serialInput.withMaxLength(Long.valueOf(TableTape.MAX_LEN_SERIAL));
@@ -109,9 +121,10 @@ public class AJAXLibraryCreateTapeForm extends BaseHTTPHandler {
 				final ElementInputTextLTOBarcode barcodeInput = ElementInputTextLTOBarcode.of();
 				barcodeInput.getFormValidator().setMessage("Barcode ", null);
 				final String value = model.getQueryModel().getStringNotNull(NAME_BARCODE);
-				barcodeInput.withLabel("Barcode:");
-				barcodeInput.withName(NAME_BARCODE).withId(NAME_BARCODE);
+				barcodeInput.withRequired().withLabel(LABEL_BARCODE);
+				barcodeInput.withName(NAME_BARCODE).withId(NAME_BARCODE).withNotEmpty();
 				barcodeInput.withValue(value);
+				barcodeInput.withMinLength(Long.valueOf(TableTape.MAX_LEN_BARCODE_FORM));
 				barcodeInput.withMaxLength(Long.valueOf(TableTape.MAX_LEN_BARCODE_FORM));
 				barcodeInput.withUppercase();
 				barcodeInput.withCustomTextValidator(barcodeValue -> {
@@ -134,7 +147,7 @@ public class AJAXLibraryCreateTapeForm extends BaseHTTPHandler {
 			{ // WORM <input> checkbox
 				final boolean checked = model.getQueryModel().getChecked(NAME_WORM);
 				final ElementInputCheckBox wormCheckbox = ElementInputCheckBox.of(checked);
-				wormCheckbox.withLabel("WORM:");
+				wormCheckbox.withLabel(LABEL_WORM);
 				wormCheckbox.withName(NAME_WORM).withId(NAME_WORM);
 				wormCheckbox.withOnChangeJS(JS.libraryChangeTapeType());
 				fd.withElement(wormCheckbox);
@@ -142,36 +155,58 @@ public class AJAXLibraryCreateTapeForm extends BaseHTTPHandler {
 			{ // Encrypted <input> checkbox
 				final boolean checked = model.getQueryModel().getChecked(NAME_ENCRYPTED);
 				final ElementInputCheckBox EncCheckbox = ElementInputCheckBox.of(checked);
-				EncCheckbox.withLabel("Encrypted:");
+				EncCheckbox.withLabel(LABEL_ENCRYPTED);
 				EncCheckbox.withName(NAME_ENCRYPTED).withId(NAME_ENCRYPTED);
 				fd.withElement(EncCheckbox);
 			}
 			{ // Compression Enabled <input> checkbox
 				final boolean checked = model.getQueryModel().getChecked(NAME_COMPRESSION);
 				final ElementInputCheckBox compCheckbox = ElementInputCheckBox.of(checked);
-				compCheckbox.withLabel("Compression Enabled:");
+				compCheckbox.withLabel(LABEL_COMPRESSION);
 				compCheckbox.withName(NAME_COMPRESSION).withId(NAME_COMPRESSION);
 				fd.withElement(compCheckbox);
 			}
 			{ // Add buttons at end
 				final ElementIconButton submit = ElementIconButton.ofTypeAdd();
-				submit.withOnClickJS("alert('aaa')");
+				submit.asSubmit().withOnClickJS(JS.formSubmit());
 				fd.withButton(submit);
 
 				final ElementIconButton cancel = ElementIconButton.ofTypeCancel();
 				cancel.withOnClickJS(JS.hideModal(LibraryHandler.MODAL_ID));
 				fd.withButton(cancel);
 			}
-
 		} catch (SQLException e) {
-			e.printStackTrace(); // TODO add startup error
+			Util.throwException(e);
 		}
-
 		return fd;
 	}
 
+	public static Void submit(final FormDefinition fd, BodyModel model) {
+		try {
+			final var qm = model.getQueryModel();
+
+			final RecordManufacturer manu = RecordManufacturer.lazy(qm.getInt(NAME_MANU));
+			final RecordTapeType type = RecordTapeType.lazy(qm.getInt(NAME_TAPETYPE));
+			final RecordTapeFormatType format = RecordTapeFormatType.valueOf(qm.getString(NAME_FORMAT));
+			final String serial = qm.getString(NAME_SERIAL);
+			final String barcode = qm.getString(NAME_BARCODE);
+			final boolean worm = qm.getChecked(NAME_WORM);
+			final boolean enc = qm.getChecked(NAME_ENCRYPTED);
+			final boolean cmp = qm.getChecked(NAME_COMPRESSION);
+			final RecordTape newTape = RecordTape.of(null, manu, type, barcode, serial, 0, format,  null, worm,
+					enc, cmp);
+			final DBStatus status = Database.addTape(newTape);
+			if (!status.success()) {
+				status.rethrow();
+			}
+		} catch (Exception e) {
+			Util.throwException(e);
+		}
+		return null;
+	}
+
 	public static Void content(Div<?> view, BodyModel model) {
-		view.of(d -> Forms.content(d, formDefinition(model), model)); // FIXME static formDefinition
+		view.of(d -> Forms.content(d, formDefinition(model)));
 		return null;
 	}
 

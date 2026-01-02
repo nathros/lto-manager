@@ -19,11 +19,35 @@ public class RecordTapeType {
 		return new RecordTapeType(id, type, designation, designationWORM, size);
 	}
 
-	public Integer getID() { return id; }
-	public void setID(int id) { this.id = id; }
-	public String getType() { return type; }
-	public void setType(String type) { this.type = type; }
-	public String getDesignation() { return designation; }
-	public String getDesignationWORM() { return designationWORM; }
-	public long getCapacity() { return capacity; }
+	public static RecordTapeType lazy(Integer id) {
+		return new RecordTapeType(id, null, null, null, 0);
+	}
+
+	public Integer getID() {
+		return id;
+	}
+
+	public void setID(int id) {
+		this.id = id;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public String getDesignation() {
+		return designation;
+	}
+
+	public String getDesignationWORM() {
+		return designationWORM;
+	}
+
+	public long getCapacity() {
+		return capacity;
+	}
 }

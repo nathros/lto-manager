@@ -54,6 +54,11 @@ public class QueryModel {
 		}
 	}
 
+	public int getInt(final String key) {
+		final String value = getString(key);
+		return Integer.parseInt(value);
+	}
+
 	public boolean getChecked(final String key) {
 		final String value = getString(key);
 		return "on".equals(value);

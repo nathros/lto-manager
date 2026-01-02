@@ -2,19 +2,32 @@ package lto.manager.web.check;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiFunction;
 
 import lto.manager.web.check.element.FormElement;
+import lto.manager.web.handlers.http.templates.models.BodyModel;
 
 public class FormDefinition {
+	private final BiFunction<FormDefinition, BodyModel, Void> submitFunction;
+	private final BodyModel model;
+
 	private List<FormElement> elements = new ArrayList<FormElement>();
 	private List<FormElement> buttons = new ArrayList<FormElement>();
 	private String ajaxPath;
 
-	public static FormDefinition of(List<FormElement> elements, List<FormElement> buttons) {
-		return new FormDefinition().withElements(elements).withButtons(buttons);
+	public FormDefinition(final BodyModel model, final BiFunction<FormDefinition, BodyModel, Void> submitFunction) {
+		this.model = model;
+		this.submitFunction = submitFunction;
+	}
+
+	public static FormDefinition of(final BodyModel model,
+			final BiFunction<FormDefinition, BodyModel, Void> submitFunction, List<FormElement> elements,
+			List<FormElement> buttons) {
+		return new FormDefinition(model, submitFunction).withElements(elements).withButtons(buttons);
 	}
 
 	public FormDefinition withElement(FormElement element) {
+		element.validate();
 		elements.add(element);
 		return this;
 	}
@@ -49,6 +62,19 @@ public class FormDefinition {
 
 	public String getAJAXPath() {
 		return ajaxPath;
+	}
+
+	public BodyModel getBodyModel() {
+		return model;
+	}
+
+	public BiFunction<FormDefinition, BodyModel, Void> getSubmitFunction() {
+		return submitFunction;
+	}
+
+	public boolean hasValidationErrors() {
+		return elements.stream().filter(e -> e.getFormValidatorStatus().getStatus() != CheckStatusType.OK).findFirst()
+				.isPresent();
 	}
 
 }

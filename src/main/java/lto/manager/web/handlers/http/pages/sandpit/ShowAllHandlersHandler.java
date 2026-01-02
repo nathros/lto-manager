@@ -32,14 +32,39 @@ public class ShowAllHandlersHandler extends BaseHTTPHandler {
 		final String msg = "The package path [" + rootSearch + "] is searched at boot for classes that inherit "
 				+ httpClassName + " (HTTP) or " + wsClassName + " (WebSocket) these are added to router.";
 
+		// @formatter:off
 		view
 			.div().of(d -> InlineMessage.contentGenericInfo(d, msg))
 			.div().attrClass(CSS.GROUP).addAttr(CSS.GROUP_ATTRIBUTE, "HTTP handler (routes)")
-				.of(d -> {
-					for (Entry<String, HttpHandler> handler : Handlers.httpHandlers.entrySet()) {
-						d.a().attrClass(CSS.BUTTON).attrHref(handler.getKey()).text(handler.getKey()).__();
-					}
-				})
+				.div().attrClass(CSS.GROUP).addAttr(CSS.GROUP_ATTRIBUTE, "HTTP (page)")
+					.of(d -> {
+						for (Entry<String, HttpHandler> handler : Handlers.httpHandlers.entrySet()) {
+							if (!handler.getKey().startsWith(Asset.PATH_AJAX_BASE)) {
+								if (!handler.getKey().startsWith(Asset.PATH_API_BASE)) {
+									d.a().attrClass(CSS.BUTTON).attrHref(handler.getKey()).text(handler.getKey()).__();
+								}
+							}
+						}
+					})
+				.__()
+				.div().attrClass(CSS.GROUP).addAttr(CSS.GROUP_ATTRIBUTE, "AJAX")
+					.of(d -> {
+						for (Entry<String, HttpHandler> handler : Handlers.httpHandlers.entrySet()) {
+							if (handler.getKey().startsWith(Asset.PATH_AJAX_BASE)) {
+								d.a().attrClass(CSS.BUTTON).attrHref(handler.getKey()).text(handler.getKey()).__();
+							}
+						}
+					})
+				.__()
+				.div().attrClass(CSS.GROUP).addAttr(CSS.GROUP_ATTRIBUTE, "API")
+					.of(d -> {
+						for (Entry<String, HttpHandler> handler : Handlers.httpHandlers.entrySet()) {
+							if (handler.getKey().startsWith(Asset.PATH_API_BASE)) {
+								d.a().attrClass(CSS.BUTTON).attrHref(handler.getKey()).text(handler.getKey()).__();
+							}
+						}
+					})
+				.__()
 			.__()
 			.div().attrClass(CSS.GROUP).addAttr(CSS.GROUP_ATTRIBUTE, "WebSocket handler (routes)")
 				.of(d -> {
@@ -48,6 +73,7 @@ public class ShowAllHandlersHandler extends BaseHTTPHandler {
 					}
 				})
 			.__();
+		// @formatter:on
 		return null;
 	}
 

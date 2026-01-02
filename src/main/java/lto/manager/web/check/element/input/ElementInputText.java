@@ -4,14 +4,11 @@ import org.xmlet.htmlapifaster.Div;
 import org.xmlet.htmlapifaster.EnumTypeInputType;
 import lto.manager.web.check.CheckStatusType;
 import lto.manager.web.check.FormValidator;
-import lto.manager.web.check.FormValidator.ValidatorStatus;
 import lto.manager.web.resource.CSS;
-import lto.manager.web.resource.JS;
 
 public class ElementInputText extends ElementInput {
 	public ElementInputText() {
 		super(FormElementType.INPUT_TEXT, FormValidator.ofDefault());
-		withOnKeyUpJS(JS.formValidateTextInput());
 	}
 
 	public ElementInputText(FormValidator validator) {
@@ -27,15 +24,16 @@ public class ElementInputText extends ElementInput {
 	}
 
 	@Override
-	public void render(Div<?> div) {
-		final FormValidator validator = getFormValidator();
-		final ValidatorStatus status = validator == null ? ValidatorStatus.emptyOK()
-				: validator.validateText(values.get(FormOperation.Value), true);
+	public void validate() {
+		validatorStatus = getFormValidator().validateText(values.get(FormOperation.Value), true);
+	}
 
+	@Override
+	public void render(Div<?> div) {
 		// @formatter:off
 		div
 			.div()
-				.attrClass(CSS.TEXT_INPUT_CONTAINER + (status.getStatus() == CheckStatusType.OK ? "" : "error"))
+				.attrClass(CSS.TEXT_INPUT_CONTAINER + (validatorStatus.getStatus() == CheckStatusType.OK ? "" : "error"))
 				.input()
 					.attrType(EnumTypeInputType.TEXT)
 					.of(i -> {
@@ -46,12 +44,12 @@ public class ElementInputText extends ElementInput {
 				.__() // input
 				.div()
 					.attrClass(CSS.TEXT_INPUT_MESSAGE)
-					.raw(status.getValidatorMessage())
+					.raw(validatorStatus.getValidatorMessage())
 				.__() // div
 				.div()
 					.attrClass(CSS.TEXT_INPUT_ICON)
 				.__() // div
-			.__(); // div
+			.__(); // div TEXT_INPUT_CONTAINER
 		// @formatter:on
 	}
 

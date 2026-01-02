@@ -9,7 +9,10 @@ import org.xmlet.htmlapifaster.Element;
 import org.xmlet.htmlapifaster.Option;
 import org.xmlet.htmlapifaster.Select;
 
+import lto.manager.web.check.CheckStatusType;
+import lto.manager.web.check.FormValidator;
 import lto.manager.web.check.element.FormElement;
+import lto.manager.web.resource.CSS;
 
 public class ElementSelect extends FormElement {
 	public static class ElementSelectOption {
@@ -19,7 +22,8 @@ public class ElementSelect extends FormElement {
 		final boolean selected;
 		Consumer<Option<?>> customAction;
 
-		public ElementSelectOption(final String value, final String text, final boolean disabled, final boolean selected) {
+		public ElementSelectOption(final String value, final String text, final boolean disabled,
+				final boolean selected) {
 			this.value = value;
 			this.text = text;
 			this.disabled = disabled;
@@ -33,7 +37,8 @@ public class ElementSelect extends FormElement {
 			this.selected = value.equals(currentSelected);
 		}
 
-		public ElementSelectOption(final String value, final String text, final String currentSelected, Consumer<Option<?>> action) {
+		public ElementSelectOption(final String value, final String text, final String currentSelected,
+				Consumer<Option<?>> action) {
 			this.value = value;
 			this.text = text;
 			this.customAction = action;
@@ -62,7 +67,7 @@ public class ElementSelect extends FormElement {
 	private final List<ElementSelectOption> options = new ArrayList<ElementSelectOption>();
 
 	public ElementSelect() {
-		super(FormElementType.SELECT);
+		super(FormElementType.SELECT, FormValidator.ofDefault());
 	}
 
 	public static ElementSelect of() {
@@ -79,10 +84,7 @@ public class ElementSelect extends FormElement {
 	}
 
 	public ElementSelect withValue(final String value) {
-		operations.put(FormOperation.Value, (Element<?, ?> e) -> {
-			((Option<?>) e).attrValue(value);
-		});
-		values.put(FormOperation.Class, value);
+		values.put(FormOperation.Value, value);
 		return this;
 	}
 
@@ -128,25 +130,40 @@ public class ElementSelect extends FormElement {
 	}
 
 	@Override
+	public void validate() {
+		validatorStatus = getFormValidator().validateSelect(values.get(FormOperation.Value), getOptions(), true);
+	}
+
+	@Override
 	public void render(Div<?> div) {
 		// @formatter:off
 		div
-			.select()
-				.of(s -> {
-					for (final var op: getOperations()) {
-						op.getValue().accept(s);
-					}
-					for (final ElementSelectOption opt : getOptions()) {
-						s.option()
-							.of(o -> opt.getCustomAction().accept(o))
-							.attrValue(opt.getValue())
-							.attrSelected(opt.selected)
-							.attrDisabled(opt.disabled)
-							.text(opt.getText())
-						.__();
-					}
-				})
-			.__();
+			.div()
+				.attrClass(CSS.TEXT_INPUT_CONTAINER + (validatorStatus.getStatus() == CheckStatusType.OK ? "" : "error"))
+				.select()
+					.of(s -> {
+						for (final var op: getOperations()) {
+							op.getValue().accept(s);
+						}
+						for (final ElementSelectOption opt : getOptions()) {
+							s.option()
+								.of(o -> opt.getCustomAction().accept(o))
+								.attrValue(opt.getValue())
+								.attrSelected(opt.selected)
+								.attrDisabled(opt.disabled)
+								.text(opt.getText())
+							.__();
+						}
+					})
+				.__() // select
+				.div()
+					.attrClass(CSS.TEXT_INPUT_REQUIRED)
+					.text("Required")
+				.__() // div
+				.div()
+					.attrClass(CSS.TEXT_INPUT_ICON)
+				.__() // div
+			.__(); // div TEXT_INPUT_CONTAINER
 		// @formatter:on
 	}
 

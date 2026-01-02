@@ -5,7 +5,6 @@ import org.xmlet.htmlapifaster.EnumTypeInputType;
 
 import lto.manager.web.check.CheckStatusType;
 import lto.manager.web.check.FormValidator;
-import lto.manager.web.check.FormValidator.ValidatorStatus;
 import lto.manager.web.resource.CSS;
 
 public class ElementInputTextLTOBarcode extends ElementInputText {
@@ -26,16 +25,12 @@ public class ElementInputTextLTOBarcode extends ElementInputText {
 
 	@Override
 	public void render(Div<?> div) {
-		final FormValidator validator = getFormValidator();
-		final ValidatorStatus status = validator == null ? ValidatorStatus.emptyOK()
-				: validator.validateText(values.get(FormOperation.Value), true);
-
 		// Same as ElementInputText with extra input
 
 		// @formatter:off
 		div
 			.div()
-				.attrClass(CSS.TEXT_INPUT_CONTAINER + (status.getStatus() == CheckStatusType.OK ? "" : "error"))
+				.attrClass(CSS.TEXT_INPUT_CONTAINER + (validatorStatus.getStatus() == CheckStatusType.OK ? "" : "error"))
 				.input()
 					.attrType(EnumTypeInputType.TEXT)
 					.of(i -> {
@@ -46,7 +41,7 @@ public class ElementInputTextLTOBarcode extends ElementInputText {
 				.__() // input
 				.div()
 					.attrClass(CSS.TEXT_INPUT_MESSAGE)
-					.raw(status.getValidatorMessage())
+					.raw(validatorStatus.getValidatorMessage())
 				.__() // div
 				.div()
 					.attrClass(CSS.TEXT_INPUT_ICON)

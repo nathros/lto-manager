@@ -37,12 +37,11 @@ public class ElementIconButton extends ElementButton {
 		div
 			.button()
 				.attrClass(CSS.BUTTON + CSS.BUTTON_IMAGE + CSS.BUTTON_IMAGE_W_TEXT + iconClass)
-				.attrType(EnumTypeButtonType.BUTTON)
+				.attrType(isSubmit ? EnumTypeButtonType.SUBMIT : EnumTypeButtonType.BUTTON)
 				.of(s -> {
 					for (final var op: getOperations()) {
 						op.getValue().accept(s);
 					}
-					final String text = getText();
 					if (text != null) {
 						s.text(text);
 					}

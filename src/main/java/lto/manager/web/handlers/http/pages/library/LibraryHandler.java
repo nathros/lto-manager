@@ -49,6 +49,7 @@ public class LibraryHandler extends BaseHTTPHandler {
 			.div()
 				// Start of modal dialog
 				.of(parent -> Modal.content(parent, ModalOptions.of(MODAL_ID, "Add New Tape", true), innerDiv -> {
+					// parent.button().attrClass(CSS.BUTTON).attrDisabled(true).text("Auto fill from drive").__(); // FIXME get from tape metainfo
 					AJAXLibraryCreateTapeForm.content(parent, model);
 				}))
 				// End of modal dialog
@@ -140,15 +141,9 @@ public class LibraryHandler extends BaseHTTPHandler {
 						.text("New")
 					.__()
 					.li()
-						.a()
-							.attrHref(LibraryCreateHandler.PATH)
-							.text("Add New Tape")
-						.__()
-					.__()
-					.li()
 					.a()
 						.attrOnclick(JS.showModal(MODAL_ID))
-						.text("Add New Tape v2")
+						.text("Add New Tape")
 					.__()
 				.__()
 				.__() // ul

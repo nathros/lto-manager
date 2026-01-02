@@ -4,6 +4,7 @@ import org.xmlet.htmlapifaster.Div;
 import org.xmlet.htmlapifaster.EnumTypeInputType;
 
 import lto.manager.web.check.FormValidator;
+import lto.manager.web.check.FormValidator.ValidatorStatus;
 import lto.manager.web.resource.CSS;
 
 public class ElementInputCheckBox extends ElementInput {
@@ -21,6 +22,11 @@ public class ElementInputCheckBox extends ElementInput {
 
 	public static ElementInputCheckBox of(final boolean checked) {
 		return new ElementInputCheckBox(checked);
+	}
+
+	@Override
+	public void validate() {
+		validatorStatus = ValidatorStatus.emptyOK();
 	}
 
 	@Override
