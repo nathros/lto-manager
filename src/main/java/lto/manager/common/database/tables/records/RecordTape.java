@@ -56,7 +56,7 @@ public class RecordTape {
 
 	public static RecordTape getBlank() {
 		RecordManufacturer blankManufacturer = RecordManufacturer.of(0, "");
-		RecordTapeType blankType = RecordTapeType.of(null, "", "", "", 0);
+		RecordTapeType blankType = RecordTapeType.of(0, "", "", "", 0, "", "", "", "");
 		return new RecordTape(TableTape.DIR_TAPE_ID, blankManufacturer, blankType, "BLANK", "BLANK", 0,
 				RecordTapeFormatType.values()[0], null, false, false, false);
 	}

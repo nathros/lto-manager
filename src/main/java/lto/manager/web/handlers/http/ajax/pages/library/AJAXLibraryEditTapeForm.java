@@ -68,7 +68,8 @@ public class AJAXLibraryEditTapeForm extends BaseHTTPHandler {
 
 	private static FormDefinition formDefinition(BodyModel model) {
 		final FormDefinition fd = new FormDefinition(model, AJAXLibraryEditTapeForm::submit);
-		fd.withAJAXPath(PATH).withId(FORM_ID).withOnReplace(JS.libraryChangeTapeType(NAME_BARCODE_DES, NAME_WORM, NAME_TAPETYPE));
+		fd.withAJAXPath(PATH).withId(FORM_ID)
+				.withOnReplace(JS.libraryChangeTapeType(NAME_BARCODE_DES, NAME_WORM, NAME_TAPETYPE));
 
 		try {
 			final List<RecordManufacturer> allDBTapeManufacturers = Database.getAllTapeManufacturers();
@@ -77,6 +78,13 @@ public class AJAXLibraryEditTapeForm extends BaseHTTPHandler {
 			final String idStr = model.getQueryModel().getString(NAME_ID, "0");
 			final int id = Integer.parseInt(idStr);
 			final RecordTape tape = id == 0 ? RecordTape.getBlank() : Database.getTapeAtID(id);
+			final String selectedManuStr = model.getQueryModel().getString(NAME_MANU,
+					String.valueOf(tape.getManufacturer().getID()));
+			final int selectedManuId = Integer.parseInt(selectedManuStr);
+			final RecordManufacturer selectedManu = allDBTapeManufacturers.stream()
+					.filter(type -> type.getID() == selectedManuId).findFirst().orElse(RecordManufacturer.of(0, ""));
+			final boolean isFetch = model.getQueryModel().keySet().size() == 1;
+			final boolean wormChecked = model.getQueryModel().getChecked(NAME_WORM, isFetch ? tape.getIsWORM() : false);
 
 			{ // id number <input> text
 				final ElementInputHidden idInput = ElementInputHidden.of();
@@ -88,8 +96,22 @@ public class AJAXLibraryEditTapeForm extends BaseHTTPHandler {
 				final ElementSelect tapeTypesSelect = ElementSelect.of();
 				final String selected = model.getQueryModel().getString(NAME_TAPETYPE,
 						String.valueOf(tape.getTapeType().getID()));
+				final int selectedInt = model.getQueryModel().getInt(NAME_TAPETYPE, tape.getTapeType().getID());
+				final RecordTapeType tapeType = allDBTapeTypes.stream().filter(t -> t.getID() == selectedInt)
+						.findFirst().orElse(RecordTapeType.lazy(0));
+				final boolean isHP = selectedManu.isHP();
+
 				tapeTypesSelect.withRequired().withLabel(LABEL_TAPETYPE);
+				tapeTypesSelect.withAdditionalClass(CSS.LIBRARY_TYPE_SELECT);
 				tapeTypesSelect.withName(NAME_TAPETYPE).withId(NAME_TAPETYPE).withNotEmpty();
+				if (wormChecked) {
+					final String backgroundWorm = "url('" + Asset.IMG_LTO_COLOURS + "worm.svg')";
+					tapeTypesSelect.withStyle("background-image:" + backgroundWorm + ", url('" + Asset.IMG_LTO_COLOURS
+							+ (isHP ? tapeType.getColourWORMHP() : tapeType.getColourWORM()) + ".svg')");
+				} else {
+					tapeTypesSelect.withStyle("background-image:url('" + Asset.IMG_LTO_COLOURS
+							+ (isHP ? tapeType.getColourHP() : tapeType.getColour()) + ".svg')");
+				}
 				tapeTypesSelect.withValue(selected);
 				tapeTypesSelect.withOptions(
 						allDBTapeTypes.stream().map(type -> new ElementSelectOption(type.getID().toString(),
@@ -102,20 +124,16 @@ public class AJAXLibraryEditTapeForm extends BaseHTTPHandler {
 			}
 			{ // LTO manufacturer <select>
 				final ElementSelect tapeManuSelect = ElementSelect.of();
-				final String selected = model.getQueryModel().getString(NAME_MANU,
-						String.valueOf(tape.getManufacturer().getID()));
-				final int selectedInt = Integer.parseInt(selected);
-				final RecordManufacturer selectedManu = allDBTapeManufacturers.stream()
-						.filter(type -> type.getID() == selectedInt).findFirst().orElse(RecordManufacturer.of(0, ""));
 				tapeManuSelect.withAdditionalClass(CSS.LIBRARY_MANUFACTURER_SELECT);
 				tapeManuSelect.withStyle("background-image:url('" + Asset.IMG_COMPANY_LOGOS
 						+ selectedManu.getManufacturer().toLowerCase() + ".svg')");
 				tapeManuSelect.withRequired().withLabel(LABEL_MANU).withNotEmpty();
 				tapeManuSelect.withName(NAME_MANU).withId(NAME_MANU);
-				tapeManuSelect.withValue(selected);
-				tapeManuSelect.withOptions(allDBTapeManufacturers.stream()
-						.map(type -> new ElementSelectOption(type.getID().toString(), type.getManufacturer(), selected))
-						.collect(Collectors.toList()));
+				tapeManuSelect.withOnChangeJS(JS.libraryChangeManufacturer(FORM_ID, NAME_TAPETYPE));
+				tapeManuSelect.withValue(selectedManuStr);
+				tapeManuSelect.withOptions(
+						allDBTapeManufacturers.stream().map(type -> new ElementSelectOption(type.getID().toString(),
+								type.getManufacturer(), selectedManuStr)).collect(Collectors.toList()));
 				fd.withElement(tapeManuSelect);
 			}
 			{ // Format <input> radio
@@ -171,7 +189,8 @@ public class AJAXLibraryEditTapeForm extends BaseHTTPHandler {
 				final ElementInputCheckBox wormCheckbox = ElementInputCheckBox.of(checked);
 				wormCheckbox.withLabel(LABEL_WORM);
 				wormCheckbox.withName(NAME_WORM).withId(NAME_WORM);
-				wormCheckbox.withOnChangeJS(JS.libraryChangeTapeType(NAME_BARCODE_DES, NAME_WORM, NAME_TAPETYPE));
+				wormCheckbox.withOnChangeJS(JS.libraryChangeTapeType(NAME_BARCODE_DES, NAME_WORM, NAME_TAPETYPE)
+						+ JS.libraryChangeManufacturer(FORM_ID, NAME_TAPETYPE));
 				fd.withElement(wormCheckbox);
 			}
 			{ // Encrypted <input> checkbox

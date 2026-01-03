@@ -17,3 +17,10 @@ function onSelectTapeType(id, wormId, typeId) {
 	if (data === "") data = "Not Supported";
 	document.getElementById(id).value = data;
 }
+
+function refetchType(formId, typeSelectId) {
+	const form = document.getElementById(formId);
+	const elementRefetch = document.getElementById(typeSelectId);
+	const formURL = getFormURL(form);
+	validateInput(elementRefetch, form, formURL);
+}

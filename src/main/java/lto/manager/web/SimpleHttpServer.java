@@ -30,7 +30,8 @@ public class SimpleHttpServer {
 				    server.createContext(key, value);
 				}
 			}
-			server.setExecutor(Executors.newCachedThreadPool());
+			// .newCachedThreadPool() (multi-thread) FIXME causes responses to be interleaved
+			server.setExecutor(Executors.newSingleThreadExecutor());
 			server.start();
 		} catch (IOException e) {
 			Log.log(Level.SEVERE, e.getMessage(), e);

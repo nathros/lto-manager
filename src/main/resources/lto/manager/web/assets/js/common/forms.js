@@ -5,7 +5,7 @@ const VALIDATE_SINGLE = "__single=on";
 const VALIDATE_SINGLE_KEY = "__k";
 
 function validateForm(form, event) {
-	const validateURL = form.getAttribute(FORM_ATT_PATH);
+	const validateURL = getFormURL(form);
 	if (validateURL == null || form == null) {
 		return;
 	}
@@ -28,7 +28,7 @@ function submitForm(formId) {
 function fetchForm(formId, additionalQuery, onCompleteFn) {
 	let form = document.getElementById(formId);
 	const formURL = getFormURL(form);
-	const fetchURL = `${formURL}?&${additionalQuery}`;
+	const fetchURL = `${formURL}?${additionalQuery}`;
 	ajaxFetch(fetchURL, form, () => {
 		executeFormReplaceScript(form);
 		if (onCompleteFn) {
@@ -72,7 +72,7 @@ async function validateInput(element, form, validateURL /* event */) {
 			return; // Do not validate checkboxes or radios
 		}
 	}
-	const fetchURL = `${validateURL}?${VALIDATE_SINGLE}&${VALIDATE_SINGLE_KEY}=${element.id}&${element.id}=${encodeURIComponent(element.value)}`;
+	const fetchURL = `${validateURL}?${VALIDATE_SINGLE}&${VALIDATE_SINGLE_KEY}=${element.id}&${element.id}=${encodeURIComponent(element.value)}&${buildFormQuery(form)}`;
 	const newInputContainer = await ajaxFetchWait(fetchURL, true);
 	const existingInputContainer = element.parentElement;
 	if (replaceElement) {

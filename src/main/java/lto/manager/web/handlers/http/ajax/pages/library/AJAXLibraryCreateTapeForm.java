@@ -73,11 +73,30 @@ public class AJAXLibraryCreateTapeForm extends BaseHTTPHandler {
 			final List<RecordManufacturer> allDBTapeManufacturers = Database.getAllTapeManufacturers();
 			final List<RecordTapeType> allDBTapeTypes = Database.getAllTapeTypes();
 
+			final int selectedManuInt = model.getQueryModel().getInt(NAME_MANU, 0);
+			final RecordManufacturer selectedManu = allDBTapeManufacturers.stream()
+					.filter(type -> type.getID() == selectedManuInt).findFirst().orElse(RecordManufacturer.of(0, ""));
+			final boolean wormChecked = model.getQueryModel().getChecked(NAME_WORM);
+
 			{ // LTO tape type <select>
 				final ElementSelect tapeTypesSelect = ElementSelect.of();
 				final String selected = model.getQueryModel().getString(NAME_TAPETYPE);
+				final int selectedInt = model.getQueryModel().getInt(NAME_TAPETYPE, 0);
+				final RecordTapeType tapeType = allDBTapeTypes.stream().filter(t -> t.getID() == selectedInt)
+						.findFirst().orElse(RecordTapeType.lazy(0));
+				final boolean isHP = selectedManu.isHP();
+
 				tapeTypesSelect.withRequired().withLabel(LABEL_TAPETYPE);
+				tapeTypesSelect.withAdditionalClass(CSS.LIBRARY_TYPE_SELECT);
 				tapeTypesSelect.withName(NAME_TAPETYPE).withId(NAME_TAPETYPE).withNotEmpty();
+				if (wormChecked) {
+					final String backgroundWorm = "url('" + Asset.IMG_LTO_COLOURS + "worm.svg')";
+					tapeTypesSelect.withStyle("background-image:" + backgroundWorm + ", url('" + Asset.IMG_LTO_COLOURS
+							+ (isHP ? tapeType.getColourWORMHP() : tapeType.getColourWORM()) + ".svg')");
+				} else {
+					tapeTypesSelect.withStyle("background-image:url('" + Asset.IMG_LTO_COLOURS
+							+ (isHP ? tapeType.getColourHP() : tapeType.getColour()) + ".svg')");
+				}
 				tapeTypesSelect.withDisabledDefault(selected).withValue(selected); // Enable blank option
 				tapeTypesSelect.withOptions(
 						allDBTapeTypes.stream().map(type -> new ElementSelectOption(type.getID().toString(),
@@ -91,15 +110,13 @@ public class AJAXLibraryCreateTapeForm extends BaseHTTPHandler {
 			{ // LTO manufacturer <select>
 				final ElementSelect tapeManuSelect = ElementSelect.of();
 				final String selected = model.getQueryModel().getString(NAME_MANU);
-				final int selectedInt = model.getQueryModel().getInt(NAME_MANU, 0);
-				final RecordManufacturer selectedManu = allDBTapeManufacturers.stream()
-						.filter(type -> type.getID() == selectedInt).findFirst().orElse(RecordManufacturer.of(0, ""));
 				tapeManuSelect.withAdditionalClass(CSS.LIBRARY_MANUFACTURER_SELECT);
 				tapeManuSelect.withStyle("background-image:url('" + Asset.IMG_COMPANY_LOGOS
 						+ selectedManu.getManufacturer().toLowerCase() + ".svg')");
 				tapeManuSelect.withRequired().withLabel(LABEL_MANU).withNotEmpty();
 				tapeManuSelect.withName(NAME_MANU).withId(NAME_MANU);
 				tapeManuSelect.withDisabledDefault(selected).withValue(selected); // Enable blank option
+				tapeManuSelect.withOnChangeJS(JS.libraryChangeManufacturer(FORM_ID, NAME_TAPETYPE));
 				tapeManuSelect.withOptions(allDBTapeManufacturers.stream()
 						.map(type -> new ElementSelectOption(type.getID().toString(), type.getManufacturer(), selected))
 						.collect(Collectors.toList()));
@@ -155,11 +172,11 @@ public class AJAXLibraryCreateTapeForm extends BaseHTTPHandler {
 				fd.withElement(barcodeInput);
 			}
 			{ // WORM <input> checkbox
-				final boolean checked = model.getQueryModel().getChecked(NAME_WORM);
-				final ElementInputCheckBox wormCheckbox = ElementInputCheckBox.of(checked);
+				final ElementInputCheckBox wormCheckbox = ElementInputCheckBox.of(wormChecked);
 				wormCheckbox.withLabel(LABEL_WORM);
 				wormCheckbox.withName(NAME_WORM).withId(NAME_WORM);
-				wormCheckbox.withOnChangeJS(JS.libraryChangeTapeType(NAME_BARCODE_DES, NAME_WORM, NAME_TAPETYPE));
+				wormCheckbox.withOnChangeJS(JS.libraryChangeTapeType(NAME_BARCODE_DES, NAME_WORM, NAME_TAPETYPE)
+						+ JS.libraryChangeManufacturer(FORM_ID, NAME_TAPETYPE));
 				fd.withElement(wormCheckbox);
 			}
 			{ // Encrypted <input> checkbox

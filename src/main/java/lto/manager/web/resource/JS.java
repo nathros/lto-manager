@@ -125,4 +125,8 @@ public class JS {
 	public static String libraryChangeTapeType(final String id, final String wormId, final String typeId) {
 		return "onSelectTapeType('" + id + "','" + wormId + "','" + typeId + "');"; // See add_tape.js
 	}
+
+	public static String libraryChangeManufacturer(final String formId, final String typeSelectId) {
+		return "refetchType('" + formId + "','" + typeSelectId + "');"; // See add_tape.js
+	}
 }

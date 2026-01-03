@@ -50,6 +50,11 @@ text {
 	font-family: revert-layer; /* In preview font-family in svg text is being ignored */
 }
 /* Add/update tape */
+.type-select {
+	background-position: 90% 50%;
+	background-size: 2rem;
+	background-repeat: no-repeat;
+}
 .manufacture-select {
 	background-position: 88% 50%;
 	background-size: 4rem;

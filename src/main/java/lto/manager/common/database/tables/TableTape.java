@@ -168,7 +168,8 @@ public class TableTape {
 		uq.addSetClause(table.getColumns().get(COLUMN_INDEX_MANUFACTURER), existingTape.getManufacturer().getID());
 		uq.addSetClause(table.getColumns().get(COLUMN_INDEX_FORMAT_TYPE), existingTape.getFormat().ordinal());
 		uq.addSetClause(table.getColumns().get(COLUMN_INDEX_SPACE_REMAINING), existingTape.getUsedSpace());
-		uq.addSetClause(table.getColumns().get(COLUMN_INDEX_DATE_ADDED), Timestamp.valueOf(existingTape.getDateAdded()));
+		uq.addSetClause(table.getColumns().get(COLUMN_INDEX_DATE_ADDED),
+				Timestamp.valueOf(existingTape.getDateAdded()));
 		uq.addSetClause(table.getColumns().get(COLUMN_INDEX_IS_WORM), existingTape.getIsWORM());
 		uq.addSetClause(table.getColumns().get(COLUMN_INDEX_IS_ENCRYPTED), existingTape.getIsEncrypted());
 		uq.addSetClause(table.getColumns().get(COLUMN_INDEX_IS_COMPRESSED), existingTape.getIsCompressed());
@@ -277,7 +278,11 @@ public class TableTape {
 		String des = result.getString(TableTapeType.COLUMN_NAME_DESIGNATION);
 		String worm = result.getString(TableTapeType.COLUMN_NAME_DESIGNATION_WORM);
 		long capacity = result.getLong(TableTapeType.COLUMN_NAME_CAPACITY);
-		RecordTapeType tt = RecordTapeType.of(i, name, des, worm, capacity);
+		String colour = result.getString(TableTapeType.COLUMN_NAME_COLOUR_TYP);
+		String colourHP = result.getString(TableTapeType.COLUMN_NAME_COLOUR_HP);
+		String colourWORM = result.getString(TableTapeType.COLUMN_NAME_COLOUR_WORM_TYP);
+		String colourWORMHP = result.getString(TableTapeType.COLUMN_NAME_COLOUR_WORM_HP);
+		RecordTapeType tt = RecordTapeType.of(i, name, des, worm, capacity, colour, colourHP, colourWORM, colourWORMHP);
 
 		i = result.getInt(COLUMN_NAME_ID);
 		String barcode = result.getString(COLUMN_NAME_BARCODE);

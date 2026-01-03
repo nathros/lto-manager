@@ -37,6 +37,7 @@ public class Asset {
 	public static final String IMG_TYPES_PATH = AssetHandler.PATH + "img/types/";
 	public static final String IMG_AVATAR_PATH = AssetHandler.PATH + "img/avatar/";
 	public static final String IMG_COMPANY_LOGOS = AssetHandler.PATH + "img/company-logo/";
+	public static final String IMG_LTO_COLOURS = AssetHandler.PATH + "img/lto-colours/";
 	public static final String IMG_LTO_LABEL = AssetHandler.PATH + "img/lto-label/";
 	public static final String IMG_ICON_INFO = AssetHandler.PATH + "img/info-circle-fill.svg";
 	public static final String PATH_LOCALISATION = AssetHandler.PATH + "localisation/";

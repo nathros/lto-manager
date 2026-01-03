@@ -33,4 +33,8 @@ public class RecordManufacturer {
 	public void setManufacturer(String manufacturer) {
 		this.manufacturer = manufacturer;
 	}
+
+	public boolean isHP() {
+		return "HP".equals(manufacturer); // HP do not follow standard cartridge colours
+	}
 }

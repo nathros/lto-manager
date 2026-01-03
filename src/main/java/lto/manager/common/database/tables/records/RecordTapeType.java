@@ -6,21 +6,32 @@ public class RecordTapeType {
 	private String designation;
 	private String designationWORM;
 	private long capacity;
+	private String colour;
+	private String colourHP;
+	private String colourWORM;
+	private String colourWORMHP;
 
-	public RecordTapeType(Integer id, String type, String designation, String designationWORM, long size) {
+	public RecordTapeType(Integer id, String type, String designation, String designationWORM, long size, String colour,
+			String colourHP, String colourWORM, String colourWORMHP) {
 		this.id = id;
 		this.type = type;
 		this.designation = designation;
 		this.designationWORM = designationWORM;
 		this.capacity = size;
+		this.colour = colour;
+		this.colourHP = colourHP;
+		this.colourWORM = colourWORM;
+		this.colourWORMHP = colourWORMHP;
 	}
 
-	public static RecordTapeType of(Integer id, String type, String designation, String designationWORM, long size) {
-		return new RecordTapeType(id, type, designation, designationWORM, size);
+	public static RecordTapeType of(Integer id, String type, String designation, String designationWORM, long size,
+			String colour, String colourHP, String colourWORM, String colourWORMHP) {
+		return new RecordTapeType(id, type, designation, designationWORM, size, colour, colourHP, colourWORM,
+				colourWORMHP);
 	}
 
 	public static RecordTapeType lazy(Integer id) {
-		return new RecordTapeType(id, null, null, null, 0);
+		return new RecordTapeType(id, null, null, null, 0, "", "", "", "");
 	}
 
 	public Integer getID() {
@@ -49,5 +60,21 @@ public class RecordTapeType {
 
 	public long getCapacity() {
 		return capacity;
+	}
+
+	public String getColour() {
+		return colour;
+	}
+
+	public String getColourHP() {
+		return colourHP;
+	}
+
+	public String getColourWORM() {
+		return colourWORM;
+	}
+
+	public String getColourWORMHP() {
+		return colourWORMHP;
 	}
 }

@@ -141,10 +141,6 @@ public class Database {
 		return TableManufacturer.getAll(connection);
 	}
 
-	public static boolean addNewType(String name) throws SQLException {
-		return TableTapeType.addNewType(connection, name, "", "", 0);
-	}
-
 	public static List<RecordTapeType> getAllTapeTypes() throws SQLException {
 		return TableTapeType.getAll(connection);
 	}
