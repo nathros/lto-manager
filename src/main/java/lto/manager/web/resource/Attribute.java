@@ -6,4 +6,5 @@ public class Attribute {
 	public static final String AJAX_ERROR_CALLBACK = "data-ajax-ecb"; // JavaScript to run on load failure
 
 	public static final String FORM_DATA = "data-form";
+	public static final String FORM_REPLACE = "data-replace";
 }

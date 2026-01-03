@@ -1,4 +1,5 @@
 const FORM_ATT_PATH = "data-form";
+const FORM_ATT_REPLACE = "data-replace";
 const VALIDATE_SUBMIT = "__submit=on";
 const VALIDATE_SINGLE = "__single=on";
 const VALIDATE_SINGLE_KEY = "__k";
@@ -11,14 +12,27 @@ function validateForm(form, event) {
 	validateInput(event.target, form, validateURL);
 }
 
-function submitForm(button) {
-	let form = findForm(button);
+function submitForm(formId) {
+	let form = document.getElementById(formId);
 	const formURL = getFormURL(form);
 	const formQuery = buildFormQuery(form);
 	const fetchURL = `${formURL}?${VALIDATE_SUBMIT}&${formQuery}`;
 	ajaxFetch(fetchURL, form, () => {
 		if (checkAnyFormSuccess(form)) {
 			window.location.reload(); // Success on submit refresh with new data
+		}
+	}, () => {}, true);
+	return false; // Stop submit
+}
+
+function fetchForm(formId, additionalQuery, onCompleteFn) {
+	let form = document.getElementById(formId);
+	const formURL = getFormURL(form);
+	const fetchURL = `${formURL}?&${additionalQuery}`;
+	ajaxFetch(fetchURL, form, () => {
+		executeFormReplaceScript(form);
+		if (onCompleteFn) {
+			onCompleteFn();
 		}
 	}, () => {}, true);
 	return false; // Stop submit
@@ -42,18 +56,11 @@ function getFormURL(form) {
 	return form ? form.getAttribute(FORM_ATT_PATH) : null;
 }
 
-function findForm(baseElement) {
-	let findForm = baseElement;
-	while (true) { // Work way up until find a <form>
-		findForm = findForm.parentNode;
-		if (findForm == null) {
-			break; // Reached end without find
-		}
-		if (findForm.tagName == "FORM") {
-			return findForm;
-		}
+function executeFormReplaceScript(form) {
+	const script = form ? form.getAttribute(FORM_ATT_REPLACE) : null;
+	if (script) {
+		eval(script);
 	}
-	return null;
 }
 
 async function validateInput(element, form, validateURL /* event */) {

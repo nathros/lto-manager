@@ -61,6 +61,7 @@ public class TableManufacturer {
 		manufacturer.add("SONY");
 		manufacturer.add("Maxell");
 		manufacturer.add("Overland Tandberg");
+		manufacturer.add("Other");
 		if (!statment.execute(q)) {
 			for (int i = 0; i < manufacturer.size(); i++) {
 				if (addNewManufacturer(con, manufacturer.get(i)) == false) return false;

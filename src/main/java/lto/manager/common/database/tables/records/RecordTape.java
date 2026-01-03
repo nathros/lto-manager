@@ -30,10 +30,7 @@ public class RecordTape {
 		this.serial = serial;
 		this.usedSpace = usedSpace;
 		this.format = format;
-		if (dateAdded == null)
-			this.dateAdded = LocalDateTime.now();
-		else
-			this.dateAdded = dateAdded;
+		this.dateAdded = dateAdded == null ? LocalDateTime.now() : dateAdded;
 		this.isWorm = isWorm;
 		this.isEncrypted = isEncrypted;
 		this.isCompressed = isCompressed;
@@ -58,7 +55,7 @@ public class RecordTape {
 	}
 
 	public static RecordTape getBlank() {
-		RecordManufacturer blankManufacturer = RecordManufacturer.of(null, "");
+		RecordManufacturer blankManufacturer = RecordManufacturer.of(0, "");
 		RecordTapeType blankType = RecordTapeType.of(null, "", "", "", 0);
 		return new RecordTape(TableTape.DIR_TAPE_ID, blankManufacturer, blankType, "BLANK", "BLANK", 0,
 				RecordTapeFormatType.values()[0], null, false, false, false);

@@ -595,7 +595,7 @@ dialog > div:first-child > button {
 	mask-image: url(/assets/img/bug-fill.svg);
 }
 .icon-github::before {
-	mask-image: url(/assets/img/company-logo/github-mark.svg);
+	mask-image: url(/assets/img/company-logo/github.svg);
 }
 .icon-book::before {
 	mask-image: url(/assets/img/book.svg);

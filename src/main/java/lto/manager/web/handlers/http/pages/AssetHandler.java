@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -27,7 +28,7 @@ public class AssetHandler extends BaseHTTPHandler {
 
 	@Override
 	public void requestHandle(HttpExchange he, BodyModel bm) throws IOException {
-		final String resource = he.getRequestURI().toString();
+		final String resource = URLDecoder.decode(he.getRequestURI().toString(), BaseHTTPHandler.CHARSET_VALUE);
 		InputStream is = null;
 		if (!resource.contains("..")) { // Traversal attack check
 			try {

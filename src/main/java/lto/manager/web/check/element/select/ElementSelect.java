@@ -139,7 +139,7 @@ public class ElementSelect extends FormElement {
 		// @formatter:off
 		div
 			.div()
-				.attrClass(CSS.TEXT_INPUT_CONTAINER + (validatorStatus.getStatus() == CheckStatusType.OK ? "" : "error"))
+				.attrClass(CSS.TEXT_INPUT_CONTAINER + (validatorStatus.getStatus() == CheckStatusType.OK ? "" : CSS.ERROR))
 				.select()
 					.of(s -> {
 						for (final var op: getOperations()) {

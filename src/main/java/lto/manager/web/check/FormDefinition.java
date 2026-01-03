@@ -14,6 +14,8 @@ public class FormDefinition {
 	private List<FormElement> elements = new ArrayList<FormElement>();
 	private List<FormElement> buttons = new ArrayList<FormElement>();
 	private String ajaxPath;
+	private String id;
+	private String onReplace;
 
 	public FormDefinition(final BodyModel model, final BiFunction<FormDefinition, BodyModel, Void> submitFunction) {
 		this.model = model;
@@ -62,6 +64,24 @@ public class FormDefinition {
 
 	public String getAJAXPath() {
 		return ajaxPath;
+	}
+
+	public FormDefinition withId(final String id) {
+		this.id = id;
+		return this;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public FormDefinition withOnReplace(final String replaceJS) {
+		this.onReplace = replaceJS;
+		return this;
+	}
+
+	public String getOnReplace() {
+		return onReplace;
 	}
 
 	public BodyModel getBodyModel() {

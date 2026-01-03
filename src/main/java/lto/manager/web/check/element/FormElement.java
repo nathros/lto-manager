@@ -16,12 +16,12 @@ import lto.manager.web.check.FormValidator.ValidatorStatus;
 
 public abstract class FormElement {
 	public static enum FormElementType {
-		INPUT_TEXT, INPUT_PASSWORD, INPUT_CHECKBOX, INPUT_RADIO, SELECT, BUTTON, BUTTON_ICON
+		INPUT_TEXT, INPUT_PASSWORD, INPUT_CHECKBOX, INPUT_HIDDEN, INPUT_RADIO, SELECT, BUTTON, BUTTON_ICON
 	}
 
 	public static enum FormOperation {
-		Id, Class, Label, Value, Name, InputSelected, MinLen, MaxLen, Text, OnClick, OnKeyDown, OnKeyUp, onChange,
-		onInputUpperCase, onInputLowerCase, Required
+		Id, Class, Style, Label, Value, Name, InputSelected, MinLen, MaxLen, Text, OnClick, OnKeyDown, OnKeyUp,
+		onChange, onInputUpperCase, onInputLowerCase, Required
 	};
 
 	private final FormElementType type;
@@ -68,6 +68,22 @@ public abstract class FormElement {
 
 	public String getId() {
 		return values.get(FormOperation.Id);
+	}
+
+	public FormElement withAdditionalClass(final String additionalClass) {
+		operations.put(FormOperation.Class, (Element<?, ?> e) -> {
+			((GlobalAttributes<?, ?>) e).attrClass(additionalClass);
+		});
+		values.put(FormOperation.Class, additionalClass);
+		return this;
+	}
+
+	public FormElement withStyle(final String cssStyle) {
+		operations.put(FormOperation.Style, (Element<?, ?> e) -> {
+			((GlobalAttributes<?, ?>) e).attrStyle(cssStyle);
+		});
+		values.put(FormOperation.Style, cssStyle);
+		return this;
 	}
 
 	public FormElement withLabel(final String label) {

@@ -1,9 +1,5 @@
 form b {
-	white-space: nowrap;
-}
-form {
-	padding-top: var(--padding-full);
-	padding-left: var(--padding-full);
+	white-space: nowrap; /* FIXME Needed for generate LTO label, remove */
 }
 .card {
 	flex: 1;
@@ -52,4 +48,10 @@ form {
 }
 text {
 	font-family: revert-layer; /* In preview font-family in svg text is being ignored */
+}
+/* Add/update tape */
+.manufacture-select {
+	background-position: 88% 50%;
+	background-size: 4rem;
+	background-repeat: no-repeat;
 }

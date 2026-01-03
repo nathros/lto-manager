@@ -113,6 +113,10 @@ public class Database {
 		return TableTape.addTape(connection, newTape);
 	}
 
+	public static DBStatus updateTape(RecordTape existingTape) throws SQLException {
+		return TableTape.updateTape(connection, existingTape);
+	}
+
 	public static boolean DelTape(int id) throws SQLException {
 		return TableTape.delTape(connection, id);
 	}
@@ -227,7 +231,8 @@ public class Database {
 		return TableFile.updateVirtualFileIcon(connection, changeFile.getID(), icon);
 	}
 
-	public static RecordUser getUserByName(String username, boolean includePermissions) throws IOException, SQLException {
+	public static RecordUser getUserByName(String username, boolean includePermissions)
+			throws IOException, SQLException {
 		return TableUser.getUserByName(connection, username, includePermissions);
 	}
 
@@ -247,7 +252,8 @@ public class Database {
 		return TableUser.updateUser(connection, user);
 	}
 
-	public static List<RecordUser> getUsersByRole(int roleID, boolean includePermissions) throws SQLException, IOException {
+	public static List<RecordUser> getUsersByRole(int roleID, boolean includePermissions)
+			throws SQLException, IOException {
 		return TableUser.getUserByRole(connection, roleID, includePermissions);
 	}
 

@@ -4,29 +4,22 @@ import org.xmlet.htmlapifaster.Div;
 import org.xmlet.htmlapifaster.EnumTypeInputType;
 
 import lto.manager.web.check.CheckStatusType;
-import lto.manager.web.check.FormValidator;
 import lto.manager.web.resource.CSS;
 
 public class ElementInputTextLTOBarcode extends ElementInputText {
-	public ElementInputTextLTOBarcode() {
+	private final String designationId;
+
+	public ElementInputTextLTOBarcode(final String designationId) {
+		this.designationId = designationId;
 	}
 
-	public ElementInputTextLTOBarcode(FormValidator validator) {
-		super(validator);
-	}
-
-	public static ElementInputTextLTOBarcode of() {
-		return new ElementInputTextLTOBarcode();
-	}
-
-	public static ElementInputTextLTOBarcode of(FormValidator validator) {
-		return new ElementInputTextLTOBarcode(validator);
+	public static ElementInputTextLTOBarcode of(final String designationId) {
+		return new ElementInputTextLTOBarcode(designationId);
 	}
 
 	@Override
 	public void render(Div<?> div) {
 		// Same as ElementInputText with extra input
-
 		// @formatter:off
 		div
 			.div()
@@ -47,7 +40,7 @@ public class ElementInputTextLTOBarcode extends ElementInputText {
 					.attrClass(CSS.TEXT_INPUT_ICON)
 				.__() // div
 				.input()
-					.attrId("des") // See: add_tape.js
+					.attrId(designationId) // See: add_tape.js
 					.attrStyle("width:1.5rem;margin-left:var(--padding);text-align:center") // TODO ad to special.css
 					.attrDisabled(true)
 				.__()

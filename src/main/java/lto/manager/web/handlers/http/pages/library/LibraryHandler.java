@@ -14,6 +14,7 @@ import lto.manager.common.database.tables.records.RecordRole.Permission;
 import lto.manager.common.database.tables.records.RecordTape;
 import lto.manager.web.handlers.http.BaseHTTPHandler;
 import lto.manager.web.handlers.http.ajax.pages.library.AJAXLibraryCreateTapeForm;
+import lto.manager.web.handlers.http.ajax.pages.library.AJAXLibraryEditTapeForm;
 import lto.manager.web.handlers.http.pages.files.FilesHandler;
 import lto.manager.web.handlers.http.partial.components.TableTrFilter;
 import lto.manager.web.handlers.http.partial.modal.Modal;
@@ -32,7 +33,8 @@ public class LibraryHandler extends BaseHTTPHandler {
 	public static final String NAME = "Library";
 
 	private static final String TABLE_ID = "tab";
-	public static final String MODAL_ID = "modal-add-new-tape";
+	public static final String MODAL_ID_NEW = "modal-add-new-tape";
+	public static final String MODAL_ID_EDIT = "modal-edit-tape";
 
 	static Void body(Div<?> view, BodyModel model) {
 		List<RecordTape> tmp = null;
@@ -48,9 +50,12 @@ public class LibraryHandler extends BaseHTTPHandler {
 		view
 			.div()
 				// Start of modal dialog
-				.of(parent -> Modal.content(parent, ModalOptions.of(MODAL_ID, "Add New Tape", true), innerDiv -> {
+				.of(parent -> Modal.content(parent, ModalOptions.of(MODAL_ID_NEW, "Add New Tape", true), innerDiv -> {
 					// parent.button().attrClass(CSS.BUTTON).attrDisabled(true).text("Auto fill from drive").__(); // FIXME get from tape metainfo
 					AJAXLibraryCreateTapeForm.content(parent, model);
+				}))
+				.of(parent -> Modal.content(parent, ModalOptions.of(MODAL_ID_EDIT, "Edit Tape", true), innerDiv -> {
+					AJAXLibraryEditTapeForm.content(parent, model);
 				}))
 				// End of modal dialog
 
@@ -85,6 +90,14 @@ public class LibraryHandler extends BaseHTTPHandler {
 							.td()
 								.div().attrClass(CSS.TABLE_ACTIONS)
 									.a()
+										.attrClass(CSS.TOOLTIP + CSS.ICON_EDIT)
+										.attrHref("")
+										.attrOnclick(
+											JS.formFetch(AJAXLibraryEditTapeForm.FORM_ID, AJAXLibraryEditTapeForm.NAME_ID, String.valueOf(item.getID()), JS.showModal(MODAL_ID_EDIT)) +
+											JS.STOP_DEFAULT)
+										.em().text("Edit").__()
+									.__()
+									.a()
 										.attrClass(CSS.TOOLTIP + CSS.ICON_EYE)
 										.attrHref(FilesHandler.PATH + "?" + FilesHandler.TAPE_ID + "=" + item.getID())
 										.em().text("Show Files").__()
@@ -108,7 +121,7 @@ public class LibraryHandler extends BaseHTTPHandler {
 	@Override
 	public void requestHandle(HttpExchange he, BodyModel bm) throws IOException, InterruptedException, ExecutionException {
 		HeadModel thm = HeadModel.of(NAME);
-		thm.addScript(Asset.JS_ADD_TAPE);
+		thm.addScript(Asset.JS_ADD_TAPE).addCSS(Asset.CSS_LIBRARY);
 		BreadCrumbs crumbs = new BreadCrumbs().add(NAME, PATH);
 		TemplatePageModel tpm = TemplatePageModel.of(LibraryHandler::body, LibraryHandler::header, thm, SelectedPage.Library, bm, crumbs);
 		requestHandleCompletePage(he, tpm);
@@ -142,7 +155,7 @@ public class LibraryHandler extends BaseHTTPHandler {
 					.__()
 					.li()
 					.a()
-						.attrOnclick(JS.showModal(MODAL_ID))
+						.attrOnclick(JS.showModal(MODAL_ID_NEW))
 						.text("Add New Tape")
 					.__()
 				.__()

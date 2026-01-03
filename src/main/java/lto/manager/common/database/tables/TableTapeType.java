@@ -71,6 +71,8 @@ public class TableTapeType {
 					}
 					if (!addNewType(con, "LTO-" + i, "L" + i, worm, tapeSizeGB[i - 1] * bytesPerGiB)) return false;
 				}
+				if (!addNewType(con, "LTO-10 30TB", "LA", "LH", 30000 * bytesPerGiB)) return false;
+				if (!addNewType(con, "LTO-10 40TB", "LA", "LH", 40000 * bytesPerGiB)) return false;
 				return true;
 			}
 		}

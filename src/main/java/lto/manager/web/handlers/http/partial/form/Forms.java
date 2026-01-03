@@ -43,7 +43,9 @@ public class Forms {
 
 		// @formatter:off
 		view.form()
+			.attrId(fd.getId())
 			.addAttr(Attribute.FORM_DATA, fd.getAJAXPath()) // Path to send form to validate
+			.addAttr(Attribute.FORM_REPLACE, fd.getOnReplace()) // JavaScript to run on replace
 			.attrOnchange(JS.formValidate())
 			.attrOnkeyup(JS.formValidate())
 

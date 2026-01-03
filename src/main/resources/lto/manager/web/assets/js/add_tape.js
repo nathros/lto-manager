@@ -1,7 +1,7 @@
-function onSelectTapeType() {
-	let worm = document.getElementById("worm");
-	let sel = document.getElementById("type");
-	let option = sel.children[sel.selectedIndex];
+function onSelectTapeType(id, wormId, typeId) {
+	const worm = document.getElementById(wormId);
+	const sel = document.getElementById(typeId);
+	const option = sel.children[sel.selectedIndex];
 	if (option.getAttribute("data-worm") === "") {
 		worm.disabled = true;
 		worm.checked = false;
@@ -15,5 +15,5 @@ function onSelectTapeType() {
 		data = option.getAttribute("data-des");
 	}
 	if (data === "") data = "Not Supported";
-	document.getElementById("des").value = data;
+	document.getElementById(id).value = data;
 }

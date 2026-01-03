@@ -17,6 +17,7 @@ import com.healthmarketscience.sqlbuilder.DeleteQuery;
 import com.healthmarketscience.sqlbuilder.InsertQuery;
 import com.healthmarketscience.sqlbuilder.SelectQuery;
 import com.healthmarketscience.sqlbuilder.SelectQuery.JoinType;
+import com.healthmarketscience.sqlbuilder.UpdateQuery;
 import com.healthmarketscience.sqlbuilder.dbspec.basic.DbColumn;
 import com.healthmarketscience.sqlbuilder.dbspec.basic.DbJoin;
 import com.healthmarketscience.sqlbuilder.dbspec.basic.DbSchema;
@@ -127,7 +128,7 @@ public class TableTape {
 	public static DBStatus addTape(Connection con, RecordTape newTape) throws SQLException {
 		var statment = con.createStatement();
 
-		InsertQuery iq = new InsertQuery(table);
+		final InsertQuery iq = new InsertQuery(table);
 		if (newTape.getID() != NO_ID)
 			iq.addColumn(table.getColumns().get(COLUMN_INDEX_ID), newTape.getID());
 
@@ -135,19 +136,50 @@ public class TableTape {
 		iq.addColumn(table.getColumns().get(COLUMN_INDEX_BARCODE), newTape.getBarcode());
 		iq.addColumn(table.getColumns().get(COLUMN_INDEX_SERIAL), newTape.getSerial());
 		iq.addColumn(table.getColumns().get(COLUMN_INDEX_MANUFACTURER), newTape.getManufacturer().getID());
+		iq.addColumn(table.getColumns().get(COLUMN_INDEX_FORMAT_TYPE), newTape.getFormat().ordinal());
 		iq.addColumn(table.getColumns().get(COLUMN_INDEX_SPACE_REMAINING), newTape.getUsedSpace());
 		iq.addColumn(table.getColumns().get(COLUMN_INDEX_DATE_ADDED), Timestamp.valueOf(newTape.getDateAdded()));
 		iq.addColumn(table.getColumns().get(COLUMN_INDEX_IS_WORM), newTape.getIsWORM());
 		iq.addColumn(table.getColumns().get(COLUMN_INDEX_IS_ENCRYPTED), newTape.getIsEncrypted());
 		iq.addColumn(table.getColumns().get(COLUMN_INDEX_IS_COMPRESSED), newTape.getIsCompressed());
 
-		String sql = iq.validate().toString();
+		final String sql = iq.validate().toString();
 
 		try {
 			if (!statment.execute(sql)) {
 				return DBStatus.OK();
 			} else {
 				return DBStatus.Error(null, "Failed to insert: " + sql);
+			}
+		} catch (SQLException e) {
+			Log.severe(e.getMessage() + " SQL: " + sql);
+			return DBStatus.Error(e, TableTape::prettyException);
+		}
+	}
+
+	public static DBStatus updateTape(Connection con, RecordTape existingTape) throws SQLException {
+		var statment = con.createStatement();
+
+		final UpdateQuery uq = new UpdateQuery(table);
+		uq.addCondition(BinaryCondition.equalTo(table.getColumns().get(COLUMN_INDEX_ID), existingTape.getID()));
+		uq.addSetClause(table.getColumns().get(COLUMN_INDEX_TYPE), existingTape.getTapeType().getID());
+		uq.addSetClause(table.getColumns().get(COLUMN_INDEX_BARCODE), existingTape.getBarcode());
+		uq.addSetClause(table.getColumns().get(COLUMN_INDEX_SERIAL), existingTape.getSerial());
+		uq.addSetClause(table.getColumns().get(COLUMN_INDEX_MANUFACTURER), existingTape.getManufacturer().getID());
+		uq.addSetClause(table.getColumns().get(COLUMN_INDEX_FORMAT_TYPE), existingTape.getFormat().ordinal());
+		uq.addSetClause(table.getColumns().get(COLUMN_INDEX_SPACE_REMAINING), existingTape.getUsedSpace());
+		uq.addSetClause(table.getColumns().get(COLUMN_INDEX_DATE_ADDED), Timestamp.valueOf(existingTape.getDateAdded()));
+		uq.addSetClause(table.getColumns().get(COLUMN_INDEX_IS_WORM), existingTape.getIsWORM());
+		uq.addSetClause(table.getColumns().get(COLUMN_INDEX_IS_ENCRYPTED), existingTape.getIsEncrypted());
+		uq.addSetClause(table.getColumns().get(COLUMN_INDEX_IS_COMPRESSED), existingTape.getIsCompressed());
+
+		final String sql = uq.validate().toString();
+
+		try {
+			if (!statment.execute(sql)) {
+				return DBStatus.OK();
+			} else {
+				return DBStatus.Error(null, "Failed to update: " + sql);
 			}
 		} catch (SQLException e) {
 			Log.severe(e.getMessage() + " SQL: " + sql);

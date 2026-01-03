@@ -25,6 +25,7 @@ import lto.manager.common.database.tables.records.RecordTapeType;
 import lto.manager.web.check.FormDefinition;
 import lto.manager.web.check.element.button.ElementIconButton;
 import lto.manager.web.check.element.input.ElementInputCheckBox;
+import lto.manager.web.check.element.input.ElementInputHidden;
 import lto.manager.web.check.element.input.ElementInputRadio;
 import lto.manager.web.check.element.input.ElementInputRadio.ElementRadioOption;
 import lto.manager.web.check.element.input.ElementInputText;
@@ -40,20 +41,21 @@ import lto.manager.web.resource.Asset;
 import lto.manager.web.resource.CSS;
 import lto.manager.web.resource.JS;
 
-public class AJAXLibraryCreateTapeForm extends BaseHTTPHandler {
-	public static final String PATH = Asset.PATH_AJAX_BASE + "library/new/";
+public class AJAXLibraryEditTapeForm extends BaseHTTPHandler {
+	public static final String PATH = Asset.PATH_AJAX_BASE + "library/edit/";
 	public static final String NAME = "New Tape";
-	public static final String FORM_ID = "form-" + LibraryHandler.MODAL_ID_NEW;
+	public static final String FORM_ID = "form-" + LibraryHandler.MODAL_ID_EDIT;
 
-	private static final String NAME_TAPETYPE = "type_n";
-	private static final String NAME_MANU = "manu_n";
-	private static final String NAME_FORMAT = "format_n";
-	private static final String NAME_SERIAL = "serial_n";
-	private static final String NAME_BARCODE = "barcode_n";
-	private static final String NAME_WORM = "worm_n";
-	private static final String NAME_ENCRYPTED = "enc_n";
-	private static final String NAME_COMPRESSION = "comp_n";
-	private static final String NAME_BARCODE_DES = "barcode_des_n";
+	public static final String NAME_ID = "tape_id_e";
+	private static final String NAME_TAPETYPE = "type_e";
+	private static final String NAME_MANU = "manu_e";
+	private static final String NAME_FORMAT = "format_e";
+	private static final String NAME_SERIAL = "serial_e";
+	private static final String NAME_BARCODE = "barcode_e";
+	private static final String NAME_WORM = "worm_e";
+	private static final String NAME_ENCRYPTED = "enc_e";
+	private static final String NAME_COMPRESSION = "comp_e";
+	private static final String NAME_BARCODE_DES = "barcode_des_e";
 
 	private static final String LABEL_TAPETYPE = "LTO Tape Type";
 	private static final String LABEL_MANU = "LTO Manufacturer";
@@ -65,20 +67,30 @@ public class AJAXLibraryCreateTapeForm extends BaseHTTPHandler {
 	private static final String LABEL_COMPRESSION = "Compression Enabled";
 
 	private static FormDefinition formDefinition(BodyModel model) {
-		final FormDefinition fd = new FormDefinition(model, AJAXLibraryCreateTapeForm::submit);
-		fd.withAJAXPath(PATH).withId(FORM_ID)
-				.withOnReplace(JS.libraryChangeTapeType(NAME_BARCODE_DES, NAME_WORM, NAME_TAPETYPE));
+		final FormDefinition fd = new FormDefinition(model, AJAXLibraryEditTapeForm::submit);
+		fd.withAJAXPath(PATH).withId(FORM_ID).withOnReplace(JS.libraryChangeTapeType(NAME_BARCODE_DES, NAME_WORM, NAME_TAPETYPE));
 
 		try {
 			final List<RecordManufacturer> allDBTapeManufacturers = Database.getAllTapeManufacturers();
 			final List<RecordTapeType> allDBTapeTypes = Database.getAllTapeTypes();
 
+			final String idStr = model.getQueryModel().getString(NAME_ID, "0");
+			final int id = Integer.parseInt(idStr);
+			final RecordTape tape = id == 0 ? RecordTape.getBlank() : Database.getTapeAtID(id);
+
+			{ // id number <input> text
+				final ElementInputHidden idInput = ElementInputHidden.of();
+				idInput.withName(NAME_ID).withId(NAME_ID);
+				idInput.withValue(idStr);
+				fd.withElement(idInput);
+			}
 			{ // LTO tape type <select>
 				final ElementSelect tapeTypesSelect = ElementSelect.of();
-				final String selected = model.getQueryModel().getString(NAME_TAPETYPE);
+				final String selected = model.getQueryModel().getString(NAME_TAPETYPE,
+						String.valueOf(tape.getTapeType().getID()));
 				tapeTypesSelect.withRequired().withLabel(LABEL_TAPETYPE);
 				tapeTypesSelect.withName(NAME_TAPETYPE).withId(NAME_TAPETYPE).withNotEmpty();
-				tapeTypesSelect.withDisabledDefault(selected).withValue(selected); // Enable blank option
+				tapeTypesSelect.withValue(selected);
 				tapeTypesSelect.withOptions(
 						allDBTapeTypes.stream().map(type -> new ElementSelectOption(type.getID().toString(),
 								type.getType(), selected, (Option<?> option) -> {
@@ -90,8 +102,9 @@ public class AJAXLibraryCreateTapeForm extends BaseHTTPHandler {
 			}
 			{ // LTO manufacturer <select>
 				final ElementSelect tapeManuSelect = ElementSelect.of();
-				final String selected = model.getQueryModel().getString(NAME_MANU);
-				final int selectedInt = model.getQueryModel().getInt(NAME_MANU, 0);
+				final String selected = model.getQueryModel().getString(NAME_MANU,
+						String.valueOf(tape.getManufacturer().getID()));
+				final int selectedInt = Integer.parseInt(selected);
 				final RecordManufacturer selectedManu = allDBTapeManufacturers.stream()
 						.filter(type -> type.getID() == selectedInt).findFirst().orElse(RecordManufacturer.of(0, ""));
 				tapeManuSelect.withAdditionalClass(CSS.LIBRARY_MANUFACTURER_SELECT);
@@ -99,7 +112,7 @@ public class AJAXLibraryCreateTapeForm extends BaseHTTPHandler {
 						+ selectedManu.getManufacturer().toLowerCase() + ".svg')");
 				tapeManuSelect.withRequired().withLabel(LABEL_MANU).withNotEmpty();
 				tapeManuSelect.withName(NAME_MANU).withId(NAME_MANU);
-				tapeManuSelect.withDisabledDefault(selected).withValue(selected); // Enable blank option
+				tapeManuSelect.withValue(selected);
 				tapeManuSelect.withOptions(allDBTapeManufacturers.stream()
 						.map(type -> new ElementSelectOption(type.getID().toString(), type.getManufacturer(), selected))
 						.collect(Collectors.toList()));
@@ -108,8 +121,7 @@ public class AJAXLibraryCreateTapeForm extends BaseHTTPHandler {
 			{ // Format <input> radio
 				final ElementInputRadio tapeFormatRadio = ElementInputRadio.of(NAME_FORMAT);
 				tapeFormatRadio.withLabel(LABEL_FORMAT);
-				final String selected = model.getQueryModel().getString(NAME_FORMAT,
-						RecordTapeFormatType.values()[0].toString());
+				final String selected = model.getQueryModel().getString(NAME_FORMAT, tape.getFormat().name());
 				tapeFormatRadio.withOptions(Arrays.stream(RecordTapeFormatType.values())
 						.filter(format -> format != RecordTapeFormatType.STFS) // FIXME STFS not yet supported
 						.map(format -> new ElementRadioOption(format.toString(), format.toString(),
@@ -120,7 +132,7 @@ public class AJAXLibraryCreateTapeForm extends BaseHTTPHandler {
 			{ // Serial number <input> text
 				final ElementInputText serialInput = ElementInputText.of();
 				serialInput.getFormValidator().setMessage("Serial number ", "");
-				final String value = model.getQueryModel().getStringNotNull(NAME_SERIAL);
+				final String value = model.getQueryModel().getString(NAME_SERIAL, tape.getSerial());
 				serialInput.withRequired().withLabel(LABEL_SERIAL).withNotEmpty();
 				serialInput.withName(NAME_SERIAL).withId(NAME_SERIAL);
 				serialInput.withValue(value);
@@ -130,7 +142,7 @@ public class AJAXLibraryCreateTapeForm extends BaseHTTPHandler {
 			{ // Barcode number <input> text
 				final ElementInputTextLTOBarcode barcodeInput = ElementInputTextLTOBarcode.of(NAME_BARCODE_DES);
 				barcodeInput.getFormValidator().setMessage("Barcode ", null);
-				final String value = model.getQueryModel().getStringNotNull(NAME_BARCODE);
+				final String value = model.getQueryModel().getString(NAME_BARCODE, tape.getBarcode());
 				barcodeInput.withRequired().withLabel(LABEL_BARCODE);
 				barcodeInput.withName(NAME_BARCODE).withId(NAME_BARCODE).withNotEmpty();
 				barcodeInput.withValue(value);
@@ -155,7 +167,7 @@ public class AJAXLibraryCreateTapeForm extends BaseHTTPHandler {
 				fd.withElement(barcodeInput);
 			}
 			{ // WORM <input> checkbox
-				final boolean checked = model.getQueryModel().getChecked(NAME_WORM);
+				final boolean checked = model.getQueryModel().getChecked(NAME_WORM, tape.getIsWORM());
 				final ElementInputCheckBox wormCheckbox = ElementInputCheckBox.of(checked);
 				wormCheckbox.withLabel(LABEL_WORM);
 				wormCheckbox.withName(NAME_WORM).withId(NAME_WORM);
@@ -163,14 +175,14 @@ public class AJAXLibraryCreateTapeForm extends BaseHTTPHandler {
 				fd.withElement(wormCheckbox);
 			}
 			{ // Encrypted <input> checkbox
-				final boolean checked = model.getQueryModel().getChecked(NAME_ENCRYPTED);
+				final boolean checked = model.getQueryModel().getChecked(NAME_ENCRYPTED, tape.getIsEncrypted());
 				final ElementInputCheckBox EncCheckbox = ElementInputCheckBox.of(checked);
 				EncCheckbox.withLabel(LABEL_ENCRYPTED);
 				EncCheckbox.withName(NAME_ENCRYPTED).withId(NAME_ENCRYPTED);
 				fd.withElement(EncCheckbox);
 			}
 			{ // Compression Enabled <input> checkbox
-				final boolean checked = model.getQueryModel().getChecked(NAME_COMPRESSION);
+				final boolean checked = model.getQueryModel().getChecked(NAME_COMPRESSION, tape.getIsCompressed());
 				final ElementInputCheckBox compCheckbox = ElementInputCheckBox.of(checked);
 				compCheckbox.withLabel(LABEL_COMPRESSION);
 				compCheckbox.withName(NAME_COMPRESSION).withId(NAME_COMPRESSION);
@@ -178,11 +190,11 @@ public class AJAXLibraryCreateTapeForm extends BaseHTTPHandler {
 			}
 			{ // Add buttons at end
 				final ElementIconButton submit = ElementIconButton.ofTypeAdd();
-				submit.asSubmit().withOnClickJS(JS.formSubmit(FORM_ID));
+				submit.asSubmit().withOnClickJS(JS.formSubmit(FORM_ID)).withText("Update");
 				fd.withButton(submit);
 
 				final ElementIconButton cancel = ElementIconButton.ofTypeCancel();
-				cancel.withOnClickJS(JS.hideModal(LibraryHandler.MODAL_ID_NEW));
+				cancel.withOnClickJS(JS.hideModal(LibraryHandler.MODAL_ID_EDIT));
 				fd.withButton(cancel);
 			}
 		} catch (SQLException e) {
@@ -195,6 +207,8 @@ public class AJAXLibraryCreateTapeForm extends BaseHTTPHandler {
 		try {
 			final var qm = model.getQueryModel();
 
+			final RecordTape tape = Database.getTapeAtID(model.getQueryModel().getInt(NAME_ID));
+
 			final RecordManufacturer manu = RecordManufacturer.lazy(qm.getInt(NAME_MANU));
 			final RecordTapeType type = RecordTapeType.lazy(qm.getInt(NAME_TAPETYPE));
 			final RecordTapeFormatType format = RecordTapeFormatType.valueOf(qm.getString(NAME_FORMAT));
@@ -203,9 +217,9 @@ public class AJAXLibraryCreateTapeForm extends BaseHTTPHandler {
 			final boolean worm = qm.getChecked(NAME_WORM);
 			final boolean enc = qm.getChecked(NAME_ENCRYPTED);
 			final boolean cmp = qm.getChecked(NAME_COMPRESSION);
-			final RecordTape newTape = RecordTape.of(null, manu, type, barcode, serial, 0, format, null, worm, enc,
-					cmp);
-			final DBStatus status = Database.addTape(newTape);
+			final RecordTape updateTape = RecordTape.of(tape.getID(), manu, type, barcode, serial, 0, format,
+					tape.getDateAdded(), worm, enc, cmp);
+			final DBStatus status = Database.updateTape(updateTape);
 			if (!status.success()) {
 				status.rethrow();
 			}
@@ -229,6 +243,6 @@ public class AJAXLibraryCreateTapeForm extends BaseHTTPHandler {
 	@Override
 	public void requestHandle(HttpExchange he, BodyModel bm)
 			throws IOException, SQLException, InterruptedException, ExecutionException {
-		requestHandleCompleteFetcher(he, new TemplateFetcherModel(AJAXLibraryCreateTapeForm::content, bm));
+		requestHandleCompleteFetcher(he, new TemplateFetcherModel(AJAXLibraryEditTapeForm::content, bm));
 	}
 }

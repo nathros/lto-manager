@@ -146,6 +146,8 @@ public class CSS {
 
 	public final static String LIST_CONTAINER = "list-container ";
 
+	public final static String LIBRARY_MANUFACTURER_SELECT = "manufacture-select  ";
+
 	public final static String DRIVE_CONTAINER = "drive-container ";
 
 	public final static String LOADING_CONTAINER = "loading-container ";
