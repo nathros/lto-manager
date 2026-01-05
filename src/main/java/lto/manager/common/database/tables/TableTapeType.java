@@ -38,12 +38,8 @@ public class TableTapeType {
 		DbTable table = schema.addTable(TABLE_NAME);
 
 		DbColumn id = table.addColumn(COLUMN_NAME_ID, Types.INTEGER, null);
-		//id.primaryKey();
-		id.unique();
-		id.notNull();
+		id.primaryKey();
 
-		String key[] = new String[] { COLUMN_NAME_ID};
-		table.primaryKey(COLUMN_NAME_ID, key);
 		table.addColumn(COLUMN_NAME_TYPE, Types.VARCHAR, 128);
 		table.addColumn(COLUMN_NAME_DESIGNATION, Types.VARCHAR, 2);
 		table.addColumn(COLUMN_NAME_DESIGNATION_WORM, Types.VARCHAR, 2);
@@ -54,14 +50,12 @@ public class TableTapeType {
 
 	public static boolean createTable(Connection con) throws SQLException {
 		String q = new CreateTableQuery(TableTapeType.table, true).validate().toString();
-		q = q.replace(COLUMN_NAME_ID + ")", COLUMN_NAME_ID + " AUTOINCREMENT)"); // TODO better way of autoincrement
-
 		var statment = con.createStatement();
 
 		final long bytesPerGiB = 1000 * 1000 * 1000;
 		final long[] tapeSizeGB = {100, 200, 400, 800, 1500, 2500, 6000, 12000, 18000};
 		if (!statment.execute(q)) {
-			if (addNewType(con, "LTO-7 Type M8", "M8", "", 9000 * bytesPerGiB)) { // Prepopulate values
+			if (addNewType(con, "LTO-7 Type M8", "M8", "", 9000 * bytesPerGiB)) { // Pre-populate values
 				char letter = 'T';
 				for (int i = 1; i < 10; i++) {
 					String worm = "";
@@ -71,6 +65,8 @@ public class TableTapeType {
 					}
 					if (!addNewType(con, "LTO-" + i, "L" + i, worm, tapeSizeGB[i - 1] * bytesPerGiB)) return false;
 				}
+				if (!addNewType(con, "LTO-10 30TB Native", "LA", "LH", 30000 * bytesPerGiB)) return false;
+				if (!addNewType(con, "LTO-10 40TB Native", "LA", "LH", 40000 * bytesPerGiB)) return false;
 				return true;
 			}
 		}

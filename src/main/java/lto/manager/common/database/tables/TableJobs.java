@@ -50,12 +50,8 @@ public class TableJobs {
 		DbTable table = schema.addTable(TABLE_NAME);
 
 		DbColumn id = table.addColumn(COLUMN_NAME_ID, Types.INTEGER, null);
-		//id.primaryKey();
-		id.unique();
-		id.notNull();
+		id.primaryKey();
 
-		String key[] = new String[] { COLUMN_NAME_ID};
-		table.primaryKey(COLUMN_NAME_ID, key);
 		table.addColumn(COLUMN_NAME_NAME, Types.VARCHAR, 128);
 		table.addColumn(COLUMN_NAME_TYPE, Types.INTEGER, null);
 		table.addColumn(COLUMN_NAME_STATUS, Types.INTEGER, null);
@@ -68,7 +64,6 @@ public class TableJobs {
 
 	public static boolean createTable(Connection con) throws SQLException {
 		String q = new CreateTableQuery(TableJobs.table, true).validate().toString();
-		q = q.replace(COLUMN_NAME_ID + ")", COLUMN_NAME_ID + " AUTOINCREMENT)");
 		var statment = con.createStatement();
 		if (!statment.execute(q)) {
 			return true;

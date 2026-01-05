@@ -50,12 +50,7 @@ public class TableRoles {
 		DbTable table = schema.addTable(TABLE_NAME);
 
 		DbColumn id = table.addColumn(COLUMN_NAME_ID, Types.INTEGER, null);
-		//id.primaryKey();
-		id.unique();
-		id.notNull();
-
-		String key[] = new String[] { COLUMN_NAME_ID};
-		table.primaryKey(COLUMN_NAME_ID, key);
+		id.primaryKey();
 
 		table.addColumn(COLUMN_NAME_NAME, Types.VARCHAR, MAX_LENGTH_NAME).unique();
 		table.addColumn(COLUMN_NAME_DESCRIPTION, Types.VARCHAR, MAX_LENGTH_DESCRIPTION);

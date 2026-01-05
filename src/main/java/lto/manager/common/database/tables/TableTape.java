@@ -72,10 +72,7 @@ public class TableTape {
 		DbTable table = schema.addTable(TABLE_NAME);
 
 		DbColumn id = table.addColumn(COLUMN_NAME_ID, Types.INTEGER, null);
-		id.unique();
-		id.notNull();
-		String key[] = new String[] { COLUMN_NAME_ID };
-		table.primaryKey(COLUMN_NAME_ID, key);
+		id.primaryKey();
 
 		DbColumn tapeTypeForeignColumn = table.addColumn(COLUMN_NAME_TYPE, Types.INTEGER, null);
 		DbTable tableTapeType = TableTapeType.table;
@@ -109,8 +106,6 @@ public class TableTape {
 
 	public static boolean createTable(Connection con) throws SQLException {
 		String q = new CreateTableQuery(TableTape.table, true).validate().toString();
-		q = q.replace(COLUMN_NAME_ID + ")", COLUMN_NAME_ID + " AUTOINCREMENT)");
-
 		var statment = con.createStatement();
 
 		if (!statment.execute(q)) {

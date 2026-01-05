@@ -65,12 +65,7 @@ public class TableUser {
 		DbTable table = schema.addTable(TABLE_NAME);
 
 		DbColumn id = table.addColumn(COLUMN_NAME_ID, Types.INTEGER, null);
-		// id.primaryKey();
-		id.unique();
-		id.notNull();
-
-		String key[] = new String[] { COLUMN_NAME_ID };
-		table.primaryKey(COLUMN_NAME_ID, key);
+		id.primaryKey();
 
 		DbColumn roleForeignColumn = table.addColumn(COLUMN_NAME_ROLE, Types.INTEGER, null);
 		roleForeignColumn.notNull();

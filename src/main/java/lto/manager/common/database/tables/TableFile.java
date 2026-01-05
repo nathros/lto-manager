@@ -61,12 +61,8 @@ public class TableFile {
 		DbTable table = schema.addTable(TABLE_NAME);
 
 		DbColumn id = table.addColumn(COLUMN_NAME_ID, Types.INTEGER, null);
-		// id.primaryKey();
-		id.unique();
-		id.notNull();
+		id.primaryKey();
 
-		String key[] = new String[] { COLUMN_NAME_ID };
-		table.primaryKey(COLUMN_NAME_ID, key);
 		var nameColumn = table.addColumn(COLUMN_NAME_FILE_NAME_VIRTUAL, Types.VARCHAR, 256);
 		nameColumn.notNull();
 		var pathColumn = table.addColumn(COLUMN_NAME_FILE_PATH_VIRTUAL, Types.VARCHAR, 4096);
@@ -94,8 +90,6 @@ public class TableFile {
 
 	public static boolean createTable(Connection con) throws SQLException {
 		String q = new CreateTableQuery(TableFile.table, true).validate().toString();
-		q = q.replace(COLUMN_NAME_ID + ")", COLUMN_NAME_ID + " AUTOINCREMENT)");
-
 		var statment = con.createStatement();
 
 		boolean result = statment.execute(q);
@@ -108,8 +102,7 @@ public class TableFile {
 			return false;
 
 		LocalDateTime now = LocalDateTime.now();
-		RecordFile rootDir = RecordFile.of(TableTape.DIR_TAPE_ID, "/", "/", "", "", 0, now, now, 0, 0,
-				"folder~a-root");
+		RecordFile rootDir = RecordFile.of(TableTape.DIR_TAPE_ID, "/", "/", "", "", 0, now, now, 0, 0, "folder~a-root");
 		try {
 			addFile(con, 0, rootDir);
 		} catch (Exception e) {
@@ -277,14 +270,12 @@ public class TableFile {
 		final String sql = uq.validate().toString();
 		statment.execute(sql);
 		if (statment.getUpdateCount() == 0) {
-			throw new SQLException("Failed to update virtual file with ID " + id
-					+ ", WARNING table in bad state");
+			throw new SQLException("Failed to update virtual file with ID " + id + ", WARNING table in bad state");
 		}
 		return true;
 	}
 
-	public static List<RecordFile> getAllFiles(Connection con, int tapeID) throws SQLException, IOException { // FIXME
-																												// start
+	public static List<RecordFile> getAllFiles(Connection con, int tapeID) throws SQLException, IOException {
 		var statment = con.createStatement();
 
 		List<RecordFile> files = new ArrayList<RecordFile>();

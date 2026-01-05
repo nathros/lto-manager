@@ -41,10 +41,7 @@ public class TableOptions {
 		DbTable table = schema.addTable(TABLE_NAME);
 
 		DbColumn id = table.addColumn(COLUMN_NAME_ID, Types.INTEGER, null);
-		id.unique();
-		id.notNull();
-		String key[] = new String[] { COLUMN_NAME_ID};
-		table.primaryKey(COLUMN_NAME_ID, key);
+		id.primaryKey();
 		table.addColumn(COLUMN_NAME_DATA_TYPE, Types.VARCHAR, 32);
 		table.addColumn(COLUMN_NAME_VALUE, Types.VARCHAR, 4096);
 		return table;

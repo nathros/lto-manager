@@ -33,12 +33,8 @@ public class TableManufacturer {
 		DbTable table = schema.addTable(TABLE_NAME);
 
 		DbColumn id = table.addColumn(COLUMN_NAME_ID, Types.INTEGER, null);
-		//id.primaryKey();
-		id.unique();
-		id.notNull();
+		id.primaryKey();
 
-		String key[] = new String[] { COLUMN_NAME_ID};
-		table.primaryKey(COLUMN_NAME_ID, key);
 		table.addColumn(COLUMN_NAME_NAME, Types.VARCHAR, 128);
 
 		return table;
@@ -46,8 +42,6 @@ public class TableManufacturer {
 
 	public static boolean createTable(Connection con) throws SQLException {
 		String q = new CreateTableQuery(TableManufacturer.table, true).validate().toString();
-		q = q.replace(COLUMN_NAME_ID + ")", COLUMN_NAME_ID + " AUTOINCREMENT)");
-
 		var statment = con.createStatement();
 
 		List<String> manufacturer = new ArrayList<String>();
@@ -61,6 +55,7 @@ public class TableManufacturer {
 		manufacturer.add("SONY");
 		manufacturer.add("Maxell");
 		manufacturer.add("Overland Tandberg");
+		manufacturer.add("Other");
 		if (!statment.execute(q)) {
 			for (int i = 0; i < manufacturer.size(); i++) {
 				if (addNewManufacturer(con, manufacturer.get(i)) == false) return false;

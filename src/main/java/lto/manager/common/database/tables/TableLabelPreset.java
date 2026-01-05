@@ -42,10 +42,7 @@ public class TableLabelPreset {
 		DbTable table = schema.addTable(TABLE_NAME);
 
 		DbColumn id = table.addColumn(COLUMN_NAME_ID, Types.INTEGER, null);
-		id.unique();
-		id.notNull();
-		String key[] = new String[] { COLUMN_NAME_ID };
-		table.primaryKey(COLUMN_NAME_ID, key);
+		id.primaryKey();
 
 		DbColumn userForeignColumn = table.addColumn(COLUMN_NAME_USER, Types.INTEGER, null);
 		DbTable tableUser = TableUser.table;
@@ -61,8 +58,6 @@ public class TableLabelPreset {
 
 	public static boolean createTable(Connection con) throws SQLException {
 		String q = new CreateTableQuery(TableLabelPreset.table, true).validate().toString();
-		q = q.replace(COLUMN_NAME_ID + ")", COLUMN_NAME_ID + " AUTOINCREMENT)");
-
 		var statment = con.createStatement();
 
 		if (!statment.execute(q)) {
