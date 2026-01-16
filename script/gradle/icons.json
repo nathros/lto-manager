@@ -1,0 +1,10 @@
+{
+	"user" : {
+		"tabler" : "external/tabler-icons/icons/filled/user.svg",
+		"remix" : "external/RemixIcon/icons/User & Faces/user-fill.svg"
+	},
+	"exclamation-triangle" : {
+		"tabler" : "external/tabler-icons/icons/filled/alert-triangle.svg",
+		"remix" : "external/RemixIcon/icons/System/alert-fill.svg"
+	}
+}

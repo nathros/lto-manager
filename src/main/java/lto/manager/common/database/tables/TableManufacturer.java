@@ -26,18 +26,20 @@ public class TableManufacturer {
 	public static final String COLUMN_NAME_NAME = "name_manufacturer";
 
 	public static final int COLUMN_INDEX_ID = 0;
-	public static final int COLUMN_INDEX_TYPE = 1;
+	public static final int COLUMN_INDEX_NAME = 1;
+
+	private static final String OTHER = "Other";
 
 	static private DbTable getSelf() {
 		DbSchema schema = Database.schema;
 		DbTable table = schema.addTable(TABLE_NAME);
 
 		DbColumn id = table.addColumn(COLUMN_NAME_ID, Types.INTEGER, null);
-		//id.primaryKey();
+		// id.primaryKey();
 		id.unique();
 		id.notNull();
 
-		String key[] = new String[] { COLUMN_NAME_ID};
+		String key[] = new String[] { COLUMN_NAME_ID };
 		table.primaryKey(COLUMN_NAME_ID, key);
 		table.addColumn(COLUMN_NAME_NAME, Types.VARCHAR, 128);
 
@@ -51,21 +53,23 @@ public class TableManufacturer {
 		var statment = con.createStatement();
 
 		List<String> manufacturer = new ArrayList<String>();
-		manufacturer.add("Quantum");
-		manufacturer.add("IBM");
-		manufacturer.add("HP");
-		manufacturer.add("Fujifilm");
-		manufacturer.add("Spectra");
+		manufacturer.add(OTHER);
 		manufacturer.add("Dell");
-		manufacturer.add("TDK");
-		manufacturer.add("SONY");
+		manufacturer.add("Fujifilm");
+		manufacturer.add("HP");
+		manufacturer.add("IBM");
+		manufacturer.add("Imation");
 		manufacturer.add("Maxell");
 		manufacturer.add("Overland Tandberg");
-		manufacturer.add("Imation");
-		manufacturer.add("Other");
+		manufacturer.add("Quantum");
+		manufacturer.add("SONY");
+		manufacturer.add("Spectra");
+		manufacturer.add("TDK");
+
 		if (!statment.execute(q)) {
 			for (int i = 0; i < manufacturer.size(); i++) {
-				if (addNewManufacturer(con, manufacturer.get(i)) == false) return false;
+				if (addNewManufacturer(con, manufacturer.get(i)) == false)
+					return false;
 			}
 			return true;
 		}
@@ -77,7 +81,7 @@ public class TableManufacturer {
 		var statment = con.createStatement();
 
 		InsertQuery iq = new InsertQuery(table);
-		iq.addColumn(table.getColumns().get(COLUMN_INDEX_TYPE), name);
+		iq.addColumn(table.getColumns().get(COLUMN_INDEX_NAME), name);
 		String sql = iq.validate().toString();
 		if (!statment.execute(sql)) {
 			return true;
@@ -90,8 +94,10 @@ public class TableManufacturer {
 
 		SelectQuery uq = new SelectQuery();
 		uq.addAllTableColumns(table);
-		uq.addOrderings(table.getColumns().get(COLUMN_INDEX_TYPE));
+		uq.addOrderings(table.getColumns().get(COLUMN_INDEX_NAME));
 		String sql = uq.validate().toString();
+		// Order by name then "Other" to be last, TODO this is not clean way
+		sql = sql.replaceFirst("ORDER BY", "ORDER BY CASE " + COLUMN_INDEX_NAME + " WHEN " + OTHER + " THEN \"\" END,");
 		ResultSet result = statment.executeQuery(sql);
 
 		List<RecordManufacturer> list = new ArrayList<RecordManufacturer>();

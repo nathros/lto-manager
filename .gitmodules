@@ -1,0 +1,9 @@
+[submodule "external/breeze-icons"]
+	path = external/breeze-icons
+	url = https://invent.kde.org/frameworks/breeze-icons.git
+[submodule "external/tabler-icons"]
+	path = external/tabler-icons
+	url = https://github.com/tabler/tabler-icons.git
+[submodule "external/RemixIcon"]
+	path = external/RemixIcon
+	url = https://github.com/Remix-Design/RemixIcon.git
