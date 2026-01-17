@@ -1,0 +1,10 @@
+{
+	"dir-root" : {
+		"breeze" : "external/breeze-icons/icons/places/64/folder-root.svg",
+		"kora" : "external/kora/kora/places/scalable/folder-root.svg"
+	},
+	".png" : {
+		"breeze" : "external/breeze-icons/icons/mimetypes/64/image-png.svg",
+		"kora" : "external/kora/kora/mimetypes/scalable/application-image-png.svg"
+	}
+}
