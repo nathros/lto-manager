@@ -97,7 +97,7 @@ public class TableTapeType {
 			return false;
 		if (!addNewType(con, "LTO-10 30TB", "LA", "LH", 30000 * bytesPerGiB, "black", "purple", "black", "purple"))
 			return false;
-		if (!addNewType(con, "LTO-10 40TB", "LA", "LH", 40000 * bytesPerGiB, "black", "purple", "black", "purple"))
+		if (!addNewType(con, "LTO-10 40TB", "PA", "PH", 40000 * bytesPerGiB, "black", "purple", "black", "purple"))
 			return false;
 		return true;
 	}

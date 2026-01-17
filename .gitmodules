@@ -7,3 +7,6 @@
 [submodule "external/RemixIcon"]
 	path = external/RemixIcon
 	url = https://github.com/Remix-Design/RemixIcon.git
+[submodule "external/kora"]
+	path = external/kora
+	url = https://github.com/bikass/kora.git
