@@ -41,6 +41,11 @@ ROOT_DIR="../../"
 EXT_PATH=external/
 HTML_PREVIEW="${1}.preview.html"
 
+if [ ! -f "${JSON}" ]; then
+    echo -e "\e[1;31mError: \e[0;41m$JSON\e[0m\e[1;31m does not exist\e[0m"
+    exit 1
+fi
+
 echo "Fetching submodules at: ${ROOT_DIR}${EXT_PATH}"
 echo "Very first run may take a few minutes..."
 git submodule update --progress --init --recursive
